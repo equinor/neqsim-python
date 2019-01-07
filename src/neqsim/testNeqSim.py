@@ -4,6 +4,9 @@ Created on Thu Jan  3 22:24:08 2019
 
 @author: ESOL
 """
+import neqsim
+neqsim.javaGateway.startServer()
+
 from py4j.java_gateway import *
 neqsim =  JavaGateway().jvm.neqsim
 
