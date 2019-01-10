@@ -12,7 +12,7 @@ setuptools.setup(
     long_description="NeqSim is a tool for thermodynamic and process calculations",
     long_description_content_type="text/markdown",
     url="https://github.com/Statoil/neqsimpython",
-    packages=['neqsim'],
+    packages=['neqsim',"neqsim.thermo", "neqsim.process"],
     package_dir={'neqsim': 'src/neqsim'},
     package_data={'neqsim': ['lib/*.jar']},
     include_package_data=True,

@@ -6,5 +6,7 @@ neqsim.egg-info/dependency_links.txt
 neqsim.egg-info/top_level.txt
 src/neqsim/__init__.py
 src/neqsim/javaGateway.py
-src/neqsim/testNeqSim.py
-src/neqsim/thermoTools.py
+src/neqsim/process/__init__.py
+src/neqsim/process/processTools.py
+src/neqsim/thermo/__init__.py
+src/neqsim/thermo/thermoTools.py
