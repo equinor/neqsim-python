@@ -122,6 +122,7 @@ def solid(testSystem, solid=1):
 def TPflash(testSystem):
         testFlash = ThermodynamicOperations(testSystem)
         testFlash.TPflash()
+        testSystem.init(3)
 
 def TPsolidflash(testSystem):
         testFlash = ThermodynamicOperations(testSystem)

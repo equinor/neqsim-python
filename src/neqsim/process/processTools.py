@@ -63,6 +63,12 @@ def heater(teststream, name=""):
         processoperations.add(heater)
         return heater
 
+def heaterExchanger(stream1, stream2, name=""):
+        heater = neqsim.processSimulation.processEquipment.heatExchanger.HeatExchanger(stream1, stream2)
+        heater.setName(name)
+        processoperations.add(heater)
+        return heater
+
 def distillationColumn(trays=5, name="destColumn"):
         distillationColumn = neqsim.processSimulation.processEquipment.distillation.DistillationColumn(trays, 1,1)
         distillationColumn.setName(name)
@@ -114,14 +120,23 @@ def pipeline(teststream, position, diameter, height, outTemp, rough):
         return pipe
 
 def clear():
-        processoperations.clearAll()
+        processoperations.clearAll
         
 def run():
+        processoperations.run()
+
+def clearProcess():
+        processoperations.clearAll
+
+def runProcess():
         processoperations.run()
 
 def runtrans():
         processoperations.runTransient()
         
 def view():
+        processoperations.displayResult()
+
+def viewProcess():
         processoperations.displayResult()
         
