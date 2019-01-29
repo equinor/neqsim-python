@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Jan 28 09:04:44 CET 2019:
-Booting Derby (version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137)) instance a816c00e-0168-937d-39ba-00001ec121e8 
-on database directory classpath:data/neqsimthermodatabase in READ ONLY mode with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@27af8592. 
+Mon Jan 28 15:40:50 CET 2019:
+Booting Derby (version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137)) instance a816c00e-0168-94e7-dea8-00001eb83fb0 
+on database directory classpath:data/neqsimthermodatabase in READ ONLY mode with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@6f1358cb. 
 Loaded from file:/C:/ProgramData/Anaconda3/Lib/site-packages/neqsim/lib/NeqSimSource.jar.
 java.vendor=Oracle Corporation
 java.runtime.version=10.0.1+10
