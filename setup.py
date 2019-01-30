@@ -16,5 +16,5 @@ setuptools.setup(
     package_dir={'neqsim': 'src/neqsim'},
     package_data={'neqsim': ['lib/*.jar']},
     include_package_data=True,
-    install_requires=['py4j',]
+    install_requires=['py4j']
 )
