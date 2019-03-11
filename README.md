@@ -28,9 +28,3 @@ NeqSim is distributed under the [Apache-2.0](https://github.com/equinor/neqsimso
 
 ## Acknowledgments
 A number of master and PhD students at NTNU have contributed to development of NeqSim. We greatly acknowledge their contributions.
-
-
-
-
-
-Introduction to how to use neqsim in python are given in the Jupyter files.
