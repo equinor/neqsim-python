@@ -8,7 +8,7 @@ The NeqSim Python package is distributed as a pip package (neqsim).
 See the [NeqSim Python Wiki](/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks.
 
 ### Prerequisites
-The Python package py4j is used to connect Python and Java. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
+A Java run time environment ([Java JRE](https://www.oracle.com/technetwork/java/javase/downloads/index.html)) need to be installedl. The Python package py4j is used to connect Python and Java. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
 
 ### Initial setup
 The NeqSim Python package is downloaded by cloning the library to your local computer (alternatively fork it to your private reprository). The following commands are dependent on a local installation of [GIT](https://git-scm.com/).
