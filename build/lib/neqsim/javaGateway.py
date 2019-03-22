@@ -10,6 +10,7 @@ def startServer():
     colon = ':'
     if(localosname == 'nt'):
         colon=';'
+    colon=';'
     resources_dir = pkg_resources.resource_filename('neqsim', 'lib/')
     #resources_dir = "/usr/local/lib/python3.6/dist-packages/neqsim/lib"
     fullstring = shlex.split('java -classpath '+resources_dir+'/NeqSimpy4j.jar'+colon+resources_dir+'/NeqSimSource.jar'+colon+resources_dir+'/py4j0.10.8.1.jar neqsimpy4j.startJavaGateway')
