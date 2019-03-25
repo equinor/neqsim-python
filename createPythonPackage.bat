@@ -1,4 +1,4 @@
-cd C:\Users\esol\OneDrive - Statoil ASA\programming\neqsimpython
+cd C:\Users\esol\OneDrive - Equinor\programming\neqsimpython
 ipython setup.py sdist bdist_wheel
 pip uninstall neqsim
 y
