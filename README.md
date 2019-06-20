@@ -17,6 +17,7 @@ The NeqSim Python package is downloaded by cloning the library to your local com
 ```bash
 git clone https://github.com/equinor/neqsimpython.git
 cd neqsimpython
+pip install .
 ```
 ## Contributing
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.

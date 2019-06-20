@@ -1,2 +1,1 @@
-name = "process"
-__all__ = ["processTools"]
+from .processTools import *
