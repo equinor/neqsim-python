@@ -1,2 +1,1 @@
-name = "standards"
-__all__ = ["standardTools"]
+from .standardTools import *

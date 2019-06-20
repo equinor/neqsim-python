@@ -1,0 +1,6 @@
+dist
+build
+neqsim.egg-info
+**/derby.log
+__pychache__
+**/*.pyc
