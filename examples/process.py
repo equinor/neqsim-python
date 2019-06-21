@@ -25,5 +25,17 @@ inletSeparator = separator(inletValve.getOutStream())
 oilValve = valve(inletSeparator.getLiquidOutStream(), 1.0)
 compressor1 = compressor(inletSeparator.getGasOutStream(), 100.0)  # add compressor and set out pressure
 
+#sensoir to read from Omnia
+#temperatureTranmitter1 = temperatureTransmitter(stream1, "PT20232")
+#pressureTranmitter1 = pressureTransmitter(stream1,"TIP2030I")
+
+#signals to calculate
+#VTemperatureTransmitter1 = VtemperatureTransmitter(inletValve.getOutStream(),"VT20314")
+
+
+
 runProcess()
 viewProcess()
+
+print("compressor power ", compressor1.getPower())
+

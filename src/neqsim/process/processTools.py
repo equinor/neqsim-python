@@ -71,8 +71,13 @@ def heater(teststream, name=""):
     processoperations.add(heater)
     return heater
 
+def cooler(teststream, name=""):
+    cooler = neqsim.processSimulation.processEquipment.heatExchanger.Cooler(teststream)
+    cooler.setName(name)
+    processoperations.add(cooler)
+    return cooler
 
-def heaterExchanger(stream1, stream2, name=""):
+def heatExchanger(stream1, stream2, name=""):
     heater = neqsim.processSimulation.processEquipment.heatExchanger.HeatExchanger(stream1, stream2)
     heater.setName(name)
     processoperations.add(heater)
