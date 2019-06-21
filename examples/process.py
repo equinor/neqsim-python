@@ -36,3 +36,6 @@ compressor1 = compressor(inletSeparator.getGasOutStream(), 100.0)  # add compres
 
 runProcess()
 viewProcess()
+
+print("compressor power ", compressor1.getPower())
+
