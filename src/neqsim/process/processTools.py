@@ -49,6 +49,12 @@ def compressor(teststream, p, name="compressor ?"):
     processoperations.add(compressor)
     return compressor
 
+def pump(teststream, p, name="pump ?"):
+    pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)
+    pump.setOutletPressure(p)
+    pump.setName(name)
+    processoperations.add(pump)
+    return pump
 
 def expander(teststream, p, name="expander ?"):
     expander = neqsim.processSimulation.processEquipment.expander.Expander(teststream)
