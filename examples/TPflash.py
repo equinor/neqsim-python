@@ -15,7 +15,7 @@ from neqsim.thermo import fluid, TPflash
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
 fluid1.setTemperature(28.15, "C")
 fluid1.setPressure(100.0, "bara")
-fluid1.addComponent("nitrogen", 10.0, "mol/sec")
+fluid1.addComponent("methane", 10.0, "mol/sec")
 fluid1.addComponent("n-heptane", 5.0, "mol/sec")
 fluid1.addComponent("water", 1.0, "kg/sec")
 fluid1.setMixingRule(2)
