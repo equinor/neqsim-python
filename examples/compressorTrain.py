@@ -36,4 +36,4 @@ runProcess()
 print("compressor1 power ", compressor1.getPower()/1e6, " MW")
 print("compressor2 power ", compressor2.getPower()/1e6, " MW")
 
-print("temperature out of compressor2 ", compressor2.getOutStream().getTemperature())
+print("temperature out of compressor2 ", compressor2.getOutStream().getTemperature()-273.15, " °C")
