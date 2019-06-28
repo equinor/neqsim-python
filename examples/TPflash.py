@@ -26,8 +26,8 @@ fluid1.addComponent("n-butane", 1.0, "mol/sec")
 fluid1.addComponent("i-pentane", 0.4, "mol/sec")
 fluid1.addComponent("n-pentane", 0.2, "mol/sec")
 fluid1.addComponent("n-hexane", 0.1, "mol/sec")
-fluid1.setMixingRule("classic") # classic is means use binary kij 
-fluid1.setMultiPhaseCheck(True) #if more than two phases could be present
+fluid1.setMixingRule("classic") # classic will use binary kij 
+fluid1.setMultiPhaseCheck(True) #True if more than two phases could be present
 
 """
 Set a new fluid composition, temperature and pressure (fluid composition will 
@@ -45,6 +45,9 @@ TPflash(fluid1)
 fluid1.initThermoProperties()
 fluid1.initPhysicalProperties()
 
-# Print results. See file propertiesOfNatural
+"""
+Print results (number of phases at equilibrium and density). 
+For how to read more properties see: propertiesOfNaturalGas.py
+"""
 print("number of phases ", fluid1.getNumberOfPhases())
-print("fluid density ", fluid1.getDensity("kg/m3"))
+print("fluid density ", fluid1.getDensity("kg/m3"), " kg/m3")
