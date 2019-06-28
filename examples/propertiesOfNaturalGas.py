@@ -24,7 +24,8 @@ fluid1.setMultiPhaseCheck(True)
 # Calculate equilibrium at given temperature and pressure
 TPflash(fluid1)
 
-# Caclulate physical properties of the fluid
+# Caclulate thermodynamic and physical properties of the fluid
+fluid1.initThermoProperties()
 fluid1.initPhysicalProperties()
 
 # Read overall mixture properties

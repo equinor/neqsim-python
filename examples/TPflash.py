@@ -47,4 +47,4 @@ fluid1.initPhysicalProperties()
 
 # Print results. See file propertiesOfNatural
 print("number of phases ", fluid1.getNumberOfPhases())
-print("fluid density ", fluid1.getPhase(0).getDensity("kg/m3"))
+print("fluid density ", fluid1.getDensity("kg/m3"))
