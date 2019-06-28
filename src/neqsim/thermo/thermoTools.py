@@ -1,4 +1,5 @@
 from neqsim import java_gateway
+from neqsim import javaGateway
 
 neqsim = java_gateway.jvm.neqsim
 ThermodynamicOperations = neqsim.thermodynamicOperations.ThermodynamicOperations
@@ -195,9 +196,20 @@ def waterdewt(testSystem):
 
 def phaseenvelope(testSystem, i=1):
     testFlash = ThermodynamicOperations(testSystem)
-    testFlash.calcPTphaseEnvelope(i)
+    testFlash.calcPTphaseEnvelope()
     return testFlash
 
+def fluidComposition(testSystem, composition):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    numberOfComponents =len(composition)    
+    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
+    i = 0
+    for i in range(0,numberOfComponents):
+        compositionJavaArray[i] = composition[i]
+        i = i+1
+    testSystem.setMolarComposition(compositionJavaArray)
+    testSystem.init(0)
 
 def getExtThermProp(function, thermoSystem, t=0, p=0):
     nargout = [0, 0, 0, 0]
