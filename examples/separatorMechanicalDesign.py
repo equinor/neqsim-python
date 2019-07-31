@@ -29,7 +29,7 @@ fluid1.setTotalFlowRate(10.0, "MSm3/day")
 clearProcess()
 stream1 = stream(fluid1)
 separator1 = separator(stream1, "inlet separator")
-valve1 = valve(separator1.getLiquidOutStream(), MPpressure)
+valve1 = valve(separator1.getLiquidOutStream(), MPpressure, "HP oil valve")
 separator2 = separator(valve1.getOutStream(), "MP separator")
 valve2 = valve(separator2.getLiquidOutStream(), LPpressure)
 separator3 = separator(valve2.getOutStream(), "LP separator")
@@ -98,3 +98,6 @@ separator3.getMechanicalDesign().setMaxOperationPressure(10.0);
 separator3.addSeparatorSection("tray", "");
 separator3.getMechanicalDesign().calcDesign();
 separator3.getMechanicalDesign().displayResults();
+
+valve1.getMechanicalDesign().calcDesign();
+valve1.getMechanicalDesign().displayResults();
