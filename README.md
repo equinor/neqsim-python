@@ -6,7 +6,7 @@ The NeqSim Python package is distributed as a pip package. See the [Wiki](https:
 >pip install neqsim-xxx.whl
 
 ## Getting Started
-See the [NeqSim Python Wiki](/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks.
+See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks.
 
 ### Prerequisites
 A Java run time environment ([Java JRE](https://www.oracle.com/technetwork/java/javase/downloads/index.html)) needs to be installed. The Python package [py4j](https://www.py4j.org/) is used to connect Python and Java. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
