@@ -26,6 +26,12 @@ def neqstream(thermoSystem, name="stream ?", t=0, p=0):
     processoperations.add(stream)
     return stream
 
+def recycle(teststream, name="recycle ?"):
+    recycle1 = neqsim.processSimulation.processEquipment.util.Recycle()
+    recycle1.addStream(teststream)
+    processoperations.add(recycle1)
+    return recycle1
+
 
 def separator(teststream, name="separator ?"):
     separator = neqsim.processSimulation.processEquipment.separator.Separator(teststream)
