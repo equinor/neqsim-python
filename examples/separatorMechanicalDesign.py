@@ -76,7 +76,7 @@ print("temperature out of compressor2 ", compressor2.getOutStream().getTemperatu
 valve1.displayResult()
 separator3.displayResult()
 scrubberLP.displayResult()
-scrubberLP.getLiquidOutStream().displayResult()
+# scrubberLP.getLiquidOutStream().displayResult()
 
 # Calculating mechanical design of separators
 separator1.displayResult()
@@ -86,18 +86,18 @@ separator1.getMechanicalDesign().calcDesign();
 separator1.getMechanicalDesign().displayResults();
 #recycleLP.displayResult()
 
-separator2.displayResult()
+#separator2.displayResult()
 separator2.getMechanicalDesign().setMaxOperationPressure(50.0);
 separator2.addSeparatorSection("tray", "");
 separator2.getMechanicalDesign().calcDesign();
-separator2.getMechanicalDesign().displayResults();
+# separator2.getMechanicalDesign().displayResults();
 
 
-separator3.displayResult()
+#separator3.displayResult()
 separator3.getMechanicalDesign().setMaxOperationPressure(10.0);
 separator3.addSeparatorSection("tray", "");
 separator3.getMechanicalDesign().calcDesign();
-separator3.getMechanicalDesign().displayResults();
+#separator3.getMechanicalDesign().displayResults();
 
 valve1.getMechanicalDesign().calcDesign();
-valve1.getMechanicalDesign().displayResults();
+#valve1.getMechanicalDesign().displayResults();
