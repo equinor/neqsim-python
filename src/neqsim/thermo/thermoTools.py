@@ -22,7 +22,7 @@ fluid_type = {
     'unifac': neqsim.thermo.system.SystemUNIFAC,
     'electrolyte': neqsim.thermo.system.SystemFurstElectrolyteEos,
     'Electrolyte-ScRK-EoS': neqsim.thermo.system.SystemFurstElectrolyteEos,
-    'Electrolyte-CPA-EoS': neqsim.thermo.system.SystemElectrolyteCPA,
+    'Electrolyte-CPA-EoS': neqsim.thermo.system.SystemElectrolyteCPAstatoil,
     'cpa-el': neqsim.thermo.system.SystemElectrolyteCPA,
     'cpa-s': neqsim.thermo.system.SystemSrkCPAs,
     'cpa-statoil': neqsim.thermo.system.SystemSrkCPAstatoil,
@@ -136,6 +136,16 @@ def PSflash(testSystem, entropy):
 def freeze(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.freezingPointTemperatureFlash()
+    
+def scaleCheck(testSystem):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.checkScalePotential(testSystem.getPhaseNumberOfPhase("aqueous"))
+    testFlash.display()
+
+def ionComposition(testSystem):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.calcIonComposition(testSystem.getPhaseNumberOfPhase("aqueous"))
+    testFlash.display()
 
 
 def hydp(testSystem):
