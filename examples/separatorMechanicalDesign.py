@@ -4,7 +4,7 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
-from neqsim.thermo import fluid
+from neqsim.thermo import fluid, phaseenvelope
 from neqsim.process import clearProcess, stream, valve, separator, compressor, runProcess, viewProcess, heater, mixer, recycle
 
 feedPressure = 30.0
@@ -20,9 +20,13 @@ fluid1.addComponent("ethane", 5.0)
 fluid1.addComponent("propane", 3.0)
 fluid1.addComponent("i-butane", 2.0)
 fluid1.addComponent("n-butane", 2.0)
-fluid1.addComponent("n-nonane", 11.1)
-fluid1.setMixingRule(2)
-fluid1.setTemperature(28.15, "C")
+fluid1.addComponent("n-hexane", 1.1)
+fluid1.addComponent("n-heptane", 2.1)
+fluid1.addComponent("n-octane", 1.1)
+fluid1.addComponent("n-nonane", 0.51)
+fluid1.addComponent("nC10", 5.1)
+fluid1.setMixingRule('classic')
+fluid1.setTemperature(35.15, "C")
 fluid1.setPressure(feedPressure, "bara")
 fluid1.setTotalFlowRate(10.0, "MSm3/day")
 # demonstration of setting up a simple process calculation
@@ -101,3 +105,5 @@ separator3.getMechanicalDesign().calcDesign();
 
 valve1.getMechanicalDesign().calcDesign();
 #valve1.getMechanicalDesign().displayResults();
+
+#phaseenvelope(compressor2.getThermoSystem()).displayResult()
