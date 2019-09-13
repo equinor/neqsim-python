@@ -22,6 +22,7 @@ fluid1.setTemperature(28.15, "C")
 fluid1.setPressure(30.0, "bara")
 fluid1.setTotalFlowRate(10.0, "MSm3/day")
 # demonstration of setting up a simple process calculation
+
 clearProcess()
 stream1 = stream(fluid1)
 compressor1 = compressor(stream1, 60.0)  # add compressor and set out pressure
@@ -36,4 +37,5 @@ runProcess()
 print("compressor1 power ", compressor1.getPower()/1e6, " MW")
 print("compressor2 power ", compressor2.getPower()/1e6, " MW")
 
+print("temperature out of compressor1 ", compressor1.getOutStream().getTemperature()-273.15, " °C")
 print("temperature out of compressor2 ", compressor2.getOutStream().getTemperature()-273.15, " °C")

@@ -40,4 +40,4 @@ oilstream1 = separator1.getLiquidOutStream()
 valve1 = valve(oilstream1,10.0, 'valv1')
 
 runProcess()
-valve1.displayResults()
+valve1.displayResult()

@@ -153,11 +153,10 @@ def hydp(testSystem):
     testFlash.hydrateFormationPressure()
 
 
-def hydt(testSystem, type):
+def hydt(testSystem, type=1):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.hydrateFormationTemperature(type)
     return testSystem.getTemperature()
-
 
 def bubp(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
@@ -204,9 +203,30 @@ def waterdewt(testSystem):
     return testSystem.getTemperature()
 
 
-def phaseenvelope(testSystem, i=1):
+def phaseenvelope(testSystem, plot=False):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.calcPTphaseEnvelope()
+    data = testFlash
+    if(plot):
+        import matplotlib.pyplot as plt
+        plt.plot(list(data.getOperation().get("dewT") ),list(data.getOperation().get("dewP")), label="dew point")
+        plt.plot(list(data.getOperation().get("bubT")),list(data.getOperation().get("bubP")), label="bubble point")
+
+        try:
+            plt.plot(list(data.getOperation().get("dewT2")),list(data.getOperation().get("dewP2")), label="dew point2")
+        except:
+            print("An exception occurred")
+
+        try:
+            plt.plot(list(data.getOperation().get("bubT2")),list(data.getOperation().get("bubP2")), label="bubble point2")
+        except:
+            print("An exception occurred")
+        
+        plt.title('PT envelope')
+        plt.xlabel('Temperature [\u00B0C]')
+        plt.ylabel('Pressure [bar]')
+        plt.legend()
+        plt.show()
     return testFlash
 
 def fluidComposition(testSystem, composition):

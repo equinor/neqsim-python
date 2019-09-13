@@ -1,4 +1,5 @@
 from neqsim import java_gateway
+from neqsim import javaGateway
 
 neqsim = java_gateway.jvm.neqsim
 
@@ -134,19 +135,52 @@ def twophasepipe(teststream, position, diameter, height, outTemp, rough):
     processoperations.add(pipe)
     return pipe
 
+def pipe(teststream, length, deltaElevation, diameter, rough):
+    pipe = neqsim.processSimulation.processEquipment.pipeline.AdiabaticPipe(teststream)
+    pipe.setDiameter(diameter)
+    pipe.setLength(length);
+    pipe.setPipeWallRoughness(rough)
+    pipe.setInletElevation(0.0)
+    pipe.setOutletElevation(deltaElevation)
+    processoperations.add(pipe)
+    return pipe
 
-def pipeline(teststream, position, diameter, height, outTemp, rough):
+def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTransferCoefficients, pipeWallHeatTransferCoefficients):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    numberOfComponents =len(position)    
+    positionJavaArray = gateway.new_array(double_class,numberOfComponents)
+    diameterJavaArray = gateway.new_array(double_class,numberOfComponents)
+    heightJavaArray = gateway.new_array(double_class,numberOfComponents)
+    outTempJavaArray = gateway.new_array(double_class,numberOfComponents)
+    roughJavaArray = gateway.new_array(double_class,numberOfComponents)
+    javaouterHeatTransferCoefficients = gateway.new_array(double_class,numberOfComponents)
+    javapipeWallHeatTransferCoefficients = gateway.new_array(double_class,numberOfComponents)
+    i = 0
+    for i in range(0,numberOfComponents):
+        positionJavaArray[i] = position[i]
+        diameterJavaArray[i] = diameter[i]
+        heightJavaArray[i] = height[i]
+        outTempJavaArray[i] = outTemp[i]
+        roughJavaArray[i] = rough[i]
+        javaouterHeatTransferCoefficients[i]=outerHeatTransferCoefficients[i]
+        javapipeWallHeatTransferCoefficients[i]=pipeWallHeatTransferCoefficients[i]
+        
+        i = i+1
+        
     pipe = neqsim.processSimulation.processEquipment.pipeline.OnePhasePipeLine(teststream)
     pipe.setOutputFileName("c:/tempNew20.nc")
     numberOfLegs = len(position) - 1
     numberOfNodesInLeg = 100
     pipe.setNumberOfLegs(numberOfLegs)
     pipe.setNumberOfNodesInLeg(numberOfNodesInLeg)
-    pipe.setLegPositions(position)
-    pipe.setHeightProfile(height)
-    pipe.setPipeDiameters(diameter)
-    pipe.setPipeWallRoughness(rough)
-    pipe.setOuterTemperatures(outTemp)
+    pipe.setLegPositions(positionJavaArray)
+    pipe.setHeightProfile(heightJavaArray)
+    pipe.setPipeDiameters(diameterJavaArray)
+    pipe.setPipeWallRoughness(roughJavaArray)
+    pipe.setPipeOuterHeatTransferCoefficients(javaouterHeatTransferCoefficients)
+    pipe.setPipeWallHeatTransferCoefficients(javapipeWallHeatTransferCoefficients)
+    pipe.setOuterTemperatures(outTempJavaArray)
     processoperations.add(pipe)
     return pipe
 
