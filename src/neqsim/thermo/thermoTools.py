@@ -153,11 +153,10 @@ def hydp(testSystem):
     testFlash.hydrateFormationPressure()
 
 
-def hydt(testSystem, type):
+def hydt(testSystem, type=1):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.hydrateFormationTemperature(type)
     return testSystem.getTemperature()
-
 
 def bubp(testSystem):
     testFlash = ThermodynamicOperations(testSystem)

@@ -14,7 +14,7 @@ from neqsim.thermo import fluid, TPflash
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
 fluid1.setTemperature(28.15, "C")
-fluid1.setPressure(100.0, "bara")
+fluid1.setPressure(10.0, "bara")
 fluid1.addComponent("methane", 10.0, "mol/sec")
 fluid1.addComponent("n-heptane", 5.0, "mol/sec")
 fluid1.addComponent("water", 1.0, "kg/sec")
@@ -98,5 +98,15 @@ TCComp1inPhase1 = fluid1.getPhase(0).getComponent(0).getTC()
 PCComp1inPhase1 = fluid1.getPhase(0).getComponent(0).getPC()
 # a numer of properties can be read for both components and phases
 
+
+# Example of how to read interfacial tension 
+if fluid1.hasPhaseType("gas") and fluid1.hasPhaseType("oil"):
+        interfacialtensiongasoil = fluid1.getInterfacialTension('gas','oil')
+        
+if fluid1.hasPhaseType("gas") and fluid1.hasPhaseType("aqueous"):
+        interfacialtensiongasaqueous = fluid1.getInterfacialTension('gas','aqueous')
+        
+if fluid1.hasPhaseType("oil") and fluid1.hasPhaseType("aqueous"):
+        interfacialtensionoilaqueous = fluid1.getInterfacialTension('oil','aqueous')        
 # Display the fluid properties  
 #fluid1.display()
