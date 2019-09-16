@@ -154,6 +154,8 @@ def hydp(testSystem):
 
 
 def hydt(testSystem, type=1):
+    if not testSystem.doHydrateCheck():
+        testSystem.setHydrateCheck(True)
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.hydrateFormationTemperature(type)
     return testSystem.getTemperature()
