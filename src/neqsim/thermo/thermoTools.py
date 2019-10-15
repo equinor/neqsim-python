@@ -152,6 +152,8 @@ def hydp(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.hydrateFormationPressure()
 
+def addfluids(fluid1, fluid2):
+    return neqsim.thermo.system.SystemInterface.addFluids(fluid1,fluid2)
 
 def hydt(testSystem, type=1):
     if not testSystem.doHydrateCheck():
