@@ -12,7 +12,7 @@ See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for h
 A Java run time environment ([Java JRE](https://www.oracle.com/technetwork/java/javase/downloads/index.html)) needs to be installed. The Python package [py4j](https://www.py4j.org/) is used to connect Python and Java. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
 
 ### Initial setup
-The NeqSim Python package is installed by downloading/cloning the library to your local computer (alternatively fork it to your private reprository). The following commands are dependent on a local installation of [GIT](https://git-scm.com/). 
+The NeqSim Python package is installed by downloading/cloning the library to your local computer (alternatively fork it to your private reprository). The following commands are dependent on a local installation of [GIT](https://git-scm.com/). Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf).
 
 ```bash
 git clone https://github.com/equinor/neqsimpython.git
