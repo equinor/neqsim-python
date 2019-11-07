@@ -3,7 +3,7 @@ NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimho
 
 ## Releases
 The NeqSim Python package is distributed as a pip package. See the [Wiki](https://github.com/equinor/neqsimpython/wiki) for instructions on how to use it. Install the package by running
->pip install neqsim-xxx.whl
+>pip install neqsim
 
 ## Getting Started
 See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf).
