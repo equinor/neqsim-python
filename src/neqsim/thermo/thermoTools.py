@@ -42,6 +42,12 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
 def newdatabase(system):
     system.createDatabase(1)
 
+def printFluid(system):
+    a = system.getResultTable()
+    for i in range(len(a)):
+        for j in range(len(a[i])):
+            print(a[i][j], end='\t')
+    print()
 
 def volumecorrection(system, use=1):
     system.useVolumeCorrection(use)
@@ -126,6 +132,10 @@ def TPsolidflash(testSystem):
 def PHflash(testSystem, enthalpy):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.PHflash(enthalpy, 0)
+    
+def PHsolidflash(testSystem, enthalpy):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.PHsolidFlash(enthalpy)
 
 
 def PSflash(testSystem, entropy):
@@ -152,6 +162,8 @@ def hydp(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.hydrateFormationPressure()
 
+def addfluids(fluid1, fluid2):
+    return neqsim.thermo.system.SystemInterface.addFluids(fluid1,fluid2)
 
 def hydt(testSystem, type=1):
     if not testSystem.doHydrateCheck():
@@ -331,6 +343,9 @@ def entropy(thermoSystem, t=0, p=0):
     func.append(thermoSystem.getPhase(1).getEntropy)
     return getExtThermProp(func, thermoSystem, t, p)
 
+def densityGERG2008(phase):
+    GERG2008 = neqsim.thermo.util.GERG.NeqSimGERG2008();
+    return GERG2008.getDensity(phase)
 
 def molvol(thermoSystem, t=0, p=0):
     func = []
@@ -422,3 +437,7 @@ def viscosity(thermoSystem, t=0, p=0):
     func.append(thermoSystem.getPhase(0).getPhysicalProperties().getViscosity)
     func.append(thermoSystem.getPhase(1).getPhysicalProperties().getViscosity)
     return getPhysProp(func, thermoSystem, t, p)
+
+def PVTpropTable(testSystem,fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0) 
