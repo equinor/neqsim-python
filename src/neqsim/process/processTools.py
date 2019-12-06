@@ -56,6 +56,32 @@ def compressor(teststream, p, name="compressor ?"):
     processoperations.add(compressor)
     return compressor
 
+
+def compressorChart(compressor, curveConditions, speed, flow, head, polyEff):
+    from neqsim import javaGateway
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double  
+
+    curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
+    for i in range(len(curveConditionsJava)):
+        curveConditionsJava[i]=curveConditions[i]
+
+    speedJava = gateway.new_array(double_class,len(speed))
+    for i in range(len(speed)):
+        speedJava[i]=speed[i]
+    
+    flowJava = gateway.new_array(double_class,len(flow), len(flow[0]))
+    headJava = gateway.new_array(double_class,len(head), len(head[0]))
+    polyEffJava = gateway.new_array(double_class,len(polyEff), len(polyEff[0]))
+    for i in range(len(flow)):
+        for j in range(len(flow[0])):
+            flowJava[i][j] = flow[i][j]
+            headJava[i][j] = head[i][j]
+            polyEffJava[i][j] = polyEff[i][j]
+    
+    compressor.getCompressorChart().setCurves(curveConditionsJava, speedJava, flowJava, headJava, polyEffJava)
+    #compositionJavaArray = gateway.new_array(double_class,numberOfCurves)
+
 def pump(teststream, p, name="pump ?"):
     pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)
     pump.setOutletPressure(p)
