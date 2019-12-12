@@ -57,7 +57,7 @@ def compressor(teststream, p, name="compressor ?"):
     return compressor
 
 
-def compressorChart(compressor, curveConditions, speed, flow, head, polyEff):
+def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
     from neqsim import javaGateway
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double  
@@ -80,7 +80,44 @@ def compressorChart(compressor, curveConditions, speed, flow, head, polyEff):
             polyEffJava[i][j] = polyEff[i][j]
     
     compressor.getCompressorChart().setCurves(curveConditionsJava, speedJava, flowJava, headJava, polyEffJava)
-    #compositionJavaArray = gateway.new_array(double_class,numberOfCurves)
+
+def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
+    from neqsim import javaGateway
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double  
+    
+    curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
+    for i in range(len(curveConditionsJava)):
+        curveConditionsJava[i]=curveConditions[i]
+        
+    surgeflowJava = gateway.new_array(double_class,len(surgeflow))
+    surgeheadJava = gateway.new_array(double_class,len(surgehead))
+    
+    for i in range(len(surgeflow)):
+            surgeflowJava[i] = surgeflow[i]
+            surgeheadJava[i] = surgehead[i]
+    
+    compressor.getCompressorChart().getSurgeCurve().setCurve(curveConditionsJava, surgeflowJava, surgeheadJava)
+    
+def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
+    from neqsim import javaGateway
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double  
+    
+    curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
+    for i in range(len(curveConditionsJava)):
+        curveConditionsJava[i]=curveConditions[i]
+        
+    stoneWallFlowJava = gateway.new_array(double_class,len(stoneWallflow))
+    stoneWallHeadJava = gateway.new_array(double_class,len(stoneWallHead))
+    
+    for i in range(len(stoneWallflow)):
+            stoneWallFlowJava[i] = stoneWallflow[i]
+            stoneWallHeadJava[i] = stoneWallHead[i]
+    
+    compressor.getCompressorChart().getStoneWallCurve().setCurve(curveConditionsJava, stoneWallFlowJava, stoneWallHeadJava)
+    
+
 
 def pump(teststream, p, name="pump ?"):
     pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)

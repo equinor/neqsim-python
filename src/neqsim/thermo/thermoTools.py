@@ -41,6 +41,23 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
 
 def newdatabase(system):
     system.createDatabase(1)
+    
+def data(system):
+    a = system.getResultTable()
+    return a
+
+def table(system):
+    return system.createTable("")
+
+def dataFrame(system):
+    import pandas
+    system.createTable("")
+    return pandas.DataFrame(system.createTable(""))
+    
+def printFrame(system):
+    import pandas
+    system.createTable("")
+    print(pandas.DataFrame(system.createTable("")).to_string())
 
 def printFluid(system):
     a = system.getResultTable()
@@ -122,12 +139,15 @@ def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
     testSystem.init(3)
-
+    
+def PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
+    testFlash = ThermodynamicOperations(fluid1)
+    testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0);
+    testFlash.displayResult();
 
 def TPsolidflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPSolidflash()
-
 
 def PHflash(testSystem, enthalpy):
     testFlash = ThermodynamicOperations(testSystem)
@@ -172,6 +192,16 @@ def hydt(testSystem, type=1):
     testFlash.hydrateFormationTemperature(type)
     return testSystem.getTemperature()
 
+def calcIonComposition(fluid1):
+    testFlash = ThermodynamicOperations(fluid1)
+    testFlash.calcIonComposition(fluid1.getPhaseNumberOfPhase("aqueous"))
+    return testFlash.getResultTable()
+    
+def checkScalePotential(fluid1):
+    testFlash = ThermodynamicOperations(fluid1)
+    testFlash.checkScalePotential(fluid1.getPhaseNumberOfPhase("aqueous"))
+    return testFlash.getResultTable()
+
 def bubp(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     try:
@@ -179,7 +209,6 @@ def bubp(testSystem):
     except:
         print('error calculating bublepoint')
     return testSystem.getPressure()
-
 
 def bubt(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
