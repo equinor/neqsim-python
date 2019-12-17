@@ -32,10 +32,10 @@ Plus fraction is added using addPlusFraction(name, moles, molarmass, relative de
 fluid1.addTBPfraction("C7", 2.0, 140.0/1000.0, 0.8)
 fluid1.addTBPfraction("C8", 2.0, 160.0/1000.0, 0.82)
 fluid1.addTBPfraction("C9", 2.0, 180.0/1000.0, 0.83)
-fluid1.addPlusFraction("C10", 2.0, 190.0/1000.0, 0.88)
+"""fluid1.addPlusFraction("C10", 2.0, 190.0/1000.0, 0.88)
 fluid1.getCharacterization().getLumpingModel().setNumberOfLumpedComponents(12)
 fluid1.getCharacterization().characterisePlusFraction();
-
+"""
 fluid1.addComponent("water", 0.2, "mol/sec")
 fluid1.setMixingRule("classic") # classic will use binary kij 
 fluid1.setMultiPhaseCheck(True) #True if more than two phases could be present
@@ -55,8 +55,7 @@ fluidComposition(fluid1, fluidcomposition)
 fluid1.setPressure(101.0, "bara")
 fluid1.setTemperature(22.3, "C")
 TPflash(fluid1)
-fluid1.initThermoProperties()
-fluid1.initPhysicalProperties()
+fluid1.initProperties()
 #fluid1.display()
 """
 Print results (number of phases at equilibrium and density). 
