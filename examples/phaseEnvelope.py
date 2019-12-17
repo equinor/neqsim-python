@@ -4,45 +4,39 @@ Created on Tue Aug 13 14:08:09 2019
 
 @author: esol
 """
-
+import neqsim
+import time
+time.sleep(3)
+from neqsim.thermo.thermoTools import *
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+import math
 from neqsim.thermo.thermoTools import fluid,phaseenvelope
 import matplotlib.pyplot as plt
+eosname = 'srk' #@param ["srk", "pr"]
+camponentName = "ethane" #@param ["methane", "ethane", "propane", "i-butane", "n-butane"]
+fluid1 = fluid('eosname') #create a fluid using the SRK-EoS
+fluid1.addComponent(camponentName, 1.0) #adding 1 mole methane to the fluid
 
-fluid1 = fluid('srk')
-fluid1.addComponent("nitrogen", 1.0)
-fluid1.addComponent("CO2", 2.5)
-fluid1.addComponent("methane", 68.1)
-fluid1.addComponent("ethane", 7.1)
-fluid1.addComponent("propane", 3.1)
-fluid1.addComponent("i-butane", 1.2)
-fluid1.addComponent("n-butane", 3.1)
-fluid1.addComponent("n-pentane", 0.31)
-fluid1.addComponent("n-hexane", 0.21)
-fluid1.addComponent("n-heptane", 0.41)
-fluid1.addComponent("n-octane", 0.22)
-fluid1.addComponent("n-nonane", 0.16)
-fluid1.addComponent("nC10", 0.01)
-fluid1.setMixingRule('classic')
+TTrip = fluid1.getPhase(0).getComponent(camponentName).getTriplePointTemperature()
+PTrip = fluid1.getPhase(0).getComponent(camponentName).getTriplePointPressure()
+Tcritical = fluid1.getPhase(0).getComponent(camponentName).getTC()
+Pcritical = fluid1.getPhase(0).getComponent(camponentName).getPC()
 
+fluid1.setTemperature(TTrip)
+fluid1.setPressure(PTrip)
+print('triple point temperature ', TTrip, "[K] and pressure ", PTrip, "[bara]")
+print('critical temperature ', Tcritical, "[K] and pressure ", Pcritical, "[bara]")
 
-data = phaseenvelope(fluid1)
+def bubleP(pressure):
+    fluid1.setPressure(pressure)
+    bubt(fluid1)
+    return fluid1.getTemperature('C')
 
+pressure = np.arange(PTrip, Pcritical-5.0, 1.0)
+temperature = [bubleP(P) for P in pressure]
 
-plt.plot(list(data.getOperation().get("dewT") ),list(data.getOperation().get("dewP")), label="dew point")
-plt.plot(list(data.getOperation().get("bubT")),list(data.getOperation().get("bubP")), label="bubble point")
-
-try:
-    plt.plot(list(data.getOperation().get("dewT2")),list(data.getOperation().get("dewP2")), label="dew point2")
-except:
-    print("An exception occurred")
-
-try:
-    plt.plot(list(data.getOperation().get("bubT2")),list(data.getOperation().get("bubP2")), label="bubble point2")
-except:
-    print("An exception occurred")
-        
-plt.title('PT envelope')
-plt.xlabel('Temperature [\u00B0C]')
-plt.ylabel('Pressure [bar]')
-plt.legend()
-plt.show()
+plt.plot(temperature, pressure);
+plt.xlabel('Temperature [C]');
+plt.ylabel('Pressure [bara]');

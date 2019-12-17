@@ -29,6 +29,8 @@ fluid1.setMixingRule('classic')
 fluid1.setTemperature(35.15, "C")
 fluid1.setPressure(feedPressure, "bara")
 fluid1.setTotalFlowRate(10.0, "MSm3/day")
+
+
 # demonstration of setting up a simple process calculation
 clearProcess()
 stream1 = stream(fluid1)

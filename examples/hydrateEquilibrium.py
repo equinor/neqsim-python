@@ -31,7 +31,6 @@ fluid1.addComponent("i-butane", ibutane, 'mol/sec')
 fluid1.addComponent("n-butane", nbutane, 'mol/sec')
 fluid1.addComponent("water", water, 'mol/sec')
 fluid1.setMixingRule(10);
-fluid1.setHydrateCheck(True);
 
 fluid1.setPressure(pressure, 'bara')
 
