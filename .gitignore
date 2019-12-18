@@ -1,6 +1,6 @@
 dist
 build
-neqsim.egg-info
+neqsim*egg-info
 **/derby.log
 __pychache__
 **/*.pyc
