@@ -5,14 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="neqsim",
-    version="1.2.7",
+    version="1.2.8",
     author="Even Solbraa",
     author_email="esolbraa@gmail.com",
     description="NeqSim is a tool for thermodynamic and process calculations",
     long_description="NeqSim (Non-Equilibrium Simulator) is a library for estimation of fluid behaviour for oil and gas production. The basis for NeqSim is fundamental mathematical models related to phase behaviour and physical properties of oil and gas.",
     long_description_content_type="text/markdown",
     url="https://github.com/Equinor/neqsimpython",
-    #packages=setuptools.find_packages(),
     packages=['neqsim', "neqsim.thermo", "neqsim.process", "neqsim.standards"],
     package_dir={'neqsim': 'src/neqsim'},
     package_data={'neqsim': ['lib/*.jar']},
