@@ -41,7 +41,7 @@ def separator(teststream, name="separator ?"):
     return separator
 
 
-def valve(teststream, p, name="valve ?"):
+def valve(teststream, p=1.0, name="valve ?"):
     valve = neqsim.processSimulation.processEquipment.valve.ThrottlingValve(teststream)
     valve.setOutletPressure(p)
     valve.setName(name)
@@ -49,9 +49,9 @@ def valve(teststream, p, name="valve ?"):
     return valve
 
 
-def compressor(teststream, p=10.0, name="compressor ?"):
+def compressor(teststream, pres=10.0, name="compressor ?"):
     compressor = neqsim.processSimulation.processEquipment.compressor.Compressor(teststream)
-    compressor.setOutletPressure(teststream.getThermoSystem().getPressure()+1.0)
+    compressor.setOutletPressure(pres)
     compressor.setName(name)
     processoperations.add(compressor)
     return compressor
