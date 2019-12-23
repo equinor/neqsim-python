@@ -18,4 +18,4 @@ def create_classpath(jars):
 def start_server():
     jars = ['NeqSim.jar']
     classpath = create_classpath(jars)
-    return JavaGateway.launch_gateway(classpath=classpath, die_on_exit=True)
+    return JavaGateway.launch_gateway(port=25333, classpath=classpath, die_on_exit=True)
