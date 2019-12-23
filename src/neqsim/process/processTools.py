@@ -49,9 +49,9 @@ def valve(teststream, p, name="valve ?"):
     return valve
 
 
-def compressor(teststream, p, name="compressor ?"):
+def compressor(teststream, p=10.0, name="compressor ?"):
     compressor = neqsim.processSimulation.processEquipment.compressor.Compressor(teststream)
-    compressor.setOutletPressure(p)
+    compressor.setOutletPressure(teststream.getThermoSystem().getPressure()+1.0)
     compressor.setName(name)
     processoperations.add(compressor)
     return compressor
