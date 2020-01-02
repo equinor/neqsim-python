@@ -3,7 +3,7 @@ from neqsim import javaGateway
 
 neqsim = java_gateway.jvm.neqsim
 ThermodynamicOperations = neqsim.thermodynamicOperations.ThermodynamicOperations
-
+fluidcreator = neqsim.thermo.Fluid
 fluid_type = {
     'srk': neqsim.thermo.system.SystemSrkEos,
     'SRK-EoS': neqsim.thermo.system.SystemSrkEos,
@@ -38,6 +38,42 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
+def createfluid(fluid_type='dry gas'):
+    return fluidcreator.create(fluid_type)
+
+def createfluid2(names, molefractions, unit="mol/sec"):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    string_class = gateway.jvm.String
+    numberOfComponents =len(names)    
+    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
+    nameJavaArray = gateway.new_array(string_class,numberOfComponents)
+    i = 0
+    for i in range(0,numberOfComponents):
+        compositionJavaArray[i] = molefractions[i]
+        nameJavaArray[i] = names[i]
+        i = i+1
+    return fluidcreator.create2(nameJavaArray, compositionJavaArray, unit)
+
+def addOilFractions(fluid, charNames,molefractions,molarMass,  density):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    string_class = gateway.jvm.String
+    numberOfComponents =len(charNames)    
+    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
+    molarMassJavaArray = gateway.new_array(double_class,numberOfComponents)
+    relDensityJavaArray = gateway.new_array(double_class,numberOfComponents)
+    nameJavaArray = gateway.new_array(string_class,numberOfComponents)
+    i = 0
+    for i in range(0,numberOfComponents):
+        compositionJavaArray[i] = molefractions[i]
+        nameJavaArray[i] = charNames[i]
+        molarMassJavaArray[i] = molarMass[i]
+        relDensityJavaArray[i] = density[i]
+        i = i+1
+    clonedfluid = fluid.clone()
+    clonedfluid = fluidcreator.addOilFractions(nameJavaArray, compositionJavaArray, molarMassJavaArray, relDensityJavaArray)
+    return clonedfluid;
 
 def newdatabase(system):
     system.createDatabase(1)
@@ -57,7 +93,7 @@ def dataFrame(system):
 def printFrame(system):
     import pandas
     system.createTable("")
-    print(pandas.DataFrame(system.createTable("")).to_string())
+    print(pandas.DataFrame(system.createTable("")).to_string(header=False, index=False))
 
 def printFluid(system):
     a = system.getResultTable()
@@ -138,6 +174,21 @@ def solid(testSystem, solid=1):
 def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
+    testSystem.init(3)
+
+def TVflash(testSystem, volume):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.TVflash(volume)
+    testSystem.init(3)
+
+def TSflash(testSystem, entropy, unit="J/molK"):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.TSflash(entropy, unit)
+    testSystem.init(3)
+
+def VSflash(testSystem, volume, entropy, unitVol= "m3", unit="J/molK"):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.VSflash(volume, entropy, unitVol, unit)
     testSystem.init(3)
     
 def PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
@@ -258,15 +309,17 @@ def phaseenvelope(testSystem, plot=False):
         try:
             plt.plot(list(data.getOperation().get("dewT2")),list(data.getOperation().get("dewP2")), label="dew point2")
         except:
-            print("An exception occurred")
+            pass
+            #print("An exception occurred")
 
         try:
             plt.plot(list(data.getOperation().get("bubT2")),list(data.getOperation().get("bubP2")), label="bubble point2")
         except:
-            print("An exception occurred")
+            pass
+            #print("An exception occurred")
         
         plt.title('PT envelope')
-        plt.xlabel('Temperature [\u00B0C]')
+        plt.xlabel('Temperature [K]')
         plt.ylabel('Pressure [bar]')
         plt.legend()
         plt.show()
