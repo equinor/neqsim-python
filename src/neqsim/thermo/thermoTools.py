@@ -175,6 +175,21 @@ def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
     testSystem.init(3)
+
+def TVflash(testSystem, volume):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.TVflash(volume)
+    testSystem.init(3)
+
+def TSflash(testSystem, entropy, unit="J/molK"):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.TSflash(entropy, unit)
+    testSystem.init(3)
+
+def VSflash(testSystem, volume, entropy, unitVol= "m3", unit="J/molK"):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.VSflash(volume, entropy, unitVol, unit)
+    testSystem.init(3)
     
 def PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
     testFlash = ThermodynamicOperations(fluid1)
