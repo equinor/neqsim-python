@@ -170,6 +170,17 @@ def solidcheck(testSystem, solid=1):
 def solid(testSystem, solid=1):
     testSystem.setSolidPhaseCheck(solid)
 
+def GCV(testSystem, unit):
+    from neqsim.standards import ISO6976
+    referenceTemperatureVolume = 15.0
+    referenceTemperatureCombustion = 15.0
+    numberUnit = 'mass'
+    iso6976 = ISO6976(testSystem)
+    iso6976.setReferenceType(numberUnit)
+    iso6976.setVolRefT(referenceTemperatureVolume)
+    iso6976.setEnergyRefT(referenceTemperatureCombustion)
+    iso6976.calculate()
+    return iso6976.getValue("SuperiorCalorificValue")
 
 def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
