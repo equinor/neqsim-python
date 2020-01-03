@@ -176,9 +176,9 @@ def TPflash(testSystem):
     testFlash.TPflash()
     testSystem.init(3)
 
-def TVflash(testSystem, volume):
+def TVflash(testSystem, volume, unit="m3"):
     testFlash = ThermodynamicOperations(testSystem)
-    testFlash.TVflash(volume)
+    testFlash.TVflash(volume, unit)
     testSystem.init(3)
 
 def TSflash(testSystem, entropy, unit="J/molK"):
