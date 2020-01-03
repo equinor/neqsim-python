@@ -200,19 +200,17 @@ def TPsolidflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPSolidflash()
 
-def PHflash(testSystem, enthalpy):
+def PHflash(testSystem, enthalpy, unit="J"):
     testFlash = ThermodynamicOperations(testSystem)
-    testFlash.PHflash(enthalpy, 0)
+    testFlash.PHflash(enthalpy, unit)
     
 def PHsolidflash(testSystem, enthalpy):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.PHsolidFlash(enthalpy)
 
-
-def PSflash(testSystem, entropy):
+def PSflash(testSystem, entropy, unit="J/K"):
     testFlash = ThermodynamicOperations(testSystem)
-    testFlash.PSflash(entropy)
-
+    testFlash.PSflash(entropy, unit)
 
 def freeze(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
