@@ -356,6 +356,18 @@ def fluidComposition(testSystem, composition):
     testSystem.setMolarComposition(compositionJavaArray)
     testSystem.init(0)
 
+def fluidCompositionPlus(testSystem, composition):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    numberOfComponents =len(composition)    
+    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
+    i = 0
+    for i in range(0,numberOfComponents):
+        compositionJavaArray[i] = composition[i]
+        i = i+1
+    testSystem.setMolarCompositionPlus(compositionJavaArray)
+    testSystem.init(0)
+
 def getExtThermProp(function, thermoSystem, t=0, p=0):
     nargout = [0, 0, 0, 0]
     if t != 0:
