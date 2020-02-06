@@ -186,7 +186,7 @@ def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
     testSystem.init(3)
-
+    
 def TVflash(testSystem, volume, unit="m3"):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TVflash(volume, unit)
@@ -196,7 +196,7 @@ def TSflash(testSystem, entropy, unit="J/K"):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TSflash(entropy, unit)
     testSystem.init(3)
-
+    
 def VSflash(testSystem, volume, entropy, unitVol= "m3", unit="J/K"):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.VSflash(volume, entropy, unitVol, unit)
@@ -554,3 +554,9 @@ def viscosity(thermoSystem, t=0, p=0):
 def PVTpropTable(testSystem,fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0) 
+
+def WAT(testSystem):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.calcWAT()
+    testSystem.init(3)
+    return testSystem.getTemperature()
