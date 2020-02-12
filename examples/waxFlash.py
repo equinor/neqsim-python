@@ -24,18 +24,22 @@ fluid1.addComponent("ethane", 6.0, "mol/sec")
 fluid1.addComponent("propane", 3.0, "mol/sec")
 fluid1.addComponent("i-butane", 1.0, "mol/sec")
 fluid1.addComponent("n-butane", 1.0, "mol/sec")
-fluid1.addPlusFraction("C11", 2.95, 207.0 / 1000.0, 0.8331);
+fluid1.addPlusFraction("C11", 2.95, 217.0 / 1000.0, 0.8331);
 fluid1.getCharacterization().characterisePlusFraction();
 fluid1.getWaxModel().addTBPWax();
 fluid1.createDatabase(True);
 fluid1.setMixingRule(2);
 fluid1.addSolidComplexPhase("wax");
+fluid1.setMultiphaseWaxCheck(True);
 
-fluid1.setTemperature(40.15, "C")
+fluid1.setTemperature(10.112, "C")
 fluid1.setPressure(10.0, "bara")
 
 TPflash(fluid1)
 printFrame(fluid1)
 
+fluid1.setTemperature(40.112, "C")
+fluid1.setPressure(10.0, "bara")
 waxTemp = WAT(fluid1)-273.15
+#printFrame(fluid1)
 print("WAT ", waxTemp, " °C")
