@@ -73,7 +73,7 @@ def addOilFractions(fluid, charNames,molefractions,molarMass,  density):
         i = i+1
     clonedfluid = fluid.clone()
     clonedfluid = fluidcreator.addOilFractions(nameJavaArray, compositionJavaArray, molarMassJavaArray, relDensityJavaArray)
-    return clonedfluid;
+    return clonedfluid
 
 def newdatabase(system):
     system.createDatabase(1)
@@ -214,8 +214,8 @@ def VUflash(testSystem, volume, energy, unitVol= "m3", unit="J"):
     
 def PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
     testFlash = ThermodynamicOperations(fluid1)
-    testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0);
-    testFlash.displayResult();
+    testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0)
+    testFlash.displayResult()
 
 def TPsolidflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
@@ -457,7 +457,7 @@ def entropy(thermoSystem, t=0, p=0):
     return getExtThermProp(func, thermoSystem, t, p)
 
 def densityGERG2008(phase):
-    GERG2008 = neqsim.thermo.util.GERG.NeqSimGERG2008();
+    GERG2008 = neqsim.thermo.util.GERG.NeqSimGERG2008()
     return GERG2008.getDensity(phase)
 
 def molvol(thermoSystem, t=0, p=0):
@@ -550,10 +550,6 @@ def viscosity(thermoSystem, t=0, p=0):
     func.append(thermoSystem.getPhase(0).getPhysicalProperties().getViscosity)
     func.append(thermoSystem.getPhase(1).getPhysicalProperties().getViscosity)
     return getPhysProp(func, thermoSystem, t, p)
-
-def PVTpropTable(testSystem,fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
-    testFlash = ThermodynamicOperations(testSystem)
-    testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0) 
 
 def WAT(testSystem):
     testFlash = ThermodynamicOperations(testSystem)

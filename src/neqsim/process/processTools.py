@@ -40,6 +40,11 @@ def separator(teststream, name="separator ?"):
     processoperations.add(separator)
     return separator
 
+def separator3phase(teststream, name="separator ?"):
+    separator = neqsim.processSimulation.processEquipment.separator.ThreePhaseSeparator(teststream)
+    separator.setName(name)
+    processoperations.add(separator)
+    return separator
 
 def valve(teststream, p=1.0, name="valve ?"):
     valve = neqsim.processSimulation.processEquipment.valve.ThrottlingValve(teststream)
@@ -201,7 +206,7 @@ def twophasepipe(teststream, position, diameter, height, outTemp, rough):
 def pipe(teststream, length, deltaElevation, diameter, rough):
     pipe = neqsim.processSimulation.processEquipment.pipeline.AdiabaticPipe(teststream)
     pipe.setDiameter(diameter)
-    pipe.setLength(length);
+    pipe.setLength(length)
     pipe.setPipeWallRoughness(rough)
     pipe.setInletElevation(0.0)
     pipe.setOutletElevation(deltaElevation)
