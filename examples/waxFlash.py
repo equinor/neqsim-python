@@ -7,11 +7,9 @@ Created on Wed Feb  5 19:54:21 2020
 
 
 from neqsim.thermo import *
-from neqsim import java_gateway
-neqsim = java_gateway.jvm.neqsim
-neqsim.util.database.NeqSimDataBase.setConnectionString("jdbc:derby:C:/Users/esol/OneDrive - Equinor/temp/neqsimthermodatabase");
-neqsim.util.database.NeqSimDataBase.setCreateTemporaryTables(True);
-    	
+
+from neqsim import setDatabase
+setDatabase("jdbc:derby:C:/Users/esol/OneDrive - Equinor/temp/neqsimthermodatabase")   	
 
         
 # Start by creating a fluid in neqsim
