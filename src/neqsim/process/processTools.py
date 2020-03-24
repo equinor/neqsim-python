@@ -146,6 +146,14 @@ def mixer(name=""):
     return mixer
 
 
+def splitter(teststream, name=""):
+    splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(teststream)
+    splitter.setName(name)
+    processoperations.add(splitter)
+    return splitter
+
+
+
 def heater(teststream, name=""):
     heater = neqsim.processSimulation.processEquipment.heatExchanger.Heater(teststream)
     heater.setName(name)
@@ -179,8 +187,9 @@ def neqheater(teststream, name=""):
     return neqheater
 
 
-def splitter(teststream, numb, name=""):
-    splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(name, teststream, numb)
+def splitter(teststream, name=""):
+    splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(teststream)
+    splitter.setName(name)
     processoperations.add(splitter)
     return splitter
 
