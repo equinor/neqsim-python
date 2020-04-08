@@ -12,6 +12,7 @@ fluid_type = {
     'RK-EoS': neqsim.thermo.system.SystemRKEos,
     'pr': neqsim.thermo.system.SystemPrEos,
     'PR-EoS': neqsim.thermo.system.SystemPrEos,
+    'pr-umr': neqsim.thermo.system.SystemUMRPRUMCEos,
     'srk-s': neqsim.thermo.system.SystemSrkSchwartzentruberEos,
     'GERG-water': neqsim.thermo.system.SystemGERGwaterEos,
     'SRK-MC': neqsim.thermo.system.SystemSrkMathiasCopeman,
@@ -26,6 +27,7 @@ fluid_type = {
     'cpa-el': neqsim.thermo.system.SystemElectrolyteCPA,
     'cpa-s': neqsim.thermo.system.SystemSrkCPAs,
     'cpa-statoil': neqsim.thermo.system.SystemSrkCPAstatoil,
+    'cpa': neqsim.thermo.system.SystemSrkCPAstatoil,
     'CPA-SRK-EoS': neqsim.thermo.system.SystemSrkCPA,
     'cpa-srk': neqsim.thermo.system.SystemSrkCPA,
     'srk-twoCoon': neqsim.thermo.system.SystemSrkTwuCoonParamEos,
@@ -89,7 +91,220 @@ def dataFrame(system):
     import pandas
     system.createTable("")
     return pandas.DataFrame(system.createTable(""))
+
+def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length =len(pressure)
+    pressureJavaArray = gateway.new_array(double_class,length)
+    temperatureJavaArray = gateway.new_array(double_class,length)
+    i = 0
+    for i in range(0,length):
+        pressureJavaArray[i] = pressure[i]
+        temperatureJavaArray[i] = temperature[i]
+        i = i+1
+    sepSim = neqsim.PVTsimulation.simulation.SeparatorTest(fluid)
+    sepSim.setSeparatorConditions(temperatureJavaArray, pressureJavaArray)
+    sepSim.runCalc()
+    for i in range(0,length):
+        GOR.append(sepSim.getGOR()[i])
+        Bo.append(sepSim.getBofactor()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, Bo, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('Bo [m3/Sm3]')
+        plt.figure()
+        plt.plot(pressure, GOR, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('GOR [Sm3/Sm3]')
+        plt.figure()
+
+def CVD(fluid, pressure, temperature, relativeVolume=[],liquidrelativevolume=[], Zgas=[],Zmix=[],cummulativemolepercdepleted=[], display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length =len(pressure)
+    pressureJavaArray = gateway.new_array(double_class,length)
+    i = 0
+    for i in range(0,length):
+        pressureJavaArray[i] = pressure[i]
+        i = i+1
+    cvdSim = neqsim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
+    cvdSim.setPressures(pressureJavaArray)
+    cvdSim.setTemperature(temperature)
+    cvdSim.runCalc()
+    for i in range(0,length):
+        Zgas.append(cvdSim.getZgas()[i])
+        Zmix.append(cvdSim.getZmix()[i])
+        liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
+        relativeVolume.append(cvdSim.getRelativeVolume()[i])
+        cummulativemolepercdepleted.append(cvdSim.getCummulativeMolePercDepleted()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, Zgas, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('Zgas [-]')
+        plt.figure()
+        plt.plot(pressure, relativeVolume, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('relativeVolume [-]')
+        plt.figure()
+
+def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],aqueousviscosity=[], display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length =len(pressure)
+    pressureJavaArray = gateway.new_array(double_class,length)
+    temperatureJavaArray = gateway.new_array(double_class,length)
+    i = 0
+    for i in range(0,length):
+        pressureJavaArray[i] = pressure[i]
+        temperatureJavaArray[i] = temperature[i]
+        i = i+1
+    cmeSim = neqsim.PVTsimulation.simulation.ViscositySim(fluid)
+    cmeSim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    cmeSim.runCalc()
+    for i in range(0,length):
+        gasviscosity.append(cmeSim.getGasViscosity()[i])
+        oilviscosity.append(cmeSim.getOilViscosity()[i])
+        aqueousviscosity.append(cmeSim.getAqueousViscosity()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, gasviscosity, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('gasviscosity [kg/msec]')
+        plt.figure()
+        plt.plot(pressure, oilviscosity, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('oilviscosity [kg/msec]')
+        plt.figure()
+
+def CME(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length =len(pressure)
+    pressureJavaArray = gateway.new_array(double_class,length)
+    temperatureJavaArray = gateway.new_array(double_class,length)
+    i = 0
+    for i in range(0,length):
+        pressureJavaArray[i] = pressure[i]
+        temperatureJavaArray[i] = temperature[i]
+        i = i+1
+    cvdSim = neqsim.PVTsimulation.simulation.ConstantMassExpansion(fluid)    
+    cvdSim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    cvdSim.runCalc()
+    for i in range(0,length):
+        Zgas.append(cvdSim.getZgas()[i])
+        relativeVolume.append(cvdSim.getRelativeVolume()[i])
+        liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
+        Yfactor.append(cvdSim.getYfactor()[i])
+        isothermalcompressibility.append(cvdSim.getIsoThermalCompressibility()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, Zgas, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('Zgas [-]')
+        plt.figure()
+        plt.plot(pressure, relativeVolume, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('relativeVolume [-]')
+        plt.figure()
+
+def difflib(fluid, pressure, temperature, Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length =len(pressure)
+    pressureJavaArray = gateway.new_array(double_class,length)
+    i = 0
+    for i in range(0,length):
+        pressureJavaArray[i] = pressure[i]
+        i = i+1
+    cvdSim = neqsim.PVTsimulation.simulation.DifferentialLiberation(fluid)
+    cvdSim.setPressures(pressureJavaArray)
+    cvdSim.setTemperature(temperature)
+    cvdSim.runCalc()
+    for i in range(0,length):
+        Zgas.append(cvdSim.getZgas()[i])
+        Bo.append(cvdSim.getBo()[i])
+        Bg.append(cvdSim.getBg()[i])
+        Zgas.append(cvdSim.getZgas()[i])
+        relativegravity.append(cvdSim.getRelGasGravity()[i])
+        gasstandardvolume.append(cvdSim.getGasStandardVolume()[i])
+        Rs.append(cvdSim.getRs()[i])
+        oildensity.append(cvdSim.getOilDensity()[i])
+        gasgravity.append(cvdSim.getRelGasGravity()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, Zgas, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('Zgas [-]')
+        plt.figure()
+        plt.plot(pressure, relativeVolume, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('relativeVolume [-]')
+        plt.figure()
+
+def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length =len(pressure)
+    pressureJavaArray = gateway.new_array(double_class,length)
+    temperatureJavaArray = gateway.new_array(double_class,length)
+    i = 0
+    for i in range(0,length):
+        pressureJavaArray[i] = pressure[i]
+        temperatureJavaArray[i] = temperature[i]
+        i = i+1
+    GOR = neqsim.PVTsimulation.simulation.GOR(fluid)
+    GOR.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    GOR.runCalc()
+    for i in range(0,length):
+        GORdata.append(GOR.getGOR()[i])
+        Bo.append(GOR.getBofactor()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, GOR, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('GOR [Sm3/Sm3]')
+
+def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure = [], relativeoilvolume=[], display=False):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    length2 =len(cummulativeMolePercentGasInjected)
+    cummulativeMolePercentGasInjectedJava = gateway.new_array(double_class,length2)
+    i = 0
+    for i in range(0,length2):
+        cummulativeMolePercentGasInjectedJava[i] = cummulativeMolePercentGasInjected[i]
+        i = i+1
     
+    cvdSim = neqsim.PVTsimulation.simulation.SwellingTest(fluid)
+    cvdSim.setInjectionGas(fluid2)
+    cvdSim.setTemperature(temperature)
+    cvdSim.setCummulativeMolePercentGasInjected(cummulativeMolePercentGasInjectedJava)
+    cvdSim.runCalc()
+    for i in range(0,length2):
+        relativeoilvolume.append(cvdSim.getRelativeOilVolume()[i])
+        pressure.append(cvdSim.getPressures()[i])
+        i = i+1
+    if display:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(pressure, relativeoilvolume, "o")
+        plt.xlabel('Pressure [bara]')
+        plt.ylabel('relativeoilvolume [-]')
+
 def printFrame(system):
     import pandas
     system.createTable("")
