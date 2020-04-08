@@ -186,14 +186,6 @@ def neqheater(teststream, name=""):
     processoperations.add(neqheater)
     return neqheater
 
-
-def splitter(teststream, name=""):
-    splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(teststream)
-    splitter.setName(name)
-    processoperations.add(splitter)
-    return splitter
-
-
 def twophasepipe(teststream, position, diameter, height, outTemp, rough):
     pipe = neqsim.processSimulation.processEquipment.pipeline.TwoPhasePipeLine(teststream)
     pipe.setOutputFileName("c:/tempNew20.nc")
@@ -277,6 +269,13 @@ def clearProcess():
 def runProcess():
     processoperations.run()
 
+def runProcessAsThread(process):
+    threadProcess = java_gateway.jvm.java.lang.Thread(process)
+    threadProcess.run()
+    return threadProcess
+
+def getProcess():
+    return processoperations
 
 def runtrans():
     processoperations.runTransient()
