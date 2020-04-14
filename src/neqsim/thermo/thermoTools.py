@@ -206,7 +206,6 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
         liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
         Yfactor.append(cvdSim.getYfactor()[i])
         isothermalcompressibility.append(cvdSim.getIsoThermalCompressibility()[i])
-l
         Bg.append(cvdSim.getBg()[i])
         density.append(cvdSim.getDensity()[i])
         viscosity.append(cvdSim.getViscosity()[i])
