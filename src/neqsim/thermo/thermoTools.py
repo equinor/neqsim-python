@@ -185,7 +185,7 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
         plt.ylabel('oilviscosity [kg/msec]')
         plt.figure()
 
-def CME(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], display=False):
+def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], density=[],Bg=[], viscosity=[], display=False):
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double
     length =len(pressure)
@@ -199,12 +199,17 @@ def CME(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[]
     cvdSim = neqsim.PVTsimulation.simulation.ConstantMassExpansion(fluid)    
     cvdSim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
     cvdSim.runCalc()
+    saturationPressure=cvdSim.getSaturationPressure()
     for i in range(0,length):
         Zgas.append(cvdSim.getZgas()[i])
         relativeVolume.append(cvdSim.getRelativeVolume()[i])
         liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
         Yfactor.append(cvdSim.getYfactor()[i])
         isothermalcompressibility.append(cvdSim.getIsoThermalCompressibility()[i])
+l
+        Bg.append(cvdSim.getBg()[i])
+        density.append(cvdSim.getDensity()[i])
+        viscosity.append(cvdSim.getViscosity()[i])
         i = i+1
     if display:
         import matplotlib.pyplot as plt
@@ -218,7 +223,7 @@ def CME(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[]
         plt.ylabel('relativeVolume [-]')
         plt.figure()
 
-def difflib(fluid, pressure, temperature, Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
+def difflib(fluid, pressure, temperature, relativeVolume = [], Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double
     length =len(pressure)
@@ -237,6 +242,7 @@ def difflib(fluid, pressure, temperature, Bo=[], Bg=[], relativegravity=[], Zgas
         Bg.append(cvdSim.getBg()[i])
         Zgas.append(cvdSim.getZgas()[i])
         relativegravity.append(cvdSim.getRelGasGravity()[i])
+        relativeVolume.append(cvdSim.getRelativeVolume())
         gasstandardvolume.append(cvdSim.getGasStandardVolume()[i])
         Rs.append(cvdSim.getRs()[i])
         oildensity.append(cvdSim.getOilDensity()[i])
@@ -278,6 +284,13 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
         plt.plot(pressure, GOR, "o")
         plt.xlabel('Pressure [bara]')
         plt.ylabel('GOR [Sm3/Sm3]')
+
+def saturationpressure(fluid, temperature=-1.0):
+    if(temperature<0):
+         fluid.setTemperature(temperature)
+    cvdSim = neqsim.PVTsimulation.simulation.SaturationPressure(fluid)
+    cvdSim.run()
+    return cvdSim.getSaturationPressure()
 
 def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure = [], relativeoilvolume=[], display=False):
     gateway = javaGateway.JavaGateway()
