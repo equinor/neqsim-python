@@ -76,3 +76,16 @@ print(gascondensatedf.head(30).to_string())
 gascondensateFluid = fluid_df(gascondensatedf, lastIsPlusFraction=True)
 phaseenvelope(gascondensateFluid, True)
 printFrame(gascondensateFluid)
+
+
+# Create a gas-condensate fluid
+naturalgas = {'ComponentName':  ["nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane"], 
+        'MolarComposition[-]':  [0.34, 0.84, 90.4, 5.199, 2.06, 0.36, 0.55, 0.14, 0.097, 0.014]
+} 
+
+naturalgasdf = pd.DataFrame(naturalgas) 
+print("Natural Gas Fluid:\n")
+print(naturalgasdf.head(30).to_string())
+naturalgasFluid = fluid_df(naturalgasdf)
+print("\nPhase envelope of Natural Gas Fluid:\n")
+phaseenvelope(naturalgasFluid, True)
