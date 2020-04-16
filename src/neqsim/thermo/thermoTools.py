@@ -41,10 +41,14 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     return fluid_function(temperature, pressure)
 
 def fluid_df(reservoirFluiddf,lastIsPlusFraction=False):
-    definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
-    TBPComponentsFrame = reservoirFluiddf.dropna()
+    if 'MolarMass[kg/mol]' in reservoirFluiddf:
+        definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
+    else:
+        definedComponentsFrame = reservoirFluiddf
     fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(), definedComponentsFrame['MolarComposition[-]'].tolist())
-    addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(),TBPComponentsFrame['MolarComposition[-]'].tolist(),TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(),lastIsPlusFraction);
+    TBPComponentsFrame = reservoirFluiddf.dropna()
+    if not TBPComponentsFrame.equals(reservoirFluiddf):
+        addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(),TBPComponentsFrame['MolarComposition[-]'].tolist(),TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(),lastIsPlusFraction);
     return fluid7
 
 def createfluid(fluid_type='dry gas'):
