@@ -5,7 +5,7 @@ Created on Thu Apr 16 16:39:11 2020
 @author: esol
 """
 
-from neqsim.thermo import fluid, fluid_df, printFrame, TPflash
+from neqsim.thermo import fluid, fluid_df, printFrame, TPflash, phaseenvelope
 import pandas as pd
 
 
@@ -21,18 +21,39 @@ print(gascondensatedf.head(30).to_string())
 gascondensateFluid = fluid_df(gascondensatedf, lastIsPlusFraction=True)
 
 
-4#Define a function to calculate properties of the fluid
+4#Define a function to calculate properties of the fluid at equilibrium at given temperature and pressure
 def calcProperties(frame):
         gascondensateFluid.setTemperature(frame[0], "C")
         gascondensateFluid.setPressure(frame[1], "bara")
         TPflash(gascondensateFluid)
         gascondensateFluid.initPhysicalProperties()
-        frame['gasthermalconductivity[W/mK]'] = gascondensateFluid.getThermalConductivity("W/mK")
-        frame['gasviscosity[kg/msec]']  = gascondensateFluid.getViscosity("kg/msec")
+        #Reporting some properties of the total fluid
+        frame['molarmass[kg/mol]'] =gascondensateFluid.getMolarMass('kg/mol')
+        frame['enthalpy[J/mol]'] =gascondensateFluid.getEnthalpy("J/mol")
+        #Reporting some properties of the gas phase (NaN will be reported if the phase is not present)
+        if gascondensateFluid.hasPhaseType("gas"):
+            phaseNumber = gascondensateFluid.getPhaseNumberOfPhase("gas")
+            frame['gasmolfraction[mol/mol]'] = gascondensateFluid.getMoleFraction(phaseNumber)
+            frame['gasvolumefraction[mol/mol]'] =  gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+            frame['gasthermalconductivity[W/mK]'] = gascondensateFluid.getPhase(phaseNumber).getThermalConductivity("W/mK")
+            frame['gasZ[-]'] = gascondensateFluid.getPhase(phaseNumber).getZ()
+            frame['gasmolarMass[kg/mol]'] = gascondensateFluid.getPhase(phaseNumber).getZ()
+            frame['gasenthalpy[kg/mol]'] = gascondensateFluid.getPhase(phaseNumber).getEnthalpy("J/mol")
+            frame['gasviscosity[kg/msec]']  = gascondensateFluid.getViscosity("kg/msec")
+        #Reporting some properties of the oil phase (NaN will be reported if the phase is not present)
+        if gascondensateFluid.hasPhaseType("oil"):
+            phaseNumber = gascondensateFluid.getPhaseNumberOfPhase("oil")
+            frame['oilmolfraction[mol/mol]'] = gascondensateFluid.getMoleFraction(phaseNumber)
+            frame['oilvolumefraction[mol/mol]'] =  gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+            frame['oilthermalconductivity[W/mK]'] = gascondensateFluid.getPhase(phaseNumber).getThermalConductivity("W/mK")
+            frame['oilZ[-]'] = gascondensateFluid.getPhase(phaseNumber).getZ()
+            frame['oilmolarMass[kg/mol]'] = gascondensateFluid.getPhase(phaseNumber).getZ()
+            frame['oilenthalpy[kg/mol]'] = gascondensateFluid.getPhase(phaseNumber).getEnthalpy("J/mol")
+            frame['oilviscosity[kg/msec]']  = gascondensateFluid.getViscosity("kg/msec")
         return frame
 
-temperatures_list = [20.0]*1000
-pressures_list = [10.0]*1000
+temperatures_list = [random.uniform(0.0, 500.0) for i in range(1000)] #Create list of 1000 random tempeatures between 0 and 50 deg C
+pressures_list = [random.uniform(1.0, 450.0) for i in range(1000)] #Create list of  1000 random pressures between 1 and 450 bara
 
 temppres = {'Temperature':  temperatures_list, 
         'Pressure':  pressures_list
@@ -41,4 +62,5 @@ temppres = {'Temperature':  temperatures_list,
 
 df_properties = pd.DataFrame(temppres)
 df_properties = df_properties.apply(calcProperties, axis=1)
-print(df_properties.tail())
+print(df_properties)
+
