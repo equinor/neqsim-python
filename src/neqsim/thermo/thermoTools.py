@@ -40,6 +40,13 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
+def fluid_df(reservoirFluiddf,lastIsPlusFraction=False):
+    definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
+    TBPComponentsFrame = reservoirFluiddf.dropna()
+    fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(), definedComponentsFrame['MolarComposition[-]'].tolist())
+    addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(),TBPComponentsFrame['MolarComposition[-]'].tolist(),TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(),lastIsPlusFraction);
+    return fluid7
+
 def createfluid(fluid_type='dry gas'):
     return fluidcreator.create(fluid_type)
 
@@ -57,7 +64,7 @@ def createfluid2(names, molefractions, unit="mol/sec"):
         i = i+1
     return fluidcreator.create2(nameJavaArray, compositionJavaArray, unit)
 
-def addOilFractions(fluid, charNames,molefractions,molarMass,  density):
+def addOilFractions(fluid, charNames,molefractions,molarMass,  density, lastIsPlusFraction=False):
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double
     string_class = gateway.jvm.String
@@ -74,7 +81,7 @@ def addOilFractions(fluid, charNames,molefractions,molarMass,  density):
         relDensityJavaArray[i] = density[i]
         i = i+1
     clonedfluid = fluid.clone()
-    clonedfluid = fluidcreator.addOilFractions(nameJavaArray, compositionJavaArray, molarMassJavaArray, relDensityJavaArray)
+    clonedfluid = fluidcreator.addOilFractions(nameJavaArray, compositionJavaArray, molarMassJavaArray, relDensityJavaArray,lastIsPlusFraction)
     return clonedfluid
 
 def newdatabase(system):
@@ -285,7 +292,7 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
         plt.ylabel('GOR [Sm3/Sm3]')
 
 def saturationpressure(fluid, temperature=-1.0):
-    if(temperature<0):
+    if(temperature>0):
          fluid.setTemperature(temperature)
     cvdSim = neqsim.PVTsimulation.simulation.SaturationPressure(fluid)
     cvdSim.run()
