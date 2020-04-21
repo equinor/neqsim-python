@@ -103,6 +103,24 @@ def dataFrame(system):
     system.createTable("")
     return pandas.DataFrame(system.createTable(""))
 
+def calcproperties(gascondensateFluid, inputDict):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    if("temperature" in inputDict and "pressure" in inputDict):
+         length =len(inputDict['temperature'])
+         pressureJavaArray = gateway.new_array(double_class,length)
+         temperatureJavaArray = gateway.new_array(double_class,length)
+         for i in range(0,length):
+             pressureJavaArray[i] = inputDict['pressure'][i]
+             temperatureJavaArray[i] = inputDict['temperature'][i]
+             i = i+1
+    properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, temperatureJavaArray, pressureJavaArray)
+    props = properties.calculate()
+    calculatedProperties= ({k: list(v) for k, v in props.items()})
+    import pandas as pd
+    df = pd.DataFrame(calculatedProperties)
+    return df
+
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double
