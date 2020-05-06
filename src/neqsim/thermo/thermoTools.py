@@ -94,7 +94,38 @@ def addOilFractions(fluid, charNames,molefractions,molarMass,  density, lastIsPl
 
 def newdatabase(system):
     system.createDatabase(1)
+
+def tunewaxmodel(fluid, experimentaldata):
+    gateway = javaGateway.JavaGateway()
+    double_class = gateway.jvm.double
+    tempList = experimentaldata['temperature']
+    presList = experimentaldata['pressure']
+    expList = experimentaldata['experiment']
+    numberofdata =len(tempList)
+    temperatureJavaArray = gateway.new_array(double_class,numberofdata)
+    pressureJavaArray = gateway.new_array(double_class,numberofdata)
+    experimentJavaArray = gateway.new_array(double_class,numberofdata, 1)
+    i = 0
+    for i in range(0,numberofdata):
+         temperatureJavaArray[i] = tempList[i]+273.15
+         pressureJavaArray[i] = presList[i]
+         experimentJavaArray[i][0] = expList[i]*100
+    waxsim = neqsim.PVTsimulation.simulation.WaxFractionSim(fluid)
+    waxsim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    waxsim.setExperimentalData(experimentJavaArray)
+    waxsim.getOptimizer().setNumberOfTuningParameters(3)
+    waxsim.getOptimizer().setMaxNumberOfIterations(20)
+    waxsim.runTuning()
+    waxsim.runCalc()
     
+    results = {'temperature':  [20.0, 10.0], 
+        'pressure':  [50.0, 50.0],
+        'experiment':  [0.01, 0.02],
+        'results': list(waxsim.getWaxFraction()),
+        'parameters': list(waxsim.getOptimizer().getSampleSet().getSample(0).getFunction().getFittingParams())
+    }    
+    return results
+
 def data(system):
     a = system.getResultTable()
     return a
