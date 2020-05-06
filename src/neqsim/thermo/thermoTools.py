@@ -118,9 +118,9 @@ def tunewaxmodel(fluid, experimentaldata):
     waxsim.runTuning()
     waxsim.runCalc()
     
-    results = {'temperature':  [20.0, 10.0], 
-        'pressure':  [50.0, 50.0],
-        'experiment':  [0.01, 0.02],
+    results = {'temperature':  tempList, 
+        'pressure':  presList,
+        'experiment':  expList,
         'results': list(waxsim.getWaxFraction()),
         'parameters': list(waxsim.getOptimizer().getSampleSet().getSample(0).getFunction().getFittingParams())
     }    
