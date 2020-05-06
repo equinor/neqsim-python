@@ -21,10 +21,11 @@ import time
 
 start = time.time()
 print("start benchmark...")
-
+temperature=None
+pressure = None
 for lp in range(5000):
     TPflash(fluid1)
 
 end = time.time()
 print("time ", (end - start), " sec")
-printFrame(fluid1)
+#printFrame(fluid1)

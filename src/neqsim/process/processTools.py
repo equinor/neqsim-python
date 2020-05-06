@@ -1,10 +1,7 @@
 from neqsim import java_gateway
 from neqsim import javaGateway
-
 neqsim = java_gateway.jvm.neqsim
-
 processoperations = neqsim.processSimulation.processSystem.ProcessSystem()
-
 
 def stream(thermoSystem, name="stream ?", t=0, p=0):
     if t != 0:
@@ -63,7 +60,6 @@ def compressor(teststream, pres=10.0, name="compressor ?"):
 
 
 def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
-    from neqsim import javaGateway
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double  
 
@@ -87,7 +83,6 @@ def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
     compressor.getCompressorChart().setCurves(curveConditionsJava, speedJava, flowJava, headJava, polyEffJava)
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
-    from neqsim import javaGateway
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double  
     
@@ -105,7 +100,6 @@ def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
     compressor.getCompressorChart().getSurgeCurve().setCurve(curveConditionsJava, surgeflowJava, surgeheadJava)
     
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
-    from neqsim import javaGateway
     gateway = javaGateway.JavaGateway()
     double_class = gateway.jvm.double  
     
@@ -152,8 +146,6 @@ def splitter(teststream, name=""):
     processoperations.add(splitter)
     return splitter
 
-
-
 def heater(teststream, name=""):
     heater = neqsim.processSimulation.processEquipment.heatExchanger.Heater(teststream)
     heater.setName(name)
@@ -172,13 +164,11 @@ def heatExchanger(stream1, stream2, name=""):
     processoperations.add(heater)
     return heater
 
-
 def distillationColumn(trays=5, name="destColumn"):
     distillationColumn = neqsim.processSimulation.processEquipment.distillation.DistillationColumn(trays, 1, 1)
     distillationColumn.setName(name)
     processoperations.add(distillationColumn)
     return distillationColumn
-
 
 def neqheater(teststream, name=""):
     neqheater = neqsim.processSimulation.processEquipment.heatExchanger.NeqHeater(teststream)
