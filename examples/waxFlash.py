@@ -41,3 +41,16 @@ fluid1.setPressure(10.0, "bara")
 waxTemp = WAT(fluid1)-273.15
 #printFrame(fluid1)
 print("WAT ", waxTemp, " °C")
+
+
+# The following code illustrates how we can fit the neqsim wax model to experimental wax precipitation data
+# THe experimental data will be wt fraction of wax formed as function of temperature (wax precipitation curve) 
+experimentaldata = {'temperature':  [20.0, 10.0], 
+        'pressure':  [50.0, 50.0],
+        'experiment':  [0.04, 0.06]
+} 
+
+results2 = tunewaxmodel(fluid1, experimentaldata)
+print(results2)
+
+
