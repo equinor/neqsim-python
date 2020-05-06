@@ -1,5 +1,9 @@
+import pandas
+import neqsim
 from neqsim import java_gateway
 from neqsim import javaGateway
+from neqsim.standards import ISO6976
+import matplotlib.pyplot as plt
 
 neqsim = java_gateway.jvm.neqsim
 ThermodynamicOperations = neqsim.thermodynamicOperations.ThermodynamicOperations
@@ -99,7 +103,6 @@ def table(system):
     return system.createTable("")
 
 def dataFrame(system):
-    import pandas
     system.createTable("")
     return pandas.DataFrame(system.createTable(""))
 
@@ -117,8 +120,7 @@ def calcproperties(gascondensateFluid, inputDict):
     properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, temperatureJavaArray, pressureJavaArray)
     props = properties.calculate()
     calculatedProperties= ({k: list(v) for k, v in props.items()})
-    import pandas as pd
-    df = pd.DataFrame(calculatedProperties)
+    df = pandas.DataFrame(calculatedProperties)
     return df
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
@@ -140,7 +142,6 @@ def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
         Bo.append(sepSim.getBofactor()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, Bo, "o")
         plt.xlabel('Pressure [bara]')
@@ -172,7 +173,6 @@ def CVD(fluid, pressure, temperature, relativeVolume=[],liquidrelativevolume=[],
         cummulativemolepercdepleted.append(cvdSim.getCummulativeMolePercDepleted()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, Zgas, "o")
         plt.xlabel('Pressure [bara]')
@@ -203,7 +203,6 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
         aqueousviscosity.append(cmeSim.getAqueousViscosity()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, gasviscosity, "o")
         plt.xlabel('Pressure [bara]')
@@ -240,7 +239,6 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
         viscosity.append(cvdSim.getViscosity()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, Zgas, "o")
         plt.xlabel('Pressure [bara]')
@@ -277,7 +275,6 @@ def difflib(fluid, pressure, temperature, relativeVolume = [], Bo=[], Bg=[], rel
         gasgravity.append(cvdSim.getRelGasGravity()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, Zgas, "o")
         plt.xlabel('Pressure [bara]')
@@ -307,7 +304,6 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
         Bo.append(GOR.getBofactor()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, GOR, "o")
         plt.xlabel('Pressure [bara]')
@@ -340,14 +336,12 @@ def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, 
         pressure.append(cvdSim.getPressures()[i])
         i = i+1
     if display:
-        import matplotlib.pyplot as plt
         plt.figure()
         plt.plot(pressure, relativeoilvolume, "o")
         plt.xlabel('Pressure [bara]')
         plt.ylabel('relativeoilvolume [-]')
 
 def printFrame(system):
-    import pandas
     system.createTable("")
     print(pandas.DataFrame(system.createTable("")).to_string(header=False, index=False))
 
@@ -427,7 +421,6 @@ def solid(testSystem, solid=1):
     testSystem.setSolidPhaseCheck(solid)
 
 def GCV(testSystem, unit):
-    from neqsim.standards import ISO6976
     referenceTemperatureVolume = 15.0
     referenceTemperatureCombustion = 15.0
     numberUnit = 'mass'
@@ -577,7 +570,6 @@ def phaseenvelope(testSystem, plot=False):
     testFlash.calcPTphaseEnvelope()
     data = testFlash
     if(plot):
-        import matplotlib.pyplot as plt
         plt.plot(list(data.getOperation().get("dewT") ),list(data.getOperation().get("dewP")), label="dew point")
         plt.plot(list(data.getOperation().get("bubT")),list(data.getOperation().get("bubP")), label="bubble point")
 

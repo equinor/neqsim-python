@@ -27,7 +27,7 @@ fluid1.addComponent("propane", propane, 'mol/sec')
 fluid1.addComponent("i-butane", ibutane, 'mol/sec')
 fluid1.addComponent("n-butane", nbutane, 'mol/sec')
 fluid1.addComponent("water", water, 'mol/sec')
-fluid1.setMixingRule(10);
+fluid1.setMixingRule(10)
 
 
 fluid1.setPressure(pressure, 'bara')
@@ -35,7 +35,7 @@ fluid1.setPressure(pressure, 'bara')
 
 fluid2 = fluid('cpa')
 fluid2.addComponent("oxygen", nitrogen, 'mol/sec')
-fluid2.setMixingRule(10);
+fluid2.setMixingRule(10)
 
 fluid3 = addfluids(fluid1,fluid2)
 hydt(fluid3)
