@@ -25,6 +25,9 @@ plt.xlabel('Pressure [bara]')
 plt.ylabel('oilviscosity [kg/msec]')
 plt.show()
 
+#saturation pressure calc
+satpress= saturationpressure(fluid1, 340.0)
+print("saturation pressure ", satpress)
 
 print("CME...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
@@ -35,8 +38,8 @@ liquidrelativevolume = []
 Zgas =  []
 Yfactor = []
 isothermalcompressibility = []
-
-CME(fluid1,pressure,temperature,relativevolume, liquidrelativevolume,Zgas,Yfactor,isothermalcompressibility)
+saturationpressure = None
+CME(fluid1,pressure,temperature,saturationpressure, relativevolume, liquidrelativevolume,Zgas,Yfactor,isothermalcompressibility)
 
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
@@ -100,7 +103,7 @@ plt.show()
 print("differential liberation...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0, 1.01325]
 temperature = 301.0
-
+printFrame(fluid1)
 Bo = []
 Bg = []
 relativegravity = []
@@ -109,8 +112,9 @@ gasstandardvolume = []
 Rs = []
 oildensity = []
 relativegravity = []
+relativevolume = []
 
-difflib(fluid1.clone(),pressure,temperature,Bo, Bg,relativegravity,Zgas,gasstandardvolume,Rs, oildensity, relativegravity)
+difflib(fluid1.clone(),pressure,temperature,relativevolume,Bo, Bg,relativegravity,Zgas,gasstandardvolume,Rs, oildensity, relativegravity)
 
 
 plt.figure(figsize=(20, 5))
