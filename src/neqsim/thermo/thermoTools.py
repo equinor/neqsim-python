@@ -462,6 +462,11 @@ def GCV(testSystem, unit):
     iso6976.calculate()
     return iso6976.getValue("SuperiorCalorificValue")
 
+def watersaturate(testSystem):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.saturateWithWater()
+    testSystem.init(3)
+
 def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
