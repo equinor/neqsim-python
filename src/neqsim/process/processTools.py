@@ -30,6 +30,17 @@ def recycle(teststream, name="recycle ?"):
     processoperations.add(recycle1)
     return recycle1
 
+def saturator(teststream, name="water saturator"):
+    streamsaturator = neqsim.processSimulation.processEquipment.util.StreamSaturatorUtil(teststream)
+    processoperations.add(streamsaturator)
+    return streamsaturator
+
+def glycoldehydrationlmodule(teststream, name="TEG process"):
+    dehydrationlmodule = neqsim.processSimulation.processSystem.processModules.GlycolDehydrationlModule()
+    dehydrationlmodule.setName(name)
+    dehydrationlmodule.addInputStream("gasStreamToAbsorber", teststream)
+    processoperations.add(dehydrationlmodule)
+    return dehydrationlmodule
 
 def separator(teststream, name="separator ?"):
     separator = neqsim.processSimulation.processEquipment.separator.Separator(teststream)

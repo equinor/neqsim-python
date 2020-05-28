@@ -37,6 +37,7 @@ fluid_type = {
     'srk-twoCoon': neqsim.thermo.system.SystemSrkTwuCoonParamEos,
     'cpa-pr': neqsim.thermo.system.SystemPrCPA,
     'CPA-PR-EoS': neqsim.thermo.system.SystemPrCPA,
+    'SRK-TwuCoon-EOS': neqsim.thermo.system.SystemSrkTwuCoonEos
 }
 
 
@@ -461,6 +462,11 @@ def GCV(testSystem, unit):
     iso6976.setEnergyRefT(referenceTemperatureCombustion)
     iso6976.calculate()
     return iso6976.getValue("SuperiorCalorificValue")
+
+def watersaturate(testSystem):
+    testFlash = ThermodynamicOperations(testSystem)
+    testFlash.saturateWithWater()
+    testSystem.init(3)
 
 def TPflash(testSystem):
     testFlash = ThermodynamicOperations(testSystem)
