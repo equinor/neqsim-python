@@ -37,6 +37,7 @@ fluid_type = {
     'srk-twoCoon': neqsim.thermo.system.SystemSrkTwuCoonParamEos,
     'cpa-pr': neqsim.thermo.system.SystemPrCPA,
     'CPA-PR-EoS': neqsim.thermo.system.SystemPrCPA,
+    'SRK-TwuCoon-EOS': neqsim.thermo.system.SystemSrkTwuCoonEos
 }
 
 
