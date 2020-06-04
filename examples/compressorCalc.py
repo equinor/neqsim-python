@@ -17,7 +17,7 @@ naturalgasFluid = fluid_df(pd.DataFrame(naturalgas))
 
 #Setting up a process with an inpu stream and a compressor
 clearProcess()
-stream1 = stream(fluid1)
+stream1 = stream(naturalgasFluid)
 compressor2 = compressor(stream1)
 
 
@@ -44,27 +44,29 @@ compressor2.setUsePolytropicCalc(True)
 stream1.getFluid().setTotalFlowRate(7.1854785, "MSm3/day")
 stream1.setTemperature(25.0, "C")
 stream1.setPressure(50.0, "bara")
-compressor2.setSpeed(11533)
+compressor2.setSpeed(11015)
 runProcess()
 #Read results
 polytropicHead = compressor2.getPolytropicHead()
+
 flowRate = stream1.getThermoSystem().getFlowRate("m3/hr")
 print('Method 1. Run calculation with given flow, T and P at inlet ')
 print('pressure out ', compressor2.getOutletPressure())
 print('temperature out ', compressor2.getOutTemperature()-273.15, " C")
 print('polytropic head ', compressor2.getPolytropicHead(), " meter")
+print('polytropic efficiency ', compressor2.getPolytropicEfficiency())
 print('compressor speed ', compressor2.getCompressorChart().getSpeed(flowRate, polytropicHead))
 print('power ', compressor2.getPower()/1e6, ' MW')
 
 
 
 #Method 2
-#Run calculation with given flow, T and P at inlet and P out (compressor curves are only used for reading compressor speed)
+#Run calculation with given flow, T and P at inlet and T and P out (compressor curves are only used for reading compressor speed)
 stream1.getFluid().setTotalFlowRate(7.1854785, "MSm3/day")
 stream1.setTemperature(25.0, "C")
 stream1.setPressure(50.0, "bara")
-compressor2.setOutletPressure(150.0)
-compressor2.setOutTemperature(143.0+273.15)
+compressor2.setOutletPressure(160.0)
+compressor2.setOutTemperature(130.57+273.15)
 runProcess()
 #Read results
 polytropicHead = compressor2.getPolytropicHead()
@@ -73,5 +75,6 @@ print('Method 2. Run calculation with given flow, T and P at inlet and P out (co
 print('pressure out ', compressor2.getOutletPressure())
 print('temperature out ', compressor2.getOutTemperature()-273.15, " C")
 print('polytropic head ', compressor2.getPolytropicHead(), " meter")
+print('polytropic efficiency ', compressor2.getPolytropicEfficiency())
 print('compressor speed ', compressor2.getCompressorChart().getSpeed(flowRate, polytropicHead))
 print('power ', compressor2.getPower()/1e6, ' MW')
