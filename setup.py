@@ -21,6 +21,6 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=['py4j', 'numpy', 'matplotlib'],
+    install_requires=['py4j==0.10.8.1', 'numpy', 'matplotlib', 'pandas'],
     python_requires='>=3'
 )
