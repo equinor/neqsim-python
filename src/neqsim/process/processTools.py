@@ -42,6 +42,10 @@ def glycoldehydrationlmodule(teststream, name="TEG process"):
     processoperations.add(dehydrationlmodule)
     return dehydrationlmodule
 
+def openprocess(filename):
+    processoperations = neqsim.processSimulation.processSystem.ProcessSystem.open(filename)
+    return processoperations
+
 def separator(teststream, name="separator ?"):
     separator = neqsim.processSimulation.processEquipment.separator.Separator(teststream)
     separator.setName(name)
