@@ -75,7 +75,7 @@ def compressor(teststream, pres=10.0, name="compressor ?"):
 
 
 def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double  
 
     curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
@@ -98,7 +98,7 @@ def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
     compressor.getCompressorChart().setCurves(curveConditionsJava, speedJava, flowJava, headJava, polyEffJava)
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double  
     
     curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
@@ -115,7 +115,7 @@ def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
     compressor.getCompressorChart().getSurgeCurve().setCurve(curveConditionsJava, surgeflowJava, surgeheadJava)
     
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double  
     
     curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
@@ -220,7 +220,7 @@ def pipe(teststream, length, deltaElevation, diameter, rough):
     return pipe
 
 def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTransferCoefficients, pipeWallHeatTransferCoefficients):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     numberOfComponents =len(position)    
     positionJavaArray = gateway.new_array(double_class,numberOfComponents)

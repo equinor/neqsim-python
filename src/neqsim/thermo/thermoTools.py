@@ -60,7 +60,7 @@ def createfluid(fluid_type='dry gas'):
     return fluidcreator.create(fluid_type)
 
 def createfluid2(names, molefractions, unit="mol/sec"):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway#javaGateway.JavaGateway()
     double_class = gateway.jvm.double
     string_class = gateway.jvm.String
     numberOfComponents =len(names)    
@@ -74,7 +74,7 @@ def createfluid2(names, molefractions, unit="mol/sec"):
     return fluidcreator.create2(nameJavaArray, compositionJavaArray, unit)
 
 def addOilFractions(fluid, charNames,molefractions,molarMass,  density, lastIsPlusFraction=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     string_class = gateway.jvm.String
     numberOfComponents =len(charNames)    
@@ -97,7 +97,7 @@ def newdatabase(system):
     system.createDatabase(1)
 
 def tunewaxmodel(fluid, experimentaldata):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     tempList = experimentaldata['temperature']
     presList = experimentaldata['pressure']
@@ -139,7 +139,7 @@ def dataFrame(system):
     return pandas.DataFrame(system.createTable(""))
 
 def calcproperties(gascondensateFluid, inputDict):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     if("temperature" in inputDict and "pressure" in inputDict):
          length =len(inputDict['temperature'])
@@ -156,7 +156,7 @@ def calcproperties(gascondensateFluid, inputDict):
     return df
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length =len(pressure)
     pressureJavaArray = gateway.new_array(double_class,length)
@@ -185,7 +185,7 @@ def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
         plt.figure()
 
 def CVD(fluid, pressure, temperature, relativeVolume=[],liquidrelativevolume=[], Zgas=[],Zmix=[],cummulativemolepercdepleted=[], display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length =len(pressure)
     pressureJavaArray = gateway.new_array(double_class,length)
@@ -216,7 +216,7 @@ def CVD(fluid, pressure, temperature, relativeVolume=[],liquidrelativevolume=[],
         plt.figure()
 
 def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],aqueousviscosity=[], display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length =len(pressure)
     pressureJavaArray = gateway.new_array(double_class,length)
@@ -246,7 +246,7 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
         plt.figure()
 
 def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], density=[],Bg=[], viscosity=[], display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length =len(pressure)
     pressureJavaArray = gateway.new_array(double_class,length)
@@ -282,7 +282,7 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
         plt.figure()
 
 def difflib(fluid, pressure, temperature, relativeVolume = [], Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length =len(pressure)
     pressureJavaArray = gateway.new_array(double_class,length)
@@ -318,7 +318,7 @@ def difflib(fluid, pressure, temperature, relativeVolume = [], Bo=[], Bg=[], rel
         plt.figure()
 
 def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length =len(pressure)
     pressureJavaArray = gateway.new_array(double_class,length)
@@ -349,7 +349,7 @@ def saturationpressure(fluid, temperature=-1.0):
     return cvdSim.getSaturationPressure()
 
 def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure = [], relativeoilvolume=[], display=False):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     length2 =len(cummulativeMolePercentGasInjected)
     cummulativeMolePercentGasInjectedJava = gateway.new_array(double_class,length2)
@@ -630,7 +630,7 @@ def phaseenvelope(testSystem, plot=False):
     return testFlash
 
 def fluidComposition(testSystem, composition):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     numberOfComponents =len(composition)    
     compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
@@ -642,7 +642,7 @@ def fluidComposition(testSystem, composition):
     testSystem.init(0)
 
 def fluidCompositionPlus(testSystem, composition):
-    gateway = javaGateway.JavaGateway()
+    gateway = java_gateway
     double_class = gateway.jvm.double
     numberOfComponents =len(composition)    
     compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
