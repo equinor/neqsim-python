@@ -52,6 +52,12 @@ def separator(teststream, name="separator ?"):
     processoperations.add(separator)
     return separator
 
+def gasscrubber(teststream, name="scrubber ?"):
+    separator = neqsim.processSimulation.processEquipment.separator.GasScrubber(teststream)
+    separator.setName(name)
+    processoperations.add(separator)
+    return separator
+
 def separator3phase(teststream, name="separator ?"):
     separator = neqsim.processSimulation.processEquipment.separator.ThreePhaseSeparator(teststream)
     separator.setName(name)
@@ -154,9 +160,26 @@ def mixer(name=""):
     processoperations.add(mixer)
     return mixer
 
+def phasemixer(name=""):
+    mixer = neqsim.processSimulation.processEquipment.mixer.StaticPhaseMixer()
+    mixer.setName(name)
+    processoperations.add(mixer)
+    return mixer
 
-def splitter(teststream, name=""):
+def nequnit(teststream, equipment="pipeline", flowpattern="stratified"):
+    neqUn = neqsim.processSimulation.processEquipment.util.NeqSimUnit(teststream, equipment)
+    processoperations.add(neqUn)
+    return neqUn
+
+def splitter(teststream, splitfactors, name=""):
+    gateway = java_gateway
+    double_class = gateway.jvm.double  
+    splitfactorsJava = gateway.new_array(double_class,len(splitfactors))
+    for i in range(0,len(splitfactors)):
+        splitfactorsJava[i] = splitfactors[i]
     splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(teststream)
+    splitter.setSplitNumber(len(splitfactors))
+    splitter.setSplitFactors(splitfactorsJava)
     splitter.setName(name)
     processoperations.add(splitter)
     return splitter
