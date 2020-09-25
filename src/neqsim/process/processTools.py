@@ -167,7 +167,7 @@ def phasemixer(name=""):
     return mixer
 
 def nequnit(teststream, equipment="pipeline", flowpattern="stratified"):
-    neqUn = neqsim.processSimulation.processEquipment.util.NeqSimUnit(teststream, equipment)
+    neqUn = neqsim.processSimulation.processEquipment.util.NeqSimUnit(teststream, equipment, flowpattern)
     processoperations.add(neqUn)
     return neqUn
 
