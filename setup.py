@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="neqsim",
-    version="2.2.18",
+    version="2.2.19",
     author="Even Solbraa",
     author_email="esolbraa@gmail.com",
     description="NeqSim is a tool for thermodynamic and process calculations",
