@@ -603,7 +603,7 @@ def waterdewt(testSystem):
 
 
 def phaseenvelope(testSystem, plot=False):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = ThermodynamicOperations(testSystem.clone())
     testFlash.calcPTphaseEnvelope()
     data = testFlash
     if(plot):
