@@ -166,8 +166,9 @@ def phasemixer(name=""):
     processoperations.add(mixer)
     return mixer
 
-def nequnit(teststream, equipment="pipeline", flowpattern="stratified"):
+def nequnit(teststream, equipment="pipeline", flowpattern="stratified", numberOfNodes=100):
     neqUn = neqsim.processSimulation.processEquipment.util.NeqSimUnit(teststream, equipment, flowpattern)
+    neqUn.setNumberOfNodes(numberOfNodes)
     processoperations.add(neqUn)
     return neqUn
 
@@ -189,6 +190,12 @@ def heater(teststream, name=""):
     heater.setName(name)
     processoperations.add(heater)
     return heater
+
+def simplereservoir(fluid, name="Reservoir 1",  gasvolume=10.0 * 1e7, oilvolume=120.0 * 1e6, watervolume=10.0e6):
+    reserv = neqsim.processSimulation.processEquipment.reservoir.SimpleReservoir(name)
+    reserv.setReservoirFluid(fluid, gasvolume, oilvolume, watervolume)
+    processoperations.add(reserv)
+    return reserv
 
 def cooler(teststream, name=""):
     cooler = neqsim.processSimulation.processEquipment.heatExchanger.Cooler(teststream)
