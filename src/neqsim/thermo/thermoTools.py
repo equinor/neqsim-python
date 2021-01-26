@@ -45,7 +45,15 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
-def fluid_df(reservoirFluiddf,lastIsPlusFraction=False):
+def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, modelName=''):
+    if(autoSetModel):
+        fluidcreator.setAutoSelectModel(True)
+    else:
+        fluidcreator.setAutoSelectModel(False)
+    if(modelName):
+        fluidcreator.setThermoModel(modelName)
+    else:
+        fluidcreator.setAutoSelectModel(False)
     if 'MolarMass[kg/mol]' in reservoirFluiddf:
         definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
     else:
