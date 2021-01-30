@@ -8,6 +8,8 @@ colon = ':'
 if local_os_name == 'nt':
     colon = ';'
 
+port = 0
+
 def create_classpath(jars):
     resources_dir = pkg_resources.resource_filename('neqsim', 'lib/')
     return colon.join([path.join(resources_dir, jar) for jar in jars])
@@ -17,6 +19,8 @@ def start_server():
     global gateway
     jars = ['NeqSim.jar']
     classpath = create_classpath(jars)
-    return JavaGateway.launch_gateway(classpath=classpath, die_on_exit=True)
-
+    if port==0:
+       return JavaGateway.launch_gateway(classpath=classpath, die_on_exit=True)
+    else:
+       return JavaGateway.launch_gateway(port=port,classpath=classpath, die_on_exit=True)
 
