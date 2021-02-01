@@ -8,8 +8,15 @@ colon = ':'
 if local_os_name == 'nt':
     colon = ';'
 
-port = 0
-
+try:
+    port
+except NameError:
+    #print("port not defined. setting it to port=0")
+    port=0
+else:
+    port = port
+    #print("port defined")
+    
 def create_classpath(jars):
     resources_dir = pkg_resources.resource_filename('neqsim', 'lib/')
     return colon.join([path.join(resources_dir, jar) for jar in jars])
