@@ -8,6 +8,8 @@ colon = ':'
 if local_os_name == 'nt':
     colon = ';'
 
+port = 33685
+
 try:
     port
 except NameError:
