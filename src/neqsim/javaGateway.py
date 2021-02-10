@@ -2,7 +2,6 @@ import os
 from os import path
 from py4j.java_gateway import JavaGateway
 import pkg_resources
-gateway = None
 local_os_name = os.name
 colon = ':'
 if local_os_name == 'nt':
@@ -23,11 +22,11 @@ def create_classpath(jars):
 
 
 def start_server():
-    global gateway
     jars = ['NeqSim.jar']
     classpath = create_classpath(jars)
     if port==0:
        return JavaGateway.launch_gateway(classpath=classpath, die_on_exit=True)
     else:
        return JavaGateway.launch_gateway(port=port,classpath=classpath, die_on_exit=True)
+
 

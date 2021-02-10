@@ -2,8 +2,10 @@ name = "neqsim"
 
 from neqsim import javaGateway
 
-java_gateway = javaGateway.start_server()
-neqsim = java_gateway.jvm.neqsim
+try:
+    java_gateway
+except:
+    java_gateway = javaGateway.start_server()
 
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
