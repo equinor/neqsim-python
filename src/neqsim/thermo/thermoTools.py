@@ -1,7 +1,6 @@
 import pandas
 import neqsim
 from neqsim import java_gateway
-from neqsim import javaGateway
 from neqsim.standards import ISO6976
 import matplotlib.pyplot as plt
 

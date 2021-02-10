@@ -1,7 +1,7 @@
 from neqsim import java_gateway
-from neqsim import javaGateway
 neqsim = java_gateway.jvm.neqsim
 processoperations = neqsim.processSimulation.processSystem.ProcessSystem()
+
 
 def stream(thermoSystem, name="stream ?", t=0, p=0):
     if t != 0:
