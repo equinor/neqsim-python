@@ -1,7 +1,6 @@
 name = "neqsim"
 
-from neqsim import javaGateway
-
+from .javaGateway import start_server
 try:
     java_gateway
 except:
@@ -15,3 +14,6 @@ def methods(checkClass):
 def setDatabase(connectionString):
     neqsim.util.database.NeqSimDataBase.setConnectionString(connectionString)
     neqsim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
+    
+def startserver():
+    java_gateway = javaGateway.start_server()

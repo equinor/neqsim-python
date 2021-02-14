@@ -29,4 +29,3 @@ def start_server():
     else:
        return JavaGateway.launch_gateway(port=port,classpath=classpath, die_on_exit=True)
 
-
