@@ -1,10 +1,12 @@
 import pandas
-import neqsim
-from neqsim import java_gateway
 from neqsim.standards import ISO6976
 import matplotlib.pyplot as plt
+import jpype
+import jpype.imports
+from jpype.types import *
+import numpy 
+from neqsim.neqsimpython import neqsim
 
-neqsim = java_gateway.jvm.neqsim
 ThermodynamicOperations = neqsim.thermodynamicOperations.ThermodynamicOperations
 fluidcreator = neqsim.thermo.Fluid
 fluid_type = {
@@ -67,37 +69,11 @@ def createfluid(fluid_type='dry gas'):
     return fluidcreator.create(fluid_type)
 
 def createfluid2(names, molefractions, unit="mol/sec"):
-    gateway = java_gateway#javaGateway.JavaGateway()
-    double_class = gateway.jvm.double
-    string_class = gateway.jvm.String
-    numberOfComponents =len(names)    
-    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
-    nameJavaArray = gateway.new_array(string_class,numberOfComponents)
-    i = 0
-    for i in range(0,numberOfComponents):
-        compositionJavaArray[i] = molefractions[i]
-        nameJavaArray[i] = names[i]
-        i = i+1
-    return fluidcreator.create2(nameJavaArray, compositionJavaArray, unit)
+    return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
 def addOilFractions(fluid, charNames,molefractions,molarMass,  density, lastIsPlusFraction=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
-    string_class = gateway.jvm.String
-    numberOfComponents =len(charNames)    
-    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
-    molarMassJavaArray = gateway.new_array(double_class,numberOfComponents)
-    relDensityJavaArray = gateway.new_array(double_class,numberOfComponents)
-    nameJavaArray = gateway.new_array(string_class,numberOfComponents)
-    i = 0
-    for i in range(0,numberOfComponents):
-        compositionJavaArray[i] = molefractions[i]
-        nameJavaArray[i] = charNames[i]
-        molarMassJavaArray[i] = molarMass[i]
-        relDensityJavaArray[i] = density[i]
-        i = i+1
     clonedfluid = fluid.clone()
-    clonedfluid = fluidcreator.addOilFractions(nameJavaArray, compositionJavaArray, molarMassJavaArray, relDensityJavaArray,lastIsPlusFraction)
+    clonedfluid = fluidcreator.addOilFractions(JString[:](charNames), JDouble[:](molefractions), JDouble[:](molarMass), JDouble[:](density),lastIsPlusFraction)
     return clonedfluid
 
 def newdatabase(system):
@@ -146,17 +122,7 @@ def dataFrame(system):
     return pandas.DataFrame(system.createTable(""))
 
 def calcproperties(gascondensateFluid, inputDict):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
-    if("temperature" in inputDict and "pressure" in inputDict):
-         length =len(inputDict['temperature'])
-         pressureJavaArray = gateway.new_array(double_class,length)
-         temperatureJavaArray = gateway.new_array(double_class,length)
-         for i in range(0,length):
-             pressureJavaArray[i] = inputDict['pressure'][i]
-             temperatureJavaArray[i] = inputDict['temperature'][i]
-             i = i+1
-    properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, temperatureJavaArray, pressureJavaArray)
+    properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, JDouble[:](inputDict['temperature']), JDouble[:](inputDict['pressure']))
     props = properties.calculate()
     calculatedProperties= ({k: list(v) for k, v in props.items()})
     df = pandas.DataFrame(calculatedProperties)
@@ -637,27 +603,11 @@ def phaseenvelope(testSystem, plot=False):
     return testFlash
 
 def fluidComposition(testSystem, composition):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
-    numberOfComponents =len(composition)    
-    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
-    i = 0
-    for i in range(0,numberOfComponents):
-        compositionJavaArray[i] = composition[i]
-        i = i+1
-    testSystem.setMolarComposition(compositionJavaArray)
+    testSystem.setMolarComposition(JDouble[:](composition))
     testSystem.init(0)
 
 def fluidCompositionPlus(testSystem, composition):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
-    numberOfComponents =len(composition)    
-    compositionJavaArray = gateway.new_array(double_class,numberOfComponents)
-    i = 0
-    for i in range(0,numberOfComponents):
-        compositionJavaArray[i] = composition[i]
-        i = i+1
-    testSystem.setMolarCompositionPlus(compositionJavaArray)
+    testSystem.setMolarCompositionPlus(JDouble[:](composition))
     testSystem.init(0)
 
 def getExtThermProp(function, thermoSystem, t=0, p=0):

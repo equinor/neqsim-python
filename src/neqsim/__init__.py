@@ -1,11 +1,6 @@
 name = "neqsim"
 
-from neqsim import javaGateway
-
-try:
-    java_gateway
-except:
-    java_gateway = javaGateway.start_server()
+from neqsim.neqsimpython import neqsim
 
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()

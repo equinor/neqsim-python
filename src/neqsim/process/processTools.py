@@ -1,5 +1,7 @@
-from neqsim import java_gateway
-neqsim = java_gateway.jvm.neqsim
+import jpype
+import jpype.imports
+from jpype.types import *
+from neqsim.neqsimpython import neqsim
 processoperations = neqsim.processSimulation.processSystem.ProcessSystem()
 
 
@@ -173,14 +175,9 @@ def nequnit(teststream, equipment="pipeline", flowpattern="stratified", numberOf
     return neqUn
 
 def splitter(teststream, splitfactors, name=""):
-    gateway = java_gateway
-    double_class = gateway.jvm.double  
-    splitfactorsJava = gateway.new_array(double_class,len(splitfactors))
-    for i in range(0,len(splitfactors)):
-        splitfactorsJava[i] = splitfactors[i]
     splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(teststream)
     splitter.setSplitNumber(len(splitfactors))
-    splitter.setSplitFactors(splitfactorsJava)
+    splitter.setSplitFactors(JDouble[:](splitfactors))
     splitter.setName(name)
     processoperations.add(splitter)
     return splitter
@@ -305,7 +302,8 @@ def runProcess():
     processoperations.run()
 
 def runProcessAsThread(process):
-    threadProcess = java_gateway.jvm.java.lang.Thread(process)
+    Thread = jpype.JPackage('java.lang.Thread')
+    threadProcess = Thread(process)
     threadProcess.run()
     return threadProcess
 
