@@ -80,23 +80,13 @@ def newdatabase(system):
     system.createDatabase(1)
 
 def tunewaxmodel(fluid, experimentaldata):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
-    tempList = experimentaldata['temperature']
+    tempList = [x+273.15 for x in experimentaldata['temperature']]
     presList = experimentaldata['pressure']
-    expList = experimentaldata['experiment']
-    numberofdata =len(tempList)
-    temperatureJavaArray = gateway.new_array(double_class,numberofdata)
-    pressureJavaArray = gateway.new_array(double_class,numberofdata)
-    experimentJavaArray = gateway.new_array(double_class,numberofdata, 1)
-    i = 0
-    for i in range(0,numberofdata):
-         temperatureJavaArray[i] = tempList[i]+273.15
-         pressureJavaArray[i] = presList[i]
-         experimentJavaArray[i][0] = expList[i]*100
+    expList = [x*100.0 for x in experimentaldata['experiment']]
+   
     waxsim = neqsim.PVTsimulation.simulation.WaxFractionSim(fluid)
-    waxsim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
-    waxsim.setExperimentalData(experimentJavaArray)
+    waxsim.setTemperaturesAndPressures(JDouble[:](tempList),JDouble[:](presList))
+    waxsim.setExperimentalData(JDouble[:](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(20)
     waxsim.runTuning()
@@ -129,18 +119,9 @@ def calcproperties(gascondensateFluid, inputDict):
     return df
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length =len(pressure)
-    pressureJavaArray = gateway.new_array(double_class,length)
-    temperatureJavaArray = gateway.new_array(double_class,length)
-    i = 0
-    for i in range(0,length):
-        pressureJavaArray[i] = pressure[i]
-        temperatureJavaArray[i] = temperature[i]
-        i = i+1
     sepSim = neqsim.PVTsimulation.simulation.SeparatorTest(fluid)
-    sepSim.setSeparatorConditions(temperatureJavaArray, pressureJavaArray)
+    sepSim.setSeparatorConditions(JDouble[:](temperature), JDouble[:](pressure))
     sepSim.runCalc()
     for i in range(0,length):
         GOR.append(sepSim.getGOR()[i])
@@ -158,16 +139,9 @@ def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
         plt.figure()
 
 def CVD(fluid, pressure, temperature, relativeVolume=[],liquidrelativevolume=[], Zgas=[],Zmix=[],cummulativemolepercdepleted=[], display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length =len(pressure)
-    pressureJavaArray = gateway.new_array(double_class,length)
-    i = 0
-    for i in range(0,length):
-        pressureJavaArray[i] = pressure[i]
-        i = i+1
     cvdSim = neqsim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
-    cvdSim.setPressures(pressureJavaArray)
+    cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
     for i in range(0,length):
@@ -189,24 +163,14 @@ def CVD(fluid, pressure, temperature, relativeVolume=[],liquidrelativevolume=[],
         plt.figure()
 
 def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],aqueousviscosity=[], display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length =len(pressure)
-    pressureJavaArray = gateway.new_array(double_class,length)
-    temperatureJavaArray = gateway.new_array(double_class,length)
-    i = 0
-    for i in range(0,length):
-        pressureJavaArray[i] = pressure[i]
-        temperatureJavaArray[i] = temperature[i]
-        i = i+1
     cmeSim = neqsim.PVTsimulation.simulation.ViscositySim(fluid)
-    cmeSim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    cmeSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cmeSim.runCalc()
     for i in range(0,length):
         gasviscosity.append(cmeSim.getGasViscosity()[i])
         oilviscosity.append(cmeSim.getOilViscosity()[i])
         aqueousviscosity.append(cmeSim.getAqueousViscosity()[i])
-        i = i+1
     if display:
         plt.figure()
         plt.plot(pressure, gasviscosity, "o")
@@ -219,18 +183,9 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
         plt.figure()
 
 def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], density=[],Bg=[], viscosity=[], display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length =len(pressure)
-    pressureJavaArray = gateway.new_array(double_class,length)
-    temperatureJavaArray = gateway.new_array(double_class,length)
-    i = 0
-    for i in range(0,length):
-        pressureJavaArray[i] = pressure[i]
-        temperatureJavaArray[i] = temperature[i]
-        i = i+1
     cvdSim = neqsim.PVTsimulation.simulation.ConstantMassExpansion(fluid)    
-    cvdSim.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    cvdSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cvdSim.runCalc()
     saturationPressure=cvdSim.getSaturationPressure()
     for i in range(0,length):
@@ -255,16 +210,9 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
         plt.figure()
 
 def difflib(fluid, pressure, temperature, relativeVolume = [], Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length =len(pressure)
-    pressureJavaArray = gateway.new_array(double_class,length)
-    i = 0
-    for i in range(0,length):
-        pressureJavaArray[i] = pressure[i]
-        i = i+1
     cvdSim = neqsim.PVTsimulation.simulation.DifferentialLiberation(fluid)
-    cvdSim.setPressures(pressureJavaArray)
+    cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
     for i in range(0,length):
@@ -291,18 +239,9 @@ def difflib(fluid, pressure, temperature, relativeVolume = [], Bo=[], Bg=[], rel
         plt.figure()
 
 def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length =len(pressure)
-    pressureJavaArray = gateway.new_array(double_class,length)
-    temperatureJavaArray = gateway.new_array(double_class,length)
-    i = 0
-    for i in range(0,length):
-        pressureJavaArray[i] = pressure[i]
-        temperatureJavaArray[i] = temperature[i]
-        i = i+1
     GOR = neqsim.PVTsimulation.simulation.GOR(fluid)
-    GOR.setTemperaturesAndPressures(temperatureJavaArray, pressureJavaArray)
+    GOR.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     GOR.runCalc()
     for i in range(0,length):
         GORdata.append(GOR.getGOR()[i])
@@ -322,19 +261,11 @@ def saturationpressure(fluid, temperature=-1.0):
     return cvdSim.getSaturationPressure()
 
 def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure = [], relativeoilvolume=[], display=False):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
     length2 =len(cummulativeMolePercentGasInjected)
-    cummulativeMolePercentGasInjectedJava = gateway.new_array(double_class,length2)
-    i = 0
-    for i in range(0,length2):
-        cummulativeMolePercentGasInjectedJava[i] = cummulativeMolePercentGasInjected[i]
-        i = i+1
-    
     cvdSim = neqsim.PVTsimulation.simulation.SwellingTest(fluid)
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
-    cvdSim.setCummulativeMolePercentGasInjected(cummulativeMolePercentGasInjectedJava)
+    cvdSim.setCummulativeMolePercentGasInjected(JDouble[:](cummulativeMolePercentGasInjected))
     cvdSim.runCalc()
     for i in range(0,length2):
         relativeoilvolume.append(cvdSim.getRelativeOilVolume()[i])
