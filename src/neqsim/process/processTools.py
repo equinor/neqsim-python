@@ -10,7 +10,7 @@ def stream(thermoSystem, name="stream ?", t=0, p=0):
         thermoSystem.setTemperature(t)
         if p != 0:
             thermoSystem.setPressure(p)
-    stream = neqsim.processSimulation.processEquipment.stream.Stream(thermoSystm)
+    stream = neqsim.processSimulation.processEquipment.stream.Stream(thermoSystem)
     stream.setName(name)
     processoperations.add(stream)
     return stream
