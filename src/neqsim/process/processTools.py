@@ -86,10 +86,10 @@ def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
     compressor.getCompressorChart().setCurves(JDouble[:](curveConditions), JDouble[:](speed), JDouble[:][:](flow), JDouble[:][:](head), JDouble[:][:](polyEff))
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
-    compressor.getCompressorChart().getSurgeCurve().setCurve(JDouble[:](curveConditionsJava), JDouble[:](surgeflowJava), JDouble[:](surgeheadJava))
+    compressor.getCompressorChart().getSurgeCurve().setCurve(JDouble[:](curveConditions), JDouble[:](surgeflow), JDouble[:](surgehead))
     
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
-    compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](curveConditionsJava), JDouble[:](stoneWallFlowJava), JDouble[:](stoneWallHeadJava))
+    compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](curveConditions), JDouble[:](stoneWallflow), JDouble[:](stoneWallHead))
 
 def pump(teststream, p, name="pump ?"):
     pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)

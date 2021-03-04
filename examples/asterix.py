@@ -134,14 +134,7 @@ cond2 = S2.getOilOutStream()
 
 # THIRD SEPARATOR (S3)
 # make split
-split = splitter(cond2)
-split.setSplitNumber(2)
-gateway = java_gateway
-double_class = gateway.jvm.double
-splitFactorArray = gateway.new_array(double_class,2)
-splitFactorArray[0] = carryunderfrac
-splitFactorArray[1] = 1.0 - carryunderfrac
-split.setSplitFactors(splitFactorArray)
+split = splitter(cond2, [carryunderfrac, 1.0-carryunderfrac])
 carryunder = split.getSplitStream(0)
 
 
