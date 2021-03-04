@@ -25,8 +25,12 @@ gascondensateFluid = fluid_df(gascondensatedf, lastIsPlusFraction=True)
 def calcProperties(frame):
         gascondensateFluid.setTemperature(frame[0], "K")
         gascondensateFluid.setPressure(frame[1], "bara")
-        TPflash(gascondensateFluid)
-        gascondensateFluid.initProperties()
+        try:
+            TPflash(gascondensateFluid)
+            gascondensateFluid.initProperties()
+        except:
+            print('error in calculation properties....continue')
+            return None
         #Reporting some properties of the total fluid
         frame['molarmass[kg/mol]'] =gascondensateFluid.getMolarMass('kg/mol')
         frame['enthalpy[J/mol]'] =gascondensateFluid.getEnthalpy("J/mol")

@@ -8,8 +8,8 @@ from neqsim.thermo import fluid_df, TPflash, phaseenvelope,printFrame,dewt
 import pandas as pd
 
 
-naturalgas = {'ComponentName':  ["nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane","i-pentane", "n-pentane","2-m-C5", "3-m-C5", "n-hexane", "benzene", "c-hexane", "n-heptane", "toluene", "c-C7", "n-octane", "m-Xylene", "c-C8", "n-nonane", "nC10"], 
-       'MolarComposition[-]':  [1.1799,0.5102,95.3303,2.1102,0.3217,0.1278,0.0846,0.0694,0.0340,0.0335,0.0109,0.0181,0.0017,0.0661,0.0207,0.0045,0.0530,0.0061,0.0033,0.000103,0.0032,0.0004]
+naturalgas = {'ComponentName':  ["nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane","i-pentane", "n-pentane","2-m-C5", "3-m-C5", "n-hexane", "benzene", "c-hexane", "n-heptane", "toluene", "c-C7", "n-octane", "m-Xylene", "c-C8", "n-nonane", "m-Xylene","nC10","nC11","nC12"], 
+       'MolarComposition[-]':  [1.192,0.5102,95.3303,2.1102,0.3217,0.1278,0.0846,0.0694,0.0340,0.0335,0.0109,0.0181,0.0017,0.0661,0.0207,0.0045,0.0530,0.0061,0.0033,0.000103,0.0032, 0.00354, 0.00597,0.0000597,0.000001]
 } 
 
 
@@ -17,7 +17,7 @@ naturalgasdf = pd.DataFrame(naturalgas)
 print("Natural Gas Fluid:\n")
 print(naturalgasdf.head(30).to_string())
 
-naturalgasFluid = fluid_df(naturalgasdf)#.setModel("UMR-PRU-EoS")
+naturalgasFluid = fluid_df(naturalgasdf).setModel("UMR-PRU-EoS")
 naturalgasFluid.autoSelectMixingRule()
 TPflash(naturalgasFluid)
 printFrame(naturalgasFluid)

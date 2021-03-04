@@ -15,7 +15,7 @@ import math
 from neqsim.thermo.thermoTools import fluid,phaseenvelope
 import matplotlib.pyplot as plt
 eosname = 'srk' #@param ["srk", "pr"]
-camponentName = "ethane" #@param ["methane", "ethane", "propane", "i-butane", "n-butane"]
+camponentName = "CO2" #@param ["methane", "ethane", "propane", "i-butane", "n-butane"]
 fluid1 = fluid('eosname') #create a fluid using the SRK-EoS
 fluid1.addComponent(camponentName, 1.0) #adding 1 mole methane to the fluid
 

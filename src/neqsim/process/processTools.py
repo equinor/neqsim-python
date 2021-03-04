@@ -1,5 +1,7 @@
-from neqsim import java_gateway
-neqsim = java_gateway.jvm.neqsim
+import jpype
+import jpype.imports
+from jpype.types import *
+from neqsim.neqsimpython import neqsim
 processoperations = neqsim.processSimulation.processSystem.ProcessSystem()
 
 
@@ -81,63 +83,13 @@ def compressor(teststream, pres=10.0, name="compressor ?"):
 
 
 def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
-    gateway = java_gateway
-    double_class = gateway.jvm.double  
-
-    curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
-    for i in range(len(curveConditionsJava)):
-        curveConditionsJava[i]=curveConditions[i]
-
-    speedJava = gateway.new_array(double_class,len(speed))
-    for i in range(len(speed)):
-        speedJava[i]=speed[i]
-    
-    flowJava = gateway.new_array(double_class,len(flow), len(flow[0]))
-    headJava = gateway.new_array(double_class,len(head), len(head[0]))
-    polyEffJava = gateway.new_array(double_class,len(polyEff), len(polyEff[0]))
-    for i in range(len(flow)):
-        for j in range(len(flow[0])):
-            flowJava[i][j] = flow[i][j]
-            headJava[i][j] = head[i][j]
-            polyEffJava[i][j] = polyEff[i][j]
-    
-    compressor.getCompressorChart().setCurves(curveConditionsJava, speedJava, flowJava, headJava, polyEffJava)
+    compressor.getCompressorChart().setCurves(JDouble[:](curveConditions), JDouble[:](speed), JDouble[:][:](flow), JDouble[:][:](head), JDouble[:][:](polyEff))
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
-    gateway = java_gateway
-    double_class = gateway.jvm.double  
-    
-    curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
-    for i in range(len(curveConditionsJava)):
-        curveConditionsJava[i]=curveConditions[i]
-        
-    surgeflowJava = gateway.new_array(double_class,len(surgeflow))
-    surgeheadJava = gateway.new_array(double_class,len(surgehead))
-    
-    for i in range(len(surgeflow)):
-            surgeflowJava[i] = surgeflow[i]
-            surgeheadJava[i] = surgehead[i]
-    
-    compressor.getCompressorChart().getSurgeCurve().setCurve(curveConditionsJava, surgeflowJava, surgeheadJava)
+    compressor.getCompressorChart().getSurgeCurve().setCurve(JDouble[:](curveConditions), JDouble[:](surgeflow), JDouble[:](surgehead))
     
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
-    gateway = java_gateway
-    double_class = gateway.jvm.double  
-    
-    curveConditionsJava = gateway.new_array(double_class,len(curveConditions))
-    for i in range(len(curveConditionsJava)):
-        curveConditionsJava[i]=curveConditions[i]
-        
-    stoneWallFlowJava = gateway.new_array(double_class,len(stoneWallflow))
-    stoneWallHeadJava = gateway.new_array(double_class,len(stoneWallHead))
-    
-    for i in range(len(stoneWallflow)):
-            stoneWallFlowJava[i] = stoneWallflow[i]
-            stoneWallHeadJava[i] = stoneWallHead[i]
-    
-    compressor.getCompressorChart().getStoneWallCurve().setCurve(curveConditionsJava, stoneWallFlowJava, stoneWallHeadJava)
-    
-
+    compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](curveConditions), JDouble[:](stoneWallflow), JDouble[:](stoneWallHead))
 
 def pump(teststream, p, name="pump ?"):
     pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)
@@ -173,14 +125,9 @@ def nequnit(teststream, equipment="pipeline", flowpattern="stratified", numberOf
     return neqUn
 
 def splitter(teststream, splitfactors, name=""):
-    gateway = java_gateway
-    double_class = gateway.jvm.double  
-    splitfactorsJava = gateway.new_array(double_class,len(splitfactors))
-    for i in range(0,len(splitfactors)):
-        splitfactorsJava[i] = splitfactors[i]
     splitter = neqsim.processSimulation.processEquipment.splitter.Splitter(teststream)
     splitter.setSplitNumber(len(splitfactors))
-    splitter.setSplitFactors(splitfactorsJava)
+    splitter.setSplitFactors(JDouble[:](splitfactors))
     splitter.setName(name)
     processoperations.add(splitter)
     return splitter
@@ -250,44 +197,21 @@ def pipe(teststream, length, deltaElevation, diameter, rough):
     return pipe
 
 def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTransferCoefficients, pipeWallHeatTransferCoefficients):
-    gateway = java_gateway
-    double_class = gateway.jvm.double
-    numberOfComponents =len(position)    
-    positionJavaArray = gateway.new_array(double_class,numberOfComponents)
-    diameterJavaArray = gateway.new_array(double_class,numberOfComponents)
-    heightJavaArray = gateway.new_array(double_class,numberOfComponents)
-    outTempJavaArray = gateway.new_array(double_class,numberOfComponents)
-    roughJavaArray = gateway.new_array(double_class,numberOfComponents)
-    javaouterHeatTransferCoefficients = gateway.new_array(double_class,numberOfComponents)
-    javapipeWallHeatTransferCoefficients = gateway.new_array(double_class,numberOfComponents)
-    i = 0
-    for i in range(0,numberOfComponents):
-        positionJavaArray[i] = position[i]
-        diameterJavaArray[i] = diameter[i]
-        heightJavaArray[i] = height[i]
-        outTempJavaArray[i] = outTemp[i]
-        roughJavaArray[i] = rough[i]
-        javaouterHeatTransferCoefficients[i]=outerHeatTransferCoefficients[i]
-        javapipeWallHeatTransferCoefficients[i]=pipeWallHeatTransferCoefficients[i]
-        
-        i = i+1
-        
     pipe = neqsim.processSimulation.processEquipment.pipeline.OnePhasePipeLine(teststream)
     pipe.setOutputFileName("c:/tempNew20.nc")
     numberOfLegs = len(position) - 1
     numberOfNodesInLeg = 100
     pipe.setNumberOfLegs(numberOfLegs)
     pipe.setNumberOfNodesInLeg(numberOfNodesInLeg)
-    pipe.setLegPositions(positionJavaArray)
-    pipe.setHeightProfile(heightJavaArray)
-    pipe.setPipeDiameters(diameterJavaArray)
-    pipe.setPipeWallRoughness(roughJavaArray)
-    pipe.setPipeOuterHeatTransferCoefficients(javaouterHeatTransferCoefficients)
-    pipe.setPipeWallHeatTransferCoefficients(javapipeWallHeatTransferCoefficients)
-    pipe.setOuterTemperatures(outTempJavaArray)
+    pipe.setLegPositions(JDouble[:](position))
+    pipe.setHeightProfile(JDouble[:](height))
+    pipe.setPipeDiameters(JDouble[:](diameter))
+    pipe.setPipeWallRoughness(JDouble[:](rough))
+    pipe.setPipeOuterHeatTransferCoefficients(JDouble[:](outerHeatTransferCoefficients))
+    pipe.setPipeWallHeatTransferCoefficients(JDouble[:](pipeWallHeatTransferCoefficients))
+    pipe.setOuterTemperatures(JDouble[:](outTemp))
     processoperations.add(pipe)
     return pipe
-
 
 def clear():
     processoperations.clearAll
@@ -305,7 +229,8 @@ def runProcess():
     processoperations.run()
 
 def runProcessAsThread(process):
-    threadProcess = java_gateway.jvm.java.lang.Thread(process)
+    Thread = jpype.JPackage('java.lang.Thread')
+    threadProcess = Thread(process)
     threadProcess.run()
     return threadProcess
 
