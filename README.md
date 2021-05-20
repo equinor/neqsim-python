@@ -6,7 +6,7 @@ The NeqSim Python package is distributed as a pip package. See the [Wiki](https:
 >pip install neqsim
 
 ## Getting Started
-See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf). Use [NeqSim discussion forum](https://github.com/equinor/neqsim/discussions) for Q&A. 
+See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf). Learn and ask questions in [Discussions for use and development of NeqSim](https://github.com/equinor/neqsim/discussions). 
 
 ### Prerequisites
 A Java run time environment ([Java JRE](https://www.oracle.com/java/technologies/javase-jre8-downloads.html)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
