@@ -196,11 +196,10 @@ def pipe(teststream, length, deltaElevation, diameter, rough):
     processoperations.add(pipe)
     return pipe
 
-def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTransferCoefficients, pipeWallHeatTransferCoefficients):
+def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTransferCoefficients, pipeWallHeatTransferCoefficients, numberOfNodesInLeg = 50):
     pipe = neqsim.processSimulation.processEquipment.pipeline.OnePhasePipeLine(teststream)
     pipe.setOutputFileName("c:/tempNew20.nc")
     numberOfLegs = len(position) - 1
-    numberOfNodesInLeg = 100
     pipe.setNumberOfLegs(numberOfLegs)
     pipe.setNumberOfNodesInLeg(numberOfNodesInLeg)
     pipe.setLegPositions(JDouble[:](position))
