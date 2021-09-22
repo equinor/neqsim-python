@@ -54,6 +54,18 @@ def separator(teststream, name="separator ?"):
     processoperations.add(separator)
     return separator
 
+def simpleTEGAbsorber(name="TEG absorber ?"):
+    absorber = neqsim.processSimulation.processEquipment.absorber.SimpleTEGAbsorber()
+    absorber.setName(name)
+    processoperations.add(absorber)
+    return absorber
+
+def waterStripperColumn(name="water stripper ?"):
+    stripper = neqsim.processSimulation.processEquipment.absorber.WaterStripperColumn()
+    stripper.setName(name)
+    processoperations.add(stripper)
+    return stripper
+
 def gasscrubber(teststream, name="scrubber ?"):
     separator = neqsim.processSimulation.processEquipment.separator.GasScrubber(teststream)
     separator.setName(name)
@@ -73,6 +85,25 @@ def valve(teststream, p=1.0, name="valve ?"):
     processoperations.add(valve)
     return valve
 
+def recycle2(name="recycle ?"):
+    recyc = neqsim.processSimulation.processEquipment.util.Recycle(name)
+    processoperations.add(recyc)
+    return recyc
+
+def calculator(name="calculator ?"):
+    calc2 = neqsim.processSimulation.processEquipment.util.Calculator(name)
+    processoperations.add(calc2)
+    return calc2
+
+def setpoint(name1, unit1, name2, unit2):
+    setp = neqsim.processSimulation.processEquipment.util.SetPoint(name1, unit1, name2, unit2)
+    processoperations.add(setp)
+    return setp
+
+def filters(teststream):
+    filter2 = neqsim.processSimulation.processEquipment.filter.Filter(teststream)
+    processoperations.add(filter2)
+    return filter2
 
 def compressor(teststream, pres=10.0, name="compressor ?"):
     compressor = neqsim.processSimulation.processEquipment.compressor.Compressor(teststream)
@@ -150,14 +181,17 @@ def cooler(teststream, name=""):
     processoperations.add(cooler)
     return cooler
 
-def heatExchanger(stream1, stream2, name=""):
-    heater = neqsim.processSimulation.processEquipment.heatExchanger.HeatExchanger(stream1, stream2)
+def heatExchanger(stream1, stream2=None, name=""):
+    if stream2==None:
+        heater = neqsim.processSimulation.processEquipment.heatExchanger.HeatExchanger(stream1)
+    else:
+        heater = neqsim.processSimulation.processEquipment.heatExchanger.HeatExchanger(stream1, stream2)
     heater.setName(name)
     processoperations.add(heater)
     return heater
 
-def distillationColumn(trays=5, name="destColumn"):
-    distillationColumn = neqsim.processSimulation.processEquipment.distillation.DistillationColumn(trays, 1, 1)
+def distillationColumn(trays=5, reboil=True, condenser=True, name="destColumn"):
+    distillationColumn = neqsim.processSimulation.processEquipment.distillation.DistillationColumn(trays, reboil, condenser)
     distillationColumn.setName(name)
     processoperations.add(distillationColumn)
     return distillationColumn
