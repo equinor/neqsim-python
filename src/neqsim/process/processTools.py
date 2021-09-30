@@ -247,7 +247,7 @@ def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTr
     return pipe
 
 def clear():
-    processoperations.clearAll
+    processoperations.clearAll()
 
 
 def run():
@@ -255,7 +255,7 @@ def run():
 
 
 def clearProcess():
-    processoperations.clearAll
+    processoperations.clearAll()
 
 
 def runProcess():
