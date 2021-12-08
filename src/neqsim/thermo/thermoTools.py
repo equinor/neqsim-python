@@ -406,6 +406,12 @@ def VUflash(testSystem, volume, energy, unitVol= "m3", unit="J"):
     testFlash.VUflash(volume, energy, unitVol, unit)
     testSystem.init(3)
     
+def PUflash(testSystem, pressure, energy, unitPressure= "bara", unitEnergy="J"):
+    testFlash = ThermodynamicOperations(testSystem)
+    testSystem.setPressure(pressure, unitPressure) 
+    testFlash.PUflash(energy, unitEnergy)
+    testSystem.init(3)
+    
 def PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
     testFlash = ThermodynamicOperations(fluid1)
     testFlash.OLGApropTable(lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps, fileName, 0)
