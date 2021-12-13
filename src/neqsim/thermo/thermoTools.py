@@ -46,6 +46,10 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
+def readEclipseFluid(filename):
+    fluid1 = neqsim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
+    return fluid1
+
 def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, modelName=''):
     if(autoSetModel):
         fluidcreator.setAutoSelectModel(True)
