@@ -1,5 +1,5 @@
 import jpype
-jpype.addClassPath('./lib/NeqSim.jar')
+jpype.addClassPath('./lib/*')
 if not(jpype.isJVMStarted()):
     jpype.startJVM(convertStrings =True)
 
