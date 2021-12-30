@@ -6,10 +6,10 @@ The NeqSim Python package is distributed as a pip package. See the [Wiki](https:
 >pip install neqsim
 
 ## Getting Started
-See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf).
+See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf). Learn and ask questions in [Discussions for use and development of NeqSim](https://github.com/equinor/neqsim/discussions). 
 
 ### Prerequisites
-A Java run time environment ([Java JRE](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
+A Java run time environment ([Java JRE](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
 
 ### Initial setup
 The NeqSim Python package is installed by downloading/cloning the library to your local computer (alternatively fork it to your private reprository). The following commands are dependent on a local installation of [GIT](https://git-scm.com/). |pypidownloads| |pypiversion| 
@@ -26,9 +26,8 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 Discussions related to NeqSim development and use is done using [Slack for NeqSim](https://neqsim.slack.com). 
 Use the [invitation link](https://join.slack.com/t/neqsim/shared_invite/enQtNjU1ODQ1MDQyMjEzLWU5MWEyNDA3YTlmNThmMGQ1OGMyODgzYzdlZTM5NTVjNDMzOGIyOTU4MTYwNzZkNmZiNDczZjBjMGZkNzlkZTE) to join the group.
 
-## NeqSim Slack collaboration hub
-Discussions related to NeqSim development and use is done using [Slack for NeqSim](https://neqsim.slack.com). 
-Use the [invitation link](https://join.slack.com/t/neqsim/signup) to join the group.
+## Discussion forum
+Questions related to neqsim can be posted in the [github discussion pages](https://github.com/equinor/neqsim/discussions).
 
 ## Versioning
 NeqSim use [SemVer](https://semver.org/) for versioning.
