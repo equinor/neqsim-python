@@ -4,3 +4,4 @@ neqsim*egg-info
 **/derby.log
 __pychache__
 **/*.pyc
+jupyter/.ipynb_checkpoints
