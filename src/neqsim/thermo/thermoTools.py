@@ -72,7 +72,9 @@ def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, mode
 def createfluid(fluid_type='dry gas'):
     return fluidcreator.create(fluid_type)
 
-def createfluid2(names, molefractions, unit="mol/sec"):
+def createfluid2(names, molefractions=None, unit="mol/sec"):
+    if(molefractions is None):
+        fluidcreator.create2(JString[:](names))
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
 def addOilFractions(fluid, charNames,molefractions,molarMass,  density, lastIsPlusFraction=False):
