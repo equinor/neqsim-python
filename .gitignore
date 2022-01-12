@@ -1,7 +1,28 @@
-dist
-build
-neqsim*egg-info
-**/derby.log
-__pychache__
+__pycache__
 **/*.pyc
+
+# Distribution / packaging 
+build
+dist
+eggs/ 
+.eggs/ 
+neqsim*egg-info
+
+# Derby database is used by neqsim
+**/derby.log
+
+# Unit test / coverage reports 
+.pytest_cache/
+
+# Jupyter Notebook
 jupyter/.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Visual Studio Code # 
+.vscode/*
