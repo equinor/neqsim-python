@@ -29,10 +29,6 @@ pip install .
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
-## NeqSim Slack collaboration hub
-
-Discussions related to NeqSim development and use is done using [Slack for NeqSim](https://neqsim.slack.com).  
-Use the [invitation link](https://join.slack.com/t/neqsim/shared_invite/enQtNjU1ODQ1MDQyMjEzLWU5MWEyNDA3YTlmNThmMGQ1OGMyODgzYzdlZTM5NTVjNDMzOGIyOTU4MTYwNzZkNmZiNDczZjBjMGZkNzlkZTE) to join the group.
 
 ## Discussion forum
 
