@@ -61,7 +61,7 @@ def test_TPflash2():
 
 def test_fluidflashproperties():
     res = fluidflashproperties(
-        10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
+        300, 10, 'TP', None, ['methane', 'ethane'], [0.7, 0.3])
 
     assert int(res.fluidProperties[0][0]) == 1  # Check number of phases
     assert abs(res.fluidProperties[0][1] -
@@ -71,11 +71,11 @@ def test_fluidflashproperties():
 
 def test_fluidflashproperties_online_fraction():
     res = fluidflashproperties(
-        10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
+        300, 10, 'TP', None, ['methane', 'ethane'], [0.7, 0.3])
     res2 = fluidflashproperties(
-        10, 300, 1, None, ['methane', 'ethane'], [0.6, 0.4])
+        300, 10, 'TP', None, ['methane', 'ethane'], [0.6, 0.4])
 
-    res3 = fluidflashproperties([10, 10], [300, 300], 1, None, ['methane', 'ethane'], [
+    res3 = fluidflashproperties([300, 300], [10, 10], 'TP', None, ['methane', 'ethane'], [
         [0.7, 0.6], [0.3, 0.4]])
 
     for k in range(0, len(res3.fluidProperties[0])):
@@ -88,6 +88,36 @@ def test_fluidflashproperties_online_fraction():
             assert isnan(res3.fluidProperties[1][k])
         else:
             assert res3.fluidProperties[1][k] == res2.fluidProperties[0][k]
+
+
+def test_fluidflashproperties_TP_PT():
+    res_1 = fluidflashproperties(
+        10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
+
+    res_1_inverse = fluidflashproperties(
+        300, 10, 1, None, ['methane', 'ethane'], [0.7, 0.3])
+
+    assert abs(res_1.fluidProperties[0][1]/1e5 -
+               res_1_inverse.fluidProperties[0][2]) < 1e-8
+    assert abs(res_1.fluidProperties[0][2] -
+               res_1_inverse.fluidProperties[0][1]/1e5) < 1e-8
+
+    res_TP = fluidflashproperties(
+        10, 300, 'TP', None, ['methane', 'ethane'], [0.7, 0.3])
+
+    # Pressures are equal
+    assert res_1.fluidProperties[0][1] == res_TP.fluidProperties[0][1]
+    # Temperatures are equal
+    assert res_1.fluidProperties[0][2] == res_TP.fluidProperties[0][2]
+
+    res_PT = fluidflashproperties(
+        300, 10, 'PT', None, ['methane', 'ethane'], [0.7, 0.3])
+
+    # Pressures are equal
+    assert res_1.fluidProperties[0][1] == res_PT.fluidProperties[0][1]
+    # Temperatures are equal
+    assert res_1.fluidProperties[0][2] == res_TP.fluidProperties[0][2]
+
 
 
 def test_addfluid():
