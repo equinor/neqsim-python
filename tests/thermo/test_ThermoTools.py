@@ -3,7 +3,7 @@ import neqsim
 import unittest
 from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition
 
-def testTPflash1():
+def test_TPflash1():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
     fluid1.setTemperature(28.15, "C")
     fluid1.setPressure(100.0, "bara")
