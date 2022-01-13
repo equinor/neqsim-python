@@ -1,7 +1,6 @@
 # import the package
 import neqsim
-import unittest
-from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition
+from neqsim.thermo import fluid, TPflash, fluidComposition
 
 def test_TPflash1():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
