@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import jpype
 import jpype.imports
 from jpype.types import *
-import numpy 
 from neqsim.neqsimpython import neqsim
 
 ThermodynamicOperations = neqsim.thermodynamicOperations.ThermodynamicOperations

@@ -21,7 +21,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=['jpype1', 'numpy', 'matplotlib', 'pandas'],
+    install_requires=['jpype1', 'matplotlib', 'pandas'],
     python_requires='>=3'
 )
 

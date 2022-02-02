@@ -122,7 +122,7 @@ def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
     compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](curveConditions), JDouble[:](stoneWallflow), JDouble[:](stoneWallHead))
 
-def pump(teststream, p, name="pump ?"):
+def pump(teststream, p=1.0, name="pump ?"):
     pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)
     pump.setOutletPressure(p)
     pump.setName(name)
