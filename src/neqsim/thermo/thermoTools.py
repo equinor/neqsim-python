@@ -45,12 +45,20 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
-def readEclipseFluid(filename):
+def readEclipseFluid(filename, wellName=''):
+    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
     fluid1 = neqsim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
     return fluid1
 
-def setEclipseComposition(fluid, filename):
+def setEclipseComposition(fluid, filename, wellName=''):
+    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
     neqsim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(fluid, filename)
+
+def addFluids(fluids):
+    fluid = fluids[0].clone()
+    numberOfFluids = len(fluids)
+    for i in range(numberOfFluids-1):
+        fluid.addFluid(fluids[i+1])
     return fluid
 
 def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, modelName=''):
