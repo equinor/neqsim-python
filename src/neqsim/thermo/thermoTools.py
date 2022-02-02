@@ -49,6 +49,10 @@ def readEclipseFluid(filename):
     fluid1 = neqsim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
     return fluid1
 
+def setEclipseComposition(fluid, filename):
+    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(fluid, filename)
+    return fluid
+
 def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, modelName=''):
     if(autoSetModel):
         fluidcreator.setAutoSelectModel(True)
