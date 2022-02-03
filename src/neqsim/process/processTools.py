@@ -54,6 +54,12 @@ def separator(teststream, name="separator ?"):
     processoperations.add(separator)
     return separator
 
+def GORfitter(teststream, name="GOR fitter ?"):
+    GORfitter1 = neqsim.processSimulation.processEquipment.util.GORfitter(name, teststream)
+    GORfitter1.setName(name)
+    processoperations.add(GORfitter1)
+    return GORfitter1
+
 def simpleTEGAbsorber(name="TEG absorber ?"):
     absorber = neqsim.processSimulation.processEquipment.absorber.SimpleTEGAbsorber()
     absorber.setName(name)
