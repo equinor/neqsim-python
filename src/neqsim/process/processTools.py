@@ -54,6 +54,12 @@ def separator(teststream, name="separator ?"):
     processoperations.add(separator)
     return separator
 
+def GORfitter(teststream, name="GOR fitter ?"):
+    GORfitter1 = neqsim.processSimulation.processEquipment.util.GORfitter(name, teststream)
+    GORfitter1.setName(name)
+    processoperations.add(GORfitter1)
+    return GORfitter1
+
 def simpleTEGAbsorber(name="TEG absorber ?"):
     absorber = neqsim.processSimulation.processEquipment.absorber.SimpleTEGAbsorber()
     absorber.setName(name)
@@ -122,7 +128,7 @@ def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
     compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](curveConditions), JDouble[:](stoneWallflow), JDouble[:](stoneWallHead))
 
-def pump(teststream, p, name="pump ?"):
+def pump(teststream, p=1.0, name="pump ?"):
     pump = neqsim.processSimulation.processEquipment.pump.Pump(teststream)
     pump.setOutletPressure(p)
     pump.setName(name)
