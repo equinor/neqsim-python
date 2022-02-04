@@ -6,7 +6,7 @@ NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimho
 
 The NeqSim Python package is distributed as a pip package. See the [Wiki](https://github.com/equinor/neqsimpython/wiki) for instructions on how to use it. Install the package by running
 
-pip install --upgrade --force-reinstall neqsim
+pip install --upgrade neqsim
 
 ## Getting Started
 
