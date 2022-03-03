@@ -1,6 +1,7 @@
 # import the package
 import neqsim
-from neqsim.thermo import fluid, TPflash, fluidComposition
+from neqsim.thermo import TPflash, calcfluidproperties, fluid, fluidComposition
+
 
 def test_TPflash1():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -25,7 +26,9 @@ def test_TPflash1():
     TPflash(fluid1)
     fluid1.initThermoProperties()
     fluid1.initPhysicalProperties()
-    assert fluid1.getViscosity('kg/msec') == 1.574354015664789e-05
+    visc = float()
+    assert abs(fluid1.getViscosity('kg/msec') -
+               float(1.574354015664789e-05)) < 1e-8
 
 def test_TPflash2():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -50,3 +53,13 @@ def test_TPflash2():
     TPflash(fluid1)
     fluid1.initProperties()
     assert fluid1.getNumberOfPhases() == 2
+
+
+def test_calcfluidproperties():
+    res = calcfluidproperties(
+        10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
+
+    assert int(res.fluidProperties[0][0]) == 1  # Check number of phases
+    assert abs(res.fluidProperties[0][1] -
+               float(10*1e5)) < 1e-8  # Correct pressure
+    assert res.fluidProperties[0][2] == float(300)  # Correct temperature
