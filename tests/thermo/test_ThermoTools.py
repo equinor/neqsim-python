@@ -1,6 +1,7 @@
 # import the package
 import neqsim
 from neqsim.thermo import TPflash, calcfluidproperties, fluid, fluidComposition
+from numpy import isnan
 
 
 def test_TPflash1():
@@ -45,7 +46,8 @@ def test_TPflash2():
     fluid1.addComponent("n-pentane", 0.2, "mol/sec")
     fluid1.addComponent("n-heptane", 10.1, "mol/sec")
     fluid1.setMixingRule("classic") # classic will use binary kij 
-    fluid1.setMultiPhaseCheck(True) #True if more than two phases could be present
+    # True if more than two phases could be present
+    fluid1.setMultiPhaseCheck(True)
     fluidcomposition = [0.01, 0.02, 0.9, 0.1, 0.03, 0.02, 0.01, 0.01, 0.01, 0.003]
     fluidComposition(fluid1, fluidcomposition)
     fluid1.setPressure(101.0, "bara")
@@ -63,3 +65,24 @@ def test_calcfluidproperties():
     assert abs(res.fluidProperties[0][1] -
                float(10*1e5)) < 1e-8  # Correct pressure
     assert res.fluidProperties[0][2] == float(300)  # Correct temperature
+
+
+def test_calcfluidproperties_online_fraction():
+    res = calcfluidproperties(
+        10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
+    res2 = calcfluidproperties(
+        10, 300, 1, None, ['methane', 'ethane'], [0.6, 0.4])
+
+    res3 = calcfluidproperties([10, 10], [300, 300], 1, None, ['methane', 'ethane'], [
+                               [0.7, 0.6], [0.3, 0.4]])
+
+    for k in range(0, len(res3.fluidProperties[0])):
+        if isnan(res.fluidProperties[0][k]):
+            assert isnan(res3.fluidProperties[0][k])
+        else:
+            assert res3.fluidProperties[0][k] == res.fluidProperties[0][k]
+
+        if isnan(res2.fluidProperties[0][k]):
+            assert isnan(res3.fluidProperties[1][k])
+        else:
+            assert res3.fluidProperties[1][k] == res2.fluidProperties[0][k]

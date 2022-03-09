@@ -1,5 +1,5 @@
-from argparse import ArgumentError
-from typing import Optional, Union
+from typing import Optional, Type, Union
+from unittest import result
 
 import jpype
 import jpype.imports
@@ -48,14 +48,18 @@ def fluid(name='srk', temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
+
 def readEclipseFluid(filename, wellName=''):
     neqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
     fluid1 = neqsim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
     return fluid1
 
+
 def setEclipseComposition(fluid, filename, wellName=''):
     neqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
-    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(fluid, filename)
+    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(
+        fluid, filename)
+
 
 def addFluids(fluids):
     fluid = fluids[0].clone()
@@ -64,7 +68,8 @@ def addFluids(fluids):
         fluid.addFluid(fluids[i+1])
     return fluid
 
-def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, modelName=''):
+
+def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName=''):
     if(autoSetModel):
         fluidcreator.setAutoSelectModel(True)
     else:
@@ -77,69 +82,83 @@ def fluid_df(reservoirFluiddf,lastIsPlusFraction=False, autoSetModel=False, mode
         definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
     else:
         definedComponentsFrame = reservoirFluiddf
-    fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(), definedComponentsFrame['MolarComposition[-]'].tolist())
+    fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(
+    ), definedComponentsFrame['MolarComposition[-]'].tolist())
     TBPComponentsFrame = reservoirFluiddf.dropna()
     if not TBPComponentsFrame.equals(reservoirFluiddf):
-        addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(),TBPComponentsFrame['MolarComposition[-]'].tolist(),TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(),lastIsPlusFraction);
+        addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(), TBPComponentsFrame['MolarComposition[-]'].tolist(
+        ), TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(), lastIsPlusFraction)
     return fluid7
+
 
 def createfluid(fluid_type='dry gas'):
     return fluidcreator.create(fluid_type)
+
 
 def createfluid2(names, molefractions=None, unit="mol/sec"):
     if(molefractions is None):
         fluidcreator.create2(JString[:](names))
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
-def addOilFractions(fluid, charNames,molefractions,molarMass,  density, lastIsPlusFraction=False):
+
+def addOilFractions(fluid, charNames, molefractions, molarMass,  density, lastIsPlusFraction=False):
     clonedfluid = fluid.clone()
-    clonedfluid = fluidcreator.addOilFractions(JString[:](charNames), JDouble[:](molefractions), JDouble[:](molarMass), JDouble[:](density),lastIsPlusFraction)
+    clonedfluid = fluidcreator.addOilFractions(JString[:](charNames), JDouble[:](
+        molefractions), JDouble[:](molarMass), JDouble[:](density), lastIsPlusFraction)
     return clonedfluid
+
 
 def newdatabase(system):
     system.createDatabase(1)
+
 
 def tunewaxmodel(fluid, experimentaldata):
     tempList = [x+273.15 for x in experimentaldata['temperature']]
     presList = experimentaldata['pressure']
     expList = [x*100.0 for x in experimentaldata['experiment']]
-   
+
     waxsim = neqsim.PVTsimulation.simulation.WaxFractionSim(fluid)
-    waxsim.setTemperaturesAndPressures(JDouble[:](tempList),JDouble[:](presList))
+    waxsim.setTemperaturesAndPressures(
+        JDouble[:](tempList), JDouble[:](presList))
     waxsim.setExperimentalData(JDouble[:](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(20)
     waxsim.runTuning()
     waxsim.runCalc()
-    
-    results = {'temperature':  tempList, 
-        'pressure':  presList,
-        'experiment':  expList,
-        'results': list(waxsim.getWaxFraction()),
-        'parameters': list(waxsim.getOptimizer().getSampleSet().getSample(0).getFunction().getFittingParams())
-    }    
+
+    results = {'temperature':  tempList,
+               'pressure':  presList,
+               'experiment':  expList,
+               'results': list(waxsim.getWaxFraction()),
+               'parameters': list(waxsim.getOptimizer().getSampleSet().getSample(0).getFunction().getFittingParams())
+               }
     return results
+
 
 def data(system):
     a = system.getResultTable()
     return a
 
+
 def table(system):
     return system.createTable("")
+
 
 def dataFrame(system):
     system.createTable("")
     return pandas.DataFrame(system.createTable(""))
 
+
 def calcproperties(gascondensateFluid, inputDict):
-    properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, JDouble[:](inputDict['temperature']), JDouble[:](inputDict['pressure']))
+    properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, JDouble[:](
+        inputDict['temperature']), JDouble[:](inputDict['pressure']))
     props = properties.calculate()
-    calculatedProperties= ({k: list(v) for k, v in props.items()})
+    calculatedProperties = ({k: list(v) for k, v in props.items()})
     df = pandas.DataFrame(calculatedProperties)
     return df
 
 
-def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, fluid=None, components=None, fractions=None):
+def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, system=None, components=None, fractions=None):
     """
     Perform flash and return multiple fluid properties for a series of process properties.
 
@@ -160,26 +179,30 @@ def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, flui
         elif mode == 'PS':
             mode = 3
 
-    if not isinstance(mode, int):
-        raise ArgumentError(
+    if not isinstance(mode, int) or mode < 1 or mode > 3:
+        raise ValueError(
             "Mode must be in 'TP' or 1, 'PH' or 2 or 'PS' or 3")
 
-    if fluid is None:
+    if system is None:
         if components is None or fractions is None:
-            raise ArgumentError(
-                "if fluid is not specified, components and fractions must be specified.")
+            raise ValueError(
+                "if system is not specified, components and fractions must be specified.")
 
-        fluid = neqsim.thermo.system.SystemSrkEos(273.15, 1.01325)
+        system = neqsim.thermo.system.SystemSrkEos(273.15, 1.01325)
         if not isinstance(components, list):
             components = [components]
 
+        system.addComponents(components)
+
+        # Single component
         if not isinstance(fractions, list):
             fractions = [fractions]
 
-        fluid.addComponents(components, fractions)
-        fluid.init(0)
+        if not all([isinstance(x, list) for x in fractions]):
+            system.setTotalNumberOfMoles(1)
+            system.setMolarComposition(fractions)
 
-    thermoOps = neqsim.thermodynamicOperations.ThermodynamicOperations(fluid)
+    thermoOps = neqsim.thermodynamicOperations.ThermodynamicOperations(system)
 
     if isinstance(spec1, pandas.Series):
         spec1 = spec1.to_list()
@@ -196,25 +219,46 @@ def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, flui
     [jSpec2.add(float(x)) for x in spec2]
 
     if fractions is not None:
+        if not isinstance(fractions, list):
+            raise TypeError("Fractions must be a list if provided")
         if components is not None:
             if not isinstance(components, list):
                 components = [components]
 
             if all([isinstance(x, list) for x in components]):
-               raise NotImplementedError
+                raise NotImplementedError
             elif any([isinstance(x, list) for x in components]):
                 raise NotImplementedError
             else:
                 components = None
 
         if all([isinstance(x, list) for x in fractions]):
-           raise NotImplementedError
+            # pivot fractions
+            num_components = len(fractions)
+            jFractions = jpype.java.util.ArrayList()
+            for k_comp in range(0, num_components):
+                jComp = jpype.java.util.ArrayList()
+                [jComp.add(x) for x in fractions[k_comp]]
+                jFractions.add(jComp)
+
+            # for k_samples in range(0, num_samples):
+            #     jSampleValues = jpype.java.util.ArrayList()
+            #    for k_comp in range(0, num_components):
+            #        jSampleValues.add(float(fractions[k_comp][k_samples]))
+            #    jFractions.add(jSampleValues)
+
+            fractions = jFractions
         elif any([isinstance(x, list) for x in fractions]):
-            raise NotImplementedError
+            pass
+            # raise NotImplementedError
         else:
             fractions = None
 
-    return thermoOps.propertyFlash(jSpec1, jSpec2, mode, components, fractions)
+    result = thermoOps.propertyFlash(
+        jSpec1, jSpec2, mode, components, fractions)
+
+    return result
+
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
     length = len(pressure)
