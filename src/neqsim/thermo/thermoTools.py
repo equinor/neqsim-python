@@ -160,9 +160,14 @@ def calcproperties(gascondensateFluid, inputDict):
 
 def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, system=None, components=None, fractions=None):
     """
-    Perform flash and return multiple fluid properties for a series of process properties.
+    Perform flash and return fluid properties for a series of process properties.
 
-    Supports flash modes: TP, PH, PS
+    Spec1 and Spec2 are the process conditions to perform flash at.
+    Supported flash modes: TP (1), PH (2) and PS (3).
+
+    A default system is created if not passed and components and fractions can specify it.
+    Fractions can be a single list of component fractions to use for all flashes or 
+    a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
 
     """
     if isinstance(mode, str):
@@ -241,12 +246,6 @@ def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, syst
                 [jComp.add(x) for x in fractions[k_comp]]
                 jFractions.add(jComp)
 
-            # for k_samples in range(0, num_samples):
-            #     jSampleValues = jpype.java.util.ArrayList()
-            #    for k_comp in range(0, num_components):
-            #        jSampleValues.add(float(fractions[k_comp][k_samples]))
-            #    jFractions.add(jSampleValues)
-
             fractions = jFractions
         elif any([isinstance(x, list) for x in fractions]):
             pass
@@ -254,10 +253,8 @@ def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, syst
         else:
             fractions = None
 
-    result = thermoOps.propertyFlash(
+    return thermoOps.propertyFlash(
         jSpec1, jSpec2, mode, components, fractions)
-
-    return result
 
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
