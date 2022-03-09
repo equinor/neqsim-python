@@ -27,7 +27,6 @@ def test_TPflash1():
     TPflash(fluid1)
     fluid1.initThermoProperties()
     fluid1.initPhysicalProperties()
-    visc = float()
     assert abs(fluid1.getViscosity('kg/msec') -
                float(1.574354015664789e-05)) < 1e-8
 
