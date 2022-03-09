@@ -158,7 +158,7 @@ def calcproperties(gascondensateFluid, inputDict):
     return df
 
 
-def calcfluidproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, system=None, components=None, fractions=None):
+def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, system=None, components=None, fractions=None):
     """
     Perform flash and return fluid properties for a series of process properties.
 

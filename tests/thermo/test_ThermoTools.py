@@ -1,6 +1,7 @@
 # import the package
 import neqsim
-from neqsim.thermo import TPflash, calcfluidproperties, fluid, fluidComposition
+from neqsim.thermo import (TPflash, fluid, fluidComposition,
+                           fluidflashproperties)
 from numpy import isnan
 
 
@@ -56,8 +57,8 @@ def test_TPflash2():
     assert fluid1.getNumberOfPhases() == 2
 
 
-def test_calcfluidproperties():
-    res = calcfluidproperties(
+def test_fluidflashproperties():
+    res = fluidflashproperties(
         10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
 
     assert int(res.fluidProperties[0][0]) == 1  # Check number of phases
@@ -66,13 +67,13 @@ def test_calcfluidproperties():
     assert res.fluidProperties[0][2] == float(300)  # Correct temperature
 
 
-def test_calcfluidproperties_online_fraction():
-    res = calcfluidproperties(
+def test_fluidflashproperties_online_fraction():
+    res = fluidflashproperties(
         10, 300, 1, None, ['methane', 'ethane'], [0.7, 0.3])
-    res2 = calcfluidproperties(
+    res2 = fluidflashproperties(
         10, 300, 1, None, ['methane', 'ethane'], [0.6, 0.4])
 
-    res3 = calcfluidproperties([10, 10], [300, 300], 1, None, ['methane', 'ethane'], [
+    res3 = fluidflashproperties([10, 10], [300, 300], 1, None, ['methane', 'ethane'], [
                                [0.7, 0.6], [0.3, 0.4]])
 
     for k in range(0, len(res3.fluidProperties[0])):
