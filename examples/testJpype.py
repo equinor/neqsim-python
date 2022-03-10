@@ -10,9 +10,9 @@ import jpype
 # Enable Java imports
 import jpype.imports
 from jpype.types import *
-from neqsim.neqsimpython import neqsim
+from neqsim.neqsimpython import jNeqSim
 
-fluid1 = neqsim.thermo.system.SystemSrkEos(303.15, 35.01325)
+fluid1 = jNeqSim.thermo.system.SystemSrkEos(303.15, 35.01325)
 
 fluid1.addComponent("nitrogen", 0.0028941)
 fluid1.addComponent("CO2", 0.054069291)
