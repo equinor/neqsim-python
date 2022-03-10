@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Equinor/neqsimpython",
     package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    packages=setuptools.find_packages(),
     package_data={'neqsim': ['lib/*.jar']},
     include_package_data=True,
     classifiers=[
