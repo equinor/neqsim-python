@@ -12,7 +12,6 @@ setuptools.setup(
     long_description="NeqSim (Non-Equilibrium Simulator) is a library for estimation of fluid behaviour for oil and gas production. The basis for NeqSim is fundamental mathematical models related to phase behaviour and physical properties of oil and gas.",
     long_description_content_type="text/markdown",
     url="https://github.com/Equinor/neqsimpython",
-    package_dir={"": "src"},
     packages=setuptools.find_packages(),
     package_data={'neqsim': ['lib/*.jar']},
     include_package_data=True,
