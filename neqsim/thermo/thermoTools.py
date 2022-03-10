@@ -1,6 +1,6 @@
+import jpype
 import matplotlib.pyplot as plt
 import pandas
-import jpype
 from jpype.types import *
 from neqsim.neqsimpython import jNeqSim
 from neqsim.standards import ISO6976
@@ -189,7 +189,7 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
             raise ValueError(
                 "if system is not specified, components and fractions must be specified.")
 
-        system = neqsim.thermo.system.SystemSrkEos(273.15, 1.01325)
+        system = jNeqSim.thermo.system.SystemSrkEos(273.15, 1.01325)
         if not isinstance(components, list):
             components = [components]
 
@@ -203,7 +203,7 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
             system.setTotalNumberOfMoles(1)
             system.setMolarComposition(fractions)
 
-    thermoOps = neqsim.thermodynamicOperations.ThermodynamicOperations(system)
+    thermoOps = jNeqSim.thermodynamicOperations.ThermodynamicOperations(system)
 
     if isinstance(spec1, pandas.Series):
         spec1 = spec1.to_list()
