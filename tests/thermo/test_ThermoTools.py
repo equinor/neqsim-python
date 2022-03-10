@@ -1,6 +1,7 @@
 # import the package
 import neqsim
-from neqsim.thermo import fluid, TPflash, fluidComposition
+from neqsim.thermo import TPflash, fluid, fluidComposition
+
 
 def test_TPflash1():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -25,7 +26,7 @@ def test_TPflash1():
     TPflash(fluid1)
     fluid1.initThermoProperties()
     fluid1.initPhysicalProperties()
-    assert fluid1.getViscosity('kg/msec') == 1.574354015664789e-05
+    assert abs(fluid1.getViscosity('kg/msec') - 1.574354015664789e-05) < 1e-19
 
 def test_TPflash2():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
