@@ -1,6 +1,7 @@
 import jpype
-jpype.addClassPath('./lib/*')
-if not(jpype.isJVMStarted()):
-    jpype.startJVM(convertStrings =True)
 
-neqsim = jpype.JPackage('neqsim')
+if not(jpype.isJVMStarted()):
+    jpype.addClassPath('./lib/*')
+    jpype.startJVM(convertStrings=True)
+
+jNeqSim = jpype.JPackage('neqsim')
