@@ -1,63 +1,59 @@
-from typing import Optional, Type, Union
-from unittest import result
-
-import jpype
-import jpype.imports
 import matplotlib.pyplot as plt
 import pandas
+import jpype
 from jpype.types import *
-from neqsim.neqsimpython import neqsim
+from neqsim.neqsimpython import jNeqSim
 from neqsim.standards import ISO6976
 
-ThermodynamicOperations = neqsim.thermodynamicOperations.ThermodynamicOperations
-fluidcreator = neqsim.thermo.Fluid
+ThermodynamicOperations = jNeqSim.thermodynamicOperations.ThermodynamicOperations
+fluidcreator = jNeqSim.thermo.Fluid
 fluid_type = {
-    'srk': neqsim.thermo.system.SystemSrkEos,
-    'SRK-EoS': neqsim.thermo.system.SystemSrkEos,
-    'Psrk-EoS': neqsim.thermo.system.SystemPsrkEos,
-    'PSRK-EoS': neqsim.thermo.system.SystemPsrkEos,
-    'RK-EoS': neqsim.thermo.system.SystemRKEos,
-    'pr': neqsim.thermo.system.SystemPrEos,
-    'PR-EoS': neqsim.thermo.system.SystemPrEos,
-    'pr-umr': neqsim.thermo.system.SystemUMRPRUMCEos,
-    'srk-s': neqsim.thermo.system.SystemSrkSchwartzentruberEos,
-    'GERG-water': neqsim.thermo.system.SystemGERGwaterEos,
-    'SRK-MC': neqsim.thermo.system.SystemSrkMathiasCopeman,
-    'PR-MC': neqsim.thermo.system.SystemPrMathiasCopeman,
-    'scrk': neqsim.thermo.system.SystemSrkSchwartzentruberEos,
-    'ScRK-EoS': neqsim.thermo.system.SystemSrkSchwartzentruberEos,
-    'nrtl': neqsim.thermo.system.SystemNRTL,
-    'unifac': neqsim.thermo.system.SystemUNIFAC,
-    'electrolyte': neqsim.thermo.system.SystemFurstElectrolyteEos,
-    'Electrolyte-ScRK-EoS': neqsim.thermo.system.SystemFurstElectrolyteEos,
-    'Electrolyte-CPA-EoS': neqsim.thermo.system.SystemElectrolyteCPAstatoil,
-    'cpa-el': neqsim.thermo.system.SystemElectrolyteCPA,
-    'cpa-s': neqsim.thermo.system.SystemSrkCPAs,
-    'cpa-statoil': neqsim.thermo.system.SystemSrkCPAstatoil,
-    'cpa': neqsim.thermo.system.SystemSrkCPAstatoil,
-    'CPA-SRK-EoS': neqsim.thermo.system.SystemSrkCPA,
-    'cpa-srk': neqsim.thermo.system.SystemSrkCPA,
-    'srk-twoCoon': neqsim.thermo.system.SystemSrkTwuCoonParamEos,
-    'cpa-pr': neqsim.thermo.system.SystemPrCPA,
-    'CPA-PR-EoS': neqsim.thermo.system.SystemPrCPA,
-    'SRK-TwuCoon-EOS': neqsim.thermo.system.SystemSrkTwuCoonStatoilEos
+    'srk': jNeqSim.thermo.system.SystemSrkEos,
+    'SRK-EoS': jNeqSim.thermo.system.SystemSrkEos,
+    'Psrk-EoS': jNeqSim.thermo.system.SystemPsrkEos,
+    'PSRK-EoS': jNeqSim.thermo.system.SystemPsrkEos,
+    'RK-EoS': jNeqSim.thermo.system.SystemRKEos,
+    'pr': jNeqSim.thermo.system.SystemPrEos,
+    'PR-EoS': jNeqSim.thermo.system.SystemPrEos,
+    'pr-umr': jNeqSim.thermo.system.SystemUMRPRUMCEos,
+    'srk-s': jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
+    'GERG-water': jNeqSim.thermo.system.SystemGERGwaterEos,
+    'SRK-MC': jNeqSim.thermo.system.SystemSrkMathiasCopeman,
+    'PR-MC': jNeqSim.thermo.system.SystemPrMathiasCopeman,
+    'scrk': jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
+    'ScRK-EoS': jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
+    'nrtl': jNeqSim.thermo.system.SystemNRTL,
+    'unifac': jNeqSim.thermo.system.SystemUNIFAC,
+    'electrolyte': jNeqSim.thermo.system.SystemFurstElectrolyteEos,
+    'Electrolyte-ScRK-EoS': jNeqSim.thermo.system.SystemFurstElectrolyteEos,
+    'Electrolyte-CPA-EoS': jNeqSim.thermo.system.SystemElectrolyteCPAstatoil,
+    'cpa-el': jNeqSim.thermo.system.SystemElectrolyteCPA,
+    'cpa-s': jNeqSim.thermo.system.SystemSrkCPAs,
+    'cpa-statoil': jNeqSim.thermo.system.SystemSrkCPAstatoil,
+    'cpa': jNeqSim.thermo.system.SystemSrkCPAstatoil,
+    'CPA-SRK-EoS': jNeqSim.thermo.system.SystemSrkCPA,
+    'cpa-srk': jNeqSim.thermo.system.SystemSrkCPA,
+    'srk-twoCoon': jNeqSim.thermo.system.SystemSrkTwuCoonParamEos,
+    'cpa-pr': jNeqSim.thermo.system.SystemPrCPA,
+    'CPA-PR-EoS': jNeqSim.thermo.system.SystemPrCPA,
+    'SRK-TwuCoon-EOS': jNeqSim.thermo.system.SystemSrkTwuCoonStatoilEos
 }
 
 
 def fluid(name='srk', temperature=298.15, pressure=1.01325):
-    fluid_function = fluid_type.get(name, neqsim.thermo.system.SystemSrkEos)
+    fluid_function = fluid_type.get(name, jNeqSim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
 
 def readEclipseFluid(filename, wellName=''):
-    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
-    fluid1 = neqsim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
+    jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
+    fluid1 = jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
     return fluid1
 
 
 def setEclipseComposition(fluid, filename, wellName=''):
-    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
-    neqsim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(
+    jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
+    jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(
         fluid, filename)
 
 
@@ -117,7 +113,7 @@ def tunewaxmodel(fluid, experimentaldata):
     presList = experimentaldata['pressure']
     expList = [x*100.0 for x in experimentaldata['experiment']]
 
-    waxsim = neqsim.PVTsimulation.simulation.WaxFractionSim(fluid)
+    waxsim = jNeqSim.PVTsimulation.simulation.WaxFractionSim(fluid)
     waxsim.setTemperaturesAndPressures(
         JDouble[:](tempList), JDouble[:](presList))
     waxsim.setExperimentalData(JDouble[:](expList))
@@ -150,7 +146,7 @@ def dataFrame(system):
 
 
 def calcproperties(gascondensateFluid, inputDict):
-    properties = neqsim.util.generator.PropertyGenerator(gascondensateFluid, JDouble[:](
+    properties = jNeqSim.util.generator.PropertyGenerator(gascondensateFluid, JDouble[:](
         inputDict['temperature']), JDouble[:](inputDict['pressure']))
     props = properties.calculate()
     calculatedProperties = ({k: list(v) for k, v in props.items()})
@@ -259,7 +255,7 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
     length = len(pressure)
-    sepSim = neqsim.PVTsimulation.simulation.SeparatorTest(fluid)
+    sepSim = jNeqSim.PVTsimulation.simulation.SeparatorTest(fluid)
     sepSim.setSeparatorConditions(
         JDouble[:](temperature), JDouble[:](pressure))
     sepSim.runCalc()
@@ -281,7 +277,7 @@ def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
 
 def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Zmix=[], cummulativemolepercdepleted=[], display=False):
     length = len(pressure)
-    cvdSim = neqsim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
+    cvdSim = jNeqSim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
@@ -307,7 +303,7 @@ def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[]
 
 def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[], aqueousviscosity=[], display=False):
     length = len(pressure)
-    cmeSim = neqsim.PVTsimulation.simulation.ViscositySim(fluid)
+    cmeSim = jNeqSim.PVTsimulation.simulation.ViscositySim(fluid)
     cmeSim.setTemperaturesAndPressures(
         JDouble[:](temperature), JDouble[:](pressure))
     cmeSim.runCalc()
@@ -329,7 +325,7 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
 
 def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], density=[], Bg=[], viscosity=[], display=False):
     length = len(pressure)
-    cvdSim = neqsim.PVTsimulation.simulation.ConstantMassExpansion(fluid)
+    cvdSim = jNeqSim.PVTsimulation.simulation.ConstantMassExpansion(fluid)
     cvdSim.setTemperaturesAndPressures(
         JDouble[:](temperature), JDouble[:](pressure))
     cvdSim.runCalc()
@@ -359,7 +355,7 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
 
 def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
     length = len(pressure)
-    cvdSim = neqsim.PVTsimulation.simulation.DifferentialLiberation(fluid)
+    cvdSim = jNeqSim.PVTsimulation.simulation.DifferentialLiberation(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
@@ -389,7 +385,7 @@ def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relat
 
 def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
     length = len(pressure)
-    GOR = neqsim.PVTsimulation.simulation.GOR(fluid)
+    GOR = jNeqSim.PVTsimulation.simulation.GOR(fluid)
     GOR.setTemperaturesAndPressures(
         JDouble[:](temperature), JDouble[:](pressure))
     GOR.runCalc()
@@ -407,14 +403,14 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
 def saturationpressure(fluid, temperature=-1.0):
     if(temperature > 0):
         fluid.setTemperature(temperature)
-    cvdSim = neqsim.PVTsimulation.simulation.SaturationPressure(fluid)
+    cvdSim = jNeqSim.PVTsimulation.simulation.SaturationPressure(fluid)
     cvdSim.run()
     return cvdSim.getSaturationPressure()
 
 
 def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure=[], relativeoilvolume=[], display=False):
     length2 = len(cummulativeMolePercentGasInjected)
-    cvdSim = neqsim.PVTsimulation.simulation.SwellingTest(fluid)
+    cvdSim = jNeqSim.PVTsimulation.simulation.SwellingTest(fluid)
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
     cvdSim.setCummulativeMolePercentGasInjected(
@@ -630,7 +626,7 @@ def hydp(testSystem):
 
 
 def addfluids(fluid1, fluid2):
-    return neqsim.thermo.system.SystemInterface.addFluids(fluid1, fluid2)
+    return jNeqSim.thermo.system.SystemInterface.addFluids(fluid1, fluid2)
 
 
 def hydt(testSystem, type=1):
@@ -834,7 +830,7 @@ def entropy(thermoSystem, t=0, p=0):
 
 
 def densityGERG2008(phase):
-    GERG2008 = neqsim.thermo.util.GERG.NeqSimGERG2008()
+    GERG2008 = jNeqSim.thermo.util.GERG.NeqSimGERG2008()
     return GERG2008.getDensity(phase)
 
 

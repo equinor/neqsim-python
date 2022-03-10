@@ -1,6 +1,3 @@
-name = "neqsim"
-
-
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
     for method in methods:
@@ -8,7 +5,7 @@ def methods(checkClass):
 
 
 def setDatabase(connectionString):
-    from neqsim.neqsimpython import neqsim
+    from neqsim.neqsimpython import jNeqSim
 
-    neqsim.util.database.NeqSimDataBase.setConnectionString(connectionString)
-    neqsim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
+    jNeqSim.util.database.NeqSimDataBase.setConnectionString(connectionString)
+    jNeqSim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
