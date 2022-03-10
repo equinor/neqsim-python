@@ -1,3 +1,4 @@
+import jpype
 import matplotlib.pyplot as plt
 import pandas
 from jpype.types import *
@@ -151,6 +152,105 @@ def calcproperties(gascondensateFluid, inputDict):
     calculatedProperties = ({k: list(v) for k, v in props.items()})
     df = pandas.DataFrame(calculatedProperties)
     return df
+
+
+def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, system=None, components=None, fractions=None):
+    """
+    Perform flash and return fluid properties for a series of process properties.
+
+    Spec1 and Spec2 are the process conditions to perform flash at.
+    Supported flash modes: TP (1), PH (2) and PS (3).
+
+    A default system is created if not passed and components and fractions can specify it.
+    Fractions can be a single list of component fractions to use for all flashes or 
+    a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
+
+    """
+    if isinstance(mode, str):
+        if mode == 'PT':
+            mode = 1
+        elif mode == 'TP':
+            mode = 1
+            # Convert to PT
+            temp = spec1
+            spec1 = spec2
+            spec2 = temp
+        elif mode == 'PH':
+            mode = 2
+        elif mode == 'PS':
+            mode = 3
+
+    if not isinstance(mode, int) or mode < 1 or mode > 3:
+        raise ValueError(
+            "Mode must be in 'TP' or 1, 'PH' or 2 or 'PS' or 3")
+
+    if system is None:
+        if components is None or fractions is None:
+            raise ValueError(
+                "if system is not specified, components and fractions must be specified.")
+
+        system = jNeqSim.thermo.system.SystemSrkEos(273.15, 1.01325)
+        if not isinstance(components, list):
+            components = [components]
+
+        system.addComponents(components)
+
+        # Single component
+        if not isinstance(fractions, list):
+            fractions = [fractions]
+
+        if not all([isinstance(x, list) for x in fractions]):
+            system.setTotalNumberOfMoles(1)
+            system.setMolarComposition(fractions)
+
+    thermoOps = jNeqSim.thermodynamicOperations.ThermodynamicOperations(system)
+
+    if isinstance(spec1, pandas.Series):
+        spec1 = spec1.to_list()
+    elif not isinstance(spec1, list):
+        spec1 = [spec1]
+    jSpec1 = jpype.java.util.ArrayList()
+    [jSpec1.add(float(x)) for x in spec1]
+
+    if isinstance(spec2, pandas.Series):
+        spec2 = spec2.to_list()
+    elif not isinstance(spec2, list):
+        spec2 = [spec2]
+    jSpec2 = jpype.java.util.ArrayList()
+    [jSpec2.add(float(x)) for x in spec2]
+
+    if fractions is not None:
+        if not isinstance(fractions, list):
+            raise TypeError("Fractions must be a list if provided")
+        if components is not None:
+            if not isinstance(components, list):
+                components = [components]
+
+            if all([isinstance(x, list) for x in components]):
+                raise NotImplementedError
+            elif any([isinstance(x, list) for x in components]):
+                raise NotImplementedError
+            else:
+                components = None
+
+        if all([isinstance(x, list) for x in fractions]):
+            # pivot fractions
+            num_components = len(fractions)
+            jFractions = jpype.java.util.ArrayList()
+            for k_comp in range(0, num_components):
+                jComp = jpype.java.util.ArrayList()
+                [jComp.add(x) for x in fractions[k_comp]]
+                jFractions.add(jComp)
+
+            fractions = jFractions
+        elif any([isinstance(x, list) for x in fractions]):
+            pass
+            # raise NotImplementedError
+        else:
+            fractions = None
+
+    return thermoOps.propertyFlash(
+        jSpec1, jSpec2, mode, components, fractions)
 
 
 def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
