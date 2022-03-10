@@ -1,5 +1,4 @@
 # import the package
-import neqsim
 from neqsim.thermo import (TPflash, fluid, fluidComposition,
                            fluidflashproperties)
 from numpy import isnan
