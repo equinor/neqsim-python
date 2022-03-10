@@ -140,10 +140,8 @@ def compressor(teststream, pres=10.0, name="compressor ?"):
     return compressor
 
 
-def compressorChart(compressor, curveConditions, speed, flow, head, polyEff):
-    compressor.getCompressorChart().setCurves(JDouble[:](curveConditions), JDouble[:](
-        speed), JDouble[:][:](flow), JDouble[:][:](head), JDouble[:][:](polyEff))
-
+def compressorChart(compressor, curveConditions, speed, flow, head, polyEff ):
+    compressor.getCompressorChart().setCurves(JDouble[:](curveConditions), JDouble[:](speed), JDouble[:][:](flow), JDouble[:][:](head), JDouble[:][:](polyEff))
 
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
@@ -152,9 +150,7 @@ def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
 
 
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
-    compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](
-        curveConditions), JDouble[:](stoneWallflow), JDouble[:](stoneWallHead))
-
+    compressor.getCompressorChart().getStoneWallCurve().setCurve(JDouble[:](curveConditions), JDouble[:](stoneWallflow), JDouble[:](stoneWallHead))
 
 
 def pump(teststream, p=1.0, name="pump ?"):
@@ -294,10 +290,8 @@ def pipeline(teststream, position, diameter, height, outTemp, rough, outerHeatTr
     pipe.setHeightProfile(JDouble[:](height))
     pipe.setPipeDiameters(JDouble[:](diameter))
     pipe.setPipeWallRoughness(JDouble[:](rough))
-    pipe.setPipeOuterHeatTransferCoefficients(
-        JDouble[:](outerHeatTransferCoefficients))
-    pipe.setPipeWallHeatTransferCoefficients(
-        JDouble[:](pipeWallHeatTransferCoefficients))
+    pipe.setPipeOuterHeatTransferCoefficients(JDouble[:](outerHeatTransferCoefficients))
+    pipe.setPipeWallHeatTransferCoefficients(JDouble[:](pipeWallHeatTransferCoefficients))
     pipe.setOuterTemperatures(JDouble[:](outTemp))
     processoperations.add(pipe)
     return pipe

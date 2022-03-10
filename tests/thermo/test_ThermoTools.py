@@ -1,8 +1,7 @@
 # import the package
-from neqsim.thermo import (TPflash, fluid, fluidComposition,
-                           fluidflashproperties)
+from neqsim.thermo import (TPflash, addfluids, fluid, fluidComposition,
+                           fluidflashproperties, hydt)
 from numpy import isnan
-from neqsim.thermo import TPflash, addfluids, fluid, fluidComposition, hydt
 
 
 def test_TPflash1():
@@ -89,6 +88,8 @@ def test_fluidflashproperties_online_fraction():
             assert isnan(res3.fluidProperties[1][k])
         else:
             assert res3.fluidProperties[1][k] == res2.fluidProperties[0][k]
+
+
 def test_addfluid():
     pressure = 150.0
 
