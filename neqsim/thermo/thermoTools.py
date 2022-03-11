@@ -321,7 +321,7 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
         oilviscosity.append(cmeSim.getOilViscosity()[i])
         aqueousviscosity.append(cmeSim.getAqueousViscosity()[i])
     if display:
-        if has_matplotlib:
+        if has_matplotlib():
             plt.figure()
             plt.plot(pressure, gasviscosity, "o")
             plt.xlabel('Pressure [bara]')
@@ -417,6 +417,8 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
             plt.plot(pressure, GOR, "o")
             plt.xlabel('Pressure [bara]')
             plt.ylabel('GOR [Sm3/Sm3]')
+        else:
+            raise Exception("Package matplotlib is not installed")
     
 
 
