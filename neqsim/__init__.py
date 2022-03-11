@@ -4,6 +4,11 @@ def methods(checkClass):
         print(method.getName())
 
 
+def has_matplotlib():
+    from importlib.util import find_spec
+    return find_spec("matplotlib")
+
+
 def setDatabase(connectionString):
     from neqsim.neqsimpython import jNeqSim
 
