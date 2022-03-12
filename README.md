@@ -4,9 +4,14 @@ NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimho
 
 ## Releases
 
-The NeqSim Python package is distributed as a pip package. See the [Wiki](https://github.com/equinor/neqsimpython/wiki) for instructions on how to use it. Install the package by running
+The NeqSim Python package is distributed as a pip package. Install the package by running
 
-pip install --upgrade neqsim
+```
+pip install neqsim
+```
+
+NB! The python package matplotlib is used to show results but is not an requirement to run calculations.
+
 
 ## Getting Started
 
@@ -16,15 +21,6 @@ See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for h
 
 A Java run time environment ([Java JRE](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
 
-### Initial setup
-
-The NeqSim Python package is installed by downloading/cloning the library to your local computer (alternatively fork it to your private reprository). The following commands are dependent on a local installation of [GIT](https://git-scm.com/). |pypidownloads| |pypiversion|  
-
-```bash
-git clone https://github.com/equinor/neqsimpython.git
-cd neqsimpython
-pip install .
-```
 
 ## Contributing
 

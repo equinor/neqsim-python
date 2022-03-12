@@ -1,9 +1,12 @@
 import jpype
-import matplotlib.pyplot as plt
 import pandas
 from jpype.types import *
+from neqsim import has_matplotlib
 from neqsim.neqsimpython import jNeqSim
 from neqsim.standards import ISO6976
+
+if has_matplotlib():
+    import matplotlib.pyplot as plt
 
 ThermodynamicOperations = jNeqSim.thermodynamicOperations.ThermodynamicOperations
 fluidcreator = jNeqSim.thermo.Fluid
@@ -264,15 +267,18 @@ def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
         Bo.append(sepSim.getBofactor()[i])
         i = i+1
     if display:
-        plt.figure()
-        plt.plot(pressure, Bo, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('Bo [m3/Sm3]')
-        plt.figure()
-        plt.plot(pressure, GOR, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('GOR [Sm3/Sm3]')
-        plt.figure()
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, Bo, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('Bo [m3/Sm3]')
+            plt.figure()
+            plt.plot(pressure, GOR, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('GOR [Sm3/Sm3]')
+            plt.figure()
+        else:
+            raise Exception("Package matplotlib is not installed")
 
 
 def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Zmix=[], cummulativemolepercdepleted=[], display=False):
@@ -290,15 +296,18 @@ def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[]
             cvdSim.getCummulativeMolePercDepleted()[i])
         i = i+1
     if display:
-        plt.figure()
-        plt.plot(pressure, Zgas, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('Zgas [-]')
-        plt.figure()
-        plt.plot(pressure, relativeVolume, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('relativeVolume [-]')
-        plt.figure()
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, Zgas, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('Zgas [-]')
+            plt.figure()
+            plt.plot(pressure, relativeVolume, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('relativeVolume [-]')
+            plt.figure()
+        else:
+            raise Exception("Package matplotlib is not installed")
 
 
 def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[], aqueousviscosity=[], display=False):
@@ -312,15 +321,18 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
         oilviscosity.append(cmeSim.getOilViscosity()[i])
         aqueousviscosity.append(cmeSim.getAqueousViscosity()[i])
     if display:
-        plt.figure()
-        plt.plot(pressure, gasviscosity, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('gasviscosity [kg/msec]')
-        plt.figure()
-        plt.plot(pressure, oilviscosity, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('oilviscosity [kg/msec]')
-        plt.figure()
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, gasviscosity, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('gasviscosity [kg/msec]')
+            plt.figure()
+            plt.plot(pressure, oilviscosity, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('oilviscosity [kg/msec]')
+            plt.figure()
+        else:
+            raise Exception("Package matplotlib is not installed")
 
 
 def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], density=[], Bg=[], viscosity=[], display=False):
@@ -342,15 +354,18 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
         viscosity.append(cvdSim.getViscosity()[i])
         i = i+1
     if display:
-        plt.figure()
-        plt.plot(pressure, Zgas, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('Zgas [-]')
-        plt.figure()
-        plt.plot(pressure, relativeVolume, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('relativeVolume [-]')
-        plt.figure()
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, Zgas, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('Zgas [-]')
+            plt.figure()
+            plt.plot(pressure, relativeVolume, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('relativeVolume [-]')
+            plt.figure()
+        else:
+            raise Exception("Package matplotlib is not installed")
 
 
 def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
@@ -372,15 +387,18 @@ def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relat
         gasgravity.append(cvdSim.getRelGasGravity()[i])
         i = i+1
     if display:
-        plt.figure()
-        plt.plot(pressure, Zgas, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('Zgas [-]')
-        plt.figure()
-        plt.plot(pressure, relativeVolume, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('relativeVolume [-]')
-        plt.figure()
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, Zgas, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('Zgas [-]')
+            plt.figure()
+            plt.plot(pressure, relativeVolume, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('relativeVolume [-]')
+            plt.figure()
+        else:
+            raise Exception("Package matplotlib is not installed")
 
 
 def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
@@ -394,10 +412,14 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
         Bo.append(GOR.getBofactor()[i])
         i = i+1
     if display:
-        plt.figure()
-        plt.plot(pressure, GOR, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('GOR [Sm3/Sm3]')
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, GOR, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('GOR [Sm3/Sm3]')
+        else:
+            raise Exception("Package matplotlib is not installed")
+    
 
 
 def saturationpressure(fluid, temperature=-1.0):
@@ -425,6 +447,8 @@ def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, 
         plt.plot(pressure, relativeoilvolume, "o")
         plt.xlabel('Pressure [bara]')
         plt.ylabel('relativeoilvolume [-]')
+    else:
+        raise Exception("Package matplotlib is not installed")
 
 
 def printFrame(system):
@@ -694,35 +718,32 @@ def waterdewt(testSystem):
     return testSystem.getTemperature()
 
 
-def phaseenvelope(testSystem, plot=False):
+def phaseenvelope(testSystem, display=False):
     testFlash = ThermodynamicOperations(testSystem.clone())
     testFlash.calcPTphaseEnvelope()
     data = testFlash
-    if(plot):
-        plt.plot(list(data.getOperation().get("dewT")), list(
-            data.getOperation().get("dewP")), label="dew point")
-        plt.plot(list(data.getOperation().get("bubT")), list(
-            data.getOperation().get("bubP")), label="bubble point")
+    if display:
+        if has_matplotlib():
+            plt.plot(list(data.getOperation().get("dewT")), list(data.getOperation().get("dewP")), label="dew point")
+            plt.plot(list(data.getOperation().get("bubT")), list(data.getOperation().get("bubP")), label="bubble point")
 
-        try:
-            plt.plot(list(data.getOperation().get("dewT2")), list(
-                data.getOperation().get("dewP2")), label="dew point2")
-        except:
-            pass
-            #print("An exception occurred")
+            try:
+                plt.plot(list(data.getOperation().get("dewT2")), list(data.getOperation().get("dewP2")), label="dew point2")
+            except:
+                pass
 
-        try:
-            plt.plot(list(data.getOperation().get("bubT2")), list(
-                data.getOperation().get("bubP2")), label="bubble point2")
-        except:
-            pass
-            #print("An exception occurred")
+            try:
+                plt.plot(list(data.getOperation().get("bubT2")), list(data.getOperation().get("bubP2")), label="bubble point2")
+            except:
+                pass
 
-        plt.title('PT envelope')
-        plt.xlabel('Temperature [K]')
-        plt.ylabel('Pressure [bar]')
-        plt.legend()
-        plt.show()
+            plt.title('PT envelope')
+            plt.xlabel('Temperature [K]')
+            plt.ylabel('Pressure [bar]')
+            plt.legend()
+            plt.show()
+        else:
+            raise Exception("Package matplotlib is not installed")
     return testFlash
 
 

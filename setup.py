@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="neqsim",
-    version="2.3.18",
+    version="2.3.19",
     author="Even Solbraa",
     author_email="esolbraa@gmail.com",
     description="NeqSim is a tool for thermodynamic and process calculations",
@@ -20,7 +20,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    install_requires=['jpype1', 'matplotlib', 'pandas'],
+    install_requires=['jpype1', 'pandas'],
     python_requires='>=3'
 )
 
