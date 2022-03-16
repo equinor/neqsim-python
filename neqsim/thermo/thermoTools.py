@@ -169,7 +169,13 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
     a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
 
     """
-    if isinstance(mode, str):
+    if isinstance(mode, int):
+        if mode == 1:
+            # Convert to PT
+            temp = spec1
+            spec1 = spec2
+            spec2 = temp
+    elif isinstance(mode, str):
         if mode == 'PT':
             mode = 1
         elif mode == 'TP':
