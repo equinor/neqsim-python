@@ -1,1 +1,3 @@
 jpype1
+pandas
+matplotlib
