@@ -114,12 +114,12 @@ def newdatabase(system):
 def tunewaxmodel(fluid, experimentaldata):
     tempList = [x+273.15 for x in experimentaldata['temperature']]
     presList = experimentaldata['pressure']
-    expList = [x*100.0 for x in experimentaldata['experiment']]
+    expList = [[x*100.0 for x in experimentaldata['experiment']]]
 
     waxsim = jNeqSim.PVTsimulation.simulation.WaxFractionSim(fluid)
     waxsim.setTemperaturesAndPressures(
         JDouble[:](tempList), JDouble[:](presList))
-    waxsim.setExperimentalData(JDouble[:](expList))
+    waxsim.setExperimentalData(JDouble[:,:](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(20)
     waxsim.runTuning()
