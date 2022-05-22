@@ -460,7 +460,7 @@ def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, 
 def printFrame(system):
     system.createTable("")
     print(pandas.DataFrame(system.createTable("")
-                           ).to_string(header=False, index=False))
+                           ).to_markdown(index=False))
 
 
 def printFluid(system):
