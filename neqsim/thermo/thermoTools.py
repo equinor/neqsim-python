@@ -111,7 +111,7 @@ def newdatabase(system):
     system.createDatabase(1)
 
 
-def tunewaxmodel(fluid, experimentaldata):
+def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
     tempList = [x+273.15 for x in experimentaldata['temperature']]
     presList = experimentaldata['pressure']
     expList = [[x*100.0 for x in experimentaldata['experiment']]]
@@ -121,7 +121,7 @@ def tunewaxmodel(fluid, experimentaldata):
         JDouble[:](tempList), JDouble[:](presList))
     waxsim.setExperimentalData(JDouble[:,:](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
-    waxsim.getOptimizer().setMaxNumberOfIterations(20)
+    waxsim.getOptimizer().setMaxNumberOfIterations(maxiterations)
     waxsim.runTuning()
     waxsim.runCalc()
 
