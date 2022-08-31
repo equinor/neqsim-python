@@ -6,10 +6,9 @@ Created on Tue Apr 21 11:56:16 2020
 """
 
 
-from pyspark.sql.functions import *
 from pyspark import *
-
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
 
 spark = SparkSession \
     .builder \
@@ -25,5 +24,5 @@ import pandas as pd
 spark.conf.set("spark.sql.execution.arrow.enabled", "true")
 
 # Generate a Pandas DataFrame
-pdf = pd.DataFrame(np.random.rand(100, 3))
+pdf = pd.DataFrame(np.random.RandomState(1).rand(100, 3))
 df = spark.createDataFrame(pdf)

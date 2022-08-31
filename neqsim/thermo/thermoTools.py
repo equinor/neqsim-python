@@ -119,7 +119,7 @@ def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
     waxsim = jNeqSim.PVTsimulation.simulation.WaxFractionSim(fluid)
     waxsim.setTemperaturesAndPressures(
         JDouble[:](tempList), JDouble[:](presList))
-    waxsim.setExperimentalData(JDouble[:,:](expList))
+    waxsim.setExperimentalData(JDouble[:, :](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(maxiterations)
     waxsim.runTuning()
@@ -169,18 +169,16 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
     a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
 
     """
-    if isinstance(mode, int):
-        if mode == 1:
-            # Convert to PT
-            temp = spec1
-            spec1 = spec2
-            spec2 = temp
-    elif isinstance(mode, str):
+
+    if isinstance(mode, int) and mode == 1:
+        mode = 'TP'
+
+    if isinstance(mode, str):
         if mode == 'PT':
             mode = 1
         elif mode == 'TP':
+            # Neqsim method propertyFlash always has pressure as spec1.
             mode = 1
-            # Convert to PT
             temp = spec1
             spec1 = spec2
             spec2 = temp
@@ -191,7 +189,7 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
 
     if not isinstance(mode, int) or mode < 1 or mode > 3:
         raise ValueError(
-            "Mode must be in 'TP' or 1, 'PH' or 2 or 'PS' or 3")
+            "Mode must be in 'TP' or 'PT' or 1, 'PH' or 2 or 'PS' or 3")
 
     if system is None:
         if components is None or fractions is None:
@@ -262,7 +260,13 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
         jSpec1, jSpec2, mode, components, fractions)
 
 
-def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
+def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False):
+    if GOR is None:
+        GOR = []
+
+    if Bo is None:
+        Bo = []
+
     length = len(pressure)
     sepSim = jNeqSim.PVTsimulation.simulation.SeparatorTest(fluid)
     sepSim.setSeparatorConditions(
@@ -287,7 +291,22 @@ def separatortest(fluid, pressure, temperature, GOR=[], Bo=[], display=False):
             raise Exception("Package matplotlib is not installed")
 
 
-def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Zmix=[], cummulativemolepercdepleted=[], display=False):
+def CVD(fluid, pressure, temperature, relative_volume=None, liquidrelativevolume=None, Zgas=None, Zmix=None, cummulativemolepercdepleted=None, display=False):
+    if relative_volume is None:
+        relative_volume = []
+
+    if liquidrelativevolume is None:
+        liquidrelativevolume = []
+
+    if Zgas is None:
+        Zgas = []
+
+    if Zmix is None:
+        Zmix = []
+
+    if cummulativemolepercdepleted is None:
+        cummulativemolepercdepleted = []
+
     length = len(pressure)
     cvdSim = jNeqSim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
@@ -297,7 +316,7 @@ def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[]
         Zgas.append(cvdSim.getZgas()[i])
         Zmix.append(cvdSim.getZmix()[i])
         liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
-        relativeVolume.append(cvdSim.getRelativeVolume()[i])
+        relative_volume.append(cvdSim.getRelativeVolume()[i])
         cummulativemolepercdepleted.append(
             cvdSim.getCummulativeMolePercDepleted()[i])
         i = i+1
@@ -308,15 +327,24 @@ def CVD(fluid, pressure, temperature, relativeVolume=[], liquidrelativevolume=[]
             plt.xlabel('Pressure [bara]')
             plt.ylabel('Zgas [-]')
             plt.figure()
-            plt.plot(pressure, relativeVolume, "o")
+            plt.plot(pressure, relative_volume, "o")
             plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeVolume [-]')
+            plt.ylabel('relative_volume [-]')
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[], aqueousviscosity=[], display=False):
+def viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=None, aqueousviscosity=None, display=False):
+    if gasviscosity is None:
+        gasviscosity = []
+
+    if oilviscosity is None:
+        oilviscosity = []
+
+    if aqueousviscosity is None:
+        aqueousviscosity = []
+
     length = len(pressure)
     cmeSim = jNeqSim.PVTsimulation.simulation.ViscositySim(fluid)
     cmeSim.setTemperaturesAndPressures(
@@ -341,7 +369,28 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=[], oilviscosity=[],
             raise Exception("Package matplotlib is not installed")
 
 
-def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liquidrelativevolume=[], Zgas=[], Yfactor=[], isothermalcompressibility=[], density=[], Bg=[], viscosity=[], display=False):
+def CME(fluid, pressure, temperature, saturationPressure, relative_volume=None, liquidrelativevolume=None, Zgas=None, Yfactor=None, isothermalcompressibility=None, density=None, Bg=None, viscosity=None, display=False):
+    if relative_volume is None:
+        relative_volume = []
+
+    if liquidrelativevolume is None:
+        liquidrelativevolume = []
+
+    if Zgas is None:
+        Zgas = []
+
+    if Yfactor is None:
+        Yfactor = []
+
+    if isothermalcompressibility is None:
+        isothermalcompressibility = []
+
+    if density is None:
+        density = []
+
+    if Bg is None:
+        Bg = []
+
     length = len(pressure)
     cvdSim = jNeqSim.PVTsimulation.simulation.ConstantMassExpansion(fluid)
     cvdSim.setTemperaturesAndPressures(
@@ -350,7 +399,7 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
     saturationPressure = cvdSim.getSaturationPressure()
     for i in range(0, length):
         Zgas.append(cvdSim.getZgas()[i])
-        relativeVolume.append(cvdSim.getRelativeVolume()[i])
+        relative_volume.append(cvdSim.getRelativeVolume()[i])
         liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
         Yfactor.append(cvdSim.getYfactor()[i])
         isothermalcompressibility.append(
@@ -366,15 +415,42 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=[], liq
             plt.xlabel('Pressure [bara]')
             plt.ylabel('Zgas [-]')
             plt.figure()
-            plt.plot(pressure, relativeVolume, "o")
+            plt.plot(pressure, relative_volume, "o")
             plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeVolume [-]')
+            plt.ylabel('relative_volume [-]')
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relativegravity=[], Zgas=[], gasstandardvolume=[], Rs=[], oildensity=[], gasgravity=[], display=False):
+def difflib(fluid, pressure, temperature, relative_volume=None, Bo=None, Bg=None, relative_gravity=None, Zgas=None, gas_standard_volume=None, Rs=None, oil_density=None, gasgravity=None, display=False):
+    if relative_volume is None:
+        relative_volume = []
+
+    if Bo is None:
+        Bo = []
+
+    if Bg is None:
+        Bg = []
+
+    if relative_gravity is None:
+        relative_gravity = []
+
+    if Zgas is None:
+        Zgas = []
+
+    if gas_standard_volume is None:
+        gas_standard_volume = []
+
+    if Rs is None:
+        Rs = []
+
+    if oil_density is None:
+        oil_density = []
+
+    if gasgravity is None:
+        gasgravity = []
+
     length = len(pressure)
     cvdSim = jNeqSim.PVTsimulation.simulation.DifferentialLiberation(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
@@ -385,11 +461,11 @@ def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relat
         Bo.append(cvdSim.getBo()[i])
         Bg.append(cvdSim.getBg()[i])
         Zgas.append(cvdSim.getZgas()[i])
-        relativegravity.append(cvdSim.getRelGasGravity()[i])
-        relativeVolume.append(cvdSim.getRelativeVolume())
-        gasstandardvolume.append(cvdSim.getGasStandardVolume()[i])
+        relative_gravity.append(cvdSim.getRelGasGravity()[i])
+        relative_volume.append(cvdSim.getRelativeVolume())
+        gas_standard_volume.append(cvdSim.getgas_standard_volume()[i])
         Rs.append(cvdSim.getRs()[i])
-        oildensity.append(cvdSim.getOilDensity()[i])
+        oil_density.append(cvdSim.getOilDensity()[i])
         gasgravity.append(cvdSim.getRelGasGravity()[i])
         i = i+1
     if display:
@@ -399,24 +475,21 @@ def difflib(fluid, pressure, temperature, relativeVolume=[], Bo=[], Bg=[], relat
             plt.xlabel('Pressure [bara]')
             plt.ylabel('Zgas [-]')
             plt.figure()
-            plt.plot(pressure, relativeVolume, "o")
+            plt.plot(pressure, relative_volume, "o")
             plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeVolume [-]')
+            plt.ylabel('relative_volume [-]')
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
-    length = len(pressure)
+def GOR(fluid, pressure, temperature, display=False):
     GOR = jNeqSim.PVTsimulation.simulation.GOR(fluid)
     GOR.setTemperaturesAndPressures(
         JDouble[:](temperature), JDouble[:](pressure))
     GOR.runCalc()
-    for i in range(0, length):
-        GORdata.append(GOR.getGOR()[i])
-        Bo.append(GOR.getBofactor()[i])
-        i = i+1
+
+
     if display:
         if has_matplotlib():
             plt.figure()
@@ -425,7 +498,6 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
             plt.ylabel('GOR [Sm3/Sm3]')
         else:
             raise Exception("Package matplotlib is not installed")
-    
 
 
 def saturationpressure(fluid, temperature=-1.0):
@@ -436,23 +508,29 @@ def saturationpressure(fluid, temperature=-1.0):
     return cvdSim.getSaturationPressure()
 
 
-def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure=[], relativeoilvolume=[], display=False):
-    length2 = len(cummulativeMolePercentGasInjected)
+def swellingtest(fluid, fluid2, temperature, cumulative_molepercent_gas_injected, pressure=None, relative_oil_volume=None, display=False):
+    if pressure is None:
+        pressure = []
+
+    if relative_oil_volume is None:
+        relative_oil_volume = []
+
+    length2 = len(cumulative_molepercent_gas_injected)
     cvdSim = jNeqSim.PVTsimulation.simulation.SwellingTest(fluid)
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
     cvdSim.setCummulativeMolePercentGasInjected(
-        JDouble[:](cummulativeMolePercentGasInjected))
+        JDouble[:](cumulative_molepercent_gas_injected))
     cvdSim.runCalc()
     for i in range(0, length2):
-        relativeoilvolume.append(cvdSim.getRelativeOilVolume()[i])
+        relative_oil_volume.append(cvdSim.getrelative_oil_volume()[i])
         pressure.append(cvdSim.getPressures()[i])
         i = i+1
     if display:
         plt.figure()
-        plt.plot(pressure, relativeoilvolume, "o")
+        plt.plot(pressure, relative_oil_volume, "o")
         plt.xlabel('Pressure [bara]')
-        plt.ylabel('relativeoilvolume [-]')
+        plt.ylabel('relative_oil_volume [-]')
     else:
         raise Exception("Package matplotlib is not installed")
 
@@ -730,16 +808,20 @@ def phaseenvelope(testSystem, display=False):
     data = testFlash
     if display:
         if has_matplotlib():
-            plt.plot(list(data.getOperation().get("dewT")), list(data.getOperation().get("dewP")), label="dew point")
-            plt.plot(list(data.getOperation().get("bubT")), list(data.getOperation().get("bubP")), label="bubble point")
+            plt.plot(list(data.getOperation().get("dewT")), list(
+                data.getOperation().get("dewP")), label="dew point")
+            plt.plot(list(data.getOperation().get("bubT")), list(
+                data.getOperation().get("bubP")), label="bubble point")
 
             try:
-                plt.plot(list(data.getOperation().get("dewT2")), list(data.getOperation().get("dewP2")), label="dew point2")
+                plt.plot(list(data.getOperation().get("dewT2")), list(
+                    data.getOperation().get("dewP2")), label="dew point2")
             except:
                 pass
 
             try:
-                plt.plot(list(data.getOperation().get("bubT2")), list(data.getOperation().get("bubP2")), label="bubble point2")
+                plt.plot(list(data.getOperation().get("bubT2")), list(
+                    data.getOperation().get("bubP2")), label="bubble point2")
             except:
                 pass
 

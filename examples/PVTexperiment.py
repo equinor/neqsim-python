@@ -33,17 +33,18 @@ print("CME...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
 temperature = [301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
 
-relativevolume = []
+relative_volumee = []
 liquidrelativevolume = []
 Zgas =  []
 Yfactor = []
 isothermalcompressibility = []
 saturationpressure = None
-CME(fluid1,pressure,temperature,saturationpressure, relativevolume, liquidrelativevolume,Zgas,Yfactor,isothermalcompressibility)
+CME(fluid1, pressure, temperature, saturationpressure, relative_volume,
+    liquidrelativevolume, Zgas, Yfactor, isothermalcompressibility)
 
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
-plt.plot(pressure, relativevolume, "o")
+plt.plot(pressure, relative_volume, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('relative volume [-]')
 plt.subplot(132)
@@ -78,18 +79,18 @@ plt.show()
 print("CVD...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
 temperature = 301.0
-
-relativevolume = []
+relative_volume
+relative_volume = []
 liquidrelativevolume = []
 Zgas =  []
 Zmix = []
 cummulativemolepercdepleted = []
 
-CVD(fluid1,pressure,temperature,relativevolume, liquidrelativevolume,Zgas,Zmix,cummulativemolepercdepleted)
+CVD(fluid1,pressure,temperature,relative_volume, liquidrelativevolume,Zgas,Zmix,cummulativemolepercdepleted)
 
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
-plt.plot(pressure, relativevolume, "o")
+plt.plot(pressure, relative_volume, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('relative volume [-]')
 plt.subplot(132)
@@ -106,15 +107,16 @@ temperature = 301.0
 printFrame(fluid1)
 Bo = []
 Bg = []
-relativegravity = []
+relative_gravity = []
 Zgas =  []
-gasstandardvolume = []
+gas_standard_volume = []
 Rs = []
 oildensity = []
-relativegravity = []
-relativevolume = []
+relative_gravity = []
+relative_volume = []
 
-difflib(fluid1.clone(),pressure,temperature,relativevolume,Bo, Bg,relativegravity,Zgas,gasstandardvolume,Rs, oildensity, relativegravity)
+difflib(fluid1.clone(), pressure, temperature, relative_volume, Bo, Bg,
+        relative_gravity, Zgas, gas_standard_volume, Rs, oildensity, relative_gravity)
 
 
 plt.figure(figsize=(20, 5))
@@ -137,16 +139,17 @@ plt.show()
 
 print("swelling test...............")
 injectiongas = createfluid('CO2')
-relativeoilvolume = []
+relative_oil_volume = []
 pressure = []
 fluid1.setPressure(100.0)
 TPflash(fluid1)
 temperature = 301.0
 molPercentInjected = [0.0, 1.0, 5.0, 8.0, 10.0, 15.0, 20.0]
-swellingtest(fluid1,injectiongas,temperature, molPercentInjected, pressure,relativeoilvolume)
+swellingtest(fluid1, injectiongas, temperature,
+             molPercentInjected, pressure, relative_oil_volume)
 
 plt.figure()
-plt.plot(pressure, relativeoilvolume, "o")
+plt.plot(pressure, relative_oil_volume, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('swollen volume/initial volume [-]')
 plt.show()

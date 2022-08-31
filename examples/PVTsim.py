@@ -25,9 +25,9 @@ plt.plot(pressure, GOR, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('GOR [Sm3/Sm3]')
 plt.show()
-relativeVolume=[]
+relative_volume = []
 Zgas=[]
 temperature = 313.15
-CVD(fluid1, pressure, temperature, relativeVolume, Zgas, display=False)
+CVD(fluid1, pressure, temperature, relative_volume, Zgas, display=False)
 print("rel vol")
-print(relativeVolume)
+print(relative_volume)
