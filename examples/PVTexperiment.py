@@ -1,19 +1,20 @@
-from neqsim.thermo import *
 import matplotlib.pyplot as plt
+from neqsim.thermo import *
 
 fluid1 = createfluid('black oil')
 TPflash(fluid1)
 
 print("Phase envelope...................")
-phaseenvelope(fluid1,True)
+phaseenvelope(fluid1, True)
 
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0, 1.01325]
-temperature = [301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
+temperature = [301.0, 301.0, 301.0, 301.0,
+               301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
 
 print("Viscosity...................")
 gasviscosity = []
 oilviscosity = []
-viscositysim(fluid1,pressure,temperature,gasviscosity,oilviscosity)
+viscositysim(fluid1, pressure, temperature, gasviscosity, oilviscosity)
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
 plt.plot(pressure, gasviscosity, "o")
@@ -25,17 +26,17 @@ plt.xlabel('Pressure [bara]')
 plt.ylabel('oilviscosity [kg/msec]')
 plt.show()
 
-#saturation pressure calc
-satpress= saturationpressure(fluid1, 340.0)
+# saturation pressure calc
+satpress = saturationpressure(fluid1, 340.0)
 print("saturation pressure ", satpress)
 
 print("CME...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
 temperature = [301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
 
-relative_volumee = []
+relative_volume = []
 liquidrelativevolume = []
-Zgas =  []
+Zgas = []
 Yfactor = []
 isothermalcompressibility = []
 saturationpressure = None
@@ -59,7 +60,8 @@ plt.show()
 
 print("GOR")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0, 1.01325]
-temperature = [301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
+temperature = [301.0, 301.0, 301.0, 301.0,
+               301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
 
 GORdata = []
 Bo = []
@@ -82,11 +84,12 @@ temperature = 301.0
 relative_volume
 relative_volume = []
 liquidrelativevolume = []
-Zgas =  []
+Zgas = []
 Zmix = []
 cummulativemolepercdepleted = []
 
-CVD(fluid1,pressure,temperature,relative_volume, liquidrelativevolume,Zgas,Zmix,cummulativemolepercdepleted)
+CVD(fluid1, pressure, temperature, relative_volume,
+    liquidrelativevolume, Zgas, Zmix, cummulativemolepercdepleted)
 
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
@@ -100,7 +103,6 @@ plt.ylabel('cummulative depleted [-]')
 plt.show()
 
 
-
 print("differential liberation...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0, 1.01325]
 temperature = 301.0
@@ -108,7 +110,7 @@ printFrame(fluid1)
 Bo = []
 Bg = []
 relative_gravity = []
-Zgas =  []
+Zgas = []
 gas_standard_volume = []
 Rs = []
 oildensity = []
@@ -135,8 +137,6 @@ plt.ylabel('oil density [kg/m3]')
 plt.show()
 
 
-
-
 print("swelling test...............")
 injectiongas = createfluid('CO2')
 relative_oil_volume = []
@@ -153,5 +153,3 @@ plt.plot(pressure, relative_oil_volume, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('swollen volume/initial volume [-]')
 plt.show()
-
-
