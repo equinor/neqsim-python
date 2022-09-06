@@ -1,7 +1,7 @@
 import jpype
 import pandas
 from jpype.types import *
-from neqsim import has_matplotlib
+from neqsim import has_matplotlib, has_tabulate
 from neqsim.neqsimpython import jNeqSim
 from neqsim.standards import ISO6976
 
@@ -140,12 +140,13 @@ def data(system):
 
 
 def table(system):
+    # todo: convert to class method
     return system.createTable("")
 
 
 def dataFrame(system):
-    system.createTable("")
-    return pandas.DataFrame(system.createTable(""))
+    # todo: convert to class method
+    return pandas.DataFrame(table(system)).astype(str)
 
 
 def calcproperties(gascondensateFluid, inputDict):
@@ -536,9 +537,10 @@ def swellingtest(fluid, fluid2, temperature, cumulative_molepercent_gas_injected
 
 
 def printFrame(system):
-    system.createTable("")
-    print(pandas.DataFrame(system.createTable("")
-                           ).to_markdown(index=False))
+    if has_tabulate():
+        print(dataFrame(system).to_markdown(index=False))
+    else:
+        print(dataFrame(system))
 
 
 def printFluid(system):
