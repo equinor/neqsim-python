@@ -1,4 +1,5 @@
-from .neqsimpython import * 
+from .neqsimpython import *
+
 
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
@@ -9,6 +10,11 @@ def methods(checkClass):
 def has_matplotlib():
     from importlib.util import find_spec
     return find_spec("matplotlib")
+
+
+def has_tabulate():
+    from importlib.util import find_spec
+    return find_spec("tabulate")
 
 
 def setDatabase(connectionString):
