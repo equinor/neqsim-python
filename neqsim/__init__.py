@@ -1,5 +1,6 @@
 from .neqsimpython import *
 
+
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
     for method in methods:
