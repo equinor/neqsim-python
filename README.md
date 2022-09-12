@@ -19,7 +19,7 @@ See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for h
 
 ### Prerequisites
 
-Java version 11 or higher ([Java JRE](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
+Java version 11 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
 
 
 ## Contributing
