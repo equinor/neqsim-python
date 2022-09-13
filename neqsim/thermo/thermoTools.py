@@ -374,16 +374,16 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=N
 def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=None, liquidrelativevolume=None, Zgas=None, Yfactor=None, isothermalcompressibility=None, density=None, Bg=None, viscosity=None, display=False):
     if relativeVolume is None:
         relativeVolume = []
-    
+
     if liquidrelativevolume is None:
         liquidrelativevolume = []
-    
+
     if Zgas is None:
         Zgas = []
-    
+
     if Yfactor is None:
         Yfactor = []
-    
+
     if isothermalcompressibility is None:
         isothermalcompressibility = []
 
@@ -488,26 +488,26 @@ def difflib(fluid, pressure, temperature, relativeVolume=None, Bo=None, Bg=None,
             raise Exception("Package matplotlib is not installed")
 
 
-def GOR(fluid, pressure, temperature, GOR=None, Bo=None,  display=False):
-    if GOR is None:
-        GOR = []
+def GOR(fluid, pressure, temperature, GORdata=None, Bo=None,  display=False):
+    if GORdata is None:
+        GORdata = []
 
     if Bo is None:
         Bo = []
 
     length = len(pressure)
-    GOR = jNeqSim.PVTsimulation.simulation.GOR(fluid)
-    GOR.setTemperaturesAndPressures(
+    jGOR = jNeqSim.PVTsimulation.simulation.GOR(fluid)
+    jGOR.setTemperaturesAndPressures(
         JDouble[:](temperature), JDouble[:](pressure))
-    GOR.runCalc()
+    jGOR.runCalc()
     for i in range(0, length):
-        GORdata.append(GOR.getGOR()[i])
-        Bo.append(GOR.getBofactor()[i])
+        GORdata.append(jGOR.getGOR()[i])
+        Bo.append(jGOR.getBofactor()[i])
         i = i+1
     if display:
         if has_matplotlib():
             plt.figure()
-            plt.plot(pressure, GOR, "o")
+            plt.plot(pressure, GORdata, "o")
             plt.xlabel('Pressure [bara]')
             plt.ylabel('GOR [Sm3/Sm3]')
         else:
@@ -544,8 +544,6 @@ def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, 
         plt.plot(pressure, relativeoilvolume, "o")
         plt.xlabel('Pressure [bara]')
         plt.ylabel('relativeoilvolume [-]')
-    else:
-        raise Exception("Package matplotlib is not installed")
 
 
 def printFrame(system):
