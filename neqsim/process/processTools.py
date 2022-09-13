@@ -237,7 +237,7 @@ def cooler(teststream, name=""):
 
 
 def heatExchanger(stream1, stream2=None, name=""):
-    if stream2 == None:
+    if stream2 is None:
         heater = jNeqSim.processSimulation.processEquipment.heatExchanger.HeatExchanger(
             stream1)
     else:
