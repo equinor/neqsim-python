@@ -540,10 +540,13 @@ def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, 
         pressure.append(cvdSim.getPressures()[i])
         i = i+1
     if display:
-        plt.figure()
-        plt.plot(pressure, relativeoilvolume, "o")
-        plt.xlabel('Pressure [bara]')
-        plt.ylabel('relativeoilvolume [-]')
+        if has_matplotlib():
+            plt.figure()
+            plt.plot(pressure, relativeoilvolume, "o")
+            plt.xlabel('Pressure [bara]')
+            plt.ylabel('relativeoilvolume [-]')
+        else:
+            raise Exception("Package matplotlib is not installed")
 
 
 def printFrame(system):
