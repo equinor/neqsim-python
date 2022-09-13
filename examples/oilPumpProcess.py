@@ -4,8 +4,8 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
+from neqsim.process import clearProcess, pump, runProcess, stream
 from neqsim.thermo import fluid
-from neqsim.process import clearProcess, stream, runProcess, pump
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -23,6 +23,6 @@ stream1 = stream(fluid1)
 pump1 = pump(stream1, 11.0)
 runProcess()
 
-print("temperature out of pump ", pump1.getOutStream().getTemperature()-273.15, " °C")
+print("temperature out of pump ",
+      pump1.getOutStream().getTemperature()-273.15, " °C")
 print("pump power ", pump1.getPower()/1e3, " kW")
-

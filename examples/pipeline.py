@@ -5,8 +5,8 @@ Created on Wed Sep 11 20:27:48 2019
 @author: esol
 """
 from neqsim import methods
-from neqsim.thermo import fluid, TPflash
-from neqsim.process import pipe, pipeline, clearProcess, stream, runProcess
+from neqsim.process import clearProcess, pipe, pipeline, runProcess, stream
+from neqsim.thermo import TPflash, fluid
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-Eo
@@ -25,7 +25,7 @@ roughnes = [50.0e-6, 50.0e-6, 50.0e-6]
 position = [0.0, 500.0, 1000.0]
 height = [0.0, -400.0, -800.0]
 #height = [0.0, 0.0, 0.0]
-outtemperatures =[278.15, 278.15, 278.15]
+outtemperatures = [278.15, 278.15, 278.15]
 outHeatU = [15.0, 15.0, 15.0]
 wallHeatU = [15.0, 15.0, 15.0]
 clearProcess()
@@ -35,11 +35,11 @@ deltaElevation = 0.0
 pipeLength = 500000.0
 #roughness= 15.0e-6
 #diameter = 1.1
-pipe1 = pipeline(stream1, position, diameter, height, outtemperatures, roughnes,outHeatU,wallHeatU)
+pipe1 = pipeline(stream1, position, diameter, height,
+                 outtemperatures, roughnes, outHeatU, wallHeatU)
 #pipeSimple = pipe(stream1, pipeLength, deltaElevation, diameter, roughness)
 runProcess()
-#pipe1.getOutStream().displayResult()
+# pipe1.getOutStream().displayResult()
 print('pressure ', pipe1.getOutStream().getPressure('bara'))
 print('temperature ', pipe1.getOutStream().getTemperature('C'))
-#runProcess()
-
+# runProcess()

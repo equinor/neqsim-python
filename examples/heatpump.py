@@ -6,8 +6,9 @@ Created on Mon Nov  9 20:13:11 2020
 """
 
 import neqsim
+from neqsim.process import (clearProcess, compressor, cooler, expander, heater,
+                            pump, runProcess, stream, valve)
 from neqsim.thermo.thermoTools import *
-from neqsim.process import stream,clearProcess,runProcess, pump, heater, cooler, expander, valve, compressor, heater
 
 fluid_1 = fluid("srk")
 fluid_1.addComponent("propane", 1.0)
@@ -29,15 +30,15 @@ stream_2 = stream(cooler_1.getOutStream())
 stream_2.setSpecification("dewP")
 
 cooler_1.setOutStream(stream_2)
-JTvalve.setOutletPressure(stream_2.getPressure());
+JTvalve.setOutletPressure(stream_2.getPressure())
 
-compressor_1 = compressor(stream_2, 10.0);
+compressor_1 = compressor(stream_2, 10.0)
 compressor_1.setSpecification("out stream")
 compressor_1.setOutletPressure(stream_1.getPressure())
 
 heater = heater(compressor_1.getOutStream())
-heater.setSpecification("out stream");
-heater.setOutStream(stream_1);
+heater.setSpecification("out stream")
+heater.setOutStream(stream_1)
 
 runProcess()
 

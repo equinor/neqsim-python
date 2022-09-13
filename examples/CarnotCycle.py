@@ -5,9 +5,13 @@ Created on Thu Jan  2 15:49:07 2020
 @author: esol
 """
 
+import matplotlib
+import matplotlib.pyplot as plt
 import neqsim
+import numpy as np
+from neqsim.process import (clearProcess, compressor, cooler, expander, heater,
+                            pump, runProcess, stream, valve)
 from neqsim.thermo.thermoTools import *
-from neqsim.process import stream,clearProcess,runProcess, pump, heater, cooler, expander, valve, compressor, heater
 
 # The starting point is a fluid at termodynamic equilibrium
 P1 = 200.0
@@ -28,7 +32,7 @@ S1 = fluid_1.getEntropy("kJ/kgK")
 V1 = fluid_1.getVolume("m3")
 
 # The Carnot cycle when acting as a heat engine consists of the following steps:¨
-# 1-2: Isothermal Expansion. Heat is transferred reversibly from high temperature reservoir at constant temperature TH (isothermal heat addition or absorption). 
+# 1-2: Isothermal Expansion. Heat is transferred reversibly from high temperature reservoir at constant temperature TH (isothermal heat addition or absorption).
 V2 = V1*1.5
 TVflash(fluid_1, V2, "m3")
 fluid_1.display()
@@ -77,9 +81,9 @@ QH = (T_hot+273.15)*dS
 QC = (T_cold+273.15)*dS
 efficiency = (QH-QC)/QH
 
-volumes = [V1, V2,V3,V4, V5]
+volumes = [V1, V2, V3, V4, V5]
 pressures = [P1, P2, P3, P4, P5]
-entropy = [S1, S2,S3, S4, S5]
+entropy = [S1, S2, S3, S4, S5]
 temperature = [T1, T2, T3, T4, T5]
 
 print("Carnot efficiency: ", efficiency)
@@ -88,16 +92,12 @@ efficiency2 = 1.0 - (T_cold+273.15)/(T_hot+273.15)
 print("best Carnot efficiency ",  efficiency2)
 
 
-import matplotlib
-import numpy as np
-import matplotlib.pyplot as plt
-
-plt.plot(volumes, pressures);
-plt.xlabel('Volume [m3]');
-plt.ylabel('Pressure [bara]');
+plt.plot(volumes, pressures)
+plt.xlabel('Volume [m3]')
+plt.ylabel('Pressure [bara]')
 plt.show()
 
-plt.plot(entropy, temperature);
-plt.xlabel('Entropy [kJ/kgK]');
-plt.ylabel('Temperature [C]');
+plt.plot(entropy, temperature)
+plt.xlabel('Entropy [kJ/kgK]')
+plt.ylabel('Temperature [C]')
 plt.show()

@@ -4,9 +4,9 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
-from neqsim.thermo import fluid
 from neqsim import methods
-from neqsim.process import clearProcess, heatExchanger, stream, runProcess
+from neqsim.process import clearProcess, heatExchanger, runProcess, stream
+from neqsim.thermo import fluid
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-Eo
@@ -37,7 +37,7 @@ stream2 = stream(fluid2)
 heatExchanger1 = heatExchanger(stream1, stream2, "exchanger1")
 runProcess()
 
-#heatExchanger1.displayResult()
+# heatExchanger1.displayResult()
 
 temp1 = heatExchanger1.getOutStream(0).getTemperature()-273.15
 temp2 = heatExchanger1.getOutStream(1).getTemperature()-273.15

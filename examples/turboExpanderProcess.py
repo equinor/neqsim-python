@@ -4,9 +4,10 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
-from neqsim.thermo import fluid
 from neqsim import methods
-from neqsim.process import clearProcess, expander, stream, valve, separator, compressor, runProcess, viewProcess, heater
+from neqsim.process import (clearProcess, compressor, expander, heater,
+                            runProcess, separator, stream, valve, viewProcess)
+from neqsim.thermo import fluid
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -31,9 +32,9 @@ expander1 = expander(stream1, 40.0)
 separartor1 = separator(expander1.getOutStream())
 runProcess()
 
-print("temperature in separartor", expander1.getOutStream().getTemperature()-273.15, " °C")
+print("temperature in separartor",
+      expander1.getOutStream().getTemperature()-273.15, " °C")
 print("expander power ", expander1.getPower()/1e6, " MW")
 
 separartor1.displayResult()
 methods(expander1)
-

@@ -10,7 +10,7 @@ The current python script demonstrates use of neqsim in python
 A gas mixture is defined and the density of the gas is calculated.
 @author: esol
 """
-from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition
+from neqsim.thermo import TPflash, fluid, fluidComposition, phaseenvelope
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -26,8 +26,9 @@ fluid1.addComponent("n-butane", 1.0, "mol/sec")
 fluid1.addComponent("i-pentane", 0.4, "mol/sec")
 fluid1.addComponent("n-pentane", 0.2, "mol/sec")
 fluid1.addComponent("n-hexane", 0.1, "mol/sec")
-fluid1.setMixingRule("classic") # classic will use binary kij 
-fluid1.setMultiPhaseCheck(True) #True if more than two phases could be present
+fluid1.setMixingRule("classic")  # classic will use binary kij
+# True if more than two phases could be present
+fluid1.setMultiPhaseCheck(True)
 
 """
 Set a new fluid composition, temperature and pressure (fluid composition will 

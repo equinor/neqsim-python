@@ -5,25 +5,28 @@ Created on Thu Jan 30 19:39:10 2020
 @author: esol
 """
 
-from neqsim.thermo import fluid, addOilFractions, printFrame, dataFrame, fluidcreator,createfluid,createfluid2, TPflash, phaseenvelope
-from neqsim.process import pump, clearProcess, stream, valve, separator, compressor, runProcess, viewProcess, heater, mixer, recycle
-from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition
-from neqsim.process import clearProcess, stream, valve, separator,compressor, runProcess, viewProcess, heater, mixer, recycle
+from neqsim.process import (clearProcess, compressor, heater, mixer, pump,
+                            recycle, runProcess, separator, stream, valve,
+                            viewProcess)
+from neqsim.thermo import (TPflash, addOilFractions, createfluid, createfluid2,
+                           dataFrame, fluid, fluidComposition, fluidcreator,
+                           phaseenvelope, printFrame)
+
 # Start by creating a fluid in neqsim uing a predifined fluid (dry gas, rich gas, light oil, black oil)
-#Set temperature and pressure and do a TPflash. Show results in a dataframe.
+# Set temperature and pressure and do a TPflash. Show results in a dataframe.
 
 
 feedPressure = 50.0
 feedTemperature = 30.0
 fluid1 = fluid("cpa")  # create a fluid using the SRK-EoS
-fluid1.addComponent("CO2",1e-10)
-fluid1.addComponent("methane",1e-10)
-fluid1.addComponent("ethane",1e-10)
-fluid1.addComponent("propane",1e-10)
-fluid1.addComponent("water",1e-10)
-fluid1.addComponent("TEG",1e-10)
+fluid1.addComponent("CO2", 1e-10)
+fluid1.addComponent("methane", 1e-10)
+fluid1.addComponent("ethane", 1e-10)
+fluid1.addComponent("propane", 1e-10)
+fluid1.addComponent("water", 1e-10)
+fluid1.addComponent("TEG", 1e-10)
 fluid1.setMixingRule(10)
-fluid1.setMultiPhaseCheck(True) 
+fluid1.setMultiPhaseCheck(True)
 fluidcomposition = [0.031, 0.9297, 0.0258, 0.0135, 6.48413454028242e-002,
                     1.0e-15]
 fluidComposition(fluid1, fluidcomposition)
@@ -31,7 +34,7 @@ fluid1.setTemperature(feedTemperature, "C")
 fluid1.setPressure(feedPressure, "bara")
 fluid1.setTotalFlowRate(5.0, "MSm3/day")
 
-fluid2= fluid("cpa")
+fluid2 = fluid("cpa")
 fluid2.addComponent("CO2", 1.0e-10)
 fluid2.addComponent("methane", 1.0e-10)
 fluid2.addComponent("ethane", 1.0e-10)
@@ -65,11 +68,10 @@ heater1 = heater(flashDrum.getLiquidOutStream())
 heater1.setOutTemperature(273.15+195.0)
 stripper = separator(heater1.getOutStream())
 
-cooler1 =  heater(stripper.getLiquidOutStream())
+cooler1 = heater(stripper.getLiquidOutStream())
 cooler1.setOutTemperature(313.0)
 
 pump1 = pump(cooler1.getOutStream(), 75.0)
-
 
 
 runProcess()

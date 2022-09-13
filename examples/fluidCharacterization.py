@@ -10,7 +10,7 @@ The current python script demonstrates use of neqsim in python
 A gas mixture is defined and the density of the gas is calculated.
 @author: esol
 """
-from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition
+from neqsim.thermo import TPflash, fluid, fluidComposition, phaseenvelope
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -37,9 +37,10 @@ fluid1.getCharacterization().getLumpingModel().setNumberOfLumpedComponents(12)
 fluid1.getCharacterization().characterisePlusFraction();
 """
 fluid1.addComponent("water", 0.2, "mol/sec")
-fluid1.setMixingRule("classic") # classic will use binary kij 
-fluid1.setMultiPhaseCheck(True) #True if more than two phases could be present
-fluid1.useVolumeCorrection(True) # True if volume translation should be used
+fluid1.setMixingRule("classic")  # classic will use binary kij
+# True if more than two phases could be present
+fluid1.setMultiPhaseCheck(True)
+fluid1.useVolumeCorrection(True)  # True if volume translation should be used
 """
 Set a new fluid composition, temperature and pressure (fluid composition will 
 be normalized), and calculate nubmber of phases and composition at 
@@ -56,7 +57,7 @@ fluid1.setPressure(101.0, "bara")
 fluid1.setTemperature(22.3, "C")
 TPflash(fluid1)
 fluid1.initProperties()
-#fluid1.display()
+# fluid1.display()
 """
 Print results (number of phases at equilibrium and density). 
 For how to read more properties see: propertiesOfNaturalGas.py
@@ -65,5 +66,5 @@ print("number of phases ", fluid1.getNumberOfPhases())
 print("fluid density ", fluid1.getDensity("kg/m3"), " kg/m3")
 print("gas density ", fluid1.getPhase("gas").getDensity("kg/m3"), " kg/m3")
 print("oil density ", fluid1.getPhase("oil").getDensity("kg/m3"), " kg/m3")
-print("aqueous density ", fluid1.getPhase("aqueous").getDensity("kg/m3"), " kg/m3")
-
+print("aqueous density ", fluid1.getPhase(
+    "aqueous").getDensity("kg/m3"), " kg/m3")

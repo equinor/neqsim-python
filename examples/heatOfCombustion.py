@@ -5,8 +5,8 @@ Created on Fri Aug 30 21:36:49 2019
 @author: esol
 """
 
-from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition
 from neqsim.standards import ISO6976
+from neqsim.thermo import TPflash, fluid, fluidComposition, phaseenvelope
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -22,7 +22,7 @@ fluid1.addComponent("n-butane", 1.0, "mol/sec")
 fluid1.addComponent("i-pentane", 0.04, "mol/sec")
 fluid1.addComponent("n-pentane", 0.002, "mol/sec")
 fluid1.addComponent("n-hexane", 0.001, "mol/sec")
-fluid1.setMixingRule("classic") # classic will use binary kij 
+fluid1.setMixingRule("classic")  # classic will use binary kij
 
 TPflash(fluid1)
 
@@ -35,9 +35,5 @@ iso6976.calculate()
 GCV = iso6976.getValue("SuperiorCalorificValue")/1.0e3
 WI = iso6976.getValue("SuperiorWobbeIndex")/1.0e3
 
-print('GCV '+ str(GCV) + ' MJ/m3')
-print('WI '+ str(WI), ' MJ/m3')
-
-
-
-
+print('GCV ' + str(GCV) + ' MJ/m3')
+print('WI ' + str(WI), ' MJ/m3')
