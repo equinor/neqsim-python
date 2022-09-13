@@ -292,12 +292,12 @@ def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False
             raise Exception("Package matplotlib is not installed")
 
 
-def CVD(fluid, pressure, temperature, relative_volume=None, liquidrelativevolume=None, Zgas=None, Zmix=None, cummulativemolepercdepleted=None, display=False):
+def CVD(fluid, pressure, temperature, relative_volume=None, liquid_relative_volume=None, Zgas=None, Zmix=None, cummulativemolepercdepleted=None, display=False):
     if relative_volume is None:
         relative_volume = []
 
-    if liquidrelativevolume is None:
-        liquidrelativevolume = []
+    if liquid_relative_volume is None:
+        liquid_relative_volume = []
 
     if Zgas is None:
         Zgas = []
@@ -316,7 +316,7 @@ def CVD(fluid, pressure, temperature, relative_volume=None, liquidrelativevolume
     for i in range(0, length):
         Zgas.append(cvdSim.getZgas()[i])
         Zmix.append(cvdSim.getZmix()[i])
-        liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
+        liquid_relative_volume.append(cvdSim.getLiquidRelativeVolume()[i])
         relative_volume.append(cvdSim.getRelativeVolume()[i])
         cummulativemolepercdepleted.append(
             cvdSim.getCummulativeMolePercDepleted()[i])
@@ -370,12 +370,12 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=N
             raise Exception("Package matplotlib is not installed")
 
 
-def CME(fluid, pressure, temperature, saturationPressure, relative_volume=None, liquidrelativevolume=None, Zgas=None, Yfactor=None, isothermalcompressibility=None, density=None, Bg=None, viscosity=None, display=False):
+def CME(fluid, pressure, temperature, saturationPressure, relative_volume=None, liquid_relative_volume=None, Zgas=None, Yfactor=None, isothermalcompressibility=None, density=None, Bg=None, viscosity=None, display=False):
     if relative_volume is None:
         relative_volume = []
 
-    if liquidrelativevolume is None:
-        liquidrelativevolume = []
+    if liquid_relative_volume is None:
+        liquid_relative_volume = []
 
     if Zgas is None:
         Zgas = []
@@ -401,7 +401,7 @@ def CME(fluid, pressure, temperature, saturationPressure, relative_volume=None, 
     for i in range(0, length):
         Zgas.append(cvdSim.getZgas()[i])
         relative_volume.append(cvdSim.getRelativeVolume()[i])
-        liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
+        liquid_relative_volume.append(cvdSim.getLiquidRelativeVolume()[i])
         Yfactor.append(cvdSim.getYfactor()[i])
         isothermalcompressibility.append(
             cvdSim.getIsoThermalCompressibility()[i])
