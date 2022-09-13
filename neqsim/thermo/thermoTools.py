@@ -524,7 +524,7 @@ def swellingtest(fluid, fluid2, temperature, cumulative_molepercent_gas_injected
         JDouble[:](cumulative_molepercent_gas_injected))
     cvdSim.runCalc()
     for i in range(0, length2):
-        relative_oil_volume.append(cvdSim.getrelative_oil_volume()[i])
+        relative_oil_volume.append(cvdSim.getRelativeVolume()[i])
         pressure.append(cvdSim.getPressures()[i])
         i = i+1
     if display:
