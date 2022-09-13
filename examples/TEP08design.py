@@ -18,11 +18,11 @@ estimate the internal diameter of the gas scubber with using a gas load factor o
 
 design a scrubber with only inlet vane and mesh pad - what is the weight/hight
 """
-#1. 
-from neqsim.thermo import fluid, phaseenvelope, TPflash
-from neqsim.process import clearProcess, stream, valve, separator, compressor, runProcess, viewProcess, heater
+from neqsim.thermo import TPflash, fluid
+from neqsim.process import clearProcess, heater, runProcess, separator, stream
+import math
 
-# Start by creating a fluid in neqsim
+
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
 fluid1.addComponent("methane", 99.0)
 fluid1.addComponent("nC10", 1.0)
@@ -44,21 +44,22 @@ scrubber1 = separator(cooler1.getOutStream(), "inlet separator")
 runProcess()
 
 
-separator1.getMechanicalDesign().calcDesign();
-separartorInnerDiameter = separator1.getMechanicalDesign().getInnerDiameter();
-Ks = 0.1;
-import math 
-Vtmax = Ks * math.sqrt((separator1.getThermoSystem().getPhase('oil').getDensity()-separator1.getThermoSystem().getPhase('gas').getDensity())/separator1.getThermoSystem().getPhase('gas').getDensity());
-diameter = math.sqrt(separator1.getThermoSystem().getFlowRate("m3/sec")/Vtmax/3.14*4.0);
-separator1.getMechanicalDesign().displayResults();
+separator1.getMechanicalDesign().calcDesign()
+separatorInnerDiameter = separator1.getMechanicalDesign().getInnerDiameter()
+Ks = 0.1
+Vtmax = Ks * math.sqrt((separator1.getThermoSystem().getPhase('oil').getDensity()-separator1.getThermoSystem(
+).getPhase('gas').getDensity())/separator1.getThermoSystem().getPhase('gas').getDensity())
+diameter = math.sqrt(
+    separator1.getThermoSystem().getFlowRate("m3/sec")/Vtmax/3.14*4.0)
+separator1.getMechanicalDesign().displayResults()
 
 
 coolerDuty = cooler1.getEnergyInput()
-print("cooler duty "+ str(cooler1.getEnergyInput()/1.0e6) + " MW")
+print("cooler duty " + str(cooler1.getEnergyInput()/1.0e6) + " MW")
 #phaseenvelope(scrubber1.getThermoSystem(), plot=True)
 
 
-#calulates enthalpy of water between 10 and 30 C
+# calulates enthalpy of water between 10 and 30 C
 fluid2 = fluid("srk")  # create a fluid using the SRK-EoS
 fluid2.addComponent("water", 1.0)
 fluid2.setTemperature(10.0, "C")
@@ -70,6 +71,7 @@ fluid2.setTemperature(30.0, "C")
 fluid2.initThermoProperties()
 enthalpy2 = fluid2.getEnthalpy("J/mol")
 
-flowratewater = coolerDuty/(enthalpy1-enthalpy2)*fluid2.getMolarMass()*3600/1000.0
+flowratewater = coolerDuty/(enthalpy1-enthalpy2) * \
+    fluid2.getMolarMass()*3600/1000.0
 
 print("cooling water rate " + str(flowratewater) + " m3/hr")

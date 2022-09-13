@@ -5,10 +5,9 @@ Created on Fri Jan  3 14:06:45 2020
 @author: esol
 """
 
-#@markdown Simulation of a Braiton Cycle in neqsim
-import neqsim
+# @markdown Simulation of a Braiton Cycle in neqsim
+import matplotlib.pyplot as plt
 from neqsim.thermo.thermoTools import *
-from neqsim.standards import ISO6976
 
 T1 = 15.0
 P1 = 1.01325
@@ -22,9 +21,9 @@ drygas.setTemperature(T2, "C")
 drygas.setTotalFlowRate(14.8, "kg/sec")
 TPflash(drygas)
 
-#printFrame(drygas)
+# printFrame(drygas)
 
-air =  createfluid('air')
+air = createfluid('air')
 air.setPressure(P1, "bara")
 air.setTemperature(T1, "C")
 air.setTotalFlowRate(630.0, "kg/sec")
@@ -62,7 +61,7 @@ T3 = air.getTemperature("C")
 
 # 3. adiabatic process – expansion
 air.setPressure(P1, "bara")
-PSflash(air, S3,"kJ/kgK")
+PSflash(air, S3, "kJ/kgK")
 
 S4 = air.getEntropy("kJ/kgK")
 H4 = air.getEnthalpy("kJ/kg")
@@ -85,9 +84,9 @@ fuelMassFLow = drygas.getFlowRate("kg/sec")
 AFR = airMassFlow/fuelMassFLow
 print("air fuel ratio ", AFR, " kg/kg")
 
-print("air inlet flow ", V1 , " m3/sec")
-print("fuel inlet flow ", drygas.getFlowRate("kg/sec") , " kg/sec")
-print("compressor power ", (H2-H1)*airMassFlow/1e3 , " MW")
+print("air inlet flow ", V1, " m3/sec")
+print("fuel inlet flow ", drygas.getFlowRate("kg/sec"), " kg/sec")
+print("compressor power ", (H2-H1)*airMassFlow/1e3, " MW")
 print("Heat of combustion ", GCVgas/1e3, " MJ/kg")
 print("Turbine power ", (H3-H4)*airMassFlow/1e3, " MW")
 print("Temperature of air to turbine ", T3, " C")
@@ -97,12 +96,10 @@ powerOutput = (H3-H4)*airMassFlow/1e3 - (H2-H1)*airMassFlow/1e3
 print("plant net output ", powerOutput, " MW")
 netEfficiency = powerOutput/(energyCombustion/1e6)
 print("efficiency ", netEfficiency)
-#plot results in Ts-diagram
-entropy = [S1, S2,S3, S4, S5]
+# plot results in Ts-diagram
+entropy = [S1, S2, S3, S4, S5]
 temperature = [T1, T2, T3, T4, T5]
-import matplotlib
-import matplotlib.pyplot as plt
-plt.plot(entropy, temperature);
-plt.xlabel('Entropy [kJ/kgK]');
-plt.ylabel('Temperature [C]');
+plt.plot(entropy, temperature)
+plt.xlabel('Entropy [kJ/kgK]')
+plt.ylabel('Temperature [C]')
 plt.show()

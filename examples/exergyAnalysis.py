@@ -4,10 +4,9 @@ Created on Sun Jan  5 20:48:13 2020
 
 @author: esol
 """
-import neqsim
 from neqsim.thermo.thermoTools import *
 
-Tsurr = 20.0+273.15 # surrounding temperature in Kelvin
+Tsurr = 20.0+273.15  # surrounding temperature in Kelvin
 
 Tgas = 50.0
 P_in = 20.0
@@ -27,7 +26,7 @@ V1 = fluid_1.getVolume("m3")
 E1 = fluid_1.getExergy(Tsurr, "kJ/kg")
 
 
-#simulating a throtling process - an isenthalpic process
+# simulating a throtling process - an isenthalpic process
 fluid_1.setPressure(P_out)
 PHflash(fluid_1, E1, "kJ/kg")
 
@@ -46,7 +45,7 @@ redEx = E1-E2
 print("Reduction in exergy in valve is ", redEx)
 
 
-#In an adiabatic expander we will take out work at constant entropy
+# In an adiabatic expander we will take out work at constant entropy
 
 PSflash(fluid_1, S1, "kJ/kgK")
 
@@ -57,10 +56,10 @@ S3 = fluid_1.getEntropy("kJ/kgK")
 V3 = fluid_1.getVolume("m3")
 E3 = fluid_1.getExergy(Tsurr, "kJ/kg")
 
-#THe work done will be
+# THe work done will be
 work = H1-H3
 print("expander work ", work)
-#change in exergi is
+# change in exergi is
 exChange = E1-E3
 
 print("reduced exergy ",  exChange)

@@ -69,11 +69,11 @@ def addFluids(fluids):
 
 
 def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName=''):
-    if(autoSetModel):
+    if (autoSetModel):
         fluidcreator.setAutoSelectModel(True)
     else:
         fluidcreator.setAutoSelectModel(False)
-    if(modelName):
+    if (modelName):
         fluidcreator.setThermoModel(modelName)
     else:
         fluidcreator.setAutoSelectModel(False)
@@ -95,7 +95,7 @@ def createfluid(fluid_type='dry gas'):
 
 
 def createfluid2(names, molefractions=None, unit="mol/sec"):
-    if(molefractions is None):
+    if (molefractions is None):
         fluidcreator.create2(JString[:](names))
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
@@ -119,7 +119,7 @@ def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
     waxsim = jNeqSim.PVTsimulation.simulation.WaxFractionSim(fluid)
     waxsim.setTemperaturesAndPressures(
         JDouble[:](tempList), JDouble[:](presList))
-    waxsim.setExperimentalData(JDouble[:,:](expList))
+    waxsim.setExperimentalData(JDouble[:, :](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(maxiterations)
     waxsim.runTuning()
@@ -426,11 +426,10 @@ def GOR(fluid, pressure, temperature, GORdata=[], Bo=[],  display=False):
             plt.ylabel('GOR [Sm3/Sm3]')
         else:
             raise Exception("Package matplotlib is not installed")
-    
 
 
 def saturationpressure(fluid, temperature=-1.0):
-    if(temperature > 0):
+    if (temperature > 0):
         fluid.setTemperature(temperature)
     cvdSim = jNeqSim.PVTsimulation.simulation.SaturationPressure(fluid)
     cvdSim.run()
@@ -732,16 +731,20 @@ def phaseenvelope(testSystem, display=False):
     data = testFlash
     if display:
         if has_matplotlib():
-            plt.plot(list(data.getOperation().get("dewT")), list(data.getOperation().get("dewP")), label="dew point")
-            plt.plot(list(data.getOperation().get("bubT")), list(data.getOperation().get("bubP")), label="bubble point")
+            plt.plot(list(data.getOperation().get("dewT")), list(
+                data.getOperation().get("dewP")), label="dew point")
+            plt.plot(list(data.getOperation().get("bubT")), list(
+                data.getOperation().get("bubP")), label="bubble point")
 
             try:
-                plt.plot(list(data.getOperation().get("dewT2")), list(data.getOperation().get("dewP2")), label="dew point2")
+                plt.plot(list(data.getOperation().get("dewT2")), list(
+                    data.getOperation().get("dewP2")), label="dew point2")
             except:
                 pass
 
             try:
-                plt.plot(list(data.getOperation().get("bubT2")), list(data.getOperation().get("bubP2")), label="bubble point2")
+                plt.plot(list(data.getOperation().get("bubT2")), list(
+                    data.getOperation().get("bubP2")), label="bubble point2")
             except:
                 pass
 

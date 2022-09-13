@@ -6,10 +6,11 @@ Created on Tue Apr 21 11:56:16 2020
 """
 
 
-from pyspark.sql.functions import *
+import numpy as np
+import pandas as pd
 from pyspark import *
-
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
 
 spark = SparkSession \
     .builder \
@@ -17,9 +18,6 @@ spark = SparkSession \
     .config("spark.some.config.option", "some-value") \
     .getOrCreate()
 
-
-import numpy as np
-import pandas as pd
 
 # Enable Arrow-based columnar data transfers
 spark.conf.set("spark.sql.execution.arrow.enabled", "true")

@@ -5,9 +5,11 @@ Created on Tue Aug  6 09:45:43 2019
 @author: esol
 """
 
-from neqsim.thermo import fluid, TPflash, phaseenvelope, fluidComposition, ionComposition, scaleCheck
+from neqsim.thermo import (TPflash, fluid, fluidComposition, ionComposition,
+                           phaseenvelope, scaleCheck)
 
-fluid1 = fluid("Electrolyte-CPA-EoS")  # create a fluid using the Electrolyte-CPA-EoS
+# create a fluid using the Electrolyte-CPA-EoS
+fluid1 = fluid("Electrolyte-CPA-EoS")
 fluid1.setTemperature(30.0, "C")
 fluid1.setPressure(50.0, "bara")
 
@@ -22,15 +24,15 @@ fluid1.addComponent("Cl-", 0.500, "mol/sec")
 fluid1.addComponent("Ca++", 0.117200, "mol/sec")
 fluid1.addComponent("CO3--", 0.117200, "mol/sec")
 fluid1.addComponent("Fe++", 10.0e-5, "mol/sec")
-fluid1.chemicalReactionInit();
-fluid1.setMixingRule(10) # temperature dependent interaction coefficient
-#fluid1.setMultiPhaseCheck(True)
+fluid1.chemicalReactionInit()
+fluid1.setMixingRule(10)  # temperature dependent interaction coefficient
+# fluid1.setMultiPhaseCheck(True)
 
 
 TPflash(fluid1)
 fluid1.display()
 
-ionComposition(fluid1) # calculates ion composiion of aquous phase
-scaleCheck(fluid1) # calculates scale potaential in aqueous phase
+ionComposition(fluid1)  # calculates ion composiion of aquous phase
+scaleCheck(fluid1)  # calculates scale potaential in aqueous phase
 
 print("pH " + str(fluid1.getPhase(1).getpH()))

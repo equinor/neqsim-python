@@ -12,14 +12,14 @@ from neqsim.thermo import fluid, hydt
 
 pressure = 150.0
 
-nitrogen = 1.5 
+nitrogen = 1.5
 CO2 = 2.5
 methane = 95.0
-ethane = 5.0  
-propane =  2.5 
-ibutane =  1.25
-nbutane =  1.25
-water =  10.25
+ethane = 5.0
+propane = 2.5
+ibutane = 1.25
+nbutane = 1.25
+water = 10.25
 
 fluid1 = fluid('cpa')
 fluid1.addComponent("nitrogen", nitrogen, 'mol/sec')
@@ -30,11 +30,10 @@ fluid1.addComponent("propane", propane, 'mol/sec')
 fluid1.addComponent("i-butane", ibutane, 'mol/sec')
 fluid1.addComponent("n-butane", nbutane, 'mol/sec')
 fluid1.addComponent("water", water, 'mol/sec')
-fluid1.setMixingRule(10);
+fluid1.setMixingRule(10)
 
 fluid1.setPressure(pressure, 'bara')
 
 hydt(fluid1)
 
 print("Hydrate equilibrium temperature ", fluid1.getTemperature()-273.15, " C")
-

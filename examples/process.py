@@ -4,8 +4,9 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
+from neqsim.process import (clearProcess, compressor, runProcess, separator,
+                            stream, valve, viewProcess)
 from neqsim.thermo import fluid
-from neqsim.process import clearProcess, stream, valve, separator, compressor, runProcess, viewProcess
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -23,19 +24,18 @@ stream1 = stream(fluid1)
 inletValve = valve(stream1, 50.0)  # add valve and set outlet pressure
 inletSeparator = separator(inletValve.getOutStream())
 oilValve = valve(inletSeparator.getLiquidOutStream(), 1.0)
-compressor1 = compressor(inletSeparator.getGasOutStream(), 100.0)  # add compressor and set out pressure
+# add compressor and set out pressure
+compressor1 = compressor(inletSeparator.getGasOutStream(), 100.0)
 
-#sensoir to read from Omnia
+# sensoir to read from Omnia
 #temperatureTranmitter1 = temperatureTransmitter(stream1, "PT20232")
 #pressureTranmitter1 = pressureTransmitter(stream1,"TIP2030I")
 
-#signals to calculate
+# signals to calculate
 #VTemperatureTransmitter1 = VtemperatureTransmitter(inletValve.getOutStream(),"VT20314")
-
 
 
 runProcess()
 viewProcess()
 
 print("compressor power ", compressor1.getPower())
-

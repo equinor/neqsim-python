@@ -4,8 +4,9 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
+from neqsim.process import (clearProcess, compressor, heater, runProcess,
+                            separator, stream, valve, viewProcess)
 from neqsim.thermo import fluid
-from neqsim.process import clearProcess, stream, valve, separator, compressor, runProcess, viewProcess, heater
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -37,5 +38,7 @@ runProcess()
 print("compressor1 power ", compressor1.getPower()/1e6, " MW")
 print("compressor2 power ", compressor2.getPower()/1e6, " MW")
 
-print("temperature out of compressor1 ", compressor1.getOutStream().getTemperature()-273.15, " °C")
-print("temperature out of compressor2 ", compressor2.getOutStream().getTemperature()-273.15, " °C")
+print("temperature out of compressor1 ",
+      compressor1.getOutStream().getTemperature()-273.15, " °C")
+print("temperature out of compressor2 ",
+      compressor2.getOutStream().getTemperature()-273.15, " °C")
