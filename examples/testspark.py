@@ -23,5 +23,6 @@ spark = SparkSession \
 spark.conf.set("spark.sql.execution.arrow.enabled", "true")
 
 # Generate a Pandas DataFrame
+# deepcode ignore usePredictableRandom: Just a test function
 pdf = pd.DataFrame(np.random.rand(100, 3))
 df = spark.createDataFrame(pdf)

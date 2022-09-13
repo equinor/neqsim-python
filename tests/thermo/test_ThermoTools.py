@@ -1,8 +1,19 @@
 # import the package
-from neqsim.thermo import (TPflash, addfluids, fluid, fluidComposition,
-                           fluidflashproperties, hydt)
+import pandas as pd
+from neqsim.thermo import (TPflash, addfluids, fluid, fluid_df,
+                           fluidComposition, fluidflashproperties, hydt)
 from numpy import isnan
 
+
+def test_fluid_df():
+    components = ["nitrogen", "CO2", "methane", "ethane", "propane",
+                  "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane"]
+    composition = [0.633, 1.371, 85.697, 6.914,
+                   3.086, 0.475, 0.886, 0.242, 0.254, 0.016]
+    naturalgas = {'ComponentName': components,
+                  'MolarComposition[-]': composition
+                  }
+    naturalgasFluid = fluid_df(pd.DataFrame(naturalgas))
 
 def test_TPflash1():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
