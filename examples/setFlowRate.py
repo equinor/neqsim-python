@@ -12,14 +12,11 @@ The current python script demonstrates simple ways of creating fluids in neqsim
 """
 
 
-from neqsim.thermo.thermoTools import *
-from neqsim.thermo import (TPflash, addOilFractions, createfluid, createfluid2,
-                           dataFrame, fluid, fluid_df, fluidcreator,
-                           phaseenvelope, printFrame)
-import pandas as pd
-import neqsim
 # Create a gas-condensate fluid
 
+import pandas as pd
+from neqsim.thermo import TPflash, fluid_df, printFrame
+from neqsim.thermo.thermoTools import *
 naturalgas = {'ComponentName':  ["nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane"],
               'MolarComposition[-]':  [0.34, 0.84, 90.4, 5.199, 2.06, 0.36, 0.55, 0.14, 0.097, 0.014]
               }

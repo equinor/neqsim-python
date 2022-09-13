@@ -5,12 +5,7 @@ Created on Thu Jan  2 15:49:07 2020
 @author: esol
 """
 
-import matplotlib
 import matplotlib.pyplot as plt
-import neqsim
-import numpy as np
-from neqsim.process import (clearProcess, compressor, cooler, expander, heater,
-                            pump, runProcess, stream, valve)
 from neqsim.thermo.thermoTools import *
 
 # The starting point is a fluid at termodynamic equilibrium

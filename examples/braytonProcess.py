@@ -5,11 +5,8 @@ Created on Fri Jan  3 14:06:45 2020
 @author: esol
 """
 
-import matplotlib
 # @markdown Simulation of a Braiton Cycle in neqsim
 import matplotlib.pyplot as plt
-import neqsim
-from neqsim.standards import ISO6976
 from neqsim.thermo.thermoTools import *
 
 T1 = 15.0

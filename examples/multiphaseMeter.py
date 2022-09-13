@@ -1,8 +1,6 @@
-import math
 
 import matplotlib
 import matplotlib.pyplot as plt
-import neqsim
 import numpy
 import numpy as np
 import pandas as pd
@@ -38,7 +36,7 @@ reservoirPressure = 320.8  # bara
 
 testSeparatorTemperature = 20.6  # Celcius
 testSeparatorPressure = 86.8  # bara
-GORseparartorConditions = 35000.0  # Sm3 gas/m3 oil
+GORseparatorConditions = 35000.0  # Sm3 gas/m3 oil
 
 GORstandardConditions = 55000.0  # Sm3 gas/m3 oil
 
@@ -89,7 +87,7 @@ TPflash(characterizedFluid)
 GORcalc = characterizedFluid.getPhase("gas").getNumberOfMolesInPhase(
 )*8.314*288.15/101325 / (characterizedFluid.getPhase("oil").getVolume("m3"))
 print("GOR at test separator conditions: ", GORcalc, " Sm3 gas/m3 oil",
-      " Deviation from PVT report: ", (GORcalc-GORseparartorConditions)/GORseparartorConditions*100, " %")
+      " Deviation from PVT report: ", (GORcalc-GORseparatorConditions)/GORseparatorConditions*100, " %")
 
 # Calculating saturation pressure
 #characterizedFluid.setTemperature(reservoirTemperature, "C")

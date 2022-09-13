@@ -1,11 +1,5 @@
-import math
-
-import neqsim
-import numpy as np
-import pandas as pd
-from neqsim.process import (clearProcess, cooler, heater, mixer, runProcess,
-                            separator, separator3phase, splitter, stream,
-                            viewProcess)
+from neqsim.process import (clearProcess, heater, mixer, runProcess,
+                            separator3phase, splitter, stream)
 from neqsim.thermo.thermoTools import *
 
 model = 'cpa-statoil'

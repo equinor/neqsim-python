@@ -4,12 +4,9 @@ Created on Tue Aug 13 14:08:09 2019
 
 @author: esol
 """
-import math
 import time
 
-import matplotlib
 import matplotlib.pyplot as plt
-import neqsim
 import numpy as np
 from neqsim.thermo.thermoTools import *
 from neqsim.thermo.thermoTools import fluid, phaseenvelope

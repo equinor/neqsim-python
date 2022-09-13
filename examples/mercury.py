@@ -5,10 +5,6 @@ Created on Thu May 28 14:03:16 2020
 @author: ESOL
 """
 
-import matplotlib
-import matplotlib.pyplot as plt
-import neqsim
-import numpy as np
 import pandas as pd
 from neqsim.thermo.thermoTools import *
 

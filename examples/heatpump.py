@@ -5,9 +5,8 @@ Created on Mon Nov  9 20:13:11 2020
 @author: ESOL
 """
 
-import neqsim
-from neqsim.process import (clearProcess, compressor, cooler, expander, heater,
-                            pump, runProcess, stream, valve)
+from neqsim.process import (clearProcess, compressor, cooler, heater,
+                            runProcess, stream, valve)
 from neqsim.thermo.thermoTools import *
 
 fluid_1 = fluid("srk")

@@ -18,11 +18,10 @@ estimate the internal diameter of the gas scubber with using a gas load factor o
 
 design a scrubber with only inlet vane and mesh pad - what is the weight/hight
 """
+from neqsim.thermo import TPflash, fluid
+from neqsim.process import clearProcess, heater, runProcess, separator, stream
 import math
 
-from neqsim.process import (clearProcess, compressor, heater, runProcess,
-                            separator, stream, valve, viewProcess)
-from neqsim.thermo import TPflash, fluid, phaseenvelope
 
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
 fluid1.addComponent("methane", 99.0)
@@ -46,7 +45,7 @@ runProcess()
 
 
 separator1.getMechanicalDesign().calcDesign()
-separartorInnerDiameter = separator1.getMechanicalDesign().getInnerDiameter()
+separatorInnerDiameter = separator1.getMechanicalDesign().getInnerDiameter()
 Ks = 0.1
 Vtmax = Ks * math.sqrt((separator1.getThermoSystem().getPhase('oil').getDensity()-separator1.getThermoSystem(
 ).getPhase('gas').getDensity())/separator1.getThermoSystem().getPhase('gas').getDensity())

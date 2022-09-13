@@ -5,10 +5,7 @@ Created on Sat Jan  4 13:39:13 2020
 @author: esol
 """
 
-import matplotlib
 import matplotlib.pyplot as plt
-import neqsim
-from neqsim.standards import ISO6976
 from neqsim.thermo.thermoTools import *
 
 T1 = 15.0

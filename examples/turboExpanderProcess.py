@@ -5,8 +5,8 @@ Created on Thu Jun 13 12:01:47 2019
 @author: esol
 """
 from neqsim import methods
-from neqsim.process import (clearProcess, compressor, expander, heater,
-                            runProcess, separator, stream, valve, viewProcess)
+from neqsim.process import (clearProcess, expander, runProcess, separator,
+                            stream)
 from neqsim.thermo import fluid
 
 # Start by creating a fluid in neqsim
@@ -29,12 +29,12 @@ fluid1.setTotalFlowRate(10.0, "MSm3/day")
 clearProcess()
 stream1 = stream(fluid1)
 expander1 = expander(stream1, 40.0)
-separartor1 = separator(expander1.getOutStream())
+separator1 = separator(expander1.getOutStream())
 runProcess()
 
-print("temperature in separartor",
+print("temperature in separator",
       expander1.getOutStream().getTemperature()-273.15, " °C")
 print("expander power ", expander1.getPower()/1e6, " MW")
 
-separartor1.displayResult()
+separator1.displayResult()
 methods(expander1)

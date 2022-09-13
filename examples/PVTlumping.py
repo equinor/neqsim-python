@@ -5,7 +5,6 @@ Created on Sun Jan 12 22:54:57 2020
 @author: esol
 """
 
-import neqsim
 from neqsim.thermo.thermoTools import *
 
 fluid1 = fluid('srk', 290.0, 11.0)

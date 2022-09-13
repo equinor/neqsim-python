@@ -5,7 +5,6 @@ Created on Mon Jan  6 12:58:36 2020
 @author: esol
 """
 
-import neqsim
 from neqsim.thermo.thermoTools import *
 
 temperature = 20.0  # C
