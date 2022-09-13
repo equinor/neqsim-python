@@ -81,7 +81,6 @@ plt.show()
 print("CVD...............")
 pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
 temperature = 301.0
-relative_volume
 relative_volume = []
 liquid_relative_volume = []
 Zgas = []
