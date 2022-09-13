@@ -35,13 +35,13 @@ pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
 temperature = [301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0, 301.0]
 
 relative_volume = []
-liquidrelativevolume = []
+liquid_relative_volume = []
 Zgas = []
 Yfactor = []
 isothermalcompressibility = []
 saturationpressure = None
 CME(fluid1, pressure, temperature, saturationpressure, relative_volume,
-    liquidrelativevolume, Zgas, Yfactor, isothermalcompressibility)
+    liquid_relative_volume, Zgas, Yfactor, isothermalcompressibility)
 
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
@@ -83,13 +83,13 @@ pressure = [300.0, 250.0, 200.0, 150.0, 100.0, 70.0, 50.0, 30.0, 10.0]
 temperature = 301.0
 relative_volume
 relative_volume = []
-liquidrelativevolume = []
+liquid_relative_volume = []
 Zgas = []
 Zmix = []
-cummulativemolepercdepleted = []
+cumulative_mole_perc_depleted = []
 
 CVD(fluid1, pressure, temperature, relative_volume,
-    liquidrelativevolume, Zgas, Zmix, cummulativemolepercdepleted)
+    liquid_relative_volume, Zgas, Zmix, cumulative_mole_perc_depleted)
 
 plt.figure(figsize=(20, 5))
 plt.subplot(131)
@@ -97,7 +97,7 @@ plt.plot(pressure, relative_volume, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('relative volume [-]')
 plt.subplot(132)
-plt.plot(pressure, cummulativemolepercdepleted, "o")
+plt.plot(pressure, cumulative_mole_perc_depleted, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('cummulative depleted [-]')
 plt.show()
@@ -113,12 +113,12 @@ relative_gravity = []
 Zgas = []
 gas_standard_volume = []
 Rs = []
-oildensity = []
+oil_density = []
 relative_gravity = []
 relative_volume = []
 
 difflib(fluid1.clone(), pressure, temperature, relative_volume, Bo, Bg,
-        relative_gravity, Zgas, gas_standard_volume, Rs, oildensity, relative_gravity)
+        relative_gravity, Zgas, gas_standard_volume, Rs, oil_density, relative_gravity)
 
 
 plt.figure(figsize=(20, 5))
@@ -131,7 +131,7 @@ plt.plot(pressure, Rs, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('Rs [m3/Sm3]')
 plt.subplot(133)
-plt.plot(pressure, oildensity, "o")
+plt.plot(pressure, oil_density, "o")
 plt.xlabel('Pressure [bara]')
 plt.ylabel('oil density [kg/m3]')
 plt.show()
@@ -144,9 +144,9 @@ pressure = []
 fluid1.setPressure(100.0)
 TPflash(fluid1)
 temperature = 301.0
-molPercentInjected = [0.0, 1.0, 5.0, 8.0, 10.0, 15.0, 20.0]
+mole_percent_injected = [0.0, 1.0, 5.0, 8.0, 10.0, 15.0, 20.0]
 swellingtest(fluid1, injectiongas, temperature,
-             molPercentInjected, pressure, relative_oil_volume)
+             mole_percent_injected, pressure, relative_oil_volume)
 
 plt.figure()
 plt.plot(pressure, relative_oil_volume, "o")
