@@ -9,7 +9,7 @@ if has_matplotlib():
     import matplotlib.pyplot as plt
 
 ThermodynamicOperations = jNeqSim.thermodynamicOperations.ThermodynamicOperations
-fluidcreator = jNeqSim.thermo.Fluid
+fluidcreator = jNeqSim.thermo.Fluid()
 fluid_type = {
     'srk': jNeqSim.thermo.system.SystemSrkEos,
     'SRK-EoS': jNeqSim.thermo.system.SystemSrkEos,
@@ -68,7 +68,7 @@ def addFluids(fluids):
     return fluid
 
 
-def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName=''):
+def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName='', lumpComponents='True', numberOfLumpedComponents=12):
     if (autoSetModel):
         fluidcreator.setAutoSelectModel(True)
     else:
@@ -86,7 +86,7 @@ def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, mod
     TBPComponentsFrame = reservoirFluiddf.dropna()
     if not TBPComponentsFrame.equals(reservoirFluiddf):
         addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(), TBPComponentsFrame['MolarComposition[-]'].tolist(
-        ), TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(), lastIsPlusFraction)
+        ), TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(), lastIsPlusFraction, lumpComponents, numberOfLumpedComponents)
     return fluid7
 
 
@@ -100,11 +100,9 @@ def createfluid2(names, molefractions=None, unit="mol/sec"):
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
 
-def addOilFractions(fluid, charNames, molefractions, molarMass,  density, lastIsPlusFraction=False):
-    clonedfluid = fluid.clone()
-    clonedfluid = fluidcreator.addOilFractions(JString[:](charNames), JDouble[:](
-        molefractions), JDouble[:](molarMass), JDouble[:](density), lastIsPlusFraction)
-    return clonedfluid
+def addOilFractions(fluid, charNames, molefractions, molarMass,  density, lastIsPlusFraction=False, lumpComponents='True', numberOfPseudoComponents=12):
+    fluid.addOilFractions(JString[:](charNames), JDouble[:](
+        molefractions), JDouble[:](molarMass), JDouble[:](density), lastIsPlusFraction, lumpComponents, numberOfPseudoComponents)
 
 
 def newdatabase(system):

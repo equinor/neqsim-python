@@ -163,3 +163,29 @@ def test_addfluid():
     hydt(fluid3)
     print("Hydrate equilibrium temperature ",
           fluid3.getTemperature()-273.15, " C")
+
+def test_fluidChar():
+    import neqsim
+    from neqsim.thermo import fluid, fluid_df, addOilFractions, printFrame, dataFrame, fluidcreator,createfluid,createfluid2, TPflash, phaseenvelope
+    import pandas as pd
+    gascondensate = {'ComponentName':  ["water", "H2S", "CO2", "nitrogen", "methane", "ethane", "propane", "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane", "C7"], 
+        'MolarComposition[-]':  [10.1 ,0.001, 0.53, 3.3, 72.98, 7.68, 4.1, 0.7, 1.42, 0.54, 0.67, 0.85, 10.33], 
+        'MolarMass[kg/mol]': [None, None, None,None, None,None,None,None,None,None,None,None,0.391],
+        'RelativeDensity[-]': [None, None, None,None, None,None,None,None,None,None,None,None, 0.746]
+    } 
+
+    gascondensatedf = pd.DataFrame(gascondensate) 
+    gascondensateFluid = fluid_df(gascondensatedf, lastIsPlusFraction=True, lumpComponents=False, numberOfLumpedComponents=12) #need to add number of pseudo components to 80 and distribution to gamma
+    gascondensateFluid.setMultiPhaseCheck(True)
+    TPflash(gascondensateFluid)
+    assert gascondensateFluid.getNumberOfComponents() == 85
+
+    compositon = gascondensateFluid.getMolarComposition()
+
+    #Add mud contamination
+    compositon[30] += compositon[30]+0.01
+
+    gascondensateFluid.setMolarComposition(compositon)
+    gascondensateFluid.setTemperature(25.0, 'C')
+    gascondensateFluid.setPressure(5.0, 'bara')
+    TPflash(gascondensateFluid)
