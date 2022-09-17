@@ -26,7 +26,6 @@ def test_Viscosity():
 def test_fullOffshoreProcess():
     import pandas as pd
     import math
-    import matplotlib.pyplot as plt
 
     #well stream composition (mole fractions)
     reservoirFluid = {'ComponentName':  ['nitrogen', 'CO2', 'methane', 'ethane', 'propane', 'i-butane', 'n-butane', 'i-pentane', 'n-pentane', 'n-hexane','n-heptane', 'n-octane', 'n-nonane', 'nC10'], 
