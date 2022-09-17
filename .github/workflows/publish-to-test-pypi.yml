@@ -5,7 +5,7 @@ on: push
 jobs:
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@master
     - name: Set up Python 3.6
@@ -28,6 +28,6 @@ jobs:
         .
     - name: Publish distribution 📦 to PyPI
       if: startsWith(github.event.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.pypi_password }}
