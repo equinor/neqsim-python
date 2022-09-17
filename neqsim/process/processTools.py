@@ -202,6 +202,13 @@ def nequnit(teststream, equipment="pipeline", flowpattern="stratified", numberOf
     return neqUn
 
 
+def compsplitter(teststream, splitfactors, name=""):
+    compSplitter = jNeqSim.processSimulation.processEquipment.splitter.ComponentSplitter(
+    name, teststream)
+    compSplitter.setSplitFactors(splitfactors)
+    processoperations.add(compSplitter)
+    return compSplitter
+
 def splitter(teststream, splitfactors, name=""):
     splitter = jNeqSim.processSimulation.processEquipment.splitter.Splitter(
         teststream)
