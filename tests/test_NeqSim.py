@@ -32,7 +32,6 @@ def test_fullOffshoreProcess():
             'MolarComposition[-]':  [0.56, 1.02, 80.77, 7.77, 3.91, 0.56, 0.9, 0.25, 0.24, 0.5, 0.3, 0.2, 0.12, 0.91]
     }
     reservoirFluiddf = pd.DataFrame(reservoirFluid) #create a dataframe of the well fluid
-    print(reservoirFluiddf.head(20).to_string()) 
 
     well_head_pressure = 180.0 #bara
     well_head_temperature = 80.0 #degC
@@ -48,7 +47,7 @@ def test_fullOffshoreProcess():
     rich_gas_water_dew_point = -10.0 #degC
     rich_gas_cricondenbar = 90.0 #bara
 
-    from neqsim.thermo import fluid_df, printFrame
+    from neqsim.thermo import fluid_df
     from neqsim.process import stream,saturator,clearProcess, runProcess, cooler
 
     clearProcess() #reset process simulation
