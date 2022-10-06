@@ -649,7 +649,15 @@ def watersaturate(testSystem):
     testSystem.init(3)
 
 
-def TPflash(testSystem):
+def TPflash(testSystem, temperature =None, tUnit = None, pressure=None, pUnit=None):
+    if(temperature is not None):
+        if(tUnit is None):
+            tUnit = 'K'
+        testSystem.setTemperature(temperature, tUnit)
+    if(pressure is not None):
+        if(pUnit is None):
+            pUnit = 'bara'
+        testSystem.setPressure(pressure, pUnit)
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
     testSystem.init(3)
