@@ -23,7 +23,7 @@ def test_waterDewPointAnalyser():
     fluid1.setTemperature(28.15, "C")
     fluid1.setPressure(100.0, "bara")
     fluid1.addComponent("nitrogen", 1.0, "mol/sec")
-    fluid1.addComponent("Water", 50e-6, "mol/sec")
+    fluid1.addComponent("water", 50e-6, "mol/sec")
     fluid1.setMixingRule(2)
     clearProcess()
     stream1 = stream(fluid1)
