@@ -2,6 +2,7 @@
 from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, clearProcess, runProcess, stream)
 from neqsim.thermo import (TPflash, fluid, printFrame)
 from numpy import isnan
+from pytest import approx
 
 def test_compsplitter():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -29,4 +30,4 @@ def test_waterDewPointAnalyser():
     stream1 = stream(fluid1)
     waterDewPoint = waterDewPointAnalyser(stream1)
     runProcess()
-    assert waterDewPoint.getMeasuredValue('C') > 20
+    assert waterDewPoint.getMeasuredValue('C') == approx(-11.828217379989212, rel= 0.001)
