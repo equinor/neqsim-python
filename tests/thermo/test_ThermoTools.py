@@ -1,5 +1,6 @@
 # import the package
 import pandas as pd
+from pytest import approx
 from neqsim.thermo import (TPflash, addfluids, fluid, fluid_df,
                            fluidComposition, fluidflashproperties, hydt)
 from numpy import isnan
@@ -189,3 +190,20 @@ def test_fluidChar():
     gascondensateFluid.setTemperature(25.0, 'C')
     gascondensateFluid.setPressure(5.0, 'bara')
     TPflash(gascondensateFluid)
+
+
+def test_TPflash():
+    fluid1 = fluid('cpa')
+    fluid1.addComponent("nitrogen", 1.0, 'mol/sec')
+    fluid1.addComponent("water", 1.0, 'mol/sec')
+    fluid1.setMixingRule(10)
+    fluid1.setTemperature(293.15)
+    fluid1.setPressure(125.0)
+    TPflash(fluid1);
+    assert fluid1.getPhase('gas').getZ() == approx(1.0262852545644505, rel=1e-6)
+    TPflash(fluid1, temperature=20.0, tUnit='C', pressure=125.0, pUnit='bara')
+    assert fluid1.getPhase('gas').getZ() == approx(1.0262852545644505, rel=1e-6)
+    TPflash(fluid1, temperature=293.15, pressure=125.0)
+    assert fluid1.getPhase('gas').getZ() == approx(1.0262852545644505, rel=1e-6)
+
+    
