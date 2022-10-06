@@ -360,3 +360,11 @@ def view():
 
 def viewProcess():
     processoperations.displayResult()
+
+
+def waterDewPointAnalyser(teststream, name=""):
+    waterDewPointAnalyser = jNeqSim.processSimulation.measurementDevice.WaterDewPointAnalyser(
+        teststream)
+    waterDewPointAnalyser.setName(name)
+    processoperations.add(waterDewPointAnalyser)
+    return waterDewPointAnalyser
