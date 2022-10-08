@@ -1,5 +1,10 @@
-from .neqsimpython import *
+"""
+NeqSim is a library for estimation of behaviour and properties of fluids. 
+This module is a Python interface to the NeqSim Java library. 
+It uses the Jpype module for bridging python and Java.
+"""
 
+from .neqsimpython import *
 
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
@@ -19,6 +24,5 @@ def has_tabulate():
 
 def setDatabase(connectionString):
     from neqsim.neqsimpython import jNeqSim
-
     jNeqSim.util.database.NeqSimDataBase.setConnectionString(connectionString)
     jNeqSim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
