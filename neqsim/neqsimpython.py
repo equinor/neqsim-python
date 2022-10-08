@@ -5,11 +5,11 @@ if not jpype.isJVMStarted():
     try:
         jpype.startJVM(convertStrings=False)
         jvmVersion = jpype.getJVMVersion()[0]
+        if jvmVersion <= 8:
+            jpype.addClassPath('./lib/libj8/*')  
+        else:
+            jpype.addClassPath('./lib/*') 
     except:
-        print('could not start JVM from jpype')
-    if jvmVersion <= 8:
-        jpype.addClassPath('./lib/libj8/*')  
-    else:
-        jpype.addClassPath('./lib/*') 
+        print('Java could not be started. Please check that Java is installed on your computer. Java can be downloaded from https://adoptium.net/')
 
 jNeqSim = jpype.JPackage('neqsim')
