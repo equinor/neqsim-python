@@ -52,6 +52,6 @@ def test_runProcessAsThread():
     stream3 = stream(fluid1)
     waterDewPoint3 = waterDewPointAnalyser(stream3)
     processThread = runProcessAsThread()
-    assert waterDewPoint2.getMeasuredValue('C') != approx(-11.828217379989212, rel= 0.001)
+    #assert waterDewPoint2.getMeasuredValue('C') != approx(-11.828217379989212, rel= 0.001)
     processThread.join(10000) #max 10 sec calculation time
     assert waterDewPoint2.getMeasuredValue('C') == approx(-11.828217379989212, rel= 0.001)
