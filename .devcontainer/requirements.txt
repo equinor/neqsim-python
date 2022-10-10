@@ -1,3 +1,4 @@
 jpype1
 pandas
 matplotlib
+pytest

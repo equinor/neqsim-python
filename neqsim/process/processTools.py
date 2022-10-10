@@ -339,11 +339,8 @@ def runProcess():
     processoperations.run()
 
 
-def runProcessAsThread(process):
-    Thread = jpype.JPackage('java.lang.Thread')
-    threadProcess = Thread(process)
-    threadProcess.run()
-    return threadProcess
+def runProcessAsThread():
+    return processoperations.runAsThread()
 
 
 def getProcess():
