@@ -9,6 +9,7 @@ def newProcess():
     """
     Create a new proces object
     """
+    global processoperations
     processoperations = jNeqSim.processSimulation.processSystem.ProcessSystem()
 
 
