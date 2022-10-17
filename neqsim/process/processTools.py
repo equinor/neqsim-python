@@ -5,6 +5,12 @@ from neqsim.neqsimpython import jNeqSim
 
 processoperations = jNeqSim.processSimulation.processSystem.ProcessSystem()
 
+def newProcess():
+    """
+    Create a new proces object
+    """
+    processoperations = jNeqSim.processSimulation.processSystem.ProcessSystem()
+
 
 def stream(thermoSystem, name="stream ?", t=0, p=0):
     if t != 0:
