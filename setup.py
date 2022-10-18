@@ -23,4 +23,3 @@ setuptools.setup(
     install_requires=['jpype1', 'pandas', 'tabulate'],
     python_requires='>=3'
 )
-
