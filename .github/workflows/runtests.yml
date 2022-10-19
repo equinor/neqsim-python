@@ -23,7 +23,7 @@ jobs:
       - name: Run tests with pytest
         run: python -m pytest
   buildforJava8:
-    runs-on: windows-latest
+    runs-on: ubuntu-20.04-16core
     steps:
       - uses: actions/checkout@v2
       - name: Install Python 3
