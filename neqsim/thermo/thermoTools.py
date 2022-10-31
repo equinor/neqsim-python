@@ -68,7 +68,7 @@ def addFluids(fluids):
     return fluid
 
 
-def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName='', lumpComponents='True', numberOfLumpedComponents=12):
+def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName='', lumpComponents=True, numberOfLumpedComponents=12):
     if (autoSetModel):
         fluidcreator.setAutoSelectModel(True)
     else:
@@ -100,7 +100,7 @@ def createfluid2(names, molefractions=None, unit="mol/sec"):
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
 
-def addOilFractions(fluid, charNames, molefractions, molarMass,  density, lastIsPlusFraction=False, lumpComponents='True', numberOfPseudoComponents=12):
+def addOilFractions(fluid, charNames, molefractions, molarMass,  density, lastIsPlusFraction=False, lumpComponents=True, numberOfPseudoComponents=12):
     fluid.addOilFractions(JString[:](charNames), JDouble[:](
         molefractions), JDouble[:](molarMass), JDouble[:](density), lastIsPlusFraction, lumpComponents, numberOfPseudoComponents)
 
