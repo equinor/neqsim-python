@@ -1,5 +1,5 @@
 # import the package
-from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, clearProcess, newProcess, runProcess, stream, runProcessAsThread)
+from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, clearProcess, newProcess, runProcess, stream, runProcessAsThread)
 from neqsim.thermo import (TPflash, fluid, printFrame)
 from numpy import isnan
 from pytest import approx
@@ -31,6 +31,22 @@ def test_waterDewPointAnalyser():
     waterDewPoint = waterDewPointAnalyser(stream1)
     runProcess()
     assert waterDewPoint.getMeasuredValue('C') == approx(-11.828217379989212, rel= 0.001)
+
+def test_hydrateEquilibriumTemperatureAnalyser():
+    fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
+    fluid1.setTemperature(28.15, "C")
+    fluid1.setPressure(100.0, "bara")
+    fluid1.addComponent("nitrogen", 1.0, "mol/sec")
+    fluid1.addComponent("methane", 5, "mol/sec")
+    fluid1.addComponent("ethane", 1, "mol/sec")
+    fluid1.addComponent("propane", 1, "mol/sec")
+    fluid1.addComponent("water", 50e-6, "mol/sec")
+    fluid1.setMixingRule(2)
+    clearProcess()
+    stream1 = stream(fluid1)
+    hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser(stream1)
+    runProcess()
+    assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel= 0.001)
 
 def test_runProcessAsThread():
     """

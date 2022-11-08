@@ -372,3 +372,10 @@ def waterDewPointAnalyser(teststream, name=""):
     waterDewPointAnalyser.setName(name)
     processoperations.add(waterDewPointAnalyser)
     return waterDewPointAnalyser
+
+def hydrateEquilibriumTemperatureAnalyser(teststream, name=""):
+    hydrateEquilibriumTemperatureAnalyser = jNeqSim.processSimulation.measurementDevice.HydrateEquilibriumTemperatureAnalyser(
+        teststream)
+    hydrateEquilibriumTemperatureAnalyser.setName(name)
+    processoperations.add(hydrateEquilibriumTemperatureAnalyser)
+    return hydrateEquilibriumTemperatureAnalyser
