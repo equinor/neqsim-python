@@ -4,14 +4,12 @@ NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimho
 
 ## Releases
 
-The NeqSim Python package is distributed as a pip package. Install the package by running
+NeqSim Python is distributed as a pip package.  
 
+End-users should install neqsim python with some additional packages by running
 ```
-pip install neqsim
+pip install neqsim[interactive]
 ```
-
-NB! The python package matplotlib is used to show results but is not an requirement to run calculations.
-
 
 ## Getting Started
 
