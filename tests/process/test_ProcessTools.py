@@ -89,3 +89,55 @@ def test_newprocess():
     TPflash(splittcomp.getSplitStream(0).getFluid())
     printFrame(splittcomp.getSplitStream(0).getFluid())
     assert splittcomp.getSplitStream(0).getFluid().getViscosity('kg/msec') > 1e-19
+
+def test_flowSplitter():
+    temperature_inlet = 35.0
+    pressure_inlet = 55.0
+    pressure_outlet = 100.0
+    gasFlowRate = 5.0 
+
+    splitfactors = [0.9, 0.1]
+
+    fluid1 = fluid('srk')
+    fluid1.addComponent("methane", 1.0)
+
+    clearProcess()
+
+    stream1 = stream(fluid1)
+    stream1.setPressure(pressure_inlet, 'bara')
+    stream1.setTemperature(temperature_inlet, 'C')
+    stream1.setFlowRate(gasFlowRate, "MSm3/day")
+
+    streamresycl  = stream(stream1.clone())
+    streamresycl.setFlowRate(1.0, 'MSm3/day')
+    mixerStream = mixer()
+    mixerStream.addStream(stream1)
+    mixerStream.addStream(streamresycl)
+
+    compressor_1 = compressor(mixerStream.getOutletStream(), pressure_outlet)
+    compressor_1.setIsentropicEfficiency(0.77)
+
+    stream2 = stream(compressor_1.getOutStream())
+
+    streamSplit = splitter(stream2,splitfactors)
+    streamSplit.setFlowRates([5.0, 1.0], 'MSm3/day')
+
+    resycStream1 = streamSplit.getSplitStream(1)
+
+    valve1 = valve(resycStream1)
+    valve1.setOutletPressure(pressure_inlet)
+
+    resycleOp = recycle2()
+    resycleOp.addStream(valve1.getOutletStream())
+    resycleOp.setOutletStream(streamresycl)
+
+    exportStream = stream(streamSplit.getSplitStream(0))
+
+    runProcess()
+
+    print('export flow ' , exportStream.getFlowRate('MSm3/day'))
+    print('recycle flow ' , resycStream1.getFlowRate('MSm3/day'))
+    print('flow to compressor ' , mixerStream.getOutStream().getFlowRate('MSm3/day'))
+    print('power ', compressor_1.getPower('kW'), ' kW')
+    print('valve Cv ', valve1.getCv())
+    print('valve Cv ', valve1.getPercentValveOpening())
