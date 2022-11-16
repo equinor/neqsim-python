@@ -1,5 +1,5 @@
 # import the package
-from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, clearProcess, newProcess, runProcess, stream, runProcessAsThread)
+from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, clearProcess, newProcess, runProcess, stream, runProcessAsThread, mixer, compressor, recycle2, splitter, valve)
 from neqsim.thermo import (TPflash, fluid, printFrame)
 from numpy import isnan
 from pytest import approx
@@ -109,23 +109,23 @@ def test_flowSplitter():
     stream1.setFlowRate(gasFlowRate, "MSm3/day")
 
     streamresycl  = stream(stream1.clone())
-    streamresycl.setFlowRate(1.0, 'MSm3/day')
+    streamresycl.setFlowRate(0.1, "MSm3/day")
+
     mixerStream = mixer()
     mixerStream.addStream(stream1)
     mixerStream.addStream(streamresycl)
 
     compressor_1 = compressor(mixerStream.getOutletStream(), pressure_outlet)
-    compressor_1.setIsentropicEfficiency(0.77)
 
     stream2 = stream(compressor_1.getOutStream())
 
     streamSplit = splitter(stream2,splitfactors)
-    streamSplit.setFlowRates([5.0, 1.0], 'MSm3/day')
+    streamSplit.setFlowRates([5.0, 0.1], 'MSm3/day')
 
-    resycStream1 = streamSplit.getSplitStream(1)
+    resycStream1 = stream(streamSplit.getSplitStream(1))
 
     valve1 = valve(resycStream1)
-    valve1.setOutletPressure(pressure_inlet)
+    valve1.setOutletPressure(pressure_inlet, 'bara')
 
     resycleOp = recycle2()
     resycleOp.addStream(valve1.getOutletStream())
@@ -135,6 +135,7 @@ def test_flowSplitter():
 
     runProcess()
 
+    assert exportStream.getFlowRate('MSm3/day') == 5.0
     print('export flow ' , exportStream.getFlowRate('MSm3/day'))
     print('recycle flow ' , resycStream1.getFlowRate('MSm3/day'))
     print('flow to compressor ' , mixerStream.getOutStream().getFlowRate('MSm3/day'))
