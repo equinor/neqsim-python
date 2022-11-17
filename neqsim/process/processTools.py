@@ -24,6 +24,11 @@ def stream(thermoSystem, name="stream ?", t=0, p=0):
     processoperations.add(stream)
     return stream
 
+def virtualstream(streamIn, name="stream ?"):
+    stream = jNeqSim.processSimulation.processEquipment.stream.VirtualStream(name, 
+        streamIn)
+    processoperations.add(stream)
+    return stream
 
 def neqstream(thermoSystem, name="stream ?", t=0, p=0):
     if t != 0:
