@@ -193,7 +193,7 @@ def expander(teststream, p, name="expander ?"):
 
 
 def mixer(name=""):
-    mixer = jNeqSim.processSimulation.processEquipment.mixer.StaticMixer()
+    mixer = jNeqSim.processSimulation.processEquipment.mixer.Mixer()
     mixer.setName(name)
     processoperations.add(mixer)
     return mixer
@@ -221,11 +221,12 @@ def compsplitter(teststream, splitfactors, name=""):
     processoperations.add(compSplitter)
     return compSplitter
 
-def splitter(teststream, splitfactors, name=""):
+def splitter(teststream, splitfactors=[], name=""):
     splitter = jNeqSim.processSimulation.processEquipment.splitter.Splitter(
         teststream)
-    splitter.setSplitNumber(len(splitfactors))
-    splitter.setSplitFactors(JDouble[:](splitfactors))
+    if(len(splitfactors)>0):
+        splitter.setSplitNumber(len(splitfactors))
+        splitter.setSplitFactors(JDouble[:](splitfactors))
     splitter.setName(name)
     processoperations.add(splitter)
     return splitter

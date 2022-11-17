@@ -3,6 +3,7 @@ from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hy
 from neqsim.thermo import (TPflash, fluid, printFrame)
 from numpy import isnan
 from pytest import approx
+from jpype.types import *
 
 def test_compsplitter():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -95,8 +96,6 @@ def test_flowSplitter():
     pressure_outlet = 100.0
     gasFlowRate = 5.0 
 
-    splitfactors = [0.9, 0.1]
-
     fluid1 = fluid('srk')
     fluid1.addComponent("methane", 1.0)
 
@@ -112,14 +111,14 @@ def test_flowSplitter():
 
     mixerStream = mixer()
     mixerStream.addStream(stream1)
-    #mixerStream.addStream(streamresycl)
+    mixerStream.addStream(streamresycl)
 
     compressor_1 = compressor(mixerStream.getOutletStream(), pressure_outlet)
 
     stream2 = stream(compressor_1.getOutStream())
-
-    streamSplit = splitter(stream2,splitfactors)
-    streamSplit.setFlowRates([-1, 0.1], 'MSm3/day')
+    
+    streamSplit = splitter(stream2)
+    streamSplit.setFlowRates(JDouble[:]([5.0, 0.1]), 'MSm3/day')
 
     resycStream1 = streamSplit.getSplitStream(1)
 
@@ -133,8 +132,15 @@ def test_flowSplitter():
     exportStream = stream(streamSplit.getSplitStream(0))
 
     runProcess()
-    assert exportStream.getFlowRate('MSm3/day') == approx(4.9)
+    
+    assert exportStream.getFlowRate('MSm3/day') == approx(5.0)
     assert streamresycl.getFlowRate('MSm3/day') == approx(0.1)
+
+    valve1.getOutStream().getFlowRate('MSm3/day')
+
+    streamSplit.getSplitStream(1).getFlowRate('MSm3/day')
+
+  
 
 def test_virtualstream():
     fluid1 = fluid('srk')
