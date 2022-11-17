@@ -1,8 +1,9 @@
 # import the package
-from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, clearProcess, newProcess, runProcess, stream, runProcessAsThread)
+from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, virtualstream, clearProcess, newProcess, runProcess, stream, runProcessAsThread, mixer, compressor, recycle2, splitter, valve)
 from neqsim.thermo import (TPflash, fluid, printFrame)
 from numpy import isnan
 from pytest import approx
+from jpype.types import *
 
 def test_compsplitter():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -87,5 +88,71 @@ def test_newprocess():
     splittcomp = compsplitter(stream1, [1.0, 0.0])
     runProcess()
     TPflash(splittcomp.getSplitStream(0).getFluid())
-    printFrame(splittcomp.getSplitStream(0).getFluid())
-    assert splittcomp.getSplitStream(0).getFluid().getViscosity('kg/msec') > 1e-19
+    #assert splittcomp.getSplitStream(0).getFluid().getViscosity('kg/msec') > 1e-19
+
+def test_flowSplitter():
+    temperature_inlet = 35.0
+    pressure_inlet = 55.0
+    pressure_outlet = 100.0
+    gasFlowRate = 5.0 
+
+    fluid1 = fluid('srk')
+    fluid1.addComponent("methane", 1.0)
+
+    clearProcess()
+
+    stream1 = stream(fluid1)
+    stream1.setPressure(pressure_inlet, 'bara')
+    stream1.setTemperature(temperature_inlet, 'C')
+    stream1.setFlowRate(gasFlowRate, "MSm3/day")
+
+    streamresycl  = stream(stream1.getFluid().clone())
+    streamresycl.setFlowRate(0.1, "MSm3/day")
+
+    mixerStream = mixer()
+    mixerStream.addStream(stream1)
+    mixerStream.addStream(streamresycl)
+
+    compressor_1 = compressor(mixerStream.getOutletStream(), pressure_outlet)
+
+    stream2 = stream(compressor_1.getOutStream())
+    
+    streamSplit = splitter(stream2)
+    streamSplit.setFlowRates(JDouble[:]([5.0, 0.1]), 'MSm3/day')
+
+    resycStream1 = streamSplit.getSplitStream(1)
+
+    valve1 = valve(resycStream1)
+    valve1.setOutletPressure(pressure_inlet, 'bara')
+
+    resycleOp = recycle2()
+    resycleOp.addStream(valve1.getOutletStream())
+    resycleOp.setOutletStream(streamresycl)
+
+    exportStream = stream(streamSplit.getSplitStream(0))
+
+    runProcess()
+    
+    assert exportStream.getFlowRate('MSm3/day') == approx(5.0)
+    assert streamresycl.getFlowRate('MSm3/day') == approx(0.1)
+
+    valve1.getOutStream().getFlowRate('MSm3/day')
+
+    streamSplit.getSplitStream(1).getFlowRate('MSm3/day')
+
+  
+
+def test_virtualstream():
+    fluid1 = fluid('srk')
+    fluid1.addComponent("methane", 1.0)
+
+    clearProcess()
+    stream1 = stream(fluid1)
+    stream1.setFlowRate(3.1, "MSm3/day")
+    vstream = virtualstream(stream1)
+    vstream.setFlowRate(1.1, "MSm3/day")
+    vstream.setTemperature(25.0, 'C')
+    vstream.setPressure(25.0, 'bara')
+    runProcess()
+    assert stream1.getFlowRate('MSm3/day') == approx(3.1)
+    assert vstream.getOutStream().getFlowRate('MSm3/day') == approx(1.1)
