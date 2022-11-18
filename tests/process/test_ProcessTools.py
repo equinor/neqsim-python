@@ -128,6 +128,7 @@ def test_flowSplitter():
     resycleOp = recycle2()
     resycleOp.addStream(valve1.getOutletStream())
     resycleOp.setOutletStream(streamresycl)
+    resycleOp.setFlowAccuracy(1e-4)
 
     exportStream = stream(streamSplit.getSplitStream(0))
     runProcess()
@@ -143,6 +144,11 @@ def test_flowSplitter():
     runProcess()
     assert exportStream.getFlowRate('MSm3/day') == approx(5.0)
     assert streamresycl.getFlowRate('MSm3/day') == approx(2.5)
+
+    streamSplit.setSplitFactors(JDouble[:]([1.0, 0.0]))
+    runProcess()
+    assert exportStream.getFlowRate('MSm3/day') == approx(5.0)
+    assert streamresycl.getFlowRate('MSm3/day') == approx(0.0)
 
   
 
