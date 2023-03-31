@@ -17,11 +17,11 @@ def test_Viscosity():
     thermoOps.TPflash()
 
     gasEnthalpy = thermoSystem.getPhase(0).getEnthalpy()
-    assert abs(1079.4821290144278 - gasEnthalpy) < 1e-10
+    assert abs(1079.8561270889081 - gasEnthalpy) < 1e-10
 
     thermoSystem.initPhysicalProperties("Viscosity")
     gasViscosity = thermoSystem.getPhase(0).getViscosity("kg/msec")
-    assert abs(1.0760998263783299e-05 - gasViscosity) < 1e-10
+    assert abs(1.0760998263782569e-05 - gasViscosity) < 1e-10
 
 def test_fullOffshoreProcess():
     import pandas as pd
