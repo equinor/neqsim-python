@@ -24,8 +24,9 @@ def test_Viscosity():
     assert abs(1.0760998263782569e-05 - gasViscosity) < 1e-10
 
 def test_updateDatabase():
-    jNeqSim.util.database.NeqSimDataBase.updateTable('COMP', 'test')
-
+    jNeqSim.util.database.NeqSimDataBase.updateTable("COMP",
+        "classpath:/data/COMP.csv")
+    
 def test_fullOffshoreProcess():
     import pandas as pd
     import math
