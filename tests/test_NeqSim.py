@@ -26,7 +26,10 @@ def test_Viscosity():
 def test_updateDatabase():
     jNeqSim.util.database.NeqSimDataBase.updateTable("COMP",
         "classpath:/data/COMP.csv")
-    
+
+def test_hasComponentDatabase():
+    assert jNeqSim.util.database.NeqSimDataBase.hasComponent("methane") == True
+
 def test_fullOffshoreProcess():
     import pandas as pd
     import math
