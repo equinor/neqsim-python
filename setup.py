@@ -9,7 +9,7 @@ interactive_req = ['matplotlib', 'tabulate', 'jupyter']
 
 setup(
     name="neqsim",
-    version="2.4.15",
+    version="2.5.0",
     author="Even Solbraa",
     author_email="esolbraa@gmail.com",
     description="NeqSim is a tool for thermodynamic and process calculations",
