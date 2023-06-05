@@ -23,9 +23,9 @@ def test_Viscosity():
     gasViscosity = thermoSystem.getPhase(0).getViscosity("kg/msec")
     assert abs(1.0760998263782569e-05 - gasViscosity) < 1e-10
 
-#def test_updateDatabase():
-#    jNeqSim.util.database.NeqSimDataBase.updateTable("COMP",
-#        "classpath:/data/COMP.csv")
+def test_updateDatabase():
+    jNeqSim.util.database.NeqSimDataBase.updateTable("COMP",
+        "classpath:/data/COMP.csv")
 
 def test_hasComponentDatabase():
     assert jNeqSim.util.database.NeqSimDataBase.hasComponent("methane") == True
