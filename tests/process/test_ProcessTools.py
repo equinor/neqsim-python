@@ -4,6 +4,7 @@ from neqsim.thermo import (TPflash, fluid, printFrame)
 from numpy import isnan
 from pytest import approx
 from jpype.types import *
+from neqsim import jNeqSim
 
 def test_compsplitter():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -166,3 +167,32 @@ def test_virtualstream():
     runProcess()
     assert stream1.getFlowRate('MSm3/day') == approx(3.1)
     assert vstream.getOutStream().getFlowRate('MSm3/day') == approx(1.1)
+
+# Example of a method using direct calls to neqsim java
+def testNoUseOfThermosOrProcessTools():
+    fluid = jNeqSim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00)
+    fluid.addComponent("methane", 0.900)
+    fluid.addComponent("ethane", 0.100)
+    fluid.addComponent("n-heptane", 1.00)
+    fluid.setMixingRule(2)
+
+    stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream("Stream1", fluid)
+    stream1.setPressure(10.0, 'bara')
+    stream1.setTemperature(25.0, 'C')
+    stream1.setFlowRate(50.0, 'kg/hr')
+
+    valve1 = jNeqSim.processSimulation.processEquipment.valve.ThrottlingValve("valve_1", stream1)
+    valve1.setOutletPressure(5.0, 'bara')
+
+    separator1 = jNeqSim.processSimulation.processEquipment.separator.Separator("sep 1")
+    separator1.addStream(valve1.getOutStream())
+
+    operation = jNeqSim.processSimulation.processSystem.ProcessSystem()
+    operation.add(stream1)
+    operation.add(valve1)
+    operation.add(separator1)
+
+    operation.run()
+    
+    print('temperature ', operation.getUnit('sep 1').getGasOutStream().getTemperature('C'))
+    assert operation.getUnit('sep 1').getGasOutStream().getFlowRate('kg/hr') == approx(7.580303857)
