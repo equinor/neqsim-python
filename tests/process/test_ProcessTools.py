@@ -208,7 +208,7 @@ def test_gasoilprocess():
     }
 
     ASGAfluid_df = pd.DataFrame(ASGAwell)
-    ASGAFluid = fluid_df(ASGAfluid_df, lastIsPlusFraction=False)#.autoSelectModel()#, modelName='pr')
+    ASGAFluid = fluid_df(ASGAfluid_df, lastIsPlusFraction=False)
     ASGAFluid.setMixingRule('classic')
 
     reffluidrate = 604094.
