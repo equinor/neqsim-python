@@ -1,10 +1,11 @@
 # import the package
-from neqsim.process.processTools import (compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, virtualstream, clearProcess, newProcess, runProcess, stream, runProcessAsThread, mixer, compressor, recycle2, splitter, valve)
-from neqsim.thermo import (TPflash, fluid, printFrame)
+from neqsim.process.processTools import (separator, pump, heater, separator3phase, compsplitter, waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser, virtualstream, clearProcess, newProcess, runProcess, stream, runProcessAsThread, mixer, compressor, recycle2, splitter, valve)
+from neqsim.thermo import (TPflash, fluid, printFrame, fluid_df)
 from numpy import isnan
 from pytest import approx
 from jpype.types import *
 from neqsim import jNeqSim
+import pandas as pd
 
 def test_compsplitter():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -196,3 +197,102 @@ def testNoUseOfThermosOrProcessTools():
     
     print('temperature ', operation.getUnit('sep 1').getGasOutStream().getTemperature('C'))
     assert operation.getUnit('sep 1').getGasOutStream().getFlowRate('kg/hr') == approx(7.580303857)
+
+
+def test_gasoilprocess():
+
+    ASGAwell = {'ComponentName': ["water", "nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane", "iC5", "nC5", "C6", "C7", "C8", "C9", "C10_C12", "C13_C14", "C15_C16", "C17_C19", "C20_C22", "C23_C25", "C26_C30", "C31_C38", "C39_C80"],
+    'MolarComposition[-]': [0.034266, 0.005269, 0.039189, 0.700553, 0.091154, 0.050908, 0.007751, 0.014665, 0.004249, 0.004878, 0.004541, 0.007189, 0.006904, 0.004355, 0.007658, 0.003861, 0.003301, 0.002624, 0.001857, 0.001320, 0.001426, 0.001164, 0.000916],
+    'MolarMass[kg/mol]': [None,None,None, None,None,None,None,None,None,None, 0.08618, 0.09096, 0.10343, 0.11719, 0.14581, 0.18133, 0.21228, 0.24814, 0.28922, 0.33034, 0.38470, 0.47116, 0.66246],
+    'RelativeDensity[-]': [None,None,None, None,None,None,None,None,None,None, 0.66266, 0.74084, 0.76922, 0.78921, 0.80411, 0.82491, 0.83780, 0.84946, 0.86331, 0.87527, 0.88783, 0.90479, 0.92660]
+    }
+
+    ASGAfluid_df = pd.DataFrame(ASGAwell)
+    ASGAFluid = fluid_df(ASGAfluid_df, lastIsPlusFraction=False)#.autoSelectModel()#, modelName='pr')
+    ASGAFluid.setMixingRule('classic')
+
+    reffluidrate = 604094.
+    feedTemperature = 25.5 + 273.15
+    feedPressure = 26.0
+    MPpressure = 19.
+    LPpressure = 2.7
+    LPMidpressure = 7.3
+    P_1st_comp = LPpressure - 0.03
+
+
+    WellFluid2= ASGAFluid
+
+    clearProcess()
+
+    #Well stream
+    wstream_inlet = stream(WellFluid2)
+    wstream_inlet.setTemperature(feedTemperature,'K')
+    wstream_inlet.setPressure(feedPressure,'bara')
+    wstream_inlet.setFlowRate(reffluidrate, 'kg/hr')
+
+    #Separator train
+    separator1 = separator3phase(wstream_inlet, "inlet separator")
+    valve1 = valve(separator1.getOilOutStream(), MPpressure, "HP oil valve")
+    Oilheater1 = heater(valve1.getOutletStream())
+    Oilheater1.setOutTemperature(359.15)
+    separator2 = separator3phase(Oilheater1.getOutStream(), "MP separator")
+    valve2 = valve(separator2.getOilOutStream(), LPpressure)
+    recirc1stream = stream(valve2.getOutletStream().clone())
+    recirc2stream = stream(valve2.getOutletStream().clone())
+    recirc3stream = stream(valve2.getOutletStream().clone())
+    separator3 = separator3phase(valve2.getOutletStream(),"LP separator")
+    separator3.addStream(recirc1stream)
+    separator3.addStream(recirc2stream)
+    separator3.addStream(recirc3stream)
+
+    # 1st stg compressor
+    pipeloss1st = valve(separator3.getGasOutStream(), P_1st_comp)
+    coolerLP1 = heater(pipeloss1st.getOutletStream())
+    coolerLP1.setOutTemperature(298.15)
+    scrubberLP1 = separator(coolerLP1.getOutletStream())
+    compressorLP1 = compressor(scrubberLP1.getGasOutStream())
+
+    # Recycle for liquid from 1st stage scrubber
+    pumpLP = pump(scrubberLP1.getLiquidOutStream())
+    pumpLP.setOutletPressure(MPpressure)
+    valveR1 = valve(pumpLP.getOutletStream(), LPpressure, "1st scr liq")
+    recycleLP = recycle2("recycleLP")
+    recycleLP.addStream(valveR1.getOutletStream())
+    recycleLP.setOutletStream(recirc1stream)
+
+    # 2nd stg compressor
+    coolerMP1 = heater(compressorLP1.getOutStream())
+    coolerMP1.setOutTemperature(325.15)
+    scrubberMP1 = separator(coolerMP1.getOutStream())
+    compressorMP1 = compressor(scrubberMP1.getGasOutStream())
+    compressorMP1.setOutletPressure(MPpressure)
+    compressorMP1.setPolytropicEfficiency(0.78)
+
+    # Recycle for liquid from 2nd stage scrubber
+    valveR2 = valve(scrubberMP1.getLiquidOutStream(), LPpressure, "2nd scr liq")
+    recycleMP = recycle2("recycleMP")
+    recycleMP.addStream(valveR2.getOutletStream())
+    recycleMP.setOutletStream(recirc2stream)
+
+    # 3rd stg compressor, compressor model is skipped as the target for reference
+    # model is to derive gas composition into 3rd stage and then perform more detailed
+    # calculation on 3rd stage compressor
+    mixerMP = mixer()
+    mixerMP.addStream(compressorMP1.getOutStream())
+    mixerMP.addStream(separator2.getGasOutStream())
+    cooler3rd = heater(mixerMP.getOutStream())
+    cooler3rd.setOutTemperature(317.15)
+    scrubber3rd = separator(cooler3rd.getOutStream())
+
+    # Recycle for liquid from 2nd stage scrubber
+    valveR3 = valve(scrubber3rd.getLiquidOutStream(), LPpressure, "3re scr liq")
+    recycle3rd = recycle2('recycle3rd')
+    recycle3rd.addStream(valveR3.getOutStream())
+    recycle3rd.setOutletStream(recirc3stream)
+
+    processrun = runProcessAsThread()
+    processrun.join(120000)
+    
+    assert 3859.90 == approx(recirc1stream.getFlowRate('kg/hr'), abs=1.0)
+    assert 22876.1 ==  approx(pipeloss1st.getOutletStream().getFlowRate("kg/hr"), abs=1.0)
+    assert separator3.getGasOutStream().getFlowRate("kg/hr") == pipeloss1st.getOutletStream().getFlowRate("kg/hr")
