@@ -295,3 +295,44 @@ def test_gasoilprocess():
     #assert 3859.9 == approx(recirc1stream.getFlowRate('kg/hr'), abs=1.0)
     #assert 22876.1 ==  approx(pipeloss1st.getOutletStream().getFlowRate("kg/hr"), abs=1.0)
     #assert separator3.getGasOutStream().getFlowRate("kg/hr") == pipeloss1st.getOutletStream().getFlowRate("kg/hr")
+
+def test_AFR():
+    fluid = jNeqSim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00)
+    fluid.addComponent("nitrogen", 1.0)
+    fluid.addComponent("CO2", 1.0)
+    fluid.addComponent("methane", 92.0)
+    fluid.addComponent("ethane", 5.0)
+    fluid.addComponent("propane", 1.0)
+    fluid.addComponent("i-butane", 0.5)
+    fluid.addComponent("n-butane", 0.5)
+    fluid.addComponent("i-pentane", 0.1)
+    fluid.addComponent("n-pentane", 0.1)
+    fluid.addComponent("n-hexane", 0.01)
+    fluid.setMixingRule(2)
+    TPflash(fluid)
+    
+    elements_h = 0.0
+    elements_c = 0.0
+    sum_hc = 0.0
+    molmass_hc = 0.0
+    wtfrac_hc = 0.0
+
+    for i in range(fluid.getNumberOfComponents()):
+        if fluid.getComponent(i).isHydrocarbon():
+            sum_hc = sum_hc + fluid.getComponent(i).getz()
+            molmass_hc = molmass_hc + fluid.getComponent(i).getz() * fluid.getComponent(i).getMolarMass()
+            elements_c = elements_c + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("C")
+            elements_h = elements_h + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("H")
+
+    if sum_hc == 0:
+        return 0.0
+    else:
+        wtfrac_hc = molmass_hc / fluid.getMolarMass()
+        molmass_hc /= sum_hc
+        elements_c /= sum_hc
+        elements_h /= sum_hc
+    
+    aconst = elements_c + elements_h / 4
+    afr = aconst * (32.0 + 3.76 * 28.0) / 1000.0 / molmass_hc * wtfrac_hc
+
+    assert 16.2312248674 == approx(afr, abs=0.01)
