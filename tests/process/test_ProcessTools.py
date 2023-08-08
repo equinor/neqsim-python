@@ -318,7 +318,7 @@ def test_AFR():
     wtfrac_hc = 0.0
 
     for i in range(fluid.getNumberOfComponents()):
-      if fluid.getComponent(i).isHydrocarbon():
+        if fluid.getComponent(i).isHydrocarbon():
             sum_hc = sum_hc + fluid.getComponent(i).getz()
             molmass_hc = molmass_hc + fluid.getComponent(i).getz() * fluid.getComponent(i).getMolarMass()
             elements_c = elements_c + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("C")
