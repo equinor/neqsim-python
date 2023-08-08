@@ -311,28 +311,28 @@ def test_AFR():
     fluid.setMixingRule(2)
     TPflash(fluid)
     
-    elementsH = 0.0
-    elementsC = 0.0
-    sumHC = 0.0
-    molMassHC = 0.0
-    wtFracHC = 0.0
-    for i in range(fluid.getNumberOfComponents()):
-      if (fluid.getComponent(i).isHydrocarbon()):
-            sumHC = sumHC + fluid.getComponent(i).getz()
-            molMassHC = molMassHC + fluid.getComponent(i).getz() * fluid.getComponent(i).getMolarMass()
-            elementsC = elementsC + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("C")
-            elementsH = elementsH + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("H")
+    elements_h = 0.0
+    elements_c = 0.0
+    sum_hc = 0.0
+    molmass_hc = 0.0
+    wtfrac_hc = 0.0
 
-    if (sumHC < 1e-100):
+    for i in range(fluid.getNumberOfComponents()):
+      if fluid.getComponent(i).isHydrocarbon():
+            sum_hc = sum_hc + fluid.getComponent(i).getz()
+            molmass_hc = molmass_hc + fluid.getComponent(i).getz() * fluid.getComponent(i).getMolarMass()
+            elements_c = elements_c + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("C")
+            elements_h = elements_h + fluid.getComponent(i).getz() * fluid.getComponent(i).getElements().getNumberOfElements("H")
+
+    if sum_hc == 0:
         return 0.0
     else:
-        wtFracHC = molMassHC / fluid.getMolarMass()
-        molMassHC /= sumHC
-        elementsC /= sumHC
-        elementsH /= sumHC
+        wtfrac_hc = molmass_hc / fluid.getMolarMass()
+        molmass_hc /= sum_hc
+        elements_c /= sum_hc
+        elements_h /= sum_hc
     
-    A = elementsC + elementsH / 4
-    AFR = A * (32.0 + 3.76 * 28.0) / 1000.0 / molMassHC * wtFracHC
+    aconst = elements_c + elements_h / 4
+    afr = aconst * (32.0 + 3.76 * 28.0) / 1000.0 / molmass_hc * wtfrac_hc
 
-    assert 16.2312248674 == approx(AFR, abs=0.01)
-
+    assert 16.2312248674 == approx(afr, abs=0.01)
