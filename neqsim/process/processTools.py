@@ -164,6 +164,9 @@ def compressorChart(compressor, curveConditions, speed, flow, head, polyEff):
     compressor.getCompressorChart().setCurves(JDouble[:](curveConditions), JDouble[:](
         speed), JDouble[:][:](flow), JDouble[:][:](head), JDouble[:][:](polyEff))
 
+def pumpChart(pump, curveConditions, speed, flow, head, polyEff):
+    pump.getPumpChart().setCurves(JDouble[:](curveConditions), JDouble[:](
+        speed), JDouble[:][:](flow), JDouble[:][:](head), JDouble[:][:](polyEff))
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
     compressor.getCompressorChart().getSurgeCurve().setCurve(
