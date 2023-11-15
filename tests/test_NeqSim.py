@@ -231,3 +231,11 @@ def test_fullOffshoreProcess():
     exportCompressor.setOutletPressure(200.0, 'bara')
     exportGas = stream(exportCompressor.getOutStream())
     runProcess()
+
+def testwriteandopen():
+    import neqsim
+    from neqsim.thermo import createfluid
+    fluid1 = createfluid('dry gas')
+    neqsim.save_xml(fluid1, 'name.xml')
+    fluid2 = neqsim.open_xml('name.xml')
+    assert fluid1.getTemperature() == fluid2.getTemperature()
