@@ -4,6 +4,7 @@ Created on Thu Jan  3 22:24:08 2019
 
 @author: ESOL
 """
+import os
 from neqsim.neqsimpython import jNeqSim
 
 
@@ -231,3 +232,18 @@ def test_fullOffshoreProcess():
     exportCompressor.setOutletPressure(200.0, 'bara')
     exportGas = stream(exportCompressor.getOutStream())
     runProcess()
+
+def testwriteandopen(tmp_path):
+    import neqsim
+    from neqsim.thermo import createfluid
+
+    temp_dir = tmp_path / "test"
+    os.mkdir(temp_dir)
+
+    temp_file =  temp_dir / "name.xml"  
+
+    fluid1 = createfluid('dry gas')
+    neqsim.save_xml(fluid1, temp_file)
+    fluid2 = neqsim.open_xml(temp_file)
+    
+    assert fluid1.getTemperature() == fluid2.getTemperature()

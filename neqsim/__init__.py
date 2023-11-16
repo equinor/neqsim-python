@@ -4,7 +4,7 @@ This module is a Python interface to the NeqSim Java library.
 It uses the Jpype module for bridging python and Java.
 """
 
-from .neqsimpython import *
+from neqsim.neqsimpython import jNeqSim, jpype
 
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
@@ -23,6 +23,20 @@ def has_tabulate():
 
 
 def setDatabase(connectionString):
-    from neqsim.neqsimpython import jNeqSim
     jNeqSim.util.database.NeqSimDataBase.setConnectionString(connectionString)
     jNeqSim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
+
+def save_xml(javaobject, filename):
+    xstream = jpype.JPackage('com.thoughtworks.xstream')
+    streamer = xstream.XStream()
+    xml = streamer.toXML(javaobject)
+    print(xml, file=open(filename, 'w'))
+    return xml
+
+def open_xml(filename):
+    xstream = jpype.JPackage('com.thoughtworks.xstream')
+    streamer = xstream.XStream()
+    streamer.addPermission(xstream.security.AnyTypePermission.ANY)
+    str = open(filename, 'r').read()
+    neqsimobj = streamer.fromXML(str)
+    return neqsimobj
