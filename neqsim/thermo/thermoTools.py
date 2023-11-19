@@ -68,7 +68,7 @@ def addFluids(fluids):
     return fluid
 
 
-def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName='', lumpComponents=True, numberOfLumpedComponents=12):
+def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName='', lumpComponents=True, numberOfLumpedComponents=12, add_all_components=True):
     if (autoSetModel):
         fluidcreator.setAutoSelectModel(True)
     else:
@@ -77,6 +77,9 @@ def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, mod
         fluidcreator.setThermoModel(modelName)
     else:
         fluidcreator.setAutoSelectModel(False)
+
+    if(not add_all_components):
+        reservoirFluiddf = reservoirFluiddf[reservoirFluiddf['MolarComposition[-]'] != 0.0]
     if 'MolarMass[kg/mol]' in reservoirFluiddf:
         definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
     else:
