@@ -18,6 +18,32 @@ def test_fluid_df_emptycomp():
     assert naturalgasFluid.getNumberOfComponents() == 24
     assert naturalgasFluid2.getNumberOfComponents() == 20
 
+def test_fluid_df_emptycomp3():
+    gascondensate = {'ComponentName':  ["nitrogen", "n-hexane", "C7"],
+            'MolarComposition[-]':  [1.0, 0.0, 72.98],
+            'MolarMass[kg/mol]': [None,None,0.0913],
+            'RelativeDensity[-]': [None,None, 0.746]
+    }
+
+    gascondensatedf = pd.DataFrame(gascondensate)
+    naturalgasFluid = fluid_df(gascondensatedf)
+    naturalgasFluid2 = fluid_df(gascondensatedf, add_all_components=False)
+    assert naturalgasFluid.getNumberOfComponents() == 3
+    assert naturalgasFluid2.getNumberOfComponents() == 2
+
+def test_fluid_df_emptycomp2():
+    gascondensate = {'ComponentName':  ["nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "C15", "C16", "C17", "C18", "C19", "C20"],
+            'MolarComposition[-]':  [0.0, 3.3, 72.98, 7.68, 4.1, 0.7, 1.42, 0.54, 0.67, 0.85, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            'MolarMass[kg/mol]': [None,None, None,None,None,None,None,None,None,None,0.0913, 0.1041, 0.1188, 0.136, 0.150, 0.164, 0.179, 0.188, 0.204, 0.216, 0.236, 0.253, 0.27, 0.391],
+            'RelativeDensity[-]': [None,None, None,None,None,None,None,None,None,None, 0.746, 0.768, 0.79, 0.787, 0.793, 0.804, 0.817, 0.83, 0.835, 0.843, 0.837, 0.84, 0.85, 0.877]
+    }
+
+    gascondensatedf = pd.DataFrame(gascondensate)
+    naturalgasFluid = fluid_df(gascondensatedf)
+    naturalgasFluid2 = fluid_df(gascondensatedf, add_all_components=False)
+    assert naturalgasFluid.getNumberOfComponents() == 24
+    assert naturalgasFluid2.getNumberOfComponents() == 9
+
 def test_fluid_df():
     components = ["nitrogen", "CO2", "methane", "ethane", "propane",
                   "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane"]
