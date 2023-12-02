@@ -77,17 +77,23 @@ def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, mod
         fluidcreator.setThermoModel(modelName)
     else:
         fluidcreator.setAutoSelectModel(False)
-
+    TBPComponentsFrame = reservoirFluiddf.dropna()
     if(not add_all_components):
         reservoirFluiddf = reservoirFluiddf[reservoirFluiddf['MolarComposition[-]'] != 0.0]
+        TBPComponentsFrame= TBPComponentsFrame[TBPComponentsFrame['MolarComposition[-]'] > 0]
+    else:
+        TBPComponentsFrame = reservoirFluiddf.dropna()
     if 'MolarMass[kg/mol]' in reservoirFluiddf:
         definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
     else:
         definedComponentsFrame = reservoirFluiddf
-    fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(
-    ), definedComponentsFrame['MolarComposition[-]'].tolist())
-    TBPComponentsFrame = reservoirFluiddf.dropna()
-    if not TBPComponentsFrame.equals(reservoirFluiddf):
+    if(not add_all_components):
+        definedComponentsFrame = definedComponentsFrame[definedComponentsFrame['MolarComposition[-]'] > 0.0]
+    if definedComponentsFrame.size>0:
+        fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(), definedComponentsFrame['MolarComposition[-]'].tolist())
+    else:
+        fluid7 = fluid('srk')
+    if not TBPComponentsFrame.equals(reservoirFluiddf) and TBPComponentsFrame.size>0:
         addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(), TBPComponentsFrame['MolarComposition[-]'].tolist(
         ), TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(), lastIsPlusFraction, lumpComponents, numberOfLumpedComponents)
     return fluid7
