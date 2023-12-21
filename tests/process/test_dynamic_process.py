@@ -1,6 +1,5 @@
 import neqsim
 from neqsim import jNeqSim
-import matplotlib.pyplot as plt
 
 def test_dynamic_compressor():
     testSystem2 = jNeqSim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00);
