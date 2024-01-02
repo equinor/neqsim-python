@@ -28,6 +28,8 @@ ENV/
 .vscode/*
 .DS_Store
 
+# Jetbrains IDE
+.idea/
+
 # SNYK
 .dccache
-poetry.lock
