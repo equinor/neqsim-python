@@ -9,15 +9,25 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        version: [3.9, 3.12]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+
+        name: Install poetry
+      - run: pipx install poetry
+
+        name: Setup python
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11' 
+          python-version: ${{ matrix.version }}
+          cache: "poetry"
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install neqsim pytest
+          poetry install --no-interaction
+
       - name: Run tests with pytest
-        run: python -m pytest
+        run: poetry run pytest
