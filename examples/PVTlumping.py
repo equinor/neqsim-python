@@ -7,7 +7,7 @@ Created on Sun Jan 12 22:54:57 2020
 
 from neqsim.thermo.thermoTools import *
 
-fluid1 = fluid('srk', 290.0, 11.0)
+fluid1 = fluid("srk", 290.0, 11.0)
 
 fluid1.getCharacterization().setLumpingModel("PVTlumpingModel")
 fluid1.getCharacterization().getLumpingModel().setNumberOfPseudoComponents(12)
@@ -34,8 +34,23 @@ fluid1.setMultiPhaseCheck(True)
 TPflash(fluid1)
 printFrame(fluid1)
 
-molaFrac = [0.1, 0.01, 0.01, 0.6, 0.1, 0.02, 0.02,
-            0.01, 0.001, 0.002, 0.01, 0.001, 0.001, 0.001, 0.4]
+molaFrac = [
+    0.1,
+    0.01,
+    0.01,
+    0.6,
+    0.1,
+    0.02,
+    0.02,
+    0.01,
+    0.001,
+    0.002,
+    0.01,
+    0.001,
+    0.001,
+    0.001,
+    0.4,
+]
 fluidCompositionPlus(fluid1, molaFrac)
 
 TPflash(fluid1)

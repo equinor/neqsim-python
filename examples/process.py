@@ -4,8 +4,15 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
-from neqsim.process import (clearProcess, compressor, runProcess, separator,
-                            stream, valve, viewProcess)
+from neqsim.process import (
+    clearProcess,
+    compressor,
+    runProcess,
+    separator,
+    stream,
+    valve,
+    viewProcess,
+)
 from neqsim.thermo import fluid
 
 # Start by creating a fluid in neqsim
@@ -28,11 +35,11 @@ oilValve = valve(inletSeparator.getLiquidOutStream(), 1.0)
 compressor1 = compressor(inletSeparator.getGasOutStream(), 100.0)
 
 # sensoir to read from Omnia
-#temperatureTranmitter1 = temperatureTransmitter(stream1, "PT20232")
-#pressureTranmitter1 = pressureTransmitter(stream1,"TIP2030I")
+# temperatureTranmitter1 = temperatureTransmitter(stream1, "PT20232")
+# pressureTranmitter1 = pressureTransmitter(stream1,"TIP2030I")
 
 # signals to calculate
-#VTemperatureTransmitter1 = VtemperatureTransmitter(inletValve.getOutStream(),"VT20314")
+# VTemperatureTransmitter1 = VtemperatureTransmitter(inletValve.getOutStream(),"VT20314")
 
 
 runProcess()

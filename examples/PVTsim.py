@@ -1,12 +1,22 @@
 import matplotlib.pyplot as plt
-from neqsim.thermo import (CVD, TPflash, addOilFractions, createfluid,
-                           createfluid2, dataFrame, fluid, fluidcreator,
-                           phaseenvelope, printFrame, separatortest)
+from neqsim.thermo import (
+    CVD,
+    TPflash,
+    addOilFractions,
+    createfluid,
+    createfluid2,
+    dataFrame,
+    fluid,
+    fluidcreator,
+    phaseenvelope,
+    printFrame,
+    separatortest,
+)
 
 # Calculate and display the phase envelope of various fluid types
-fluid1 = createfluid('black oil')
-print('phase envelope for black oil')
-#phaseenvelope(fluid1, True)
+fluid1 = createfluid("black oil")
+print("phase envelope for black oil")
+# phaseenvelope(fluid1, True)
 
 TPflash(fluid1)
 
@@ -20,12 +30,12 @@ separatortest(fluid1, pressure, temperature, GOR, Bo, display=False)
 
 plt.figure()
 plt.plot(pressure, Bo, "o")
-plt.xlabel('Pressure [bara]')
-plt.ylabel('Bo [m3/Sm3]')
+plt.xlabel("Pressure [bara]")
+plt.ylabel("Bo [m3/Sm3]")
 plt.figure()
 plt.plot(pressure, GOR, "o")
-plt.xlabel('Pressure [bara]')
-plt.ylabel('GOR [Sm3/Sm3]')
+plt.xlabel("Pressure [bara]")
+plt.ylabel("GOR [Sm3/Sm3]")
 plt.show()
 relativeVolume = []
 Zgas = []

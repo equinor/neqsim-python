@@ -4,10 +4,16 @@ Created on Mon Jan 20 08:16:29 2020
 
 @author: esol
 """
-from neqsim.thermo import (TPflash, fluid, fluidComposition,
-                           fluidCompositionPlus, phaseenvelope, printFrame)
+from neqsim.thermo import (
+    TPflash,
+    fluid,
+    fluidComposition,
+    fluidCompositionPlus,
+    phaseenvelope,
+    printFrame,
+)
 
-fluid1 = fluid('srk', 290.0, 11.0)
+fluid1 = fluid("srk", 290.0, 11.0)
 
 fluid1.getCharacterization().setLumpingModel("PVTlumpingModel")
 fluid1.getCharacterization().getLumpingModel().setNumberOfPseudoComponents(12)
@@ -34,14 +40,36 @@ fluid1.setMultiPhaseCheck(True)
 TPflash(fluid1)
 fluid1
 
-molaFrac = [0.1, 0.01, 0.01, 0.6, 0.1, 0.02, 0.02,
-            0.01, 0.001, 0.002, 0.01, 0.001, 0.001, 0.001, 0.4]
-#fluidCompositionPlus(fluid1, molaFrac)
+molaFrac = [
+    0.1,
+    0.01,
+    0.01,
+    0.6,
+    0.1,
+    0.02,
+    0.02,
+    0.01,
+    0.001,
+    0.002,
+    0.01,
+    0.001,
+    0.001,
+    0.001,
+    0.4,
+]
+# fluidCompositionPlus(fluid1, molaFrac)
 printFrame(fluid1)
 
-print("number of lumped compnents ", fluid1.getCharacterization(
-).getLumpingModel().getNumberOfLumpedComponents())
+print(
+    "number of lumped compnents ",
+    fluid1.getCharacterization().getLumpingModel().getNumberOfLumpedComponents(),
+)
 
-for i in range(fluid1.getCharacterization().getLumpingModel().getNumberOfLumpedComponents()):
-    print(i, " name ", fluid1.getCharacterization(
-    ).getLumpingModel().getLumpedComponentName(i))
+for i in range(
+    fluid1.getCharacterization().getLumpingModel().getNumberOfLumpedComponents()
+):
+    print(
+        i,
+        " name ",
+        fluid1.getCharacterization().getLumpingModel().getLumpedComponentName(i),
+    )

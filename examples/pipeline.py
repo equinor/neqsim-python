@@ -24,7 +24,7 @@ diameter = [0.5, 0.5, 0.5]
 roughnes = [50.0e-6, 50.0e-6, 50.0e-6]
 position = [0.0, 500.0, 1000.0]
 height = [0.0, -400.0, -800.0]
-#height = [0.0, 0.0, 0.0]
+# height = [0.0, 0.0, 0.0]
 outtemperatures = [278.15, 278.15, 278.15]
 outHeatU = [15.0, 15.0, 15.0]
 wallHeatU = [15.0, 15.0, 15.0]
@@ -33,13 +33,14 @@ stream1 = stream(fluid1)
 
 deltaElevation = 0.0
 pipeLength = 500000.0
-#roughness= 15.0e-6
-#diameter = 1.1
-pipe1 = pipeline(stream1, position, diameter, height,
-                 outtemperatures, roughnes, outHeatU, wallHeatU)
-#pipeSimple = pipe(stream1, pipeLength, deltaElevation, diameter, roughness)
+# roughness= 15.0e-6
+# diameter = 1.1
+pipe1 = pipeline(
+    stream1, position, diameter, height, outtemperatures, roughnes, outHeatU, wallHeatU
+)
+# pipeSimple = pipe(stream1, pipeLength, deltaElevation, diameter, roughness)
 runProcess()
 # pipe1.getOutStream().displayResult()
-print('pressure ', pipe1.getOutStream().getPressure('bara'))
-print('temperature ', pipe1.getOutStream().getTemperature('C'))
+print("pressure ", pipe1.getOutStream().getPressure("bara"))
+print("temperature ", pipe1.getOutStream().getTemperature("C"))
 # runProcess()

@@ -12,11 +12,11 @@ from pyspark import *
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-spark = SparkSession \
-    .builder \
-    .appName("Python Spark SQL basic example") \
-    .config("spark.some.config.option", "some-value") \
+spark = (
+    SparkSession.builder.appName("Python Spark SQL basic example")
+    .config("spark.some.config.option", "some-value")
     .getOrCreate()
+)
 
 
 # Enable Arrow-based columnar data transfers

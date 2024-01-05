@@ -39,5 +39,5 @@ runProcess()
 
 # heatExchanger1.displayResult()
 
-temp1 = heatExchanger1.getOutStream(0).getTemperature()-273.15
-temp2 = heatExchanger1.getOutStream(1).getTemperature()-273.15
+temp1 = heatExchanger1.getOutStream(0).getTemperature() - 273.15
+temp2 = heatExchanger1.getOutStream(1).getTemperature() - 273.15

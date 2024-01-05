@@ -17,9 +17,33 @@ The current python script demonstrates simple ways of creating fluids in neqsim
 import pandas as pd
 from neqsim.thermo import TPflash, fluid_df, printFrame
 from neqsim.thermo.thermoTools import *
-naturalgas = {'ComponentName':  ["nitrogen", "CO2", "methane", "ethane", "propane", "i-butane", "n-butane", "i-pentane", "n-pentane", "n-hexane"],
-              'MolarComposition[-]':  [0.34, 0.84, 90.4, 5.199, 2.06, 0.36, 0.55, 0.14, 0.097, 0.014]
-              }
+
+naturalgas = {
+    "ComponentName": [
+        "nitrogen",
+        "CO2",
+        "methane",
+        "ethane",
+        "propane",
+        "i-butane",
+        "n-butane",
+        "i-pentane",
+        "n-pentane",
+        "n-hexane",
+    ],
+    "MolarComposition[-]": [
+        0.34,
+        0.84,
+        90.4,
+        5.199,
+        2.06,
+        0.36,
+        0.55,
+        0.14,
+        0.097,
+        0.014,
+    ],
+}
 
 naturalgasdf = pd.DataFrame(naturalgas)
 print("Natural Gas Fluid:\n")

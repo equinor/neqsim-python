@@ -4,10 +4,18 @@ Created on Tue Jun 23 10:37:26 2020
 
 @author: ESOL
 """
-from neqsim.thermo import (PHflash, PHsolidflash, TPflash, TPsolidflash, bubt,
-                           dewt, fluid, printFrame)
+from neqsim.thermo import (
+    PHflash,
+    PHsolidflash,
+    TPflash,
+    TPsolidflash,
+    bubt,
+    dewt,
+    fluid,
+    printFrame,
+)
 
-fluid1 = fluid('srk')
+fluid1 = fluid("srk")
 fluid1.addComponent("CO2", 100.0)
 
 fluid1.setTemperature(-25.0, "C")
