@@ -1,7 +1,7 @@
 import jpype
 
 if not jpype.isJVMStarted():
-    # Could call jpype.getDefaultJVMPath() to get default JVM, 
+    # Could call jpype.getDefaultJVMPath() to get default JVM,
     # but not able to get the orders to force loading a specific JVM
     jpype.startJVM(convertStrings=False)
     jvm_version = jpype.getJVMVersion()[0]
