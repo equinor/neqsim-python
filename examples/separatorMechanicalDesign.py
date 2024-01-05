@@ -4,8 +4,18 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
-from neqsim.process import (clearProcess, compressor, heater, mixer, recycle,
-                            runProcess, separator, stream, valve, viewProcess)
+from neqsim.process import (
+    clearProcess,
+    compressor,
+    heater,
+    mixer,
+    recycle,
+    runProcess,
+    separator,
+    stream,
+    valve,
+    viewProcess,
+)
 from neqsim.thermo import fluid, phaseenvelope
 
 feedPressure = 30.0
@@ -26,7 +36,7 @@ fluid1.addComponent("n-heptane", 2.1)
 fluid1.addComponent("n-octane", 1.1)
 fluid1.addComponent("n-nonane", 0.51)
 fluid1.addComponent("nC10", 5.1)
-fluid1.setMixingRule('classic')
+fluid1.setMixingRule("classic")
 fluid1.setTemperature(35.15, "C")
 fluid1.setPressure(feedPressure, "bara")
 fluid1.setTotalFlowRate(10.0, "MSm3/day")
@@ -75,13 +85,16 @@ compressor2.setIsentropicEfficiency(0.77)
 
 runProcess()
 
-print("LPcompressor power ", compressorLP1.getPower()/1e6, " MW")
-print("MPcompressor power ", compressorMP1.getPower()/1e6, " MW")
-print("compressor1 power ", compressor1.getPower()/1e6, " MW")
-print("compressor2 power ", compressor2.getPower()/1e6, " MW")
+print("LPcompressor power ", compressorLP1.getPower() / 1e6, " MW")
+print("MPcompressor power ", compressorMP1.getPower() / 1e6, " MW")
+print("compressor1 power ", compressor1.getPower() / 1e6, " MW")
+print("compressor2 power ", compressor2.getPower() / 1e6, " MW")
 
-print("temperature out of compressor2 ",
-      compressor2.getOutStream().getTemperature()-273.15, " °C")
+print(
+    "temperature out of compressor2 ",
+    compressor2.getOutStream().getTemperature() - 273.15,
+    " °C",
+)
 valve1.displayResult()
 separator3.displayResult()
 scrubberLP.displayResult()

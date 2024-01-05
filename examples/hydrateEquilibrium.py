@@ -21,19 +21,19 @@ ibutane = 1.25
 nbutane = 1.25
 water = 10.25
 
-fluid1 = fluid('cpa')
-fluid1.addComponent("nitrogen", nitrogen, 'mol/sec')
-fluid1.addComponent("CO2", CO2, 'mol/sec')
-fluid1.addComponent("methane", methane, 'mol/sec')
-fluid1.addComponent("ethane", ethane, 'mol/sec')
-fluid1.addComponent("propane", propane, 'mol/sec')
-fluid1.addComponent("i-butane", ibutane, 'mol/sec')
-fluid1.addComponent("n-butane", nbutane, 'mol/sec')
-fluid1.addComponent("water", water, 'mol/sec')
+fluid1 = fluid("cpa")
+fluid1.addComponent("nitrogen", nitrogen, "mol/sec")
+fluid1.addComponent("CO2", CO2, "mol/sec")
+fluid1.addComponent("methane", methane, "mol/sec")
+fluid1.addComponent("ethane", ethane, "mol/sec")
+fluid1.addComponent("propane", propane, "mol/sec")
+fluid1.addComponent("i-butane", ibutane, "mol/sec")
+fluid1.addComponent("n-butane", nbutane, "mol/sec")
+fluid1.addComponent("water", water, "mol/sec")
 fluid1.setMixingRule(10)
 
-fluid1.setPressure(pressure, 'bara')
+fluid1.setPressure(pressure, "bara")
 
 hydt(fluid1)
 
-print("Hydrate equilibrium temperature ", fluid1.getTemperature()-273.15, " C")
+print("Hydrate equilibrium temperature ", fluid1.getTemperature() - 273.15, " C")

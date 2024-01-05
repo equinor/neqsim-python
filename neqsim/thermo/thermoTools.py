@@ -11,107 +11,149 @@ if has_matplotlib():
 ThermodynamicOperations = jNeqSim.thermodynamicOperations.ThermodynamicOperations
 fluidcreator = jNeqSim.thermo.Fluid()
 fluid_type = {
-    'srk': jNeqSim.thermo.system.SystemSrkEos,
-    'SRK-EoS': jNeqSim.thermo.system.SystemSrkEos,
-    'Psrk-EoS': jNeqSim.thermo.system.SystemPsrkEos,
-    'PSRK-EoS': jNeqSim.thermo.system.SystemPsrkEos,
-    'RK-EoS': jNeqSim.thermo.system.SystemRKEos,
-    'pr': jNeqSim.thermo.system.SystemPrEos,
-    'PR-EoS': jNeqSim.thermo.system.SystemPrEos,
-    'pr-umr': jNeqSim.thermo.system.SystemUMRPRUMCEos,
-    'srk-s': jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
-    'GERG-water': jNeqSim.thermo.system.SystemGERGwaterEos,
-    'SRK-MC': jNeqSim.thermo.system.SystemSrkMathiasCopeman,
-    'PR-MC': jNeqSim.thermo.system.SystemPrMathiasCopeman,
-    'scrk': jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
-    'ScRK-EoS': jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
-    'nrtl': jNeqSim.thermo.system.SystemNRTL,
-    'unifac': jNeqSim.thermo.system.SystemUNIFAC,
-    'electrolyte': jNeqSim.thermo.system.SystemFurstElectrolyteEos,
-    'Electrolyte-ScRK-EoS': jNeqSim.thermo.system.SystemFurstElectrolyteEos,
-    'Electrolyte-CPA-EoS': jNeqSim.thermo.system.SystemElectrolyteCPAstatoil,
-    'cpa-el': jNeqSim.thermo.system.SystemElectrolyteCPA,
-    'cpa-s': jNeqSim.thermo.system.SystemSrkCPAs,
-    'cpa-statoil': jNeqSim.thermo.system.SystemSrkCPAstatoil,
-    'cpa': jNeqSim.thermo.system.SystemSrkCPAstatoil,
-    'CPA-SRK-EoS': jNeqSim.thermo.system.SystemSrkCPA,
-    'cpa-srk': jNeqSim.thermo.system.SystemSrkCPA,
-    'srk-twoCoon': jNeqSim.thermo.system.SystemSrkTwuCoonParamEos,
-    'cpa-pr': jNeqSim.thermo.system.SystemPrCPA,
-    'CPA-PR-EoS': jNeqSim.thermo.system.SystemPrCPA,
-    'SRK-TwuCoon-EOS': jNeqSim.thermo.system.SystemSrkTwuCoonStatoilEos
+    "srk": jNeqSim.thermo.system.SystemSrkEos,
+    "SRK-EoS": jNeqSim.thermo.system.SystemSrkEos,
+    "Psrk-EoS": jNeqSim.thermo.system.SystemPsrkEos,
+    "PSRK-EoS": jNeqSim.thermo.system.SystemPsrkEos,
+    "RK-EoS": jNeqSim.thermo.system.SystemRKEos,
+    "pr": jNeqSim.thermo.system.SystemPrEos,
+    "PR-EoS": jNeqSim.thermo.system.SystemPrEos,
+    "pr-umr": jNeqSim.thermo.system.SystemUMRPRUMCEos,
+    "srk-s": jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
+    "GERG-water": jNeqSim.thermo.system.SystemGERGwaterEos,
+    "SRK-MC": jNeqSim.thermo.system.SystemSrkMathiasCopeman,
+    "PR-MC": jNeqSim.thermo.system.SystemPrMathiasCopeman,
+    "scrk": jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
+    "ScRK-EoS": jNeqSim.thermo.system.SystemSrkSchwartzentruberEos,
+    "nrtl": jNeqSim.thermo.system.SystemNRTL,
+    "unifac": jNeqSim.thermo.system.SystemUNIFAC,
+    "electrolyte": jNeqSim.thermo.system.SystemFurstElectrolyteEos,
+    "Electrolyte-ScRK-EoS": jNeqSim.thermo.system.SystemFurstElectrolyteEos,
+    "Electrolyte-CPA-EoS": jNeqSim.thermo.system.SystemElectrolyteCPAstatoil,
+    "cpa-el": jNeqSim.thermo.system.SystemElectrolyteCPA,
+    "cpa-s": jNeqSim.thermo.system.SystemSrkCPAs,
+    "cpa-statoil": jNeqSim.thermo.system.SystemSrkCPAstatoil,
+    "cpa": jNeqSim.thermo.system.SystemSrkCPAstatoil,
+    "CPA-SRK-EoS": jNeqSim.thermo.system.SystemSrkCPA,
+    "cpa-srk": jNeqSim.thermo.system.SystemSrkCPA,
+    "srk-twoCoon": jNeqSim.thermo.system.SystemSrkTwuCoonParamEos,
+    "cpa-pr": jNeqSim.thermo.system.SystemPrCPA,
+    "CPA-PR-EoS": jNeqSim.thermo.system.SystemPrCPA,
+    "SRK-TwuCoon-EOS": jNeqSim.thermo.system.SystemSrkTwuCoonStatoilEos,
 }
 
 
-def fluid(name='srk', temperature=298.15, pressure=1.01325):
+def fluid(name="srk", temperature=298.15, pressure=1.01325):
     fluid_function = fluid_type.get(name, jNeqSim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
 
-def readEclipseFluid(filename, wellName=''):
+def readEclipseFluid(filename, wellName=""):
     jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
     fluid1 = jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
     return fluid1
 
 
-def setEclipseComposition(fluid, filename, wellName=''):
+def setEclipseComposition(fluid, filename, wellName=""):
     jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
-    jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(
-        fluid, filename)
+    jNeqSim.thermo.util.readwrite.EclipseFluidReadWrite.setComposition(fluid, filename)
 
 
 def addFluids(fluids):
     fluid = fluids[0].clone()
     numberOfFluids = len(fluids)
-    for i in range(numberOfFluids-1):
-        fluid.addFluid(fluids[i+1])
+    for i in range(numberOfFluids - 1):
+        fluid.addFluid(fluids[i + 1])
     return fluid
 
 
-def fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName='', lumpComponents=True, numberOfLumpedComponents=12, add_all_components=True):
-    if (autoSetModel):
+def fluid_df(
+    reservoirFluiddf,
+    lastIsPlusFraction=False,
+    autoSetModel=False,
+    modelName="",
+    lumpComponents=True,
+    numberOfLumpedComponents=12,
+    add_all_components=True,
+):
+    if autoSetModel:
         fluidcreator.setAutoSelectModel(True)
     else:
         fluidcreator.setAutoSelectModel(False)
-    if (modelName):
+    if modelName:
         fluidcreator.setThermoModel(modelName)
     else:
         fluidcreator.setAutoSelectModel(False)
     TBPComponentsFrame = reservoirFluiddf.dropna()
-    if(not add_all_components):
-        reservoirFluiddf = reservoirFluiddf[reservoirFluiddf['MolarComposition[-]'] != 0.0]
-        TBPComponentsFrame= TBPComponentsFrame[TBPComponentsFrame['MolarComposition[-]'] > 0]
+    if not add_all_components:
+        reservoirFluiddf = reservoirFluiddf[
+            reservoirFluiddf["MolarComposition[-]"] != 0.0
+        ]
+        TBPComponentsFrame = TBPComponentsFrame[
+            TBPComponentsFrame["MolarComposition[-]"] > 0
+        ]
     else:
         TBPComponentsFrame = reservoirFluiddf.dropna()
-    if 'MolarMass[kg/mol]' in reservoirFluiddf:
-        definedComponentsFrame = reservoirFluiddf[reservoirFluiddf['MolarMass[kg/mol]'].isnull()]
+    if "MolarMass[kg/mol]" in reservoirFluiddf:
+        definedComponentsFrame = reservoirFluiddf[
+            reservoirFluiddf["MolarMass[kg/mol]"].isnull()
+        ]
     else:
         definedComponentsFrame = reservoirFluiddf
-    if(not add_all_components):
-        definedComponentsFrame = definedComponentsFrame[definedComponentsFrame['MolarComposition[-]'] > 0.0]
-    if definedComponentsFrame.size>0:
-        fluid7 = createfluid2(definedComponentsFrame['ComponentName'].tolist(), definedComponentsFrame['MolarComposition[-]'].tolist())
+    if not add_all_components:
+        definedComponentsFrame = definedComponentsFrame[
+            definedComponentsFrame["MolarComposition[-]"] > 0.0
+        ]
+    if definedComponentsFrame.size > 0:
+        fluid7 = createfluid2(
+            definedComponentsFrame["ComponentName"].tolist(),
+            definedComponentsFrame["MolarComposition[-]"].tolist(),
+        )
     else:
-        fluid7 = fluid('srk')
-    if not TBPComponentsFrame.equals(reservoirFluiddf) and TBPComponentsFrame.size>0:
-        addOilFractions(fluid7, TBPComponentsFrame['ComponentName'].tolist(), TBPComponentsFrame['MolarComposition[-]'].tolist(
-        ), TBPComponentsFrame['MolarMass[kg/mol]'].tolist(), TBPComponentsFrame['RelativeDensity[-]'].tolist(), lastIsPlusFraction, lumpComponents, numberOfLumpedComponents)
+        fluid7 = fluid("srk")
+    if not TBPComponentsFrame.equals(reservoirFluiddf) and TBPComponentsFrame.size > 0:
+        addOilFractions(
+            fluid7,
+            TBPComponentsFrame["ComponentName"].tolist(),
+            TBPComponentsFrame["MolarComposition[-]"].tolist(),
+            TBPComponentsFrame["MolarMass[kg/mol]"].tolist(),
+            TBPComponentsFrame["RelativeDensity[-]"].tolist(),
+            lastIsPlusFraction,
+            lumpComponents,
+            numberOfLumpedComponents,
+        )
     return fluid7
 
 
-def createfluid(fluid_type='dry gas'):
+def createfluid(fluid_type="dry gas"):
     return fluidcreator.create(fluid_type)
 
 
 def createfluid2(names, molefractions=None, unit="mol/sec"):
-    if (molefractions is None):
+    if molefractions is None:
         fluidcreator.create2(JString[:](names))
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
 
 
-def addOilFractions(fluid, charNames, molefractions, molarMass,  density, lastIsPlusFraction=False, lumpComponents=True, numberOfPseudoComponents=12):
-    fluid.addOilFractions(JString[:](charNames), JDouble[:](
-        molefractions), JDouble[:](molarMass), JDouble[:](density), lastIsPlusFraction, lumpComponents, numberOfPseudoComponents)
+def addOilFractions(
+    fluid,
+    charNames,
+    molefractions,
+    molarMass,
+    density,
+    lastIsPlusFraction=False,
+    lumpComponents=True,
+    numberOfPseudoComponents=12,
+):
+    fluid.addOilFractions(
+        JString[:](charNames),
+        JDouble[:](molefractions),
+        JDouble[:](molarMass),
+        JDouble[:](density),
+        lastIsPlusFraction,
+        lumpComponents,
+        numberOfPseudoComponents,
+    )
 
 
 def newdatabase(system):
@@ -119,25 +161,31 @@ def newdatabase(system):
 
 
 def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
-    tempList = [x+273.15 for x in experimentaldata['temperature']]
-    presList = experimentaldata['pressure']
-    expList = [[x*100.0 for x in experimentaldata['experiment']]]
+    tempList = [x + 273.15 for x in experimentaldata["temperature"]]
+    presList = experimentaldata["pressure"]
+    expList = [[x * 100.0 for x in experimentaldata["experiment"]]]
 
     waxsim = jNeqSim.PVTsimulation.simulation.WaxFractionSim(fluid)
-    waxsim.setTemperaturesAndPressures(
-        JDouble[:](tempList), JDouble[:](presList))
+    waxsim.setTemperaturesAndPressures(JDouble[:](tempList), JDouble[:](presList))
     waxsim.setExperimentalData(JDouble[:, :](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(maxiterations)
     waxsim.runTuning()
     waxsim.runCalc()
 
-    results = {'temperature':  tempList,
-               'pressure':  presList,
-               'experiment':  expList,
-               'results': list(waxsim.getWaxFraction()),
-               'parameters': list(waxsim.getOptimizer().getSampleSet().getSample(0).getFunction().getFittingParams())
-               }
+    results = {
+        "temperature": tempList,
+        "pressure": presList,
+        "experiment": expList,
+        "results": list(waxsim.getWaxFraction()),
+        "parameters": list(
+            waxsim.getOptimizer()
+            .getSampleSet()
+            .getSample(0)
+            .getFunction()
+            .getFittingParams()
+        ),
+    }
     return results
 
 
@@ -157,15 +205,25 @@ def dataFrame(system):
 
 
 def calcproperties(gascondensateFluid, inputDict):
-    properties = jNeqSim.util.generator.PropertyGenerator(gascondensateFluid, JDouble[:](
-        inputDict['temperature']), JDouble[:](inputDict['pressure']))
+    properties = jNeqSim.util.generator.PropertyGenerator(
+        gascondensateFluid,
+        JDouble[:](inputDict["temperature"]),
+        JDouble[:](inputDict["pressure"]),
+    )
     props = properties.calculate()
-    calculatedProperties = ({k: list(v) for k, v in props.items()})
+    calculatedProperties = {k: list(v) for k, v in props.items()}
     df = pandas.DataFrame(calculatedProperties)
     return df
 
 
-def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, system=None, components=None, fractions=None):
+def fluidflashproperties(
+    spec1: pandas.Series,
+    spec2: pandas.Series,
+    mode=1,
+    system=None,
+    components=None,
+    fractions=None,
+):
     """
     Perform flash and return fluid properties for a series of process properties.
 
@@ -173,7 +231,7 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
     Supported flash modes: TP (1), PH (2) and PS (3).
 
     A default system is created if not passed and components and fractions can specify it.
-    Fractions can be a single list of component fractions to use for all flashes or 
+    Fractions can be a single list of component fractions to use for all flashes or
     a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
 
     """
@@ -184,27 +242,27 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
             spec1 = spec2
             spec2 = temp
     elif isinstance(mode, str):
-        if mode == 'PT':
+        if mode == "PT":
             mode = 1
-        elif mode == 'TP':
+        elif mode == "TP":
             mode = 1
             # Convert to PT
             temp = spec1
             spec1 = spec2
             spec2 = temp
-        elif mode == 'PH':
+        elif mode == "PH":
             mode = 2
-        elif mode == 'PS':
+        elif mode == "PS":
             mode = 3
 
     if not isinstance(mode, int) or mode < 1 or mode > 3:
-        raise ValueError(
-            "Mode must be in 'TP' or 1, 'PH' or 2 or 'PS' or 3")
+        raise ValueError("Mode must be in 'TP' or 1, 'PH' or 2 or 'PS' or 3")
 
     if system is None:
         if components is None or fractions is None:
             raise ValueError(
-                "if system is not specified, components and fractions must be specified.")
+                "if system is not specified, components and fractions must be specified."
+            )
 
         system = jNeqSim.thermo.system.SystemSrkEos(273.15, 1.01325)
         if not isinstance(components, list):
@@ -266,8 +324,7 @@ def fluidflashproperties(spec1: pandas.Series, spec2: pandas.Series, mode=1, sys
         else:
             fractions = None
 
-    return thermoOps.propertyFlash(
-        jSpec1, jSpec2, mode, components, fractions)
+    return thermoOps.propertyFlash(jSpec1, jSpec2, mode, components, fractions)
 
 
 def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False):
@@ -279,29 +336,38 @@ def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False
 
     length = len(pressure)
     sepSim = jNeqSim.PVTsimulation.simulation.SeparatorTest(fluid)
-    sepSim.setSeparatorConditions(
-        JDouble[:](temperature), JDouble[:](pressure))
+    sepSim.setSeparatorConditions(JDouble[:](temperature), JDouble[:](pressure))
     sepSim.runCalc()
     for i in range(0, length):
         GOR.append(sepSim.getGOR()[i])
         Bo.append(sepSim.getBofactor()[i])
-        i = i+1
+        i = i + 1
     if display:
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, Bo, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('Bo [m3/Sm3]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("Bo [m3/Sm3]")
             plt.figure()
             plt.plot(pressure, GOR, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('GOR [Sm3/Sm3]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("GOR [Sm3/Sm3]")
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def CVD(fluid, pressure, temperature, relativeVolume=None, liquidrelativevolume=None, Zgas=None, Zmix=None, cummulativemolepercdepleted=None, display=False):
+def CVD(
+    fluid,
+    pressure,
+    temperature,
+    relativeVolume=None,
+    liquidrelativevolume=None,
+    Zgas=None,
+    Zmix=None,
+    cummulativemolepercdepleted=None,
+    display=False,
+):
     if relativeVolume is None:
         relativeVolume = []
 
@@ -327,25 +393,32 @@ def CVD(fluid, pressure, temperature, relativeVolume=None, liquidrelativevolume=
         Zmix.append(cvdSim.getZmix()[i])
         liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
         relativeVolume.append(cvdSim.getRelativeVolume()[i])
-        cummulativemolepercdepleted.append(
-            cvdSim.getCummulativeMolePercDepleted()[i])
-        i = i+1
+        cummulativemolepercdepleted.append(cvdSim.getCummulativeMolePercDepleted()[i])
+        i = i + 1
     if display:
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, Zgas, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('Zgas [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("Zgas [-]")
             plt.figure()
             plt.plot(pressure, relativeVolume, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeVolume [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("relativeVolume [-]")
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=None, aqueousviscosity=None, display=False):
+def viscositysim(
+    fluid,
+    pressure,
+    temperature,
+    gasviscosity=None,
+    oilviscosity=None,
+    aqueousviscosity=None,
+    display=False,
+):
     if gasviscosity is None:
         gasviscosity = []
 
@@ -356,8 +429,7 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=N
         aqueousviscosity = []
     length = len(pressure)
     cmeSim = jNeqSim.PVTsimulation.simulation.ViscositySim(fluid)
-    cmeSim.setTemperaturesAndPressures(
-        JDouble[:](temperature), JDouble[:](pressure))
+    cmeSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cmeSim.runCalc()
     for i in range(0, length):
         gasviscosity.append(cmeSim.getGasViscosity()[i])
@@ -367,18 +439,32 @@ def viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=N
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, gasviscosity, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('gasviscosity [kg/msec]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("gasviscosity [kg/msec]")
             plt.figure()
             plt.plot(pressure, oilviscosity, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('oilviscosity [kg/msec]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("oilviscosity [kg/msec]")
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=None, liquidrelativevolume=None, Zgas=None, Yfactor=None, isothermalcompressibility=None, density=None, Bg=None, viscosity=None, display=False):
+def CME(
+    fluid,
+    pressure,
+    temperature,
+    saturationPressure,
+    relativeVolume=None,
+    liquidrelativevolume=None,
+    Zgas=None,
+    Yfactor=None,
+    isothermalcompressibility=None,
+    density=None,
+    Bg=None,
+    viscosity=None,
+    display=False,
+):
     if relativeVolume is None:
         relativeVolume = []
 
@@ -405,8 +491,7 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=None, l
 
     length = len(pressure)
     cvdSim = jNeqSim.PVTsimulation.simulation.ConstantMassExpansion(fluid)
-    cvdSim.setTemperaturesAndPressures(
-        JDouble[:](temperature), JDouble[:](pressure))
+    cvdSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cvdSim.runCalc()
     saturationPressure = cvdSim.getSaturationPressure()
     for i in range(0, length):
@@ -414,28 +499,41 @@ def CME(fluid, pressure, temperature, saturationPressure, relativeVolume=None, l
         relativeVolume.append(cvdSim.getRelativeVolume()[i])
         liquidrelativevolume.append(cvdSim.getLiquidRelativeVolume()[i])
         Yfactor.append(cvdSim.getYfactor()[i])
-        isothermalcompressibility.append(
-            cvdSim.getIsoThermalCompressibility()[i])
+        isothermalcompressibility.append(cvdSim.getIsoThermalCompressibility()[i])
         Bg.append(cvdSim.getBg()[i])
         density.append(cvdSim.getDensity()[i])
         viscosity.append(cvdSim.getViscosity()[i])
-        i = i+1
+        i = i + 1
     if display:
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, Zgas, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('Zgas [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("Zgas [-]")
             plt.figure()
             plt.plot(pressure, relativeVolume, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeVolume [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("relativeVolume [-]")
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def difflib(fluid, pressure, temperature, relativeVolume=None, Bo=None, Bg=None, relativegravity=None, Zgas=None, gasstandardvolume=None, Rs=None, oildensity=None, gasgravity=None, display=False):
+def difflib(
+    fluid,
+    pressure,
+    temperature,
+    relativeVolume=None,
+    Bo=None,
+    Bg=None,
+    relativegravity=None,
+    Zgas=None,
+    gasstandardvolume=None,
+    Rs=None,
+    oildensity=None,
+    gasgravity=None,
+    display=False,
+):
     if relativeVolume is None:
         relativeVolume = []
 
@@ -479,23 +577,23 @@ def difflib(fluid, pressure, temperature, relativeVolume=None, Bo=None, Bg=None,
         Rs.append(cvdSim.getRs()[i])
         oildensity.append(cvdSim.getOilDensity()[i])
         gasgravity.append(cvdSim.getRelGasGravity()[i])
-        i = i+1
+        i = i + 1
     if display:
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, Zgas, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('Zgas [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("Zgas [-]")
             plt.figure()
             plt.plot(pressure, relativeVolume, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeVolume [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("relativeVolume [-]")
             plt.figure()
         else:
             raise Exception("Package matplotlib is not installed")
 
 
-def GOR(fluid, pressure, temperature, GORdata=None, Bo=None,  display=False):
+def GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
     if GORdata is None:
         GORdata = []
 
@@ -504,32 +602,39 @@ def GOR(fluid, pressure, temperature, GORdata=None, Bo=None,  display=False):
 
     length = len(pressure)
     jGOR = jNeqSim.PVTsimulation.simulation.GOR(fluid)
-    jGOR.setTemperaturesAndPressures(
-        JDouble[:](temperature), JDouble[:](pressure))
+    jGOR.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     jGOR.runCalc()
     for i in range(0, length):
         GORdata.append(jGOR.getGOR()[i])
         Bo.append(jGOR.getBofactor()[i])
-        i = i+1
+        i = i + 1
     if display:
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, GORdata, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('GOR [Sm3/Sm3]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("GOR [Sm3/Sm3]")
         else:
             raise Exception("Package matplotlib is not installed")
 
 
 def saturationpressure(fluid, temperature=-1.0):
-    if (temperature > 0):
+    if temperature > 0:
         fluid.setTemperature(temperature)
     cvdSim = jNeqSim.PVTsimulation.simulation.SaturationPressure(fluid)
     cvdSim.run()
     return cvdSim.getSaturationPressure()
 
 
-def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure=None, relativeoilvolume=None, display=False):
+def swellingtest(
+    fluid,
+    fluid2,
+    temperature,
+    cummulativeMolePercentGasInjected,
+    pressure=None,
+    relativeoilvolume=None,
+    display=False,
+):
     if pressure is None:
         pressure = []
 
@@ -540,18 +645,19 @@ def swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, 
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
     cvdSim.setCummulativeMolePercentGasInjected(
-        JDouble[:](cummulativeMolePercentGasInjected))
+        JDouble[:](cummulativeMolePercentGasInjected)
+    )
     cvdSim.runCalc()
     for i in range(0, length2):
         relativeoilvolume.append(cvdSim.getRelativeOilVolume()[i])
         pressure.append(cvdSim.getPressures()[i])
-        i = i+1
+        i = i + 1
     if display:
         if has_matplotlib():
             plt.figure()
             plt.plot(pressure, relativeoilvolume, "o")
-            plt.xlabel('Pressure [bara]')
-            plt.ylabel('relativeoilvolume [-]')
+            plt.xlabel("Pressure [bara]")
+            plt.ylabel("relativeoilvolume [-]")
         else:
             raise Exception("Package matplotlib is not installed")
 
@@ -567,7 +673,7 @@ def printFluid(system):
     a = system.getResultTable()
     for i in range(len(a)):
         for j in range(len(a[i])):
-            print(a[i][j], end='\t')
+            print(a[i][j], end="\t")
     print()
 
 
@@ -621,8 +727,8 @@ def reactionCheck(thermoSystem):
     thermoSystem.chemicalReactionInit()
 
 
-def mixingRule(thermoSystem, mixRule='classic', GEmodel=''):
-    if GEmodel == '':
+def mixingRule(thermoSystem, mixRule="classic", GEmodel=""):
+    if GEmodel == "":
         thermoSystem.setMixingRule(mixRule)
     else:
         thermoSystem.setMixingRule(mixRule, GEmodel)
@@ -643,7 +749,7 @@ def solid(testSystem, solid=1):
 def GCV(testSystem, unit):
     referenceTemperatureVolume = 15.0
     referenceTemperatureCombustion = 15.0
-    numberUnit = 'mass'
+    numberUnit = "mass"
     iso6976 = ISO6976(testSystem)
     iso6976.setReferenceType(numberUnit)
     iso6976.setVolRefT(referenceTemperatureVolume)
@@ -658,14 +764,14 @@ def watersaturate(testSystem):
     testSystem.init(3)
 
 
-def TPflash(testSystem, temperature =None, tUnit = None, pressure=None, pUnit=None):
-    if(temperature is not None):
-        if(tUnit is None):
-            tUnit = 'K'
+def TPflash(testSystem, temperature=None, tUnit=None, pressure=None, pUnit=None):
+    if temperature is not None:
+        if tUnit is None:
+            tUnit = "K"
         testSystem.setTemperature(temperature, tUnit)
-    if(pressure is not None):
-        if(pUnit is None):
-            pUnit = 'bara'
+    if pressure is not None:
+        if pUnit is None:
+            pUnit = "bara"
         testSystem.setPressure(pressure, pUnit)
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.TPflash()
@@ -714,10 +820,27 @@ def PUflash(testSystem, pressure, energy, unitPressure="bara", unitEnergy="J"):
     testSystem.init(3)
 
 
-def PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
+def PVTpropTable(
+    fluid1,
+    fileName,
+    lowTemperature,
+    highTemperature,
+    Tsteps,
+    lowPressure,
+    highPressure,
+    Psteps,
+):
     testFlash = ThermodynamicOperations(fluid1)
-    testFlash.OLGApropTable(lowTemperature, highTemperature,
-                            Tsteps, lowPressure, highPressure, Psteps, fileName, 0)
+    testFlash.OLGApropTable(
+        lowTemperature,
+        highTemperature,
+        Tsteps,
+        lowPressure,
+        highPressure,
+        Psteps,
+        fileName,
+        0,
+    )
     testFlash.displayResult()
 
 
@@ -792,7 +915,7 @@ def bubp(testSystem):
     try:
         testFlash.bubblePointPressureFlash(0)
     except:
-        print('error calculating bublepoint')
+        print("error calculating bublepoint")
     return testSystem.getPressure()
 
 
@@ -801,7 +924,7 @@ def bubt(testSystem):
     try:
         testFlash.bubblePointTemperatureFlash()
     except:
-        print('error calculating bublepoint')
+        print("error calculating bublepoint")
     return testSystem.getTemperature()
 
 
@@ -810,7 +933,7 @@ def dewp(testSystem):
     try:
         testFlash.dewPointPressureFlash()
     except:
-        print('error could not calculate')
+        print("error could not calculate")
     return testSystem.getPressure()
 
 
@@ -819,7 +942,7 @@ def dewt(testSystem):
     try:
         testFlash.dewPointTemperatureFlash()
     except:
-        print('error could not calculate')
+        print("error could not calculate")
     return testSystem.getTemperature()
 
 
@@ -828,7 +951,7 @@ def waterdewt(testSystem):
     try:
         testFlash.waterDewPointTemperatureFlash()
     except:
-        print('error could not calculate')
+        print("error could not calculate")
     return testSystem.getTemperature()
 
 
@@ -838,26 +961,38 @@ def phaseenvelope(testSystem, display=False):
     data = testFlash
     if display:
         if has_matplotlib():
-            plt.plot(list(data.getOperation().get("dewT")), list(
-                data.getOperation().get("dewP")), label="dew point")
-            plt.plot(list(data.getOperation().get("bubT")), list(
-                data.getOperation().get("bubP")), label="bubble point")
+            plt.plot(
+                list(data.getOperation().get("dewT")),
+                list(data.getOperation().get("dewP")),
+                label="dew point",
+            )
+            plt.plot(
+                list(data.getOperation().get("bubT")),
+                list(data.getOperation().get("bubP")),
+                label="bubble point",
+            )
 
             try:
-                plt.plot(list(data.getOperation().get("dewT2")), list(
-                    data.getOperation().get("dewP2")), label="dew point2")
+                plt.plot(
+                    list(data.getOperation().get("dewT2")),
+                    list(data.getOperation().get("dewP2")),
+                    label="dew point2",
+                )
             except:
                 pass
 
             try:
-                plt.plot(list(data.getOperation().get("bubT2")), list(
-                    data.getOperation().get("bubP2")), label="bubble point2")
+                plt.plot(
+                    list(data.getOperation().get("bubT2")),
+                    list(data.getOperation().get("bubP2")),
+                    label="bubble point2",
+                )
             except:
                 pass
 
-            plt.title('PT envelope')
-            plt.xlabel('Temperature [K]')
-            plt.ylabel('Pressure [bar]')
+            plt.title("PT envelope")
+            plt.xlabel("Temperature [K]")
+            plt.ylabel("Pressure [bar]")
             plt.legend()
             plt.show()
         else:
@@ -884,20 +1019,20 @@ def getExtThermProp(function, thermoSystem, t=0, p=0):
         TPflash(thermoSystem)
     thermoSystem.init(3)
     nargout[0] = function[0]() / thermoSystem.getNumberOfMoles()
-    if (thermoSystem.getNumberOfPhases() == 1):
-        if (thermoSystem.getPhase(0).getPhaseType == 1):
-            nargout[1] = function[1]() / \
-                thermoSystem.getPhase(0).getNumberOfMolesInPhase()
+    if thermoSystem.getNumberOfPhases() == 1:
+        if thermoSystem.getPhase(0).getPhaseType == 1:
+            nargout[1] = (
+                function[1]() / thermoSystem.getPhase(0).getNumberOfMolesInPhase()
+            )
             nargout[2] = 0
         else:
-            nargout[2] = function[1]() / \
-                thermoSystem.getPhase(0).getNumberOfMolesInPhase()
+            nargout[2] = (
+                function[1]() / thermoSystem.getPhase(0).getNumberOfMolesInPhase()
+            )
             nargout[1] = 0
     else:
-        nargout[1] = function[1]() / \
-            thermoSystem.getPhase(0).getNumberOfMolesInPhase()
-        nargout[2] = function[2]() / \
-            thermoSystem.getPhase(1).getNumberOfMolesInPhase()
+        nargout[1] = function[1]() / thermoSystem.getPhase(0).getNumberOfMolesInPhase()
+        nargout[2] = function[2]() / thermoSystem.getPhase(1).getNumberOfMolesInPhase()
 
     nargout[3] = thermoSystem.getNumberOfPhases()
     return nargout
@@ -912,8 +1047,8 @@ def getIntThermProp(function, thermoSystem, t=0, p=0):
         TPflash(thermoSystem)
     thermoSystem.init(3)
     nargout[0] = function[0]()
-    if (thermoSystem.getNumberOfPhases() == 1):
-        if (thermoSystem.getPhase(0).getPhaseType == 1):
+    if thermoSystem.getNumberOfPhases() == 1:
+        if thermoSystem.getPhase(0).getPhaseType == 1:
             nargout[1] = function[1]()
             nargout[2] = 0
         else:
@@ -937,8 +1072,8 @@ def getPhysProp(function, thermoSystem, t=0, p=0):
     thermoSystem.init(3)
     thermoSystem.initPhysicalProperties()
     nargout[0] = function[0]()
-    if (thermoSystem.getNumberOfPhases() == 1):
-        if (thermoSystem.getPhase(0).getPhaseType == 1):
+    if thermoSystem.getNumberOfPhases() == 1:
+        if thermoSystem.getPhase(0).getPhaseType == 1:
             nargout[1] = function[1]()
             nargout[2] = 0
         else:
@@ -1049,10 +1184,8 @@ def density(thermoSystem, volcor=1, t=0, p=0):
     func.append(thermoSystem.getDensity)
     if volcor == 1:
         thermoSystem.initPhysicalProperties()
-        func.append(thermoSystem.getPhase(
-            0).getPhysicalProperties().getDensity)
-        func.append(thermoSystem.getPhase(
-            1).getPhysicalProperties().getDensity)
+        func.append(thermoSystem.getPhase(0).getPhysicalProperties().getDensity)
+        func.append(thermoSystem.getPhase(1).getPhysicalProperties().getDensity)
     else:
         func.append(thermoSystem.getPhase(0).getDensity)
         func.append(thermoSystem.getPhase(1).getDensity)

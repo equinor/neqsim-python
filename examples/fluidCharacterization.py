@@ -29,9 +29,9 @@ fluid1.addComponent("n-pentane", 0.2, "mol/sec")
 Adding the heavy hydrocarbons. Fractions are added using addTBPfraction(name, moles, molarmass, relative density)
 Plus fraction is added using addPlusFraction(name, moles, molarmass, relative density)
 """
-fluid1.addTBPfraction("C7", 2.0, 140.0/1000.0, 0.8)
-fluid1.addTBPfraction("C8", 2.0, 160.0/1000.0, 0.82)
-fluid1.addTBPfraction("C9", 2.0, 180.0/1000.0, 0.83)
+fluid1.addTBPfraction("C7", 2.0, 140.0 / 1000.0, 0.8)
+fluid1.addTBPfraction("C8", 2.0, 160.0 / 1000.0, 0.82)
+fluid1.addTBPfraction("C9", 2.0, 180.0 / 1000.0, 0.83)
 """fluid1.addPlusFraction("C10", 2.0, 190.0/1000.0, 0.88)
 fluid1.getCharacterization().getLumpingModel().setNumberOfLumpedComponents(12)
 fluid1.getCharacterization().characterisePlusFraction();
@@ -50,7 +50,7 @@ entropy, etc.) are calculated using initThermoProperties(). Physical properties
  initPhysicalProperties()
 """
 numbComp = fluid1.getPhase(0).getNumberOfComponents()
-fluidcomposition = [0.01]*numbComp
+fluidcomposition = [0.01] * numbComp
 fluidcomposition[2] = 0.9
 fluidComposition(fluid1, fluidcomposition)
 fluid1.setPressure(101.0, "bara")
@@ -66,5 +66,4 @@ print("number of phases ", fluid1.getNumberOfPhases())
 print("fluid density ", fluid1.getDensity("kg/m3"), " kg/m3")
 print("gas density ", fluid1.getPhase("gas").getDensity("kg/m3"), " kg/m3")
 print("oil density ", fluid1.getPhase("oil").getDensity("kg/m3"), " kg/m3")
-print("aqueous density ", fluid1.getPhase(
-    "aqueous").getDensity("kg/m3"), " kg/m3")
+print("aqueous density ", fluid1.getPhase("aqueous").getDensity("kg/m3"), " kg/m3")

@@ -7,8 +7,15 @@ Created on Wed Dec 11 21:19:21 2019
 
 
 import pandas
-from neqsim.thermo import (TPflash, calcIonComposition, checkScalePotential,
-                           fluid, printFluid, printFrame, table)
+from neqsim.thermo import (
+    TPflash,
+    calcIonComposition,
+    checkScalePotential,
+    fluid,
+    printFluid,
+    printFrame,
+    table,
+)
 
 nitrogen = 1.0  # @param {type:"number"}
 CO2 = 1.1  # @param {type:"number"}
@@ -22,7 +29,7 @@ Caplus = 0.00025  # @param {type:"number"}
 Feplus = 0.00025  # @param {type:"number"}
 OHminus = 0.00025  # @param {type:"number"}
 
-fluid1 = fluid('Electrolyte-CPA-EoS')
+fluid1 = fluid("Electrolyte-CPA-EoS")
 fluid1.addComponent("nitrogen", nitrogen)
 fluid1.addComponent("CO2", CO2)
 fluid1.addComponent("methane", methane)

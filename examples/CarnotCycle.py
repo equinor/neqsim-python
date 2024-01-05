@@ -28,7 +28,7 @@ V1 = fluid_1.getVolume("m3")
 
 # The Carnot cycle when acting as a heat engine consists of the following steps:¨
 # 1-2: Isothermal Expansion. Heat is transferred reversibly from high temperature reservoir at constant temperature TH (isothermal heat addition or absorption).
-V2 = V1*1.5
+V2 = V1 * 1.5
 TVflash(fluid_1, V2, "m3")
 fluid_1.display()
 T2 = fluid_1.getTemperature("C")
@@ -71,10 +71,10 @@ S5 = fluid_1.getEntropy("kJ/kgK")
 V5 = fluid_1.getVolume("m3")
 fluid_1.display()
 
-dS = S2-S1
-QH = (T_hot+273.15)*dS
-QC = (T_cold+273.15)*dS
-efficiency = (QH-QC)/QH
+dS = S2 - S1
+QH = (T_hot + 273.15) * dS
+QC = (T_cold + 273.15) * dS
+efficiency = (QH - QC) / QH
 
 volumes = [V1, V2, V3, V4, V5]
 pressures = [P1, P2, P3, P4, P5]
@@ -83,16 +83,16 @@ temperature = [T1, T2, T3, T4, T5]
 
 print("Carnot efficiency: ", efficiency)
 
-efficiency2 = 1.0 - (T_cold+273.15)/(T_hot+273.15)
-print("best Carnot efficiency ",  efficiency2)
+efficiency2 = 1.0 - (T_cold + 273.15) / (T_hot + 273.15)
+print("best Carnot efficiency ", efficiency2)
 
 
 plt.plot(volumes, pressures)
-plt.xlabel('Volume [m3]')
-plt.ylabel('Pressure [bara]')
+plt.xlabel("Volume [m3]")
+plt.ylabel("Pressure [bara]")
 plt.show()
 
 plt.plot(entropy, temperature)
-plt.xlabel('Entropy [kJ/kgK]')
-plt.ylabel('Temperature [C]')
+plt.xlabel("Entropy [kJ/kgK]")
+plt.ylabel("Temperature [C]")
 plt.show()

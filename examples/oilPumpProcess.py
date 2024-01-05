@@ -23,6 +23,5 @@ stream1 = stream(fluid1)
 pump1 = pump(stream1, 11.0)
 runProcess()
 
-print("temperature out of pump ",
-      pump1.getOutStream().getTemperature()-273.15, " °C")
-print("pump power ", pump1.getPower()/1e3, " kW")
+print("temperature out of pump ", pump1.getOutStream().getTemperature() - 273.15, " °C")
+print("pump power ", pump1.getPower() / 1e3, " kW")

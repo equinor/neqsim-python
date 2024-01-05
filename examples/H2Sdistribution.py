@@ -7,11 +7,20 @@ Created on Wed Jun  3 23:45:38 2020
 
 
 import pandas as pd
-from neqsim.thermo import (TPflash, addOilFractions, createfluid, createfluid2,
-                           dataFrame, fluid, fluid_df, fluidcreator,
-                           phaseenvelope, printFrame)
+from neqsim.thermo import (
+    TPflash,
+    addOilFractions,
+    createfluid,
+    createfluid2,
+    dataFrame,
+    fluid,
+    fluid_df,
+    fluidcreator,
+    phaseenvelope,
+    printFrame,
+)
 
-reservoirfluid = fluid('Electrolyte-CPA-EoS')
+reservoirfluid = fluid("Electrolyte-CPA-EoS")
 reservoirfluid.addComponent("H2S", 0.12)
 reservoirfluid.addComponent("nitrogen", 1.0)
 reservoirfluid.addComponent("methane", 70.0)

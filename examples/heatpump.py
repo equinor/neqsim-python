@@ -5,8 +5,15 @@ Created on Mon Nov  9 20:13:11 2020
 @author: ESOL
 """
 
-from neqsim.process import (clearProcess, compressor, cooler, heater,
-                            runProcess, stream, valve)
+from neqsim.process import (
+    clearProcess,
+    compressor,
+    cooler,
+    heater,
+    runProcess,
+    stream,
+    valve,
+)
 from neqsim.thermo.thermoTools import *
 
 fluid_1 = fluid("srk")
@@ -41,6 +48,6 @@ heater.setOutStream(stream_1)
 
 runProcess()
 
-print("Compressor power ", compressor_1.getTotalWork()/1e3, " kW")
-print("Cooling duty ", cooler_1.getDuty()/1e3, " kW")
-print("Heating duty ", heater.getDuty()/1e3, " kW")
+print("Compressor power ", compressor_1.getTotalWork() / 1e3, " kW")
+print("Cooling duty ", cooler_1.getDuty() / 1e3, " kW")
+print("Heating duty ", heater.getDuty() / 1e3, " kW")
