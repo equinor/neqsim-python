@@ -1,17 +1,17 @@
 __pycache__
 **/*.pyc
 
-# Distribution / packaging 
+# Distribution / packaging
 build
 dist
-eggs/ 
-.eggs/ 
+eggs/
+.eggs/
 neqsim*egg-info
 
 # Derby database is used by neqsim
 **/derby.log
 
-# Unit test / coverage reports 
+# Unit test / coverage reports
 .pytest_cache/
 
 # Jupyter Notebook
@@ -24,7 +24,7 @@ env/
 venv/
 ENV/
 
-# Visual Studio Code # 
+# Visual Studio Code #
 .vscode/*
 .DS_Store
 

@@ -42,11 +42,11 @@ fluid1.setMixingRule("classic")  # classic will use binary kij
 fluid1.setMultiPhaseCheck(True)
 fluid1.useVolumeCorrection(True)  # True if volume translation should be used
 """
-Set a new fluid composition, temperature and pressure (fluid composition will 
-be normalized), and calculate nubmber of phases and composition at 
-equilibrium (TPflash). Thermodynamic properties (enthalpies, densities, 
+Set a new fluid composition, temperature and pressure (fluid composition will
+be normalized), and calculate nubmber of phases and composition at
+equilibrium (TPflash). Thermodynamic properties (enthalpies, densities,
 entropy, etc.) are calculated using initThermoProperties(). Physical properties
- (viscosities, thermal conductivities etc.) are calculated using 
+ (viscosities, thermal conductivities etc.) are calculated using
  initPhysicalProperties()
 """
 numbComp = fluid1.getPhase(0).getNumberOfComponents()
@@ -59,7 +59,7 @@ TPflash(fluid1)
 fluid1.initProperties()
 # fluid1.display()
 """
-Print results (number of phases at equilibrium and density). 
+Print results (number of phases at equilibrium and density).
 For how to read more properties see: propertiesOfNaturalGas.py
 """
 print("number of phases ", fluid1.getNumberOfPhases())
