@@ -26,15 +26,17 @@ def has_tabulate():
 
 
 def setDatabase(connectionString):
-    jNeqSim.util.database.NeqSimDataBase.setConnectionString(connectionString)
+    jNeqSim.util.database.NeqSimDataBase.setConnectionString(connectionString)  
+    
+    
     jNeqSim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
 
 
 def save_xml(javaobject, filename):
-    xstream = jpype.JPackage("com.thoughtworks.xstream")
-    streamer = xstream.XStream()
-    xml = streamer.toXML(javaobject)
-    print(xml, file=open(filename, "w"))
+    xstream = jpype.JPackage('com.thoughtworks.xstream')
+    streamer=xstream.XStream()
+    xml = streamer.toXML(javaobject )
+    print(xml, file=open(filename, 'w') )
     return xml
 
 
