@@ -7,8 +7,8 @@ if not jpype.isJVMStarted():
     jvm_version = jpype.getJVMVersion()[0]
     if jvm_version == 1 and jpype.getJVMVersion()[1] >= 8:
         jpype.addClassPath("./lib/java8/*")
-    elif jvm_version >= 21:
-        jpype.addClassPath("./lib/java21/*")
+    # elif jvm_version >= 21:
+    #    jpype.addClassPath("./lib/java21/*")
     elif jvm_version >= 11:
         jpype.addClassPath("./lib/java11/*")
     else:
