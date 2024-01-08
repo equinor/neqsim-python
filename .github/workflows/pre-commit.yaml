@@ -1,8 +1,11 @@
+name: Run pre-commit on pull-requests (and main branch)
+
 on:
   pull_request:
   push:
     branches: [main]
-
+  workflow_dispatch: # Trigger manually
+  
 jobs:
   main:
     runs-on: ubuntu-latest
