@@ -41,7 +41,7 @@ def save_xml(javaobject, filename):
 
 
 def open_xml(filename):
-    xstream = jpype.JPackage("com.thoughtworks.xstream")
+    xstream = jpype.JPackage('com.thoughtworks.xstream')
     streamer = xstream.XStream()
     streamer.addPermission(xstream.security.AnyTypePermission.ANY)
     str = open(filename, "r").read()
