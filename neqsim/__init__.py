@@ -32,9 +32,9 @@ def setDatabase(connectionString):
 
 
 def save_xml(javaobject, filename):
-    xstream = jpype.JPackage("com.thoughtworks.xstream")
+    xstream =         jpype.JPackage("com.thoughtworks.xstream")
     streamer = xstream.XStream()
-    xml = streamer.toXML(javaobject)
+    xml =              streamer.toXML(javaobject)
     print(xml, file=open(filename, "w"))
     return xml
 
