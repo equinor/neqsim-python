@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch: # Trigger manually
-  
+
 jobs:
   main:
     runs-on: ubuntu-latest
