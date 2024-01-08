@@ -33,3 +33,4 @@ ENV/
 
 # SNYK
 .dccache
+neqsim/neqsimpython.py.orig
