@@ -32,8 +32,8 @@ iso6976.setVolRefT(15.0)
 iso6976.setEnergyRefT(15.0)
 iso6976.calculate()
 
-GCV = iso6976.getValue("SuperiorCalorificValue")/1.0e3
-WI = iso6976.getValue("SuperiorWobbeIndex")/1.0e3
+GCV = iso6976.getValue("SuperiorCalorificValue") / 1.0e3
+WI = iso6976.getValue("SuperiorWobbeIndex") / 1.0e3
 
-print('GCV ' + str(GCV) + ' MJ/m3')
-print('WI ' + str(WI), ' MJ/m3')
+print("GCV " + str(GCV) + " MJ/m3")
+print("WI " + str(WI), " MJ/m3")

@@ -5,8 +5,14 @@ Created on Tue Aug  6 09:45:43 2019
 @author: esol
 """
 
-from neqsim.thermo import (TPflash, fluid, fluidComposition, ionComposition,
-                           phaseenvelope, scaleCheck)
+from neqsim.thermo import (
+    TPflash,
+    fluid,
+    fluidComposition,
+    ionComposition,
+    phaseenvelope,
+    scaleCheck,
+)
 
 # create a fluid using the Electrolyte-CPA-EoS
 fluid1 = fluid("Electrolyte-CPA-EoS")

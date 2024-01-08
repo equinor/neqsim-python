@@ -69,21 +69,21 @@ S5 = fluid_1.getEntropy("kJ/kgK")
 V5 = fluid_1.getVolume("m3")
 
 # estimating efficiency
-QH = H3-H2
-QC = H4-H5
-pumpWork = H2-H1
-expanderWork = H3-H4
-efficiency = (QH-QC)/QH
+QH = H3 - H2
+QC = H4 - H5
+pumpWork = H2 - H1
+expanderWork = H3 - H4
+efficiency = (QH - QC) / QH
 print("turbine power generated ", expanderWork, " kJ/kg")
 print("pump power used ", pumpWork, " kJ/kg")
 print("Efficiency: ", efficiency)
-efficiency2 = 1.0 - (T1+273.15)/(T3+273.15)
-print("Carnot efficiency ",  efficiency2)
+efficiency2 = 1.0 - (T1 + 273.15) / (T3 + 273.15)
+print("Carnot efficiency ", efficiency2)
 
 # plot results in Ts-diagram
 entropy = [S1, S2, S3, S4, S5]
 temperature = [T1, T2, T3, T4, T5]
 plt.plot(entropy, temperature)
-plt.xlabel('Entropy [kJ/kgK]')
-plt.ylabel('Temperature [C]')
+plt.xlabel("Entropy [kJ/kgK]")
+plt.ylabel("Temperature [C]")
 plt.show()

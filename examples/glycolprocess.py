@@ -5,12 +5,31 @@ Created on Thu Jan 30 19:39:10 2020
 @author: esol
 """
 
-from neqsim.process import (clearProcess, compressor, heater, mixer, pump,
-                            recycle, runProcess, separator, stream, valve,
-                            viewProcess)
-from neqsim.thermo import (TPflash, addOilFractions, createfluid, createfluid2,
-                           dataFrame, fluid, fluidComposition, fluidcreator,
-                           phaseenvelope, printFrame)
+from neqsim.process import (
+    clearProcess,
+    compressor,
+    heater,
+    mixer,
+    pump,
+    recycle,
+    runProcess,
+    separator,
+    stream,
+    valve,
+    viewProcess,
+)
+from neqsim.thermo import (
+    TPflash,
+    addOilFractions,
+    createfluid,
+    createfluid2,
+    dataFrame,
+    fluid,
+    fluidComposition,
+    fluidcreator,
+    phaseenvelope,
+    printFrame,
+)
 
 # Start by creating a fluid in neqsim uing a predifined fluid (dry gas, rich gas, light oil, black oil)
 # Set temperature and pressure and do a TPflash. Show results in a dataframe.
@@ -27,8 +46,7 @@ fluid1.addComponent("water", 1e-10)
 fluid1.addComponent("TEG", 1e-10)
 fluid1.setMixingRule(10)
 fluid1.setMultiPhaseCheck(True)
-fluidcomposition = [0.031, 0.9297, 0.0258, 0.0135, 6.48413454028242e-002,
-                    1.0e-15]
+fluidcomposition = [0.031, 0.9297, 0.0258, 0.0135, 6.48413454028242e-002, 1.0e-15]
 fluidComposition(fluid1, fluidcomposition)
 fluid1.setTemperature(feedTemperature, "C")
 fluid1.setPressure(feedPressure, "bara")
@@ -39,13 +57,13 @@ fluid2.addComponent("CO2", 1.0e-10)
 fluid2.addComponent("methane", 1.0e-10)
 fluid2.addComponent("ethane", 1.0e-10)
 fluid2.addComponent("propane", 1.0e-10)
-fluid2.addComponent("water", 1.0, 'kg/sec')
-fluid2.addComponent("TEG", 99.0, 'kg/sec')
+fluid2.addComponent("water", 1.0, "kg/sec")
+fluid2.addComponent("TEG", 99.0, "kg/sec")
 fluid2.setMixingRule(10)
 fluid2.setMultiPhaseCheck(True)
 fluid2.setTemperature(313.15, "K")
 fluid2.setPressure(75.0, "bara")
-fluid2.setTotalFlowRate(10625.0, 'kg/hr')
+fluid2.setTotalFlowRate(10625.0, "kg/hr")
 
 # demonstration of setting up a simple process calculation
 clearProcess()
@@ -65,7 +83,7 @@ scrubberLP = separator(mixer1.getOutStream())
 valve1 = valve(scrubberLP.getLiquidOutStream(), 10.0, "Glycol valve")
 flashDrum = separator(valve1.getOutStream())
 heater1 = heater(flashDrum.getLiquidOutStream())
-heater1.setOutTemperature(273.15+195.0)
+heater1.setOutTemperature(273.15 + 195.0)
 stripper = separator(heater1.getOutStream())
 
 cooler1 = heater(stripper.getLiquidOutStream())

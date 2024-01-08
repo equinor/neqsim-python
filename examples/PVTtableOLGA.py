@@ -6,7 +6,7 @@ Created on Sun Dec  8 10:44:42 2019
 """
 from neqsim.thermo.thermoTools import PVTpropTable, TPflash, fluid
 
-fluid1 = fluid('srk')
+fluid1 = fluid("srk")
 fluid1.addComponent("methane", 79.2)
 fluid1.addComponent("nC10", 79.2)
 fluid1.setMultiPhaseCheck(True)
@@ -21,5 +21,13 @@ lowPressure = 10.0  # bara
 highPressure = 100.0  # bara
 Psteps = 20
 
-PVTpropTable(fluid1, fileName, lowTemperature, highTemperature,
-             Tsteps, lowPressure, highPressure, Psteps)
+PVTpropTable(
+    fluid1,
+    fileName,
+    lowTemperature,
+    highTemperature,
+    Tsteps,
+    lowPressure,
+    highPressure,
+    Psteps,
+)

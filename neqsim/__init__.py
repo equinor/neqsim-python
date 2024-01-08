@@ -1,6 +1,6 @@
 """
-NeqSim is a library for estimation of behaviour and properties of fluids. 
-This module is a Python interface to the NeqSim Java library. 
+NeqSim is a library for estimation of behaviour and properties of fluids.
+This module is a Python interface to the NeqSim Java library.
 It uses the Jpype module for bridging python and Java.
 """
 

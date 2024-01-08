@@ -6,7 +6,7 @@ Created on Sun Jan  5 20:48:13 2020
 """
 from neqsim.thermo.thermoTools import *
 
-Tsurr = 20.0+273.15  # surrounding temperature in Kelvin
+Tsurr = 20.0 + 273.15  # surrounding temperature in Kelvin
 
 Tgas = 50.0
 P_in = 20.0
@@ -38,9 +38,9 @@ V2 = fluid_1.getVolume("m3")
 E2 = fluid_1.getExergy(Tsurr, "kJ/kg")
 
 
-#Reduction in exergy
+# Reduction in exergy
 
-redEx = E1-E2
+redEx = E1 - E2
 
 print("Reduction in exergy in valve is ", redEx)
 
@@ -57,9 +57,9 @@ V3 = fluid_1.getVolume("m3")
 E3 = fluid_1.getExergy(Tsurr, "kJ/kg")
 
 # THe work done will be
-work = H1-H3
+work = H1 - H3
 print("expander work ", work)
 # change in exergi is
-exChange = E1-E3
+exChange = E1 - E3
 
-print("reduced exergy ",  exChange)
+print("reduced exergy ", exChange)

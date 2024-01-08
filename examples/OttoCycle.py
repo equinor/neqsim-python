@@ -15,14 +15,14 @@ compressionRatio = 14
 T2 = 30.0
 P2 = 15.4
 
-petrol = createfluid('dry gas')
+petrol = createfluid("dry gas")
 petrol.setPressure(P2, "bara")
 petrol.setTemperature(T2, "C")
 petrol.setTotalFlowRate(22.2, "kg/hr")
 TPflash(petrol)
 
 # Process 0–1 intake stroke (green arrow)
-air = createfluid('air')
+air = createfluid("air")
 air.setPressure(P1, "bara")
 air.setTemperature(T1, "C")
 air.setTotalFlowRate(3100.0, "kg/hr")
@@ -35,7 +35,7 @@ P1 = air.getPressure("bara")
 T1 = air.getTemperature("C")
 
 # Process 1–2 compression stroke (B on diagrams)
-V2 = V1/compressionRatio
+V2 = V1 / compressionRatio
 VSflash(air, V2, S1, "m3", "kJ/kgK")
 
 S2 = air.getEntropy("kJ/kgK")
@@ -46,9 +46,9 @@ T2 = air.getTemperature("C")
 
 
 # Process 2–3 ignition phase
-GCVgas = GCV(petrol, 'kJ/kg')
-energyCombustion = GCVgas*1000.0*petrol.getFlowRate("kg/sec")
-VHflash(air, V2, air.getEnthalpy()+energyCombustion, "m3", "J")
+GCVgas = GCV(petrol, "kJ/kg")
+energyCombustion = GCVgas * 1000.0 * petrol.getFlowRate("kg/sec")
+VHflash(air, V2, air.getEnthalpy() + energyCombustion, "m3", "J")
 # need to implement this in java/python
 S3 = air.getEntropy("kJ/kgK")
 H3 = air.getEnthalpy("kJ/kg")
@@ -76,15 +76,15 @@ T5 = air.getTemperature("C")
 
 airMassFlow = air.getFlowRate("kg/sec")
 fuelMassFLow = petrol.getFlowRate("kg/sec")
-AFR = airMassFlow/fuelMassFLow
+AFR = airMassFlow / fuelMassFLow
 print("air fuel ratio ", AFR, " kg/kg")
 print("air inlet flow ", V1, " m3/sec")
 print("fuel inlet flow ", petrol.getFlowRate("kg/sec"), " kg/sec")
-print("pistion power ", (H3-H4)*airMassFlow, " kW")
+print("pistion power ", (H3 - H4) * airMassFlow, " kW")
 print("Heat of combustion ", GCVgas, " kJ/kg")
 
-powerOutput = (H3-H4)*airMassFlow - (H2-H1)*airMassFlow
-print("power output ", powerOutput, " kW, ", (powerOutput*1.3596216173), " hp")
+powerOutput = (H3 - H4) * airMassFlow - (H2 - H1) * airMassFlow
+print("power output ", powerOutput, " kW, ", (powerOutput * 1.3596216173), " hp")
 
 # plot results in Ts-diagram
 entropy = [S1, S2, S3, S4, S5]
@@ -92,11 +92,11 @@ temperature = [T1, T2, T3, T4, T5]
 volumes = [V1, V2, V3, V4, V5]
 pressures = [P1, P2, P3, P4, P5]
 plt.plot(entropy, temperature)
-plt.xlabel('Entropy [kJ/kgK]')
-plt.ylabel('Temperature [C]')
+plt.xlabel("Entropy [kJ/kgK]")
+plt.ylabel("Temperature [C]")
 plt.show()
 
 plt.plot(volumes, pressures)
-plt.xlabel('Volume [m3]')
-plt.ylabel('Pressure [bara]')
+plt.xlabel("Volume [m3]")
+plt.ylabel("Pressure [bara]")
 plt.show()
