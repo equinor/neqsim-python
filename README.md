@@ -1,6 +1,7 @@
 ![NeqSim Logo](https://github.com/equinor/neqsim/blob/master/docs/wiki/neqsimlogocircleflatsmall.png)
 
 ![Run tests](https://github.com/equinor/neqsim-python/actions/workflows/runtests.yml/badge.svg?branch=master)
+![Publish package](https://github.com/equinor/neqsim-python/actions/workflows/publish-to-test-pypi.yml/badge.svg?branch=master)
 
 # NeqSim Python
 
