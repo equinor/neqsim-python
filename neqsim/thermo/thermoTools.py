@@ -1,3 +1,4 @@
+from typing import List, Union
 import jpype
 import pandas
 from jpype.types import *
@@ -219,21 +220,42 @@ def calcproperties(gascondensateFluid, inputDict):
 def fluidflashproperties(
     spec1: pandas.Series,
     spec2: pandas.Series,
-    mode=1,
+    mode: Union[int, str] = 1,
     system=None,
-    components=None,
-    fractions=None,
+    components: List[str] = None,
+    fractions: list = None,
 ):
-    """
-    Perform flash and return fluid properties for a series of process properties.
+    """Perform flash and return fluid properties for a series of process properties.
 
-    Spec1 and Spec2 are the process conditions to perform flash at.
-    Supported flash modes: TP (1), PH (2) and PS (3).
 
-    A default system is created if not passed and components and fractions can specify it.
-    Fractions can be a single list of component fractions to use for all flashes or
-    a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
+    Args:
+        spec1 (pandas.Series): Process condition to perform flash at. Type depends on mode argument, see below for units.
+        spec2 (pandas.Series): Process condition to perform flash at. Type depends on mode argument, see below for units.
+        mode (int, str): Supported flash modes: PT or TP (1), PH (2) and PS (3). Defaults to 1.
+        system (_type_, optional): A default system is created if not passed and components and fractions can specify it.
+        components (list, optional): List of component names. Defaults to None, which requires a system input.
+        fractions (list, optional): List of fractions if same for all flashes or list of list of fractions per flash. Defaults to None, which requires a system input..
 
+    Raises:
+        ValueError: Invalid Mode input
+        ValueError: Invalid combination of system, components and fractions.
+        TypeError: Fraction must be list if provided.
+        NotImplementedError: _description_
+        NotImplementedError: _description_
+
+    Returns:
+        _type_: _description_
+
+    
+        Input units:
+            - Flash pressure in bar absolute. 
+            - Temperature in Kelvin
+            - Entalphy in J/mol 
+            - Entropy in J/molK.
+
+    Pressure shall be specified as bara, 
+    Fractions can be a single list of component fractions to use for all flashes or a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
+    Same component list is used for all flashes.
     """
     if isinstance(mode, int):
         if mode == 1:
@@ -302,9 +324,9 @@ def fluidflashproperties(
                 components = [components]
 
             if all([isinstance(x, list) for x in components]):
-                raise NotImplementedError
+                raise NotImplementedError("Component list must be fixed if provided")
             elif any([isinstance(x, list) for x in components]):
-                raise NotImplementedError
+                raise NotImplementedError("Component list must be fixed if provided")
             else:
                 components = None
 
