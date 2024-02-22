@@ -246,14 +246,14 @@ def fluidflashproperties(
     Returns:
         _type_: _description_
 
-    
+
         Input units:
-            - Flash pressure in bar absolute. 
+            - Flash pressure in bar absolute.
             - Temperature in Kelvin
-            - Entalphy in J/mol 
+            - Entalphy in J/mol
             - Entropy in J/molK.
 
-    Pressure shall be specified as bara, 
+    Pressure shall be specified as bara,
     Fractions can be a single list of component fractions to use for all flashes or a list of lists where the first dimension the different components and the second dimension is the fraction per flash.
     Same component list is used for all flashes.
     """
