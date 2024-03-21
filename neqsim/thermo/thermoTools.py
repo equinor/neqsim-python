@@ -913,7 +913,7 @@ def addfluids(fluid1, fluid2):
 
 
 def hydt(testSystem, type=1):
-    if not testSystem.doHydrateCheck():
+    if not testSystem.getHydrateCheck():
         testSystem.setHydrateCheck(True)
     testFlash = ThermodynamicOperations(testSystem)
     testFlash.hydrateFormationTemperature(type)
