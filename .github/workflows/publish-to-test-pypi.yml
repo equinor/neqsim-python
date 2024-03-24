@@ -1,33 +1,36 @@
+name: Publish Python 🐍 distributions 📦 to PyPI
+
+on:
+  release: # Trigger when a new release is made
+    types: [published]
+
+  workflow_dispatch: # Trigger manually
+
 jobs:
   build-n-publish:
-    name: Build and publish Python distributions to PyPI
+    name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-          
-      - name: Install Poetry
-        run: curl -sSL https://install.python-poetry.org | python3 -
-        
-      - name: Configure Poetry
-        run: poetry config virtualenvs.create false
-        
-      - name: Install dependencies
-        run: poetry install --no-interaction
+    - uses: actions/checkout@master
 
-      - name: Build wheel
-        run: poetry build
+    - name: Install poetry
+      run: pipx install poetry
 
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: dist/
+    - name: Setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+        cache: "poetry"
+
+    - name: Install dependencies
+      run: poetry install --no-interaction
+
+    - name: Build wheel
+      run: poetry build
+
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: dist/
