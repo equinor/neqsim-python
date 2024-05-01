@@ -1,3 +1,4 @@
+import logging
 from typing import List, Union
 import jpype
 import pandas
@@ -5,6 +6,8 @@ from jpype.types import *
 from neqsim import has_matplotlib, has_tabulate
 from neqsim.neqsimpython import jNeqSim
 from neqsim.standards import ISO6976
+
+logger = logging.getLogger(__name__)
 
 if has_matplotlib():
     import matplotlib.pyplot as plt
@@ -937,7 +940,7 @@ def bubp(testSystem):
     try:
         testFlash.bubblePointPressureFlash(0)
     except:
-        print("error calculating bublepoint")
+        logger.error("error calculating bublepoint")
     return testSystem.getPressure()
 
 
@@ -946,7 +949,7 @@ def bubt(testSystem):
     try:
         testFlash.bubblePointTemperatureFlash()
     except:
-        print("error calculating bublepoint")
+        logger.error("error calculating bublepoint")
     return testSystem.getTemperature()
 
 
@@ -955,7 +958,7 @@ def dewp(testSystem):
     try:
         testFlash.dewPointPressureFlash()
     except:
-        print("error could not calculate")
+        logger.error("error could not calculate")
     return testSystem.getPressure()
 
 
@@ -964,7 +967,7 @@ def dewt(testSystem):
     try:
         testFlash.dewPointTemperatureFlash()
     except:
-        print("error could not calculate")
+        logger.error("error could not calculate")
     return testSystem.getTemperature()
 
 
@@ -973,7 +976,7 @@ def waterdewt(testSystem):
     try:
         testFlash.waterDewPointTemperatureFlash()
     except:
-        print("error could not calculate")
+        logger.error("error could not calculate")
     return testSystem.getTemperature()
 
 
