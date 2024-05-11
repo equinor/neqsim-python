@@ -943,7 +943,7 @@ def bubp(testSystem):
     except:
         logger.error("error calculating bublepoint")
         return math.nan
-    
+
     return testSystem.getPressure()
 
 
@@ -954,7 +954,7 @@ def bubt(testSystem):
     except:
         logger.error("error calculating bublepoint")
         return math.nan
-    
+
     return testSystem.getTemperature()
 
 
@@ -965,7 +965,7 @@ def dewp(testSystem):
     except:
         logger.error("error could not calculate")
         return math.nan
-    
+
     return testSystem.getPressure()
 
 
@@ -976,7 +976,7 @@ def dewt(testSystem):
     except:
         logger.error("error could not calculate")
         return math.nan
-    
+
     return testSystem.getTemperature()
 
 
@@ -987,7 +987,7 @@ def waterdewt(testSystem):
     except:
         logger.error("error could not calculate")
         return math.nan
-    
+
     return testSystem.getTemperature()
 
 
