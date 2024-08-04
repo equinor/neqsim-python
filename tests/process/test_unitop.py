@@ -62,3 +62,4 @@ def test_addPythonUnitOp():
     oilprocess.run()
 
     assert stream2.getPressure()==2*stream1.getPressure()
+
