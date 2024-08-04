@@ -10,26 +10,28 @@ from neqsim.thermo import fluid
 from neqsim import jNeqSim
 from jpype import JImplements, JOverride
 
+
 class ExampleCompressor(unitop):
     def __init__(self):
         super().__init__()
         self.name = ""
         self.inputstream = None
         self.outputstream = None
-    
+
     def setInputStream(self, stream):
         self.inputstream = stream
         self.outputstream = stream.clone()
 
     def getOutputStream(self):
         return self.outputstream
-    
+
     @JOverride
     def run(self):
         fluid2 = self.inputstream.getFluid().clone()
-        fluid2.setPressure(fluid2.getPressure()*2.0)
+        fluid2.setPressure(fluid2.getPressure() * 2.0)
         self.outputstream.setFluid(fluid2)
         self.outputstream.run()
+
 
 def test_addPythonUnitOp():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -42,18 +44,19 @@ def test_addPythonUnitOp():
     stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream(fluid1)
     stream1.setFlowRate(30000, "kg/hr")
     stream1.run()
-    
+
     uop = ExampleCompressor()
-    uop.setName('example operation 1')
+    uop.setName("example operation 1")
     uop.setInputStream(stream1)
     uop.run()
 
-    stream2 = jNeqSim.processSimulation.processEquipment.stream.Stream(uop.getOutputStream())
+    stream2 = jNeqSim.processSimulation.processEquipment.stream.Stream(
+        uop.getOutputStream()
+    )
     stream2.run()
 
-    assert stream2.getPressure()==2*stream1.getPressure()
+    assert stream2.getPressure() == 2 * stream1.getPressure()
 
-    
     oilprocess = jNeqSim.processSimulation.processSystem.ProcessSystem()
     oilprocess.add(stream1)
     oilprocess.add(uop)
@@ -61,5 +64,4 @@ def test_addPythonUnitOp():
 
     oilprocess.run()
 
-    assert stream2.getPressure()==2*stream1.getPressure()
-
+    assert stream2.getPressure() == 2 * stream1.getPressure()
