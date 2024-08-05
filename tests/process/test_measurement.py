@@ -10,18 +10,19 @@ from neqsim.thermo import fluid
 from neqsim import jNeqSim
 from jpype import JImplements, JOverride
 
+
 class ExampleMeasurement(measurement):
     def __init__(self):
         super().__init__()
         self.name = ""
-    
+
     def setInputStream(self, stream):
         self.inputstream = stream
         self.outputstream = stream.clone()
 
     def getMeasuredValue(self):
         return self.inputstream.getPressure("psia")
-    
+
 
 def test_addPythonUnitOp():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
@@ -33,9 +34,9 @@ def test_addPythonUnitOp():
 
     stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream(fluid1)
     stream1.setFlowRate(30000, "kg/hr")
-    
+
     meas1 = ExampleMeasurement()
-    meas1.setName('example measurement 1')
+    meas1.setName("example measurement 1")
     meas1.setInputStream(stream1)
 
     oilprocess = jNeqSim.processSimulation.processSystem.ProcessSystem()
@@ -43,5 +44,4 @@ def test_addPythonUnitOp():
     oilprocess.add(meas1)
     oilprocess.run()
 
-    assert stream1.getPressure("psia")==meas1.getMeasuredValue()
-
+    assert stream1.getPressure("psia") == meas1.getMeasuredValue()

@@ -8,7 +8,10 @@ from jpype import JImplements, JOverride
 # Assuming you have already started the JVM with neqsim on the classpath
 # If not, you'll need to start it before this code
 
-@JImplements(jNeqSim.processSimulation.measurementDevice.MeasurementDeviceInterface) # Use the fully qualified class name directly from the jNeqSim package
+
+@JImplements(
+    jNeqSim.processSimulation.measurementDevice.MeasurementDeviceInterface
+)  # Use the fully qualified class name directly from the jNeqSim package
 class measurement:
     def __init__(self):
         self.name = ""
@@ -20,75 +23,74 @@ class measurement:
         self.isMeasuredPercentValue = False
         self.isMeasuredValue = False
 
-    @JOverride # Add the missing 'equals' method
+    @JOverride  # Add the missing 'equals' method
     def equals(self, obj):
-      # Implement your equality logic here. 
-      # For example, you might compare the names of the objects:
-      if isinstance(obj, unitop):
-          return self.name == obj.name
-      return False
+        # Implement your equality logic here.
+        # For example, you might compare the names of the objects:
+        if isinstance(obj, unitop):
+            return self.name == obj.name
+        return False
 
-    @JOverride # Implement the missing 'hashCode' method
+    @JOverride  # Implement the missing 'hashCode' method
     def hashCode(self):
-        # Implement your hash code logic here. 
+        # Implement your hash code logic here.
         # A simple example is to return the hash of the object's name:
         return hash(self.name)
 
-    @JOverride # Implement the missing 'displayResult' method
+    @JOverride  # Implement the missing 'displayResult' method
     def displayResult(self):
-        # Add the logic to calculate or retrieve the pressure. 
+        # Add the logic to calculate or retrieve the pressure.
         # This will depend on how pressure is handled in your 'unitop' class.
         return 0.0  # Replace 0.0 with the actual pressure value or calculatio
-        # Add the logic to calculate or retrieve the pressure. 
+        # Add the logic to calculate or retrieve the pressure.
 
-    @JOverride # Implement the missing 'getMeasuredValue' method
+    @JOverride  # Implement the missing 'getMeasuredValue' method
     def getMeasuredValue(self):
         return 0.0  # Replace 0.0 with the actual pressure value or calculatio
 
-
-    @JOverride # Implement the missing 'getOnlineSignal' method
+    @JOverride  # Implement the missing 'getOnlineSignal' method
     def getOnlineSignal(self):
-        return 0.0  
+        return 0.0
 
-    @JOverride # Implement the missing 'getMeasuredPercentValue' method
+    @JOverride  # Implement the missing 'getMeasuredPercentValue' method
     def getMeasuredPercentValue(self):
         return 0.0
 
-    @JOverride # Implement the missing 'getMeasuredPercentValue' method
+    @JOverride  # Implement the missing 'getMeasuredPercentValue' method
     def getUnit(self):
-        return self.unit    
+        return self.unit
 
-    @JOverride # Implement the missing 'getMeasuredPercentValue' method
+    @JOverride  # Implement the missing 'getMeasuredPercentValue' method
     def setUnit(self, unitl):
-        self.unit = unitl 
+        self.unit = unitl
 
-    @JOverride # Implement the missing 'getMaximumValue' method
+    @JOverride  # Implement the missing 'getMaximumValue' method
     def getMaximumValue(self):
-        return self.maximumValue  
+        return self.maximumValue
 
-    @JOverride # Implement the missing 'setMaximumValue' method
+    @JOverride  # Implement the missing 'setMaximumValue' method
     def setMaximumValue(self, val):
-      self.maximumValue = val
-    
-    @JOverride # Implement the missing 'getMinimumValue' method
+        self.maximumValue = val
+
+    @JOverride  # Implement the missing 'getMinimumValue' method
     def getMinimumValue(self):
-        return self.minimumValue  
+        return self.minimumValue
 
-    @JOverride # Implement the missing 'setMinimumValue' method
+    @JOverride  # Implement the missing 'setMinimumValue' method
     def setMinimumValue(self, val):
-      self.minimumValue = val
-    
-    @JOverride # Implement the missing 'isLogging' method
-    def isLogging(self):
-      return self.logging  
+        self.minimumValue = val
 
-    @JOverride # Implement the missing 'setLogging' method
+    @JOverride  # Implement the missing 'isLogging' method
+    def isLogging(self):
+        return self.logging
+
+    @JOverride  # Implement the missing 'setLogging' method
     def setLogging(self, val):
-      self.logging = val
-    
-    @JOverride # Implement the missing 'isOnlineSignal' method
+        self.logging = val
+
+    @JOverride  # Implement the missing 'isOnlineSignal' method
     def isOnlineSignal(self):
-      return self.isOnlineSignal  
+        return self.isOnlineSignal
 
     @JOverride
     def getName(self):
