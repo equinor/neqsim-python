@@ -27,11 +27,12 @@ class ExampleCompressor(unitop):
 
     @JOverride
     def run(self, id):
-        print('here2')
+        print("here2")
         fluid2 = self.inputstream.getFluid().clone()
         fluid2.setPressure(fluid2.getPressure() * 2.0)
         self.outputstream.setFluid(fluid2)
         self.outputstream.run()
+
 
 def test_addPythonUnitOp():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
