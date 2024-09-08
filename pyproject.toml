@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neqsim"
-version = "2.5.32"
+version = "2.5.33"
 description = "NeqSim is a tool for thermodynamic and process calculations"
 authors = ["Even Solbraa <esolbraa@gmail.com>"]
 license = "Apache-2.0"
