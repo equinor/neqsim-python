@@ -32,7 +32,9 @@ def test_addPythonUnitOp():
     fluid1.addComponent("n-hexane", 1.0, "kg/sec")
     fluid1.setMixingRule(2)
 
-    stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream('stream1', fluid1)
+    stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream(
+        "stream1", fluid1
+    )
     stream1.setFlowRate(30000, "kg/hr")
 
     meas1 = ExampleMeasurement()

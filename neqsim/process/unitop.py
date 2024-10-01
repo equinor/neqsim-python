@@ -118,11 +118,11 @@ class unitop:
         # Add the logic to calculate or retrieve the pressure.
         # This will depend on how pressure is handled in your 'unitop' class.
         return 0.0  # Replace 0.0 with the actual pressure value or calculatio
-        
+
     @JOverride  # Implement the missing 'needRecalculation' method
-    def needRecalculation():  
-      return True
-        
+    def needRecalculation():
+        return True
+
     @JOverride  # Implement the missing 'getExergyChange' method
     def getResultTable(self):
         # Add the logic to calculate or retrieve the pressure.

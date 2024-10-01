@@ -174,13 +174,17 @@ def test_fullOffshoreProcess():
     oilHeaterFromFirstStage.setName("oil heater second stage")
     oilHeaterFromFirstStage.setOutTemperature(inputdata["temperatureOilHeater"], "C")
 
-    oilThrotValve = valve(oilHeaterFromFirstStage.getOutStream(), name="valve oil from first stage")
+    oilThrotValve = valve(
+        oilHeaterFromFirstStage.getOutStream(), name="valve oil from first stage"
+    )
     oilThrotValve.setOutletPressure(inputdata["secondStagePressure"])
 
     secondStageSeparator = separator3phase(oilThrotValve.getOutStream())
     secondStageSeparator.setName("2nd stage separator")
 
-    oilThrotValve2 = valve(secondStageSeparator.getOilOutStream(), name="valve oil from second stage")
+    oilThrotValve2 = valve(
+        secondStageSeparator.getOilOutStream(), name="valve oil from second stage"
+    )
     oilThrotValve2.setOutletPressure(inputdata["thirdStagePressure"])
 
     thirdStageSeparator = separator3phase(oilThrotValve2.getOutStream())
@@ -285,14 +289,14 @@ def test_fullOffshoreProcess():
 
     watersplitter = compsplitter(inletValve.getOutStream(), splitFactors)
 
-    coolerInlet = cooler(watersplitter.getSplitStream(0), name='cooler 11')
+    coolerInlet = cooler(watersplitter.getSplitStream(0), name="cooler 11")
     coolerInlet.setOutTemperature(-20.0, "C")
 
     expanderKarsto = expander(coolerInlet.getOutStream(), pressureNGL)
 
     scrubberNGL = separator(expanderKarsto.getOutStream())
 
-    gasHeater = heater(scrubberNGL.getGasOutStream(), name='heater1')
+    gasHeater = heater(scrubberNGL.getGasOutStream(), name="heater1")
     gasHeater.setOutTemperature(20.0)
 
     exportCompressor = compressor(gasHeater.getOutStream())

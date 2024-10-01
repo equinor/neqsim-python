@@ -42,15 +42,17 @@ def test_addPythonUnitOp():
     fluid1.addComponent("n-hexane", 1.0, "kg/sec")
     fluid1.setMixingRule(2)
 
-    stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream('stream 1', fluid1)
+    stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream(
+        "stream 1", fluid1
+    )
     stream1.setFlowRate(30000, "kg/hr")
 
-    uop = ExampleCompressor(name='compressor 1')
+    uop = ExampleCompressor(name="compressor 1")
     uop.setName("example operation 1")
     uop.setInputStream(stream1)
 
-    stream2 = jNeqSim.processSimulation.processEquipment.stream.Stream('stream2',
-        uop.getOutputStream()
+    stream2 = jNeqSim.processSimulation.processEquipment.stream.Stream(
+        "stream2", uop.getOutputStream()
     )
 
     oilprocess = jNeqSim.processSimulation.processSystem.ProcessSystem()
