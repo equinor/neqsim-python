@@ -120,7 +120,7 @@ class unitop:
         return 0.0  # Replace 0.0 with the actual pressure value or calculatio
 
     @JOverride  # Implement the missing 'needRecalculation' method
-    def needRecalculation():
+    def needRecalculation(self):
         return True
 
     @JOverride  # Implement the missing 'getExergyChange' method
