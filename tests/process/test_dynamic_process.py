@@ -30,7 +30,7 @@ def test_dynamic_compressor():
     separator1.setInternalDiameter(0.8)
     separator1.setLiquidLevel(0.0)
 
-    compressor1 = jNeqSim.processSimulation.processEquipment.compressor.Compressor(
+    compressor1 = jNeqSim.processSimulation.processEquipment.compressor.Compressor('comp1',
         separator1.getGasOutStream()
     )
     compressor1.setCalculateSteadyState(False)
