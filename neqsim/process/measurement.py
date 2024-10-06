@@ -10,7 +10,7 @@ from jpype import JImplements, JOverride
 
 
 @JImplements(
-    jneqsim.processSimulation.measurementDevice.MeasurementDeviceInterface
+    jneqsim.processsimulation.measurementdevice.measurementdeviceInterface
 )  # Use the fully qualified class name directly from the jneqsim package
 class measurement:
     def __init__(self):
