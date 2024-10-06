@@ -35,8 +35,8 @@ def test_compsplitter():
     fluid1.addComponent("CO2", 2.3, "mol/sec")
     fluid1.setMixingRule(2)
     clearProcess()
-    stream1 = stream('stream1', fluid1)
-    splittcomp = compsplitter('splitter 1', stream1, [1.0, 0.0])
+    stream1 = stream("stream1", fluid1)
+    splittcomp = compsplitter("splitter 1", stream1, [1.0, 0.0])
     runProcess()
     TPflash(splittcomp.getSplitStream(0).getFluid())
     printFrame(splittcomp.getSplitStream(0).getFluid())
@@ -51,8 +51,8 @@ def test_waterDewPointAnalyser():
     fluid1.addComponent("water", 50e-6, "mol/sec")
     fluid1.setMixingRule(2)
     clearProcess()
-    stream1 = stream('stream1', fluid1)
-    waterDewPoint = waterDewPointAnalyser('water', stream1)
+    stream1 = stream("stream1", fluid1)
+    waterDewPoint = waterDewPointAnalyser("water", stream1)
     runProcess()
     assert waterDewPoint.getMeasuredValue("C") == approx(-11.828217379989212, rel=0.001)
 
@@ -68,8 +68,8 @@ def test_hydrateEquilibriumTemperatureAnalyser():
     fluid1.addComponent("water", 50e-6, "mol/sec")
     fluid1.setMixingRule(2)
     clearProcess()
-    stream1 = stream('stream1', fluid1)
-    hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser('analyser1', stream1)
+    stream1 = stream("stream1", fluid1)
+    hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser("analyser1", stream1)
     runProcess()
     assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel=0.001)
 
@@ -88,11 +88,11 @@ def test_runProcessAsThread():
     fluid1.setMixingRule(2)
     clearProcess()
     stream1 = stream("stream1", fluid1)
-    waterDewPoint = waterDewPointAnalyser('analy', stream1)
-    stream2 = stream('stream2', fluid1)
-    waterDewPoint2 = waterDewPointAnalyser('anal1', stream2)
-    stream3 = stream('stream3', fluid1)
-    waterDewPoint3 = waterDewPointAnalyser('water2', stream3)
+    waterDewPoint = waterDewPointAnalyser("analy", stream1)
+    stream2 = stream("stream2", fluid1)
+    waterDewPoint2 = waterDewPointAnalyser("anal1", stream2)
+    stream3 = stream("stream3", fluid1)
+    waterDewPoint3 = waterDewPointAnalyser("water2", stream3)
     processThread = runProcessAsThread()
     # assert waterDewPoint2.getMeasuredValue('C') != approx(-11.828217379989212, rel= 0.001)
     processThread.join(10000)  # max 10 sec calculation time
@@ -108,12 +108,12 @@ def test_newprocess():
     fluid1.addComponent("nitrogen", 1.0, "mol/sec")
     fluid1.addComponent("CO2", 2.3, "mol/sec")
     fluid1.setMixingRule(2)
-    stream1 = stream('str11', fluid1)
-    splittcomp = compsplitter('split1', stream1, [1.0, 0.0])
+    stream1 = stream("str11", fluid1)
+    splittcomp = compsplitter("split1", stream1, [1.0, 0.0])
     runProcess()
     newProcess()
-    stream1 = stream('str2', fluid1)
-    splittcomp = compsplitter('split2', stream1, [1.0, 0.0])
+    stream1 = stream("str2", fluid1)
+    splittcomp = compsplitter("split2", stream1, [1.0, 0.0])
     runProcess()
     TPflash(splittcomp.getSplitStream(0).getFluid())
     # assert splittcomp.getSplitStream(0).getFluid().getViscosity('kg/msec') > 1e-19
@@ -130,21 +130,19 @@ def test_flowSplitter():
 
     clearProcess()
 
-    stream1 = stream('str1', fluid1)
+    stream1 = stream("str1", fluid1)
     stream1.setPressure(pressure_inlet, "bara")
     stream1.setTemperature(temperature_inlet, "C")
     stream1.setFlowRate(gasFlowRate, "MSm3/day")
 
-    streamresycl = stream('str2', stream1.getFluid().clone())
+    streamresycl = stream("str2", stream1.getFluid().clone())
     streamresycl.setFlowRate(0.1, "MSm3/day")
 
     mixerStream = mixer("mixer1")
     mixerStream.addStream(stream1)
     mixerStream.addStream(streamresycl)
 
-    compressor_1 = compressor('comp1',
-        mixerStream.getOutletStream(), pressure_outlet
-    )
+    compressor_1 = compressor("comp1", mixerStream.getOutletStream(), pressure_outlet)
 
     stream2 = stream("stre333", compressor_1.getOutStream())
 
@@ -187,9 +185,9 @@ def test_virtualstream():
     fluid1.addComponent("methane", 1.0)
 
     clearProcess()
-    stream1 = stream('str1', fluid1)
+    stream1 = stream("str1", fluid1)
     stream1.setFlowRate(3.1, "MSm3/day")
-    vstream = virtualstream('str2', stream1)
+    vstream = virtualstream("str2", stream1)
     vstream.setFlowRate(1.1, "MSm3/day")
     vstream.setTemperature(25.0, "C")
     vstream.setPressure(25.0, "bara")
@@ -355,7 +353,7 @@ def test_gasoilprocess():
     clearProcess()
 
     # Well stream
-    wstream_inlet = stream('str11', WellFluid2)
+    wstream_inlet = stream("str11", WellFluid2)
     wstream_inlet.setTemperature(feedTemperature, "K")
     wstream_inlet.setPressure(feedPressure, "bara")
     wstream_inlet.setFlowRate(reffluidrate, "kg/hr")
@@ -363,10 +361,10 @@ def test_gasoilprocess():
     # Separator train
     separator1 = separator3phase("inlet separator", wstream_inlet)
     valve1 = valve("HP oil valve", separator1.getOilOutStream(), MPpressure)
-    Oilheater1 = heater('heater 2', valve1.getOutletStream())
+    Oilheater1 = heater("heater 2", valve1.getOutletStream())
     Oilheater1.setOutTemperature(359.15)
     separator2 = separator3phase("MP separator", Oilheater1.getOutStream())
-    valve2 = valve('valv1', separator2.getOilOutStream(), LPpressure)
+    valve2 = valve("valv1", separator2.getOilOutStream(), LPpressure)
     recirc1stream = stream("str1", valve2.getOutletStream().clone())
     recirc2stream = stream("str2", valve2.getOutletStream().clone())
     recirc3stream = stream("str3", valve2.getOutletStream().clone())
@@ -407,12 +405,12 @@ def test_gasoilprocess():
     # 3rd stg compressor, compressor model is skipped as the target for reference
     # model is to derive gas composition into 3rd stage and then perform more detailed
     # calculation on 3rd stage compressor
-    mixerMP = mixer('mix1')
+    mixerMP = mixer("mix1")
     mixerMP.addStream(compressorMP1.getOutStream())
     mixerMP.addStream(separator2.getGasOutStream())
-    cooler3rd = heater('he1', mixerMP.getOutStream())
+    cooler3rd = heater("he1", mixerMP.getOutStream())
     cooler3rd.setOutTemperature(317.15)
-    scrubber3rd = separator('ss1', cooler3rd.getOutStream())
+    scrubber3rd = separator("ss1", cooler3rd.getOutStream())
 
     # Recycle for liquid from 2nd stage scrubber
     valveR3 = valve("3re scr liq", scrubber3rd.getLiquidOutStream(), LPpressure)
