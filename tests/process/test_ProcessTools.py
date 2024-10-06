@@ -15,7 +15,7 @@ from neqsim.process.processTools import (
     runProcessAsThread,
     mixer,
     compressor,
-    recycle2,
+    recycle,
     splitter,
     valve,
 )
@@ -156,7 +156,7 @@ def test_flowSplitter():
     valve1 = valve(resycStream1, name="valv1")
     valve1.setOutletPressure(pressure_inlet, "bara")
 
-    resycleOp = recycle2(name="rec1")
+    resycleOp = recycle(name="rec1")
     resycleOp.addStream(valve1.getOutletStream())
     resycleOp.setOutletStream(streamresycl)
     resycleOp.setFlowAccuracy(1e-4)
@@ -400,7 +400,7 @@ def test_gasoilprocess():
 
     # Recycle for liquid from 2nd stage scrubber
     valveR2 = valve(scrubberMP1.getLiquidOutStream(), LPpressure, "2nd scr liq")
-    recycleMP = recycle2("recycleMP")
+    recycleMP = recycle("recycleMP")
     recycleMP.addStream(valveR2.getOutletStream())
     recycleMP.setOutletStream(recirc2stream)
 
@@ -416,7 +416,7 @@ def test_gasoilprocess():
 
     # Recycle for liquid from 2nd stage scrubber
     valveR3 = valve(scrubber3rd.getLiquidOutStream(), LPpressure, "3re scr liq")
-    recycle3rd = recycle2("recycle3rd")
+    recycle3rd = recycle("recycle3rd")
     recycle3rd.addStream(valveR3.getOutStream())
     recycle3rd.setOutletStream(recirc3stream)
 
