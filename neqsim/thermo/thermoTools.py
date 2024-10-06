@@ -170,7 +170,7 @@ def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
     presList = experimentaldata["pressure"]
     expList = [[x * 100.0 for x in experimentaldata["experiment"]]]
 
-    waxsim = jneqsim.PVTsimulation.simulation.WaxFractionSim(fluid)
+    waxsim = jneqsim.pvtsimulation.simulation.WaxFractionSim(fluid)
     waxsim.setTemperaturesAndPressures(JDouble[:](tempList), JDouble[:](presList))
     waxsim.setExperimentalData(JDouble[:, :](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
@@ -361,7 +361,7 @@ def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False
         Bo = []
 
     length = len(pressure)
-    sepSim = jneqsim.PVTsimulation.simulation.SeparatorTest(fluid)
+    sepSim = jneqsim.pvtsimulation.simulation.SeparatorTest(fluid)
     sepSim.setSeparatorConditions(JDouble[:](temperature), JDouble[:](pressure))
     sepSim.runCalc()
     for i in range(0, length):
@@ -410,7 +410,7 @@ def CVD(
         cummulativemolepercdepleted = []
 
     length = len(pressure)
-    cvdSim = jneqsim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.ConstantVolumeDepletion(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
@@ -454,7 +454,7 @@ def viscositysim(
     if aqueousviscosity is None:
         aqueousviscosity = []
     length = len(pressure)
-    cmeSim = jneqsim.PVTsimulation.simulation.ViscositySim(fluid)
+    cmeSim = jneqsim.pvtsimulation.simulation.ViscositySim(fluid)
     cmeSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cmeSim.runCalc()
     for i in range(0, length):
@@ -516,7 +516,7 @@ def CME(
         viscosity = []
 
     length = len(pressure)
-    cvdSim = jneqsim.PVTsimulation.simulation.ConstantMassExpansion(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.ConstantMassExpansion(fluid)
     cvdSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cvdSim.runCalc()
     saturationPressure = cvdSim.getSaturationPressure()
@@ -588,7 +588,7 @@ def difflib(
         gasgravity = []
 
     length = len(pressure)
-    cvdSim = jneqsim.PVTsimulation.simulation.DifferentialLiberation(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.DifferentialLiberation(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
@@ -627,7 +627,7 @@ def GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
         Bo = []
 
     length = len(pressure)
-    jGOR = jneqsim.PVTsimulation.simulation.GOR(fluid)
+    jGOR = jneqsim.pvtsimulation.simulation.GOR(fluid)
     jGOR.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     jGOR.runCalc()
     for i in range(0, length):
@@ -647,7 +647,7 @@ def GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
 def saturationpressure(fluid, temperature=-1.0):
     if temperature > 0:
         fluid.setTemperature(temperature)
-    cvdSim = jneqsim.PVTsimulation.simulation.SaturationPressure(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.SaturationPressure(fluid)
     cvdSim.run()
     return cvdSim.getSaturationPressure()
 
@@ -667,7 +667,7 @@ def swellingtest(
     if relativeoilvolume is None:
         relativeoilvolume = []
     length2 = len(cummulativeMolePercentGasInjected)
-    cvdSim = jneqsim.PVTsimulation.simulation.SwellingTest(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.SwellingTest(fluid)
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
     cvdSim.setCummulativeMolePercentGasInjected(

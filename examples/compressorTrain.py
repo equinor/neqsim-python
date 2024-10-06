@@ -33,12 +33,12 @@ fluid1.setTotalFlowRate(10.0, "MSm3/day")
 # demonstration of setting up a simple process calculation
 
 clearProcess()
-stream1 = stream(fluid1)
-compressor1 = compressor(stream1, 60.0)  # add compressor and set out pressure
+stream1 = stream('stream 1', fluid1)
+compressor1 = compressor('compressor 1', stream1, 60.0)  # add compressor and set out pressure
 compressor1.setIsentropicEfficiency(0.8)
-cooler1 = heater(compressor1.getOutStream())
+cooler1 = heater('coller 1', compressor1.getOutStream())
 cooler1.setOutTemperature(303.0)
-compressor2 = compressor(cooler1.getOutStream(), 120.0)
+compressor2 = compressor('compressor 2', cooler1.getOutStream(), 120.0)
 compressor2.setIsentropicEfficiency(0.77)
 
 runProcess()

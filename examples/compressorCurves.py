@@ -32,8 +32,8 @@ fluid1.setTotalFlowRate(0.635, "MSm3/day")
 # demonstration of setting up a simple process calculation
 
 clearProcess()
-stream1 = stream(fluid1)
-compressor2 = compressor(stream1, 51.0)
+stream1 = stream('stream 1', fluid1)
+compressor2 = compressor('compressor 1', stream1, 51.0)
 
 
 MW = 28.01

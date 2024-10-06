@@ -15,12 +15,12 @@ fluid1.init(0)
 
 fluid1.setTemperature(28.15, "C")
 fluid1.setPressure(1.0, "bara")
-fluid1.setTotalFlowRate(135.0, "m3/hr")
+fluid1.setTotalFlowRate(135.0, "kg/hr")
 # demonstration of setting up a simple process calculation
 
 clearProcess()
-stream1 = stream(fluid1)
-pump1 = pump(stream1, 11.0)
+stream1 = stream('stream 1', fluid1)
+pump1 = pump('pump 1', stream1, 11.0)
 runProcess()
 
 print("temperature out of pump ", pump1.getOutStream().getTemperature() - 273.15, " °C")

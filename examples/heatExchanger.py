@@ -31,10 +31,10 @@ fluid2.setTotalFlowRate(2700.0, "Sm3/hr")
 
 # demonstration of setting up a simple process calculation
 clearProcess()
-stream1 = stream(fluid1)
-stream2 = stream(fluid2)
+stream1 = stream('stream1', fluid1)
+stream2 = stream('stream2', fluid2)
 
-heatExchanger1 = heatExchanger(stream1, stream2, "exchanger1")
+heatExchanger1 = heatExchanger("exchanger1", stream1, stream2)
 runProcess()
 
 # heatExchanger1.displayResult()

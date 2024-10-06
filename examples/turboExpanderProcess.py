@@ -26,9 +26,9 @@ fluid1.setTotalFlowRate(10.0, "MSm3/day")
 
 # demonstration of setting up a simple process calculation
 clearProcess()
-stream1 = stream(fluid1)
-expander1 = expander(stream1, 40.0)
-separator1 = separator(expander1.getOutStream())
+stream1 = stream('stream 1', fluid1)
+expander1 = expander('expander 1', stream1, 40.0)
+separator1 = separator('sep 1', expander1.getOutStream())
 runProcess()
 
 print(
