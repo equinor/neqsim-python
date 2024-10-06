@@ -283,7 +283,8 @@ def heater(name, teststream):
     return heater
 
 
-def simplereservoir(name, 
+def simplereservoir(
+    name,
     fluid,
     gasvolume=10.0 * 1e7,
     oilvolume=120.0 * 1e6,
@@ -370,7 +371,8 @@ def pipe(name, teststream, length, deltaElevation, diameter, rough):
     return pipe
 
 
-def pipeline(name, 
+def pipeline(
+    name,
     teststream,
     position,
     diameter,
