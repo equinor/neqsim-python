@@ -27,12 +27,12 @@ fluid1.setMultiPhaseCheck(True)
 
 # demonstration of setting up a simple process calculation
 clearProcess()
-stream1 = stream('stream 1', fluid1)
-inletValve = valve('valve 1', stream1, 50.0)  # add valve and set outlet pressure
-inletSeparator = separator('sep 1', inletValve.getOutStream())
-oilValve = valve('valv2', inletSeparator.getLiquidOutStream(), 1.0)
+stream1 = stream("stream 1", fluid1)
+inletValve = valve("valve 1", stream1, 50.0)  # add valve and set outlet pressure
+inletSeparator = separator("sep 1", inletValve.getOutStream())
+oilValve = valve("valv2", inletSeparator.getLiquidOutStream(), 1.0)
 # add compressor and set out pressure
-compressor1 = compressor('comp1', inletSeparator.getGasOutStream(), 100.0)
+compressor1 = compressor("comp1", inletSeparator.getGasOutStream(), 100.0)
 
 # sensoir to read from Omnia
 # temperatureTranmitter1 = temperatureTransmitter(stream1, "PT20232")
@@ -43,6 +43,6 @@ compressor1 = compressor('comp1', inletSeparator.getGasOutStream(), 100.0)
 
 
 runProcess()
-#viewProcess()
+# viewProcess()
 
 print("compressor power ", compressor1.getPower())

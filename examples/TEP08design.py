@@ -33,10 +33,10 @@ fluid1.setPressure(50.0, "bara")
 fluid1.setTotalFlowRate(10.0, "MSm3/day")
 
 clearProcess()
-stream1 = stream('steam1', fluid1)
+stream1 = stream("steam1", fluid1)
 separator1 = separator("inlet separator", stream1)
 
-cooler1 = heater('heat1', separator1.getGasOutStream())
+cooler1 = heater("heat1", separator1.getGasOutStream())
 cooler1.setOutTemperature(273.15 + 30.0)
 
 scrubber1 = separator("inlet separator2", cooler1.getOutStream())

@@ -311,8 +311,8 @@ def heatExchanger(name, stream1, stream2=None):
             name, stream1
         )
     else:
-        heater = jneqsim.processsimulation.processequipment.heatExchanger.HeatExchanger(name,
-            stream1, stream2
+        heater = jneqsim.processsimulation.processequipment.heatExchanger.HeatExchanger(
+            name, stream1, stream2
         )
     heater.setName(name)
     processoperations.add(heater)

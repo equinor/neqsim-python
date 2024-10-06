@@ -67,29 +67,29 @@ fluid2.setTotalFlowRate(10625.0, "kg/hr")
 
 # demonstration of setting up a simple process calculation
 clearProcess()
-stream1 = stream('stream 1', fluid1)
-glycolstream = stream('stream 2', fluid2)
-separator1 = separator('sep 1', stream1)
-compressor1 = compressor('comp 1', separator1.getGasOutStream(), 75.0)
+stream1 = stream("stream 1", fluid1)
+glycolstream = stream("stream 2", fluid2)
+separator1 = separator("sep 1", stream1)
+compressor1 = compressor("comp 1", separator1.getGasOutStream(), 75.0)
 
-heater1 = heater('heater 1', compressor1.getOutStream())
+heater1 = heater("heater 1", compressor1.getOutStream())
 heater1.setOutTemperature(313.0)
 
-mixer1 = mixer('mixer 1')
+mixer1 = mixer("mixer 1")
 mixer1.addStream(heater1.getOutStream())
 mixer1.addStream(glycolstream)
 
-scrubberLP = separator('sep1', mixer1.getOutStream())
-valve1 = valve('valve1', scrubberLP.getLiquidOutStream(), 10.0)
-flashDrum = separator('sep2', valve1.getOutStream())
-heater1 = heater('heat2', flashDrum.getLiquidOutStream())
+scrubberLP = separator("sep1", mixer1.getOutStream())
+valve1 = valve("valve1", scrubberLP.getLiquidOutStream(), 10.0)
+flashDrum = separator("sep2", valve1.getOutStream())
+heater1 = heater("heat2", flashDrum.getLiquidOutStream())
 heater1.setOutTemperature(273.15 + 195.0)
-stripper = separator('sep4', heater1.getOutStream())
+stripper = separator("sep4", heater1.getOutStream())
 
-cooler1 = heater('cooler5', stripper.getLiquidOutStream())
+cooler1 = heater("cooler5", stripper.getLiquidOutStream())
 cooler1.setOutTemperature(313.0)
 
-pump1 = pump('pump5', cooler1.getOutStream(), 75.0)
+pump1 = pump("pump5", cooler1.getOutStream(), 75.0)
 
 
 runProcess()

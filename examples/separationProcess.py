@@ -42,9 +42,9 @@ fluid1.setPressure(55.0, "bara")
 clearProcess()
 feedStream = stream("feed fluid", fluid1)
 
-separator1 = separator('sep1', feedStream)
+separator1 = separator("sep1", feedStream)
 oilstream1 = separator1.getLiquidOutStream()
 valve1 = valve("valv1", oilstream1, 10.0)
 
 runProcess()
-#valve1.displayResult()
+# valve1.displayResult()

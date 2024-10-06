@@ -40,8 +40,8 @@ naturalgasFluid = fluid_df(pd.DataFrame(naturalgas))
 
 # Setting up a process with an inpu stream and a compressor
 clearProcess()
-stream1 = stream('stream 1', naturalgasFluid)
-compressor2 = compressor('compressor 1', stream1)
+stream1 = stream("stream 1", naturalgasFluid)
+compressor2 = compressor("compressor 1", stream1)
 
 
 # setting up the compressor performance
