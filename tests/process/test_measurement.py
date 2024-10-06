@@ -7,7 +7,7 @@ from neqsim.process.processTools import (
     pumpChart,
 )
 from neqsim.thermo import fluid
-from neqsim import jNeqSim
+from neqsim import jneqsim
 from jpype import JImplements, JOverride
 
 
@@ -32,7 +32,7 @@ def test_addPythonUnitOp():
     fluid1.addComponent("n-hexane", 1.0, "kg/sec")
     fluid1.setMixingRule(2)
 
-    stream1 = jNeqSim.processSimulation.processEquipment.stream.Stream(
+    stream1 = jneqsim.processSimulation.processEquipment.stream.Stream(
         "stream1", fluid1
     )
     stream1.setFlowRate(30000, "kg/hr")
@@ -41,7 +41,7 @@ def test_addPythonUnitOp():
     meas1.setName("example measurement 1")
     meas1.setInputStream(stream1)
 
-    oilprocess = jNeqSim.processSimulation.processSystem.ProcessSystem()
+    oilprocess = jneqsim.processSimulation.processSystem.ProcessSystem()
     oilprocess.add(stream1)
     oilprocess.add(meas1)
     oilprocess.run()
