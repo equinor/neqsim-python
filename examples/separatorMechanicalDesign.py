@@ -44,43 +44,43 @@ fluid1.setTotalFlowRate(10.0, "MSm3/day")
 
 # demonstration of setting up a simple process calculation
 clearProcess()
-stream1 = stream(fluid1)
-separator1 = separator(stream1, "inlet separator")
-valve1 = valve(separator1.getLiquidOutStream(), MPpressure, "HP oil valve")
-separator2 = separator(valve1.getOutStream(), "MP separator")
-valve2 = valve(separator2.getLiquidOutStream(), LPpressure)
-separator3 = separator(valve2.getOutStream(), "LP separator")
+stream1 = stream("stream1", fluid1)
+separator1 = separator("inlet separator", stream1)
+valve1 = valve("HP oil valve", separator1.getLiquidOutStream(), MPpressure)
+separator2 = separator("sep3", valve1.getOutStream())
+valve2 = valve("valv4", separator2.getLiquidOutStream(), LPpressure)
+separator3 = separator("se55", valve2.getOutStream())
 
-compressorLP1 = compressor(separator3.getGasOutStream(), MPpressure)
-coolerMP1 = heater(compressorLP1.getOutStream())
+compressorLP1 = compressor("comp1", separator3.getGasOutStream(), MPpressure)
+coolerMP1 = heater("heat1", compressorLP1.getOutStream())
 coolerMP1.setOutTemperature(303.0)
-scrubberLP = separator(coolerMP1.getOutStream())
+scrubberLP = separator("scru", coolerMP1.getOutStream())
 
-recycleLP = recycle(scrubberLP.getLiquidOutStream())
+recycleLP = recycle("rec1", scrubberLP.getLiquidOutStream())
 # separator2.addStream(recycleLP.getOutStream())
 
-mixerLP = mixer()
+mixerLP = mixer("mix1")
 mixerLP.addStream(scrubberLP.getGasOutStream())
 mixerLP.addStream(separator2.getGasOutStream())
 
-compressorMP1 = compressor(mixerLP.getOutStream(), feedPressure)
-coolerMP1 = heater(compressorMP1.getOutStream())
+compressorMP1 = compressor("como22", mixerLP.getOutStream(), feedPressure)
+coolerMP1 = heater("hett", compressorMP1.getOutStream())
 coolerMP1.setOutTemperature(303.0)
-scrubberMP1 = separator(coolerMP1.getOutStream())
+scrubberMP1 = separator("scr", coolerMP1.getOutStream())
 
-recycleMP = recycle(scrubberMP1.getLiquidOutStream())
+recycleMP = recycle("rec33", scrubberMP1.getLiquidOutStream())
 # separator1.addStream(recycleMP.getOutStream())
 
-mixer1 = mixer()
+mixer1 = mixer("mx32")
 mixer1.addStream(scrubberMP1.getGasOutStream())
 mixer1.addStream(separator1.getGasOutStream())
 
 # add compressor and set out pressure
-compressor1 = compressor(mixer1.getOutStream(), 60.0)
+compressor1 = compressor("comp44", mixer1.getOutStream(), 60.0)
 compressor1.setIsentropicEfficiency(0.8)
-cooler1 = heater(compressor1.getOutStream())
+cooler1 = heater("coo", compressor1.getOutStream())
 cooler1.setOutTemperature(303.0)
-compressor2 = compressor(cooler1.getOutStream(), 120.0)
+compressor2 = compressor("compp2", cooler1.getOutStream(), 120.0)
 compressor2.setIsentropicEfficiency(0.77)
 
 runProcess()
@@ -95,13 +95,13 @@ print(
     compressor2.getOutStream().getTemperature() - 273.15,
     " °C",
 )
-valve1.displayResult()
-separator3.displayResult()
-scrubberLP.displayResult()
+# valve1.displayResult()
+# separator3.displayResult()
+# scrubberLP.displayResult()
 # scrubberLP.getLiquidOutStream().displayResult()
 
 # Calculating mechanical design of separators
-separator1.displayResult()
+# separator1.displayResult()
 separator1.getMechanicalDesign().setMaxOperationPressure(150.0)
 separator1.addSeparatorSection("tray", "")
 separator1.getMechanicalDesign().calcDesign()

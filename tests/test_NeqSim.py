@@ -13,7 +13,7 @@ def test_Viscosity():
     thermoSystem.addComponent("methane", 10.0)
     thermoSystem.addComponent("water", 4.0)
 
-    thermoOps = jneqsim.thermodynamicOperations.ThermodynamicOperations(thermoSystem)
+    thermoOps = jneqsim.thermodynamicoperations.ThermodynamicOperations(thermoSystem)
     thermoOps.TPflash()
 
     gasEnthalpy = thermoSystem.getPhase(0).getEnthalpy()

@@ -33,13 +33,13 @@ mixnumberOfPhases = fluid1.getNumberOfPhases()
 mixMolarVolume = 1.0 / fluid1.getDensity("mol/m3")
 mixDensity = fluid1.getDensity("kg/m3")
 mixZfactor = fluid1.getZ()
-mixEnthalpy = fluid1.getEnthalpy("Jmol")
-mixEntropy = fluid1.getEntropy("JmolK")
+mixEnthalpy = fluid1.getEnthalpy("J/mol")
+mixEntropy = fluid1.getEntropy("J/molK")
 mixCp = fluid1.getCp("J/molK")
 mixCv = fluid1.getCv("J/molK")
 mixKappa = fluid1.getKappa()
 mixViscosity = fluid1.getViscosity("kg/msec")
-mixThermalConductivity = fluid1.getConductivity("W/mK")
+mixThermalConductivity = fluid1.getThermalConductivity()
 
 # read properties of individual phases
 if fluid1.hasPhaseType("gas"):
@@ -54,7 +54,7 @@ if fluid1.hasPhaseType("gas"):
     gasWtFraction = fluid1.getWtFraction(phaseNumber) * 100
     gasKappa = fluid1.getPhase(phaseNumber).getGamma()
     gasViscosity = fluid1.getPhase(phaseNumber).getViscosity("kg/msec")
-    gasThermalConductivity = fluid1.getPhase(phaseNumber).getConductivity("W/mK")
+    gasThermalConductivity = fluid1.getPhase(phaseNumber).getThermalConductivity()
     gasSoundSpeed = fluid1.getPhase(phaseNumber).getSoundSpeed()
     gasJouleThomsonCoefficient = (
         fluid1.getPhase(phaseNumber).getJouleThomsonCoefficient() / 1e5
@@ -72,7 +72,7 @@ if fluid1.hasPhaseType("oil"):
     oilWtFraction = fluid1.getWtFraction(phaseNumber) * 100
     oilKappa = fluid1.getPhase(phaseNumber).getGamma()
     oilViscosity = fluid1.getPhase(phaseNumber).getViscosity("kg/msec")
-    oilThermalConductivity = fluid1.getPhase(phaseNumber).getConductivity("W/mK")
+    oilThermalConductivity = fluid1.getPhase(phaseNumber).getThermalConductivity()
     oilSoundSpeed = fluid1.getPhase(phaseNumber).getSoundSpeed()
     oilJouleThomsonCoefficient = (
         fluid1.getPhase(phaseNumber).getJouleThomsonCoefficient() / 1e5
@@ -90,7 +90,7 @@ if fluid1.hasPhaseType("aqueous"):
     aqueousWtFraction = fluid1.getWtFraction(phaseNumber) * 100
     aqueousKappa = fluid1.getPhase(phaseNumber).getGamma()
     aqueousViscosity = fluid1.getPhase(phaseNumber).getViscosity("kg/msec")
-    aqueousThermalConductivity = fluid1.getPhase(phaseNumber).getConductivity("W/mK")
+    aqueousThermalConductivity = fluid1.getPhase(phaseNumber).getThermalConductivity()
     aqueousSoundSpeed = fluid1.getPhase(phaseNumber).getSoundSpeed()
     aqueousJouleThomsonCoefficient = (
         fluid1.getPhase(phaseNumber).getJouleThomsonCoefficient() / 1e5

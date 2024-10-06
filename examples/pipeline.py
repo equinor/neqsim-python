@@ -29,14 +29,22 @@ outtemperatures = [278.15, 278.15, 278.15]
 outHeatU = [15.0, 15.0, 15.0]
 wallHeatU = [15.0, 15.0, 15.0]
 clearProcess()
-stream1 = stream(fluid1)
+stream1 = stream("stream 1", fluid1)
 
 deltaElevation = 0.0
 pipeLength = 500000.0
 # roughness= 15.0e-6
 # diameter = 1.1
 pipe1 = pipeline(
-    stream1, position, diameter, height, outtemperatures, roughnes, outHeatU, wallHeatU
+    "pipe 1",
+    stream1,
+    position,
+    diameter,
+    height,
+    outtemperatures,
+    roughnes,
+    outHeatU,
+    wallHeatU,
 )
 # pipeSimple = pipe(stream1, pipeLength, deltaElevation, diameter, roughness)
 runProcess()

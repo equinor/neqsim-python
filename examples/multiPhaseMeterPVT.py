@@ -32,8 +32,8 @@ characterizedFluid = addOilFractions(
     fluidDefinedComponents, charNames, charFlowrate, molarMass, density
 )
 # printFrame(characterizedFluid)
-characterizedFluid.setTemperature(273.15 + 20.6)
-characterizedFluid.setPressure(86.8)
+characterizedFluid.setTemperature(273.15 + 20.6, "K")
+characterizedFluid.setPressure(86.8, "bara")
 TPflash(characterizedFluid)
 GORcalc = (
     characterizedFluid.getPhase("gas").getNumberOfMolesInPhase()

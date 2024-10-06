@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 if has_matplotlib():
     import matplotlib.pyplot as plt
 
-ThermodynamicOperations = jneqsim.thermodynamicOperations.ThermodynamicOperations
+thermodynamicoperations = jneqsim.thermodynamicoperations.ThermodynamicOperations
 fluidcreator = jneqsim.thermo.Fluid()
 fluid_type = {
     "srk": jneqsim.thermo.system.SystemSrkEos,
@@ -170,7 +170,7 @@ def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
     presList = experimentaldata["pressure"]
     expList = [[x * 100.0 for x in experimentaldata["experiment"]]]
 
-    waxsim = jneqsim.PVTsimulation.simulation.WaxFractionSim(fluid)
+    waxsim = jneqsim.pvtsimulation.simulation.WaxFractionSim(fluid)
     waxsim.setTemperaturesAndPressures(JDouble[:](tempList), JDouble[:](presList))
     waxsim.setExperimentalData(JDouble[:, :](expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
@@ -304,7 +304,7 @@ def fluidflashproperties(
             system.setTotalNumberOfMoles(1)
             system.setMolarComposition(fractions)
 
-    thermoOps = jneqsim.thermodynamicOperations.ThermodynamicOperations(system)
+    thermoOps = jneqsim.thermodynamicoperations.ThermodynamicOperations(system)
 
     if isinstance(spec1, pandas.Series):
         spec1 = spec1.to_list()
@@ -361,7 +361,7 @@ def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False
         Bo = []
 
     length = len(pressure)
-    sepSim = jneqsim.PVTsimulation.simulation.SeparatorTest(fluid)
+    sepSim = jneqsim.pvtsimulation.simulation.SeparatorTest(fluid)
     sepSim.setSeparatorConditions(JDouble[:](temperature), JDouble[:](pressure))
     sepSim.runCalc()
     for i in range(0, length):
@@ -410,7 +410,7 @@ def CVD(
         cummulativemolepercdepleted = []
 
     length = len(pressure)
-    cvdSim = jneqsim.PVTsimulation.simulation.ConstantVolumeDepletion(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.ConstantVolumeDepletion(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
@@ -454,7 +454,7 @@ def viscositysim(
     if aqueousviscosity is None:
         aqueousviscosity = []
     length = len(pressure)
-    cmeSim = jneqsim.PVTsimulation.simulation.ViscositySim(fluid)
+    cmeSim = jneqsim.pvtsimulation.simulation.ViscositySim(fluid)
     cmeSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cmeSim.runCalc()
     for i in range(0, length):
@@ -516,7 +516,7 @@ def CME(
         viscosity = []
 
     length = len(pressure)
-    cvdSim = jneqsim.PVTsimulation.simulation.ConstantMassExpansion(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.ConstantMassExpansion(fluid)
     cvdSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     cvdSim.runCalc()
     saturationPressure = cvdSim.getSaturationPressure()
@@ -588,7 +588,7 @@ def difflib(
         gasgravity = []
 
     length = len(pressure)
-    cvdSim = jneqsim.PVTsimulation.simulation.DifferentialLiberation(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.DifferentialLiberation(fluid)
     cvdSim.setPressures(JDouble[:](pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
@@ -627,7 +627,7 @@ def GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
         Bo = []
 
     length = len(pressure)
-    jGOR = jneqsim.PVTsimulation.simulation.GOR(fluid)
+    jGOR = jneqsim.pvtsimulation.simulation.GOR(fluid)
     jGOR.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
     jGOR.runCalc()
     for i in range(0, length):
@@ -647,7 +647,7 @@ def GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
 def saturationpressure(fluid, temperature=-1.0):
     if temperature > 0:
         fluid.setTemperature(temperature)
-    cvdSim = jneqsim.PVTsimulation.simulation.SaturationPressure(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.SaturationPressure(fluid)
     cvdSim.run()
     return cvdSim.getSaturationPressure()
 
@@ -667,7 +667,7 @@ def swellingtest(
     if relativeoilvolume is None:
         relativeoilvolume = []
     length2 = len(cummulativeMolePercentGasInjected)
-    cvdSim = jneqsim.PVTsimulation.simulation.SwellingTest(fluid)
+    cvdSim = jneqsim.pvtsimulation.simulation.SwellingTest(fluid)
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
     cvdSim.setCummulativeMolePercentGasInjected(
@@ -785,7 +785,7 @@ def GCV(testSystem, unit):
 
 
 def watersaturate(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.saturateWithWater()
     testSystem.init(3)
 
@@ -799,48 +799,48 @@ def TPflash(testSystem, temperature=None, tUnit=None, pressure=None, pUnit=None)
         if pUnit is None:
             pUnit = "bara"
         testSystem.setPressure(pressure, pUnit)
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.TPflash()
     testSystem.init(3)
 
 
 def TPgradientFlash(testSystem, height, temperature):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.TPgradientFlash(height, temperature)
 
 
 def TVflash(testSystem, volume, unit="m3"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.TVflash(volume, unit)
     testSystem.init(3)
 
 
 def TSflash(testSystem, entropy, unit="J/K"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.TSflash(entropy, unit)
     testSystem.init(3)
 
 
 def VSflash(testSystem, volume, entropy, unitVol="m3", unit="J/K"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.VSflash(volume, entropy, unitVol, unit)
     testSystem.init(3)
 
 
 def VHflash(testSystem, volume, enthalpy, unitVol="m3", unit="J"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.VHflash(volume, enthalpy, unitVol, unit)
     testSystem.init(3)
 
 
 def VUflash(testSystem, volume, energy, unitVol="m3", unit="J"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.VUflash(volume, energy, unitVol, unit)
     testSystem.init(3)
 
 
 def PUflash(testSystem, pressure, energy, unitPressure="bara", unitEnergy="J"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testSystem.setPressure(pressure, unitPressure)
     testFlash.PUflash(energy, unitEnergy)
     testSystem.init(3)
@@ -856,7 +856,7 @@ def PVTpropTable(
     highPressure,
     Psteps,
 ):
-    testFlash = ThermodynamicOperations(fluid1)
+    testFlash = thermodynamicoperations(fluid1)
     testFlash.OLGApropTable(
         lowTemperature,
         highTemperature,
@@ -871,44 +871,44 @@ def PVTpropTable(
 
 
 def TPsolidflash(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.TPSolidflash()
 
 
 def PHflash(testSystem, enthalpy, unit="J"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.PHflash(enthalpy, unit)
 
 
 def PHsolidflash(testSystem, enthalpy):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.PHsolidFlash(enthalpy)
 
 
 def PSflash(testSystem, entropy, unit="J/K"):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.PSflash(entropy, unit)
 
 
 def freeze(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.freezingPointTemperatureFlash()
 
 
 def scaleCheck(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.checkScalePotential(testSystem.getPhaseNumberOfPhase("aqueous"))
     testFlash.display()
 
 
 def ionComposition(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.calcIonComposition(testSystem.getPhaseNumberOfPhase("aqueous"))
     testFlash.display()
 
 
 def hydp(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.hydrateFormationPressure()
 
 
@@ -919,25 +919,25 @@ def addfluids(fluid1, fluid2):
 def hydt(testSystem, type=1):
     if not testSystem.getHydrateCheck():
         testSystem.setHydrateCheck(True)
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.hydrateFormationTemperature(type)
     return testSystem.getTemperature()
 
 
 def calcIonComposition(fluid1):
-    testFlash = ThermodynamicOperations(fluid1)
+    testFlash = thermodynamicoperations(fluid1)
     testFlash.calcIonComposition(fluid1.getPhaseNumberOfPhase("aqueous"))
     return testFlash.getResultTable()
 
 
 def checkScalePotential(fluid1):
-    testFlash = ThermodynamicOperations(fluid1)
+    testFlash = thermodynamicoperations(fluid1)
     testFlash.checkScalePotential(fluid1.getPhaseNumberOfPhase("aqueous"))
     return testFlash.getResultTable()
 
 
 def bubp(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.bubblePointPressureFlash(0)
     except:
@@ -948,7 +948,7 @@ def bubp(testSystem):
 
 
 def bubt(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.bubblePointTemperatureFlash()
     except:
@@ -959,7 +959,7 @@ def bubt(testSystem):
 
 
 def dewp(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.dewPointPressureFlash()
     except:
@@ -970,7 +970,7 @@ def dewp(testSystem):
 
 
 def dewt(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.dewPointTemperatureFlash()
     except:
@@ -981,7 +981,7 @@ def dewt(testSystem):
 
 
 def waterdewt(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.waterDewPointTemperatureFlash()
     except:
@@ -992,7 +992,7 @@ def waterdewt(testSystem):
 
 
 def phaseenvelope(testSystem, display=False):
-    testFlash = ThermodynamicOperations(testSystem.clone())
+    testFlash = thermodynamicoperations(testSystem.clone())
     testFlash.calcPTphaseEnvelope()
     data = testFlash
     if display:
@@ -1237,7 +1237,7 @@ def viscosity(thermoSystem, t=0, p=0):
 
 
 def WAT(testSystem):
-    testFlash = ThermodynamicOperations(testSystem)
+    testFlash = thermodynamicoperations(testSystem)
     testFlash.calcWAT()
     testSystem.init(3)
     return testSystem.getTemperature()
