@@ -5,15 +5,15 @@ Created on Thu Jan  3 22:24:08 2019
 @author: ESOL
 """
 import os
-from neqsim.neqsimpython import jNeqSim
+from neqsim.neqsimpython import jneqsim
 
 
 def test_Viscosity():
-    thermoSystem = jNeqSim.thermo.system.SystemSrkEos(280.0, 10.0)
+    thermoSystem = jneqsim.thermo.system.SystemSrkEos(280.0, 10.0)
     thermoSystem.addComponent("methane", 10.0)
     thermoSystem.addComponent("water", 4.0)
 
-    thermoOps = jNeqSim.thermodynamicOperations.ThermodynamicOperations(thermoSystem)
+    thermoOps = jneqsim.thermodynamicOperations.ThermodynamicOperations(thermoSystem)
     thermoOps.TPflash()
 
     gasEnthalpy = thermoSystem.getPhase(0).getEnthalpy()
@@ -25,12 +25,12 @@ def test_Viscosity():
 
 
 # def test_updateDatabase():
-#    jNeqSim.util.database.NeqSimDataBase.updateTable("COMP",
+#    jneqsim.util.database.NeqSimDataBase.updateTable("COMP",
 #        "classpath:/data/COMP.csv")
 
 
 def test_hasComponentDatabase():
-    assert jNeqSim.util.database.NeqSimDataBase.hasComponent("methane") == True
+    assert jneqsim.util.database.NeqSimDataBase.hasComponent("methane") == True
 
 
 def test_fullOffshoreProcess():
@@ -101,7 +101,7 @@ def test_fullOffshoreProcess():
     reservoirFluid.setMultiPhaseCheck(True)  # use multiphase flash in neqsim
 
     wellStream = stream(
-        reservoirFluid
+        "stream 1", reservoirFluid
     )  # create a neqsim stream from the reservoir fluid
     wellStream.setTemperature(well_head_temperature, "C")
     wellStream.setPressure(well_head_pressure, "bara")
@@ -110,10 +110,10 @@ def test_fullOffshoreProcess():
     )  # convert flow to MSm3/day
 
     # saturate the well stream with water
-    waterSaturator = saturator(wellStream)
+    waterSaturator = saturator("saturator 1", wellStream)
 
     # Simulating the pipeline using a cooler
-    wellFlowLine = cooler(waterSaturator.getOutStream())
+    wellFlowLine = cooler(" cooler 1", waterSaturator.getOutStream())
     wellFlowLine.setOutTemperature(platform_inlet_temperature, "C")
     wellFlowLine.setOutPressure(platform_inlet_pressure, "bara")
 
@@ -154,76 +154,74 @@ def test_fullOffshoreProcess():
         simpleTEGAbsorber,
         distillationColumn,
         waterStripperColumn,
-        recycle2,
+        recycle,
         setpoint,
         calculator,
     )
 
     clearProcess()  # reset process simulation
 
-    chokeValve = valve(wellFlowLine.getOutStream())
+    chokeValve = valve("valve 1", wellFlowLine.getOutStream())
     chokeValve.setOutletPressure(inputdata["firstStagePressure"], "bara")
 
-    feedToOffshoreProcess = stream(chokeValve.getOutStream())
+    feedToOffshoreProcess = stream("stream 2", chokeValve.getOutStream())
     feedToOffshoreProcess.setName("feed to offshore")
 
-    firstStageSeparator = separator3phase(feedToOffshoreProcess)
+    firstStageSeparator = separator3phase("sep2", feedToOffshoreProcess)
     firstStageSeparator.setName("1st stage separator")
 
-    oilHeaterFromFirstStage = heater(firstStageSeparator.getOilOutStream())
+    oilHeaterFromFirstStage = heater("heatr", firstStageSeparator.getOilOutStream())
     oilHeaterFromFirstStage.setName("oil heater second stage")
     oilHeaterFromFirstStage.setOutTemperature(inputdata["temperatureOilHeater"], "C")
 
-    oilThrotValve = valve(
-        oilHeaterFromFirstStage.getOutStream(), name="valve oil from first stage"
-    )
+    oilThrotValve = valve("valvee", oilHeaterFromFirstStage.getOutStream())
     oilThrotValve.setOutletPressure(inputdata["secondStagePressure"])
 
-    secondStageSeparator = separator3phase(oilThrotValve.getOutStream())
+    secondStageSeparator = separator3phase("seppp", oilThrotValve.getOutStream())
     secondStageSeparator.setName("2nd stage separator")
 
-    oilThrotValve2 = valve(
-        secondStageSeparator.getOilOutStream(), name="valve oil from second stage"
-    )
+    oilThrotValve2 = valve("valve5", secondStageSeparator.getOilOutStream())
     oilThrotValve2.setOutletPressure(inputdata["thirdStagePressure"])
 
-    thirdStageSeparator = separator3phase(oilThrotValve2.getOutStream())
+    thirdStageSeparator = separator3phase("sep55", oilThrotValve2.getOutStream())
     thirdStageSeparator.setName("3rd stage separator")
 
     oilThirdStageToSep = wellStream.clone()
     oilThirdStageToSep.setName("resyc oil")
     thirdStageSeparator.addStream(oilThirdStageToSep)
 
-    stableOil = stream(thirdStageSeparator.getOilOutStream())
-    stableOil.setName("stable oil")
+    stableOil = stream("stable oil", thirdStageSeparator.getOilOutStream())
 
-    stableOilPump = pump(stableOil, 15.0, "stable oil pump")
+    stableOilPump = pump("stable oil pump", stableOil, 15.0)
 
-    firstStageCooler = cooler(thirdStageSeparator.getGasOutStream())
-    firstStageCooler.setName("1st stage cooler")
+    firstStageCooler = cooler("1st stage cooler", thirdStageSeparator.getGasOutStream())
     firstStageCooler.setOutTemperature(
         inputdata["firstStageSuctionCoolerTemperature"], "C"
     )
 
-    firstStageScrubber = separator(firstStageCooler.getOutStream())
-    firstStageScrubber.setName("1st stage scrubber")
+    firstStageScrubber = separator(
+        "1st stage compressor", firstStageCooler.getOutStream()
+    )
 
-    firstStageCompressor = compressor(firstStageScrubber.getGasOutStream())
-    firstStageCompressor.setName("1st stage compressor")
+    firstStageCompressor = compressor(
+        '"1st stage compressor"', firstStageScrubber.getGasOutStream()
+    )
     firstStageCompressor.setOutletPressure(inputdata["secondStagePressure"])
     firstStageCompressor.setIsentropicEfficiency(0.75)
 
-    secondStageCooler = cooler(firstStageCompressor.getOutStream())
+    secondStageCooler = cooler("cooler44", firstStageCompressor.getOutStream())
     secondStageCooler.setName("2nd stage cooler")
     secondStageCooler.setOutTemperature(
         inputdata["secondStageSuctionCoolerTemperature"], "C"
     )
 
-    secondStageScrubber = separator(secondStageCooler.getOutStream())
-    secondStageScrubber.setName("2nd stage scrubber")
+    secondStageScrubber = separator(
+        '"2nd stage scrubber', secondStageCooler.getOutStream()
+    )
 
-    secondStageCompressor = compressor(secondStageScrubber.getGasOutStream())
-    secondStageCompressor.setName("2nd stage compressor")
+    secondStageCompressor = compressor(
+        "2nd stage compressor", secondStageScrubber.getGasOutStream()
+    )
     secondStageCompressor.setOutletPressure(inputdata["firstStagePressure"])
     secondStageCompressor.setIsentropicEfficiency(0.75)
 
@@ -231,46 +229,47 @@ def test_fullOffshoreProcess():
     richGasMixer.addStream(secondStageCompressor.getOutStream())
     richGasMixer.addStream(firstStageSeparator.getGasOutStream())
 
-    dewPointControlCooler = cooler(richGasMixer.getOutStream())
-    dewPointControlCooler.setName("dew point cooler")
+    dewPointControlCooler = cooler("dew point cooler", richGasMixer.getOutStream())
     dewPointControlCooler.setOutTemperature(
         inputdata["dewPointScrubberTemperature"], "C"
     )
 
-    dewPointScrubber = separator(dewPointControlCooler.getOutStream())
-    dewPointScrubber.setName("dew point scrubber")
+    dewPointScrubber = separator(
+        "dew point scrubber", dewPointControlCooler.getOutStream()
+    )
 
     lpLiqmixer = mixer("LP liq gas mixer")
     lpLiqmixer.addStream(firstStageScrubber.getLiquidOutStream())
     lpLiqmixer.addStream(secondStageScrubber.getLiquidOutStream())
     lpLiqmixer.addStream(dewPointScrubber.getLiquidOutStream())
 
-    lpResycle = recycle2("LP liq resycle")
+    lpResycle = recycle("LP liq resycle")
     lpResycle.addStream(lpLiqmixer.getOutStream())
     lpResycle.setOutletStream(oilThirdStageToSep)
 
-    exportCompressor1 = compressor(dewPointScrubber.getGasOutStream())
-    exportCompressor1.setName("export 1st stage")
+    exportCompressor1 = compressor(
+        "export 1st stage", dewPointScrubber.getGasOutStream()
+    )
     exportCompressor1.setOutletPressure(130.0)
     exportCompressor1.setIsentropicEfficiency(0.75)
 
-    exportInterstageCooler = cooler(exportCompressor1.getOutStream())
-    exportInterstageCooler.setName("interstage stage cooler")
+    exportInterstageCooler = cooler(
+        "interstage stage cooler", exportCompressor1.getOutStream()
+    )
     exportInterstageCooler.setOutTemperature(
         inputdata["firstStageExportCoolerTemperature"], "C"
     )
 
-    exportCompressor2 = compressor(exportInterstageCooler.getOutStream())
-    exportCompressor2.setName("export 2nd stage")
+    exportCompressor2 = compressor(
+        "export 2nd stage", exportInterstageCooler.getOutStream()
+    )
     exportCompressor2.setOutletPressure(200.0)
     exportCompressor2.setIsentropicEfficiency(0.75)
 
-    exportCooler = cooler(exportCompressor2.getOutStream())
-    exportCooler.setName("export cooler")
+    exportCooler = cooler("export cooler", exportCompressor2.getOutStream())
     exportCooler.setOutTemperature(inputdata["secondStageExportCoolerTemperature"], "C")
 
-    exportGas = stream(exportCooler.getOutStream())
-    exportGas.setName("export gas")
+    exportGas = stream("export str", exportCooler.getOutStream())
 
     runProcess()  # run the process simulation
 
@@ -281,27 +280,27 @@ def test_fullOffshoreProcess():
 
     clearProcess()
 
-    inletValve = valve(exportGas)
+    inletValve = valve("valvvv", exportGas)
     inletValve.setPressure(110.0, "bara")
 
     splitFactors = [1.0] * exportGas.getFluid().getNumberOfComponents()
     splitFactors[-1] = 0.0
 
-    watersplitter = compsplitter(inletValve.getOutStream(), splitFactors)
+    watersplitter = compsplitter("comspl", inletValve.getOutStream(), splitFactors)
 
-    coolerInlet = cooler(watersplitter.getSplitStream(0), name="cooler 11")
+    coolerInlet = cooler("ccccool", watersplitter.getSplitStream(0))
     coolerInlet.setOutTemperature(-20.0, "C")
 
-    expanderKarsto = expander(coolerInlet.getOutStream(), pressureNGL)
+    expanderKarsto = expander("exp", coolerInlet.getOutStream(), pressureNGL)
 
-    scrubberNGL = separator(expanderKarsto.getOutStream())
+    scrubberNGL = separator("sep3", expanderKarsto.getOutStream())
 
-    gasHeater = heater(scrubberNGL.getGasOutStream(), name="heater1")
+    gasHeater = heater("heaterrr", scrubberNGL.getGasOutStream())
     gasHeater.setOutTemperature(20.0)
 
-    exportCompressor = compressor(gasHeater.getOutStream())
+    exportCompressor = compressor("comppp", gasHeater.getOutStream())
     exportCompressor.setOutletPressure(200.0, "bara")
-    exportGas = stream(exportCompressor.getOutStream())
+    exportGas = stream("ssstre", exportCompressor.getOutStream())
     runProcess()
 
 

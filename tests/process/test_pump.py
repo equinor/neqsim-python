@@ -16,7 +16,7 @@ def test_pump():
     fluid1.addComponent("n-pentane", 1.0, "kg/sec")
     fluid1.addComponent("n-hexane", 1.0, "kg/sec")
     fluid1.setMixingRule(2)
-    stream1 = stream(fluid1)
+    stream1 = stream("stream 1", fluid1)
     stream1.setFlowRate(30000, "kg/hr")
 
     curveConditions = []
@@ -31,8 +31,7 @@ def test_pump():
         [77.2, 79.4, 80.7, 80.5, 79.2, 75.4, 69.6, 58.7],
     ]
 
-    pump1 = pump(stream1)
-    pump1.setName("pump1")
+    pump1 = pump("pump 1", stream1)
     pumpChart(pump1, curveConditions, speed, flow, head, polyEff)
     pump1.setSpeed(500)
     pump1.getPumpChart().setHeadUnit("meter")

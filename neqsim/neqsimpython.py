@@ -17,4 +17,4 @@ if not jpype.isJVMStarted():
         )
         print("See: https://github.com/equinor/neqsimpython#prerequisites")
 
-jNeqSim = jpype.JPackage("neqsim")
+jneqsim = jpype.JPackage("neqsim")

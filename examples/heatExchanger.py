@@ -26,7 +26,7 @@ fluid2.addComponent("water", 0.1)
 fluid2.setMixingRule(2)
 fluid2.setTemperature(28.15, "C")
 fluid2.setPressure(3.0, "bara")
-fluid2.setTotalFlowRate(2700.0, "m^3/hr")
+fluid2.setTotalFlowRate(2700.0, "Sm3/hr")
 
 
 # demonstration of setting up a simple process calculation
