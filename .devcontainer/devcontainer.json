@@ -21,7 +21,11 @@
                 "python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
                 "python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
                 "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-                "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+                "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false,
+                "python.testing.nosetestsEnabled": false,
+                "python.testing.pytestArgs": ["tests"]
             },
             "extensions": [
                 "ms-python.python",
@@ -29,6 +33,9 @@
                 "ms-toolsai.jupyter",
                 "ms-vscode.test-adapter-converter",
                 "ms-azuretools.vscode-docker",
+                "ms-python.pylint",
+                "ms-python.black-formatter",
+                "ms-python.flake8",
                 "ms-python.pylint"
             ]
         }
