@@ -19,9 +19,7 @@ def stream(name, thermoSystem, t=0, p=0):
         thermoSystem.setTemperature(t)
         if p != 0:
             thermoSystem.setPressure(p)
-    stream = neqsim.processsimulation.processequipment.stream.Stream(
-        name, thermoSystem
-    )
+    stream = neqsim.processsimulation.processequipment.stream.Stream(name, thermoSystem)
     processoperations.add(stream)
     return stream
 
@@ -129,10 +127,8 @@ def gasscrubber(name, teststream):
 
 
 def separator3phase(name, teststream):
-    separator = (
-        neqsim.processsimulation.processequipment.separator.ThreePhaseSeparator(
-            name, teststream
-        )
+    separator = neqsim.processsimulation.processequipment.separator.ThreePhaseSeparator(
+        name, teststream
     )
     separator.setName(name)
     processoperations.add(separator)
@@ -253,10 +249,8 @@ def nequnit(
 
 
 def compsplitter(name, teststream, splitfactors):
-    compSplitter = (
-        neqsim.processsimulation.processequipment.splitter.ComponentSplitter(
-            name, teststream
-        )
+    compSplitter = neqsim.processsimulation.processequipment.splitter.ComponentSplitter(
+        name, teststream
     )
     compSplitter.setSplitFactors(splitfactors)
     processoperations.add(compSplitter)
