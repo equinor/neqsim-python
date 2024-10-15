@@ -11,6 +11,8 @@ classifiers = ["Operating System :: OS Independent"]
 [tool.poetry.dependencies]
 python = "^3.8"
 JPype1 = "^1.5.0"
+jneqsim = "^2.5.35"
+
 numpy = [
         { version = "^1.24.4", markers = "python_version == '3.8'" },
         { version = "^1.25.2", markers = "python_version > '3.8'" },

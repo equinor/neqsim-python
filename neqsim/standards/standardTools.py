@@ -1,4 +1,4 @@
-from neqsim.neqsimpython import jneqsim
+from jneqsim import neqsim
 
 
 def ISO6976(
@@ -8,7 +8,7 @@ def ISO6976(
     referencetemperaturecombustion="15",
 ):
     """numberUnit can be 'volume', 'mass', 'molar"""
-    iso6976 = jneqsim.standards.gasquality.Standard_ISO6976(fluid)
+    iso6976 = neqsim.standards.gasquality.Standard_ISO6976(fluid)
     iso6976.setReferenceType(numberunit)
     iso6976.setVolRefT(float(referencetemperaturevolume))
     iso6976.setEnergyRefT(float(referencetemperaturecombustion))

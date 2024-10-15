@@ -1,3 +1,4 @@
+jneqsim
 jpype1
 pandas
 matplotlib

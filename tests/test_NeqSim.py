@@ -5,15 +5,15 @@ Created on Thu Jan  3 22:24:08 2019
 @author: ESOL
 """
 import os
-from neqsim.neqsimpython import jneqsim
+from jneqsim import neqsim
 
 
 def test_Viscosity():
-    thermoSystem = jneqsim.thermo.system.SystemSrkEos(280.0, 10.0)
+    thermoSystem = neqsim.thermo.system.SystemSrkEos(280.0, 10.0)
     thermoSystem.addComponent("methane", 10.0)
     thermoSystem.addComponent("water", 4.0)
 
-    thermoOps = jneqsim.thermodynamicoperations.ThermodynamicOperations(thermoSystem)
+    thermoOps = neqsim.thermodynamicoperations.ThermodynamicOperations(thermoSystem)
     thermoOps.TPflash()
 
     gasEnthalpy = thermoSystem.getPhase(0).getEnthalpy()
@@ -25,12 +25,12 @@ def test_Viscosity():
 
 
 # def test_updateDatabase():
-#    jneqsim.util.database.NeqSimDataBase.updateTable("COMP",
+#    neqsim.util.database.NeqSimDataBase.updateTable("COMP",
 #        "classpath:/data/COMP.csv")
 
 
 def test_hasComponentDatabase():
-    assert jneqsim.util.database.NeqSimDataBase.hasComponent("methane") == True
+    assert neqsim.util.database.NeqSimDataBase.hasComponent("methane") == True
 
 
 def test_fullOffshoreProcess():
