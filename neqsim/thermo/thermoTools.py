@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 if has_matplotlib():
     import matplotlib.pyplot as plt
 
-thermodynamicoperations = neqsim.thermodynamicoperations.Thermodynamicoperations
+thermodynamicoperations = neqsim.thermodynamicoperations.ThermodynamicOperations
 fluidcreator = neqsim.thermo.Fluid()
 fluid_type = {
     "srk": neqsim.thermo.system.SystemSrkEos,
