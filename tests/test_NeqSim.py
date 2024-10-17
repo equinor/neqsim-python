@@ -5,8 +5,10 @@ Created on Thu Jan  3 22:24:08 2019
 @author: ESOL
 """
 import os
-from jneqsim import neqsim
 
+import jpype
+import jneqsim
+neqsim = jpype.JPackage('neqsim')
 
 def test_Viscosity():
     thermoSystem = neqsim.thermo.system.SystemSrkEos(280.0, 10.0)
@@ -35,7 +37,6 @@ def test_hasComponentDatabase():
 
 def test_fullOffshoreProcess():
     import pandas as pd
-    import math
 
     # well stream composition (mole fractions)
     reservoirFluid = {

@@ -13,7 +13,7 @@ NeqSim Python is distributed as a pip package.
 
 End-users should install neqsim python with some additional packages by running
 ```
-pip install neqsim[interactive]
+pip install neqsim
 ```
 
 ## Getting Started
