@@ -8,7 +8,9 @@ import os
 
 import jpype
 import jneqsim
-neqsim = jpype.JPackage('neqsim')
+
+neqsim = jpype.JPackage("neqsim")
+
 
 def test_Viscosity():
     thermoSystem = neqsim.thermo.system.SystemSrkEos(280.0, 10.0)

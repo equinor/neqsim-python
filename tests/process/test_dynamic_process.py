@@ -1,6 +1,7 @@
 import jneqsim
 import jpype
-neqsim = jpype.JPackage('neqsim')
+
+neqsim = jpype.JPackage("neqsim")
 
 
 def test_dynamic_compressor():
