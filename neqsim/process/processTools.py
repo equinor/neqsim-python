@@ -269,7 +269,7 @@ def splitter(name, teststream, splitfactors=[]):
 
 
 def heater(name, teststream):
-    heater = neqsim.processsimulation.processequipment.heatExchanger.Heater(
+    heater = jneqsim.processsimulation.processequipment.heatexchanger.Heater(
         name, teststream
     )
     heater.setName(name)
@@ -291,7 +291,7 @@ def simplereservoir(
 
 
 def cooler(name, teststream):
-    cooler = neqsim.processsimulation.processequipment.heatExchanger.Cooler(
+    cooler = jneqsim.processsimulation.processequipment.heatexchanger.Cooler(
         name, teststream
     )
     cooler.setName(name)
@@ -301,11 +301,11 @@ def cooler(name, teststream):
 
 def heatExchanger(name, stream1, stream2=None):
     if stream2 is None:
-        heater = neqsim.processsimulation.processequipment.heatExchanger.HeatExchanger(
+        heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
             name, stream1
         )
     else:
-        heater = neqsim.processsimulation.processequipment.heatExchanger.HeatExchanger(
+        heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
             name, stream1, stream2
         )
     heater.setName(name)
@@ -324,7 +324,7 @@ def distillationColumn(name, trays=5, reboil=True, condenser=True):
 
 
 def neqheater(name, teststream):
-    neqheater = neqsim.processsimulation.processequipment.heatExchanger.NeqHeater(
+    neqheater = jneqsim.processsimulation.processequipment.heatexchanger.NeqHeater(
         name, teststream
     )
     processoperations.add(neqheater)
@@ -443,8 +443,8 @@ def waterDewPointAnalyser(name, teststream):
 
 
 def hydrateEquilibriumTemperatureAnalyser(name, teststream):
-    hydrateEquilibriumTemperatureAnalyser = neqsim.processsimulation.measurementdevice.HydrateEquilibriumTemperatureAnalyser(
-        teststream
+    hydrateEquilibriumTemperatureAnalyser = jneqsim.processsimulation.measurementdevice.HydrateEquilibriumTemperatureAnalyser(
+        name, teststream
     )
     hydrateEquilibriumTemperatureAnalyser.setName(name)
     processoperations.add(hydrateEquilibriumTemperatureAnalyser)
