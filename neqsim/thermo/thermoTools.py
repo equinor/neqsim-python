@@ -2,10 +2,12 @@ import logging
 from typing import List, Union
 import jpype
 import pandas
-from jpype.types import *
-from jneqsim import neqsim
+from jpype.types import JDouble, JString
 from neqsim import has_matplotlib, has_tabulate
 from neqsim.standards import ISO6976
+
+# Must import this after getting all necessary methods from neqsim python package
+from jneqsim import neqsim
 import math
 
 logger = logging.getLogger(__name__)
@@ -13,7 +15,7 @@ logger = logging.getLogger(__name__)
 if has_matplotlib():
     import matplotlib.pyplot as plt
 
-thermodynamicoperations = neqsim.thermodynamicoperations.ThermodynamicOperations()
+thermodynamicoperations = neqsim.thermodynamicoperations.ThermodynamicOperations
 fluidcreator = neqsim.thermo.Fluid()
 fluid_type = {
     "srk": neqsim.thermo.system.SystemSrkEos,
@@ -799,7 +801,7 @@ def TPflash(testSystem, temperature=None, tUnit=None, pressure=None, pUnit=None)
         if pUnit is None:
             pUnit = "bara"
         testSystem.setPressure(pressure, pUnit)
-    testFlash = thermodynamicoperations(testSystem)
+    testFlash = neqsim.thermodynamicoperations.ThermodynamicOperations(testSystem)
     testFlash.TPflash()
     testSystem.init(3)
 

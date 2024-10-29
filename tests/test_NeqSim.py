@@ -6,10 +6,7 @@ Created on Thu Jan  3 22:24:08 2019
 """
 import os
 
-import jpype
-import jneqsim
-
-neqsim = jpype.JPackage("neqsim")
+from jneqsim import neqsim
 
 
 def test_Viscosity():

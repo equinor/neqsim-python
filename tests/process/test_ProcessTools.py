@@ -20,11 +20,12 @@ from neqsim.process.processTools import (
     valve,
 )
 from neqsim.thermo import TPflash, fluid, printFrame, fluid_df
+from neqsim.standards import ISO6976, air_fuel_ratio
+
 from pytest import approx
 from jpype.types import JDouble
 from jneqsim import neqsim
 import pandas as pd
-import neqsim.standards
 
 
 def test_compsplitter():
@@ -472,10 +473,8 @@ def test_AFR():
     afr = aconst * (32.0 + 3.76 * 28.0) / 1000.0 / molmass_hc * wtfrac_hc
 
     assert 16.2312248674 == approx(afr, abs=0.01)
-    assert 16.2312248674 == approx(neqsim.standards.air_fuel_ratio(fluid), abs=0.01)
     assert 52691.55 == approx(
-        neqsim.standards.ISO6976(fluid, numberunit="mass").getValue(
-            "SuperiorCalorificValue"
-        ),
+        ISO6976(fluid, numberunit="mass").getValue("SuperiorCalorificValue"),
         abs=0.01,
     )
+    assert 16.2312248674 == approx(air_fuel_ratio(fluid), abs=0.01)

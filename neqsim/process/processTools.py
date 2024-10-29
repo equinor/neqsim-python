@@ -1,6 +1,4 @@
-import jpype
-import jpype.imports
-from jpype.types import *
+from jpype.types import JDouble
 from jneqsim import neqsim
 
 processoperations = neqsim.processsimulation.processsystem.ProcessSystem()
@@ -47,7 +45,7 @@ def neqstream(name, thermoSystem, t=0, p=0):
 
 def recycle(name, stream=None):
     recycle1 = neqsim.processsimulation.processequipment.util.Recycle(name)
-    if not stream is None:
+    if stream is not None:
         recycle1.addStream(stream)
     processoperations.add(recycle1)
     return recycle1
@@ -269,7 +267,7 @@ def splitter(name, teststream, splitfactors=[]):
 
 
 def heater(name, teststream):
-    heater = jneqsim.processsimulation.processequipment.heatexchanger.Heater(
+    heater = neqsim.processsimulation.processequipment.heatexchanger.Heater(
         name, teststream
     )
     heater.setName(name)
@@ -291,7 +289,7 @@ def simplereservoir(
 
 
 def cooler(name, teststream):
-    cooler = jneqsim.processsimulation.processequipment.heatexchanger.Cooler(
+    cooler = neqsim.processsimulation.processequipment.heatexchanger.Cooler(
         name, teststream
     )
     cooler.setName(name)
@@ -301,11 +299,11 @@ def cooler(name, teststream):
 
 def heatExchanger(name, stream1, stream2=None):
     if stream2 is None:
-        heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
+        heater = neqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
             name, stream1
         )
     else:
-        heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
+        heater = neqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
             name, stream1, stream2
         )
     heater.setName(name)
@@ -324,7 +322,7 @@ def distillationColumn(name, trays=5, reboil=True, condenser=True):
 
 
 def neqheater(name, teststream):
-    neqheater = jneqsim.processsimulation.processequipment.heatexchanger.NeqHeater(
+    neqheater = neqsim.processsimulation.processequipment.heatexchanger.NeqHeater(
         name, teststream
     )
     processoperations.add(neqheater)
@@ -443,7 +441,7 @@ def waterDewPointAnalyser(name, teststream):
 
 
 def hydrateEquilibriumTemperatureAnalyser(name, teststream):
-    hydrateEquilibriumTemperatureAnalyser = jneqsim.processsimulation.measurementdevice.HydrateEquilibriumTemperatureAnalyser(
+    hydrateEquilibriumTemperatureAnalyser = neqsim.processsimulation.measurementdevice.HydrateEquilibriumTemperatureAnalyser(
         name, teststream
     )
     hydrateEquilibriumTemperatureAnalyser.setName(name)
