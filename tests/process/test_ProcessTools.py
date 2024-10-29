@@ -20,11 +20,12 @@ from neqsim.process.processTools import (
     valve,
 )
 from neqsim.thermo import TPflash, fluid, printFrame, fluid_df
+from neqsim.standards import ISO6976, air_fuel_ratio
+
 from pytest import approx
 from jpype.types import JDouble
-from neqsim import jneqsim
+from jneqsim import neqsim
 import pandas as pd
-import neqsim.standards
 
 
 def test_compsplitter():
@@ -198,26 +199,26 @@ def test_virtualstream():
 
 # Example of a method using direct calls to neqsim java
 def testNoUseOfThermosOrProcessTools():
-    fluid = jneqsim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00)
+    fluid = neqsim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00)
     fluid.addComponent("methane", 0.900)
     fluid.addComponent("ethane", 0.100)
     fluid.addComponent("n-heptane", 1.00)
     fluid.setMixingRule(2)
 
-    stream1 = jneqsim.processsimulation.processequipment.stream.Stream("Stream1", fluid)
+    stream1 = neqsim.processsimulation.processequipment.stream.Stream("Stream1", fluid)
     stream1.setPressure(10.0, "bara")
     stream1.setTemperature(25.0, "C")
     stream1.setFlowRate(50.0, "kg/hr")
 
-    valve1 = jneqsim.processsimulation.processequipment.valve.ThrottlingValve(
+    valve1 = neqsim.processsimulation.processequipment.valve.ThrottlingValve(
         "valve_1", stream1
     )
     valve1.setOutletPressure(5.0, "bara")
 
-    separator1 = jneqsim.processsimulation.processequipment.separator.Separator("sep 1")
+    separator1 = neqsim.processsimulation.processequipment.separator.Separator("sep 1")
     separator1.addStream(valve1.getOutStream())
 
-    operation = jneqsim.processsimulation.processsystem.ProcessSystem()
+    operation = neqsim.processsimulation.processsystem.ProcessSystem()
     operation.add(stream1)
     operation.add(valve1)
     operation.add(separator1)
@@ -426,7 +427,7 @@ def test_gasoilprocess():
 
 
 def test_AFR():
-    fluid = jneqsim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00)
+    fluid = neqsim.thermo.system.SystemSrkEos((273.15 + 25.0), 10.00)
     fluid.addComponent("nitrogen", 1.0)
     fluid.addComponent("CO2", 1.0)
     fluid.addComponent("methane", 92.0)
@@ -472,10 +473,8 @@ def test_AFR():
     afr = aconst * (32.0 + 3.76 * 28.0) / 1000.0 / molmass_hc * wtfrac_hc
 
     assert 16.2312248674 == approx(afr, abs=0.01)
-    assert 16.2312248674 == approx(neqsim.standards.air_fuel_ratio(fluid), abs=0.01)
     assert 52691.55 == approx(
-        neqsim.standards.ISO6976(fluid, numberunit="mass").getValue(
-            "SuperiorCalorificValue"
-        ),
+        ISO6976(fluid, numberunit="mass").getValue("SuperiorCalorificValue"),
         abs=0.01,
     )
+    assert 16.2312248674 == approx(air_fuel_ratio(fluid), abs=0.01)

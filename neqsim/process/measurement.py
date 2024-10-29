@@ -1,6 +1,4 @@
-from neqsim import jneqsim
-import jpype
-import jpype.imports
+from jneqsim import neqsim
 from jpype import JImplements, JOverride
 
 
@@ -10,8 +8,8 @@ from jpype import JImplements, JOverride
 
 
 @JImplements(
-    jneqsim.processsimulation.measurementdevice.MeasurementDeviceInterface
-)  # Use the fully qualified class name directly from the jneqsim package
+    neqsim.processsimulation.measurementdevice.MeasurementDeviceInterface
+)  # Use the fully qualified class name directly from the neqsim package
 class measurement:
     def __init__(self):
         self.name = ""

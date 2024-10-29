@@ -285,6 +285,7 @@ def test_fluid_df():
     ]
     naturalgas = {"ComponentName": components, "MolarComposition[-]": composition}
     naturalgasFluid = fluid_df(pd.DataFrame(naturalgas))
+    # todo: assert something
 
 
 def test_TPflash1():
@@ -442,18 +443,9 @@ def test_addfluid():
 
 
 def test_fluidChar():
-    import neqsim
     from neqsim.thermo import (
-        fluid,
         fluid_df,
-        addOilFractions,
-        printFrame,
-        dataFrame,
-        fluidcreator,
-        createfluid,
-        createfluid2,
         TPflash,
-        phaseenvelope,
     )
     import pandas as pd
 
@@ -531,15 +523,16 @@ def test_fluidChar():
     TPflash(gascondensateFluid)
     assert gascondensateFluid.getNumberOfComponents() == 85
 
-    compositon = gascondensateFluid.getMolarComposition()
+    composition = gascondensateFluid.getMolarComposition()
 
     # Add mud contamination
-    compositon[30] += compositon[30] + 0.01
+    composition[30] += composition[30] + 0.01
 
-    gascondensateFluid.setMolarComposition(compositon)
+    gascondensateFluid.setMolarComposition(composition)
     gascondensateFluid.setTemperature(25.0, "C")
     gascondensateFluid.setPressure(5.0, "bara")
     TPflash(gascondensateFluid)
+    # todo: assert something
 
 
 def test_TPflash():

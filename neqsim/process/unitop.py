@@ -1,6 +1,4 @@
-from neqsim import jneqsim
-import jpype
-import jpype.imports
+from jneqsim import neqsim
 from jpype import JImplements, JOverride
 
 # Ensure the JVM is started and neqsim is attached
@@ -9,8 +7,8 @@ from jpype import JImplements, JOverride
 
 
 @JImplements(
-    jneqsim.processsimulation.processequipment.ProcessEquipmentInterface
-)  # Use the fully qualified class name directly from the jneqsim package
+    neqsim.processsimulation.processequipment.ProcessEquipmentInterface
+)  # Use the fully qualified class name directly from the neqsim package
 class unitop:
     def __init__(self):
         self.name = ""
