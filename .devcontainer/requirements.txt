@@ -2,3 +2,4 @@ jpype1
 pandas
 matplotlib
 pytest
+pre-commit

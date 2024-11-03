@@ -1,3 +1,270 @@
+"""
+This module provides various functions for thermodynamic operations and fluid property calculations using the NeqSim library.
+
+Functions:
+    fluid(name="srk", temperature=298.15, pressure=1.01325):
+        Create a fluid object with the specified thermodynamic model, temperature, and pressure.
+
+    readEclipseFluid(filename, wellName=""):
+        Read fluid data from an Eclipse file.
+
+    setEclipseComposition(fluid, filename, wellName=""):
+        Set the composition of a fluid object using data from an Eclipse file.
+
+    addFluids(fluids):
+        Combine multiple fluid objects into one.
+
+    fluid_df(reservoirFluiddf, lastIsPlusFraction=False, autoSetModel=False, modelName="", lumpComponents=True, numberOfLumpedComponents=12, add_all_components=True):
+        Create a fluid object from a DataFrame containing reservoir fluid data.
+
+    createfluid(fluid_type="dry gas"):
+        Create a fluid object using a predefined fluid type.
+
+    createfluid2(names, molefractions=None, unit="mol/sec"):
+        Create a fluid object using specified component names and mole fractions.
+
+    addOilFractions(fluid, charNames, molefractions, molarMass, density, lastIsPlusFraction=False, lumpComponents=True, numberOfPseudoComponents=12):
+        Add oil fractions to a fluid object.
+
+    newdatabase(system):
+        Create a new database for the specified system.
+
+    tunewaxmodel(fluid, experimentaldata, maxiterations=5):
+        Tune the wax model for a fluid object using experimental data.
+
+    data(system):
+        Get the result table from a system object.
+
+    table(system):
+        Create a table from a system object.
+
+    dataFrame(system):
+        Convert the result table of a system object to a pandas DataFrame.
+
+    calcproperties(gascondensateFluid, inputDict):
+        Calculate properties of a gas condensate fluid using specified input conditions.
+
+    fluidflashproperties(spec1, spec2, mode=1, system=None, components=None, fractions=None):
+        Perform a flash calculation and return fluid properties for a series of process conditions.
+
+    separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False):
+        Perform a separator test on a fluid object and optionally display the results.
+
+    CVD(fluid, pressure, temperature, relativeVolume=None, liquidrelativevolume=None, Zgas=None, Zmix=None, cummulativemolepercdepleted=None, display=False):
+        Perform a Constant Volume Depletion (CVD) test on a fluid object and optionally display the results.
+
+    viscositysim(fluid, pressure, temperature, gasviscosity=None, oilviscosity=None, aqueousviscosity=None, display=False):
+        Simulate the viscosity of a fluid object under specified conditions and optionally display the results.
+
+    CME(fluid, pressure, temperature, saturationPressure, relativeVolume=None, liquidrelativevolume=None, Zgas=None, Yfactor=None, isothermalcompressibility=None, density=None, Bg=None, viscosity=None, display=False):
+        Perform a Constant Mass Expansion (CME) test on a fluid object and optionally display the results.
+
+    difflib(fluid, pressure, temperature, relativeVolume=None, Bo=None, Bg=None, relativegravity=None, Zgas=None, gasstandardvolume=None, Rs=None, oildensity=None, gasgravity=None, display=False):
+        Perform a Differential Liberation (DL) test on a fluid object and optionally display the results.
+
+    GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
+        Calculate the Gas-Oil Ratio (GOR) of a fluid object under specified conditions and optionally display the results.
+
+    saturationpressure(fluid, temperature=-1.0):
+        Calculate the saturation pressure of a fluid object at a specified temperature.
+
+    swellingtest(fluid, fluid2, temperature, cummulativeMolePercentGasInjected, pressure=None, relativeoilvolume=None, display=False):
+        Perform a swelling test on a fluid object and optionally display the results.
+
+    printFrame(system):
+        Print the result table of a system object as a markdown table.
+
+    printFluid(system):
+        Print the result table of a system object.
+
+    volumecorrection(system, use=1):
+        Apply volume correction to a system object.
+
+    write(system, filename, newfile=0):
+        Write the data of a system object to a file.
+
+    appenddatabase(system):
+        Append data to the database of a system object.
+
+    show(system):
+        Display the system object.
+
+    showPDF(system):
+        Generate and display a PDF of the system object.
+
+    addComponent(thermoSystem, name, moles, unit="no", phase=-10):
+        Add a component to a thermodynamic system object.
+
+    temperature(thermoSystem, temp, phase=-1):
+        Set the temperature of a thermodynamic system object.
+
+    pressure(thermoSystem, pres, phase=-1):
+        Set the pressure of a thermodynamic system object.
+
+    reactionCheck(thermoSystem):
+        Initialize chemical reactions in a thermodynamic system object.
+
+    mixingRule(thermoSystem, mixRule="classic", GEmodel=""):
+        Set the mixing rule for a thermodynamic system object.
+
+    multiphase(testSystem, multiphase=1):
+        Enable or disable multiphase check for a test system object.
+
+    solidcheck(testSystem, solid=1):
+        Enable or disable solid phase check for a test system object.
+
+    solid(testSystem, solid=1):
+        Enable or disable solid phase check for a test system object.
+
+    GCV(testSystem, unit):
+        Calculate the Gross Calorific Value (GCV) of a test system object.
+
+    watersaturate(testSystem):
+        Saturate a test system object with water.
+
+    TPflash(testSystem, temperature=None, tUnit=None, pressure=None, pUnit=None):
+        Perform a temperature-pressure flash calculation on a test system object.
+
+    TPgradientFlash(testSystem, height, temperature):
+        Perform a temperature-pressure gradient flash calculation on a test system object.
+
+    TVflash(testSystem, volume, unit="m3"):
+        Perform a temperature-volume flash calculation on a test system object.
+
+    TSflash(testSystem, entropy, unit="J/K"):
+        Perform a temperature-entropy flash calculation on a test system object.
+
+    VSflash(testSystem, volume, entropy, unitVol="m3", unit="J/K"):
+        Perform a volume-entropy flash calculation on a test system object.
+
+    VHflash(testSystem, volume, enthalpy, unitVol="m3", unit="J"):
+        Perform a volume-enthalpy flash calculation on a test system object.
+
+    VUflash(testSystem, volume, energy, unitVol="m3", unit="J"):
+        Perform a volume-internal energy flash calculation on a test system object.
+
+    PUflash(testSystem, pressure, energy, unitPressure="bara", unitEnergy="J"):
+        Perform a pressure-internal energy flash calculation on a test system object.
+
+    PVTpropTable(fluid1, fileName, lowTemperature, highTemperature, Tsteps, lowPressure, highPressure, Psteps):
+        Generate a PVT property table for a fluid object and save it to a file.
+
+    TPsolidflash(testSystem):
+        Perform a temperature-pressure solid flash calculation on a test system object.
+
+    PHflash(testSystem, enthalpy, unit="J"):
+        Perform a pressure-enthalpy flash calculation on a test system object.
+
+    PHsolidflash(testSystem, enthalpy):
+        Perform a pressure-enthalpy solid flash calculation on a test system object.
+
+    PSflash(testSystem, entropy, unit="J/K"):
+        Perform a pressure-entropy flash calculation on a test system object.
+
+    freeze(testSystem):
+        Perform a freezing point temperature flash calculation on a test system object.
+
+    scaleCheck(testSystem):
+        Check the scale potential of a test system object.
+
+    ionComposition(testSystem):
+        Calculate the ion composition of a test system object.
+
+    hydp(testSystem):
+        Calculate the hydrate formation pressure of a test system object.
+
+    addfluids(fluid1, fluid2):
+        Add two fluid objects together.
+
+    hydt(testSystem, type=1):
+        Calculate the hydrate formation temperature of a test system object.
+
+    calcIonComposition(fluid1):
+        Calculate the ion composition of a fluid object.
+
+    checkScalePotential(fluid1):
+        Check the scale potential of a fluid object.
+
+    bubp(testSystem):
+        Calculate the bubble point pressure of a test system object.
+
+    bubt(testSystem):
+        Calculate the bubble point temperature of a test system object.
+
+    dewp(testSystem):
+        Calculate the dew point pressure of a test system object.
+
+    dewt(testSystem):
+        Calculate the dew point temperature of a test system object.
+
+    waterdewt(testSystem):
+        Calculate the water dew point temperature of a test system object.
+
+    phaseenvelope(testSystem, display=False):
+        Calculate the phase envelope of a test system object and optionally display the results.
+
+    fluidComposition(testSystem, composition):
+        Set the molar composition of a test system object.
+
+    fluidCompositionPlus(testSystem, composition):
+        Set the molar composition of a test system object with plus fractions.
+
+    getExtThermProp(function, thermoSystem, t=0, p=0):
+        Get extensive thermodynamic properties of a thermodynamic system object.
+
+    getIntThermProp(function, thermoSystem, t=0, p=0):
+        Get intensive thermodynamic properties of a thermodynamic system object.
+
+    getPhysProp(function, thermoSystem, t=0, p=0):
+        Get physical properties of a thermodynamic system object.
+
+    enthalpy(thermoSystem, t=0, p=0):
+        Get the enthalpy of a thermodynamic system object.
+
+    entropy(thermoSystem, t=0, p=0):
+        Get the entropy of a thermodynamic system object.
+
+    densityGERG2008(phase):
+        Get the density of a phase using the GERG-2008 model.
+
+    molvol(thermoSystem, t=0, p=0):
+        Get the molar volume of a thermodynamic system object.
+
+    energy(thermoSystem, t=0, p=0):
+        Get the internal energy of a thermodynamic system object.
+
+    gibbsenergy(thermoSystem, t=0, p=0):
+        Get the Gibbs energy of a thermodynamic system object.
+
+    helmholtzenergy(thermoSystem, t=0, p=0):
+        Get the Helmholtz energy of a thermodynamic system object.
+
+    molefrac(thermoSystem, comp, t=0, p=0):
+        Get the mole fraction of a component in a thermodynamic system object.
+
+    moles(thermoSystem, phase=0):
+        Get the number of moles in a thermodynamic system object.
+
+    beta(thermoSystem, t=0, p=0):
+        Get the phase fraction (beta) of a thermodynamic system object.
+
+    molarmass(thermoSystem, t=0, p=0):
+        Get the molar mass of a thermodynamic system object.
+
+    Z(thermoSystem, t=0, p=0):
+        Get the compressibility factor (Z) of a thermodynamic system object.
+
+    density(thermoSystem, volcor=1, t=0, p=0):
+        Get the density of a thermodynamic system object.
+
+    viscosity(thermoSystem, t=0, p=0):
+        Get the viscosity of a thermodynamic system object.
+
+    WAT(testSystem):
+        Calculate the Wax Appearance Temperature (WAT) of a test system object.
+
+"""
+
 import logging
 from typing import List, Union
 import jpype
@@ -49,11 +316,32 @@ fluid_type = {
 
 
 def fluid(name="srk", temperature=298.15, pressure=1.01325):
+    """
+    Create a thermodynamic fluid system.
+
+    Parameters:
+    name (str): The name of the equation of state to use. Default is "srk".
+    temperature (float): The temperature of the fluid in Kelvin. Default is 298.15 K.
+    pressure (float): The pressure of the fluid in bar. Default is 1.01325 bar.
+
+    Returns:
+    object: An instance of the specified thermodynamic fluid system.
+    """
     fluid_function = fluid_type.get(name, jneqsim.thermo.system.SystemSrkEos)
     return fluid_function(temperature, pressure)
 
 
 def readEclipseFluid(filename, wellName=""):
+    """
+    Reads an Eclipse fluid file and returns the fluid object.
+
+    Parameters:
+    filename (str): The path to the Eclipse fluid file.
+    wellName (str, optional): The name of the well. Defaults to an empty string.
+
+    Returns:
+    Fluid: The fluid object read from the file.
+    """
     jneqsim.thermo.util.readwrite.EclipseFluidReadWrite.pseudoName = wellName
     fluid1 = jneqsim.thermo.util.readwrite.EclipseFluidReadWrite.read(filename)
     return fluid1
@@ -65,6 +353,20 @@ def setEclipseComposition(fluid, filename, wellName=""):
 
 
 def addFluids(fluids):
+    """
+    Combine multiple fluid objects into a single fluid object.
+
+    This function takes a list of fluid objects, clones the first fluid object,
+    and then adds each subsequent fluid object to the cloned fluid object.
+
+    Parameters:
+    fluids (list): A list of fluid objects to be combined. The first fluid object
+                   in the list will be cloned, and the rest will be added to this clone.
+
+    Returns:
+    Fluid: A single fluid object that is the result of combining all the fluid objects
+           in the input list.
+    """
     fluid = fluids[0].clone()
     numberOfFluids = len(fluids)
     for i in range(numberOfFluids - 1):
@@ -81,6 +383,21 @@ def fluid_df(
     numberOfLumpedComponents=12,
     add_all_components=True,
 ):
+    """
+    Create a fluid object from a DataFrame containing reservoir fluid composition data.
+
+    Parameters:
+    reservoirFluiddf (pd.DataFrame): DataFrame containing the reservoir fluid composition.
+    lastIsPlusFraction (bool, optional): Indicates if the last component is a plus fraction. Defaults to False.
+    autoSetModel (bool, optional): If True, automatically selects the thermodynamic model. Defaults to False.
+    modelName (str, optional): Name of the thermodynamic model to use. Defaults to an empty string.
+    lumpComponents (bool, optional): If True, lumps components together. Defaults to True.
+    numberOfLumpedComponents (int, optional): Number of lumped components to create. Defaults to 12.
+    add_all_components (bool, optional): If True, adds all components regardless of their molar composition. Defaults to True.
+
+    Returns:
+    fluid: A fluid object created based on the provided composition data.
+    """
     if autoSetModel:
         fluidcreator.setAutoSelectModel(True)
     else:
@@ -131,10 +448,30 @@ def fluid_df(
 
 
 def createfluid(fluid_type="dry gas"):
+    """
+    Create a fluid object based on the specified fluid type.
+
+    Parameters:
+    fluid_type (str): The type of fluid to create. Default is "dry gas".
+
+    Returns:
+    Fluid: A fluid object created based on the specified fluid type.
+    """
     return fluidcreator.create(fluid_type)
 
 
 def createfluid2(names, molefractions=None, unit="mol/sec"):
+    """
+    Create a fluid with specified component names and mole fractions.
+
+    Parameters:
+    names (list of str): List of component names.
+    molefractions (list of float, optional): List of mole fractions corresponding to the component names. Defaults to None.
+    unit (str, optional): Unit of the mole fractions. Defaults to "mol/sec".
+
+    Returns:
+    Fluid: The created fluid object.
+    """
     if molefractions is None:
         fluidcreator.create2(JString[:](names))
     return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
@@ -210,6 +547,18 @@ def dataFrame(system):
 
 
 def calcproperties(gascondensateFluid, inputDict):
+    """
+    Calculate properties of a gas condensate fluid using the jneqsim PropertyGenerator.
+
+    Parameters:
+    gascondensateFluid (object): The gas condensate fluid object to be analyzed.
+    inputDict (dict): A dictionary containing the input parameters:
+        - "temperature" (list of float): List of temperatures at which to calculate properties.
+        - "pressure" (list of float): List of pressures at which to calculate properties.
+
+    Returns:
+    pandas.DataFrame: A DataFrame containing the calculated properties with keys as column names.
+    """
     properties = jneqsim.util.generator.PropertyGenerator(
         gascondensateFluid,
         JDouble[:](inputDict["temperature"]),
@@ -689,6 +1038,19 @@ def swellingtest(
 
 
 def printFrame(system):
+    """
+    Print the thermodynamic system data in a tabular format.
+
+    If the 'tabulate' library is available, the data will be printed in a markdown table format.
+    Otherwise, it will be printed in a default DataFrame format.
+
+    Parameters:
+    system : object
+        The thermodynamic system object containing the data to be printed.
+
+    Returns:
+    None
+    """
     if has_tabulate():
         print(dataFrame(system).to_markdown(index=False))
     else:
@@ -725,6 +1087,19 @@ def showPDF(system):
 
 
 def addComponent(thermoSystem, name, moles, unit="no", phase=-10):
+    """
+    Add a component to the thermoSystem.
+
+    Parameters:
+    thermoSystem (object): The thermodynamic system to which the component will be added.
+    name (str): The name of the component to be added.
+    moles (float): The amount of the component to be added in moles.
+    unit (str, optional): The unit of the amount (default is "no").
+    phase (int, optional): The phase of the component (default is -10).
+
+    Returns:
+    None
+    """
     if phase == -10 and unit == "no":
         thermoSystem.addComponent(name, moles)
     elif phase == -10:
@@ -736,6 +1111,18 @@ def addComponent(thermoSystem, name, moles, unit="no", phase=-10):
 
 
 def temperature(thermoSystem, temp, phase=-1):
+    """
+    Set the temperature of the specified phase in the thermoSystem.
+
+    Parameters:
+    thermoSystem (ThermoSystem): The thermodynamic system to modify.
+    temp (float): The temperature to set.
+    phase (int, optional): The phase index to set the temperature for.
+                           If -1, set the temperature for the entire system.
+                           Defaults to -1.
+    Returns:
+    None
+    """
     if phase == -1:
         thermoSystem.setTemperature(temp)
     else:
@@ -743,6 +1130,19 @@ def temperature(thermoSystem, temp, phase=-1):
 
 
 def pressure(thermoSystem, pres, phase=-1):
+    """
+    Set the pressure of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system to modify.
+    pres (float): The pressure to set.
+    phase (int, optional): The phase index to set the pressure for.
+                           If -1, sets the pressure for the entire system.
+                           Defaults to -1.
+
+    Returns:
+    None
+    """
     if phase == -1:
         thermoSystem.setPressure(pres)
     else:
@@ -754,6 +1154,17 @@ def reactionCheck(thermoSystem):
 
 
 def mixingRule(thermoSystem, mixRule="classic", GEmodel=""):
+    """
+    Set the mixing rule for the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermoSystem): The thermodynamic system to set the mixing rule for.
+    mixRule (str, optional): The mixing rule to use. Defaults to "classic".
+    GEmodel (str, optional): The GE model to use. If not provided, only the mixing rule is set. Defaults to "".
+
+    Returns:
+    None
+    """
     if GEmodel == "":
         thermoSystem.setMixingRule(mixRule)
     else:
@@ -772,7 +1183,20 @@ def solid(testSystem, solid=1):
     testSystem.setSolidPhaseCheck(solid)
 
 
+()
+
+
 def GCV(testSystem, unit):
+    """
+    Calculate the Gross Calorific Value (GCV) of a given test system.
+
+    Parameters:
+    testSystem (object): The test system for which the GCV is to be calculated.
+    unit (str): The unit of measurement for the GCV.
+
+    Returns:
+    float: The calculated Gross Calorific Value (GCV) in the specified unit.
+    """
     referenceTemperatureVolume = 15.0
     referenceTemperatureCombustion = 15.0
     numberUnit = "mass"
@@ -785,12 +1209,37 @@ def GCV(testSystem, unit):
 
 
 def watersaturate(testSystem):
+    """
+    Saturates the given thermodynamic system with water.
+
+    This function takes a thermodynamic system as input, performs a water saturation
+    operation on it, and then reinitializes the system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to be saturated with water.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.saturateWithWater()
     testSystem.init(3)
 
 
 def TPflash(testSystem, temperature=None, tUnit=None, pressure=None, pUnit=None):
+    """
+    Perform a temperature and pressure flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to perform the flash calculation on.
+    temperature (float, optional): The temperature to set for the system. Defaults to None.
+    tUnit (str, optional): The unit of the temperature. Defaults to "K" if temperature is provided.
+    pressure (float, optional): The pressure to set for the system. Defaults to None.
+    pUnit (str, optional): The unit of the pressure. Defaults to "bara" if pressure is provided.
+
+    Returns:
+    None
+    """
     if temperature is not None:
         if tUnit is None:
             tUnit = "K"
@@ -805,41 +1254,137 @@ def TPflash(testSystem, temperature=None, tUnit=None, pressure=None, pUnit=None)
 
 
 def TPgradientFlash(testSystem, height, temperature):
+    """
+    Perform a TP gradient flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to perform the flash calculation on.
+    height (float): The height at which the flash calculation is to be performed.
+    temperature (float): The temperature at which the flash calculation is to be performed.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.TPgradientFlash(height, temperature)
 
 
 def TVflash(testSystem, volume, unit="m3"):
+    """
+    Perform a temperature-volume (TV) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem : neqsim.thermo.system.SystemInterface
+        The thermodynamic system to perform the flash calculation on.
+    volume : float
+        The volume to be used in the flash calculation.
+    unit : str, optional
+        The unit of the volume (default is "m3").
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.TVflash(volume, unit)
     testSystem.init(3)
 
 
 def TSflash(testSystem, entropy, unit="J/K"):
+    """
+    Perform a temperature-entropy (TS) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem : neqsim.thermo.system.SystemInterface
+        The thermodynamic system to perform the TS flash calculation on.
+    entropy : float
+        The entropy value to use for the TS flash calculation.
+    unit : str, optional
+        The unit of the entropy value (default is "J/K").
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.TSflash(entropy, unit)
     testSystem.init(3)
 
 
 def VSflash(testSystem, volume, entropy, unitVol="m3", unit="J/K"):
+    """
+    Perform a volume-entropy (VS) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to perform the flash calculation on.
+    volume (float): The volume to be used in the flash calculation.
+    entropy (float): The entropy to be used in the flash calculation.
+    unitVol (str, optional): The unit of the volume. Default is "m3".
+    unit (str, optional): The unit of the entropy. Default is "J/K".
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.VSflash(volume, entropy, unitVol, unit)
     testSystem.init(3)
 
 
 def VHflash(testSystem, volume, enthalpy, unitVol="m3", unit="J"):
+    """
+    Perform a volume-enthalpy (VH) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem : neqsim.thermo.system.SystemInterface
+        The thermodynamic system to perform the flash calculation on.
+    volume : float
+        The volume to be used in the flash calculation.
+    enthalpy : float
+        The enthalpy to be used in the flash calculation.
+    unitVol : str, optional
+        The unit of the volume (default is "m3").
+    unit : str, optional
+        The unit of the enthalpy (default is "J").
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.VHflash(volume, enthalpy, unitVol, unit)
     testSystem.init(3)
 
 
 def VUflash(testSystem, volume, energy, unitVol="m3", unit="J"):
+    """
+    Perform a volume-energy (VU) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to perform the flash calculation on.
+    volume (float): The volume to be used in the flash calculation.
+    energy (float): The energy to be used in the flash calculation.
+    unitVol (str, optional): The unit of the volume. Default is "m3".
+    unit (str, optional): The unit of the energy. Default is "J".
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.VUflash(volume, energy, unitVol, unit)
     testSystem.init(3)
 
 
 def PUflash(testSystem, pressure, energy, unitPressure="bara", unitEnergy="J"):
+    """
+    Perform a pressure-energy (PU) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to perform the flash calculation on.
+    pressure (float): The pressure value for the flash calculation.
+    energy (float): The energy value for the flash calculation.
+    unitPressure (str, optional): The unit of the pressure value. Default is "bara".
+    unitEnergy (str, optional): The unit of the energy value. Default is "J".
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testSystem.setPressure(pressure, unitPressure)
     testFlash.PUflash(energy, unitEnergy)
@@ -856,6 +1401,30 @@ def PVTpropTable(
     highPressure,
     Psteps,
 ):
+    """
+    Generate a PVT property table for a given fluid and save it to a file.
+
+    Parameters:
+    fluid1 : neqsim.thermo.system.SystemInterface
+        The fluid system for which the PVT properties are to be calculated.
+    fileName : str
+        The name of the file where the PVT property table will be saved.
+    lowTemperature : float
+        The lower bound of the temperature range (in Kelvin).
+    highTemperature : float
+        The upper bound of the temperature range (in Kelvin).
+    Tsteps : int
+        The number of temperature steps between lowTemperature and highTemperature.
+    lowPressure : float
+        The lower bound of the pressure range (in bar).
+    highPressure : float
+        The upper bound of the pressure range (in bar).
+    Psteps : int
+        The number of pressure steps between lowPressure and highPressure.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(fluid1)
     testFlash.OLGApropTable(
         lowTemperature,
@@ -871,52 +1440,159 @@ def PVTpropTable(
 
 
 def TPsolidflash(testSystem):
+    """
+    Perform a temperature and pressure solid flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system on which to perform the solid flash calculation.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.TPSolidflash()
 
 
 def PHflash(testSystem, enthalpy, unit="J"):
+    """
+    Perform a pressure-enthalpy (PH) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem : neqsim.thermo.system.SystemInterface
+        The thermodynamic system on which to perform the PH flash calculation.
+    enthalpy : float
+        The enthalpy value for the PH flash calculation.
+    unit : str, optional
+        The unit of the enthalpy value (default is "J").
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.PHflash(enthalpy, unit)
 
 
 def PHsolidflash(testSystem, enthalpy):
+    """
+    Perform a pressure-enthalpy flash calculation for a solid phase.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to be used for the flash calculation.
+    enthalpy (float): The enthalpy value for the flash calculation.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.PHsolidFlash(enthalpy)
 
 
 def PSflash(testSystem, entropy, unit="J/K"):
+    """
+    Perform a pressure-entropy (PS) flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem : object
+        The thermodynamic system on which to perform the PS flash calculation.
+    entropy : float
+        The entropy value to be used in the PS flash calculation.
+    unit : str, optional
+        The unit of the entropy value (default is "J/K").
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.PSflash(entropy, unit)
 
 
 def freeze(testSystem):
+    """
+    Perform a freezing point temperature flash calculation on the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to perform the freezing point calculation on.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.freezingPointTemperatureFlash()
 
 
 def scaleCheck(testSystem):
+    """
+    Perform a mineral scale potential check on the given thermodynamic system.
+
+    This function creates a thermodynamic operations object for the provided
+    test system, checks the scale potential for the aqueous phase, and displays
+    the results.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to be checked.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.checkScalePotential(testSystem.getPhaseNumberOfPhase("aqueous"))
     testFlash.display()
 
 
 def ionComposition(testSystem):
+    """
+    Calculate and display the ion composition of the aqueous phase in the given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the ion composition is to be calculated.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.calcIonComposition(testSystem.getPhaseNumberOfPhase("aqueous"))
     testFlash.display()
 
 
 def hydp(testSystem):
+    """
+    Calculate the hydrate equilibrium pressure for a given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the hydrate formation pressure is to be calculated.
+
+    Returns:
+    None
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.hydrateFormationPressure()
 
 
 def addfluids(fluid1, fluid2):
+    """
+    Add two fluid systems together using the jneqsim library.
+
+    Parameters:
+    fluid1 (SystemInterface): The first fluid system to be added.
+    fluid2 (SystemInterface): The second fluid system to be added.
+
+    Returns:
+    SystemInterface: A new fluid system that is the result of adding fluid1 and fluid2.
+    """
     return jneqsim.thermo.system.SystemInterface.addFluids(fluid1, fluid2)
 
 
 def hydt(testSystem, type=1):
+    """
+    Calculate the hydrate equilibrium temperature for a given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to be tested for hydrate formation.
+    type (int, optional): The type of hydrate formation calculation to perform. Defaults to 1.
+
+    Returns:
+    float: The temperature at which hydrate formation occurs.
+    """
     if not testSystem.getHydrateCheck():
         testSystem.setHydrateCheck(True)
     testFlash = thermodynamicoperations(testSystem)
@@ -925,18 +1601,56 @@ def hydt(testSystem, type=1):
 
 
 def calcIonComposition(fluid1):
+    """
+    Calculate the ion composition of the aqueous phase in the given fluid.
+
+    Parameters:
+    fluid1 (object): The fluid object for which the ion composition is to be calculated.
+
+    Returns:
+    list: A table of results containing the ion composition of the aqueous phase.
+    """
     testFlash = thermodynamicoperations(fluid1)
     testFlash.calcIonComposition(fluid1.getPhaseNumberOfPhase("aqueous"))
     return testFlash.getResultTable()
 
 
 def checkScalePotential(fluid1):
+    """
+    Check the mineral scale potential of a given fluid.
+
+    This function performs a thermodynamic operation to check the scale potential
+    of the specified fluid in its aqueous phase. It returns the result in a table format.
+
+    Parameters:
+    fluid1 (object): The fluid object to be analyzed. It should have a method
+                     `getPhaseNumberOfPhase` to get the phase number of the "aqueous" phase.
+
+    Returns:
+    list: A table containing the results of the scale potential check.
+    """
     testFlash = thermodynamicoperations(fluid1)
     testFlash.checkScalePotential(fluid1.getPhaseNumberOfPhase("aqueous"))
     return testFlash.getResultTable()
 
 
 def bubp(testSystem):
+    """
+    Calculate the bubble point pressure of a given thermodynamic system.
+
+    This function performs a bubble point pressure flash calculation on the provided
+    thermodynamic system. If the calculation is successful, it returns the pressure
+    of the system. If an error occurs during the calculation, it logs an error message
+    and returns NaN.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which to calculate
+                                      the bubble point pressure.
+
+    Returns:
+    float: The pressure of the system after the bubble point pressure flash calculation,
+           or NaN if an error occurs.
+    """
     testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.bubblePointPressureFlash(0)
@@ -948,6 +1662,22 @@ def bubp(testSystem):
 
 
 def bubt(testSystem):
+    """
+    Calculate the bubble point temperature of a given thermodynamic system.
+
+    This function performs a bubble point temperature flash calculation on the provided
+    thermodynamic system. If the calculation is successful, it returns the temperature
+    of the system. If an error occurs during the calculation, it logs an error message
+    and returns NaN.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the bubble point
+                                      temperature is to be calculated.
+
+    Returns:
+    float: The temperature of the system after the bubble point temperature flash calculation,
+           or NaN if an error occurs.
+    """
     testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.bubblePointTemperatureFlash()
@@ -959,6 +1689,22 @@ def bubt(testSystem):
 
 
 def dewp(testSystem):
+    """
+    Calculate the dew point pressure of the given thermodynamic system.
+
+    This function performs a dew point pressure flash calculation on the provided
+    thermodynamic system. If the calculation is successful, it returns the pressure
+    of the system. If an error occurs during the calculation, it logs an error message
+    and returns NaN.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the dew point
+                                      pressure is to be calculated.
+
+    Returns:
+    float: The dew point pressure of the system if the calculation is successful,
+           otherwise NaN.
+    """
     testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.dewPointPressureFlash()
@@ -970,6 +1716,22 @@ def dewp(testSystem):
 
 
 def dewt(testSystem):
+    """
+    Calculate the dew point temperature of a given thermodynamic system.
+
+    This function performs a dew point temperature flash calculation on the provided
+    thermodynamic system. If the calculation is successful, it returns the temperature
+    of the system. If an error occurs during the calculation, it logs an error message
+    and returns NaN.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the dew point
+                                      temperature is to be calculated.
+
+    Returns:
+    float: The temperature of the system after the dew point calculation, or NaN if
+           an error occurred.
+    """
     testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.dewPointTemperatureFlash()
@@ -981,6 +1743,22 @@ def dewt(testSystem):
 
 
 def waterdewt(testSystem):
+    """
+    Calculate the water dew point temperature of the given thermodynamic system.
+
+    This function performs a water dew point temperature flash calculation on the provided
+    thermodynamic system. If the calculation is successful, it returns the temperature of
+    the system. If an error occurs during the calculation, it logs an error message and
+    returns NaN.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the water dew point
+                                      temperature is to be calculated.
+
+    Returns:
+    float: The temperature of the system after the water dew point temperature flash
+           calculation, or NaN if an error occurs.
+    """
     testFlash = thermodynamicoperations(testSystem)
     try:
         testFlash.waterDewPointTemperatureFlash()
@@ -992,6 +1770,23 @@ def waterdewt(testSystem):
 
 
 def phaseenvelope(testSystem, display=False):
+    """
+    Calculate and optionally display the phase envelope of a given thermodynamic system.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the phase envelope is to be calculated.
+    display (bool, optional): If True, the phase envelope will be plotted using matplotlib. Default is False.
+
+    Returns:
+    ThermodynamicOperations: The thermodynamic operations object containing the phase envelope data.
+
+    Raises:
+    Exception: If display is True and matplotlib is not installed.
+
+    Notes:
+    The function clones the provided thermodynamic system and calculates the PT phase envelope.
+    If display is True and matplotlib is available, it plots the dew point and bubble point curves.
+    """
     testFlash = thermodynamicoperations(testSystem.clone())
     testFlash.calcPTphaseEnvelope()
     data = testFlash
@@ -1037,16 +1832,52 @@ def phaseenvelope(testSystem, display=False):
 
 
 def fluidComposition(testSystem, composition):
+    """
+    Set the molar composition of a given test system and initialize it.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system to set the composition for.
+    composition (list of float): A list of molar fractions for each component in the system.
+
+    Returns:
+    None
+    """
     testSystem.setMolarComposition(JDouble[:](composition))
     testSystem.init(0)
 
 
 def fluidCompositionPlus(testSystem, composition):
+    """
+    Set the molar composition of a test system and initialize it.
+
+    Parameters:
+    testSystem (TestSystem): The test system object to set the composition for.
+    composition (list of float): A list of molar compositions to set in the test system.
+
+    Returns:
+    None
+    """
     testSystem.setMolarCompositionPlus(JDouble[:](composition))
     testSystem.init(0)
 
 
 def getExtThermProp(function, thermoSystem, t=0, p=0):
+    """
+    Calculate and return external thermodynamic properties of a given thermodynamic system.
+
+    Parameters:
+    function (list): A list of functions to calculate properties.
+    thermoSystem (object): The thermodynamic system object.
+    t (float, optional): Temperature to set for the system. Defaults to 0.
+    p (float, optional): Pressure to set for the system. Defaults to 0.
+
+    Returns:
+    list: A list containing:
+        - Overall property value normalized by the number of moles.
+        - Property value of the first phase normalized by the number of moles in the phase.
+        - Property value of the second phase normalized by the number of moles in the phase.
+        - Number of phases in the system.
+    """
     nargout = [0, 0, 0, 0]
     if t != 0:
         thermoSystem.setTemperature(t)
@@ -1075,6 +1906,22 @@ def getExtThermProp(function, thermoSystem, t=0, p=0):
 
 
 def getIntThermProp(function, thermoSystem, t=0, p=0):
+    """
+    Calculate thermodynamic properties of a given thermoSystem.
+
+    Parameters:
+    function (list): A list of functions to calculate thermodynamic properties.
+    thermoSystem (object): The thermodynamic system to be analyzed.
+    t (float, optional): Temperature to set for the thermoSystem. Default is 0.
+    p (float, optional): Pressure to set for the thermoSystem. Default is 0.
+
+    Returns:
+    list: A list containing the calculated thermodynamic properties and the number of phases.
+        - nargout[0]: Result of the first function in the function list.
+        - nargout[1]: Result of the second function in the function list if the phase type is 1, otherwise 0.
+        - nargout[2]: Result of the second function in the function list if the phase type is not 1, otherwise 0.
+        - nargout[3]: Number of phases in the thermoSystem.
+    """
     nargout = [0, 0, 0, 0]
     if t != 0:
         thermoSystem.setTemperature(t)
@@ -1099,6 +1946,22 @@ def getIntThermProp(function, thermoSystem, t=0, p=0):
 
 
 def getPhysProp(function, thermoSystem, t=0, p=0):
+    """
+    Calculate physical properties of a thermodynamic system.
+
+    Parameters:
+    function (list): A list of functions to calculate physical properties.
+    thermoSystem (ThermoSystem): The thermodynamic system to be analyzed.
+    t (float, optional): Temperature to set for the system. Defaults to 0.
+    p (float, optional): Pressure to set for the system. Defaults to 0.
+
+    Returns:
+    list: A list containing the calculated physical properties:
+        - nargout[0]: Result of the first function in the list.
+        - nargout[1]: Result of the second function in the list if the phase type is 1, otherwise 0.
+        - nargout[2]: Result of the second function in the list if the phase type is not 1, otherwise 0.
+        - nargout[3]: Number of phases in the thermodynamic system.
+    """
     nargout = [0, 0, 0, 0]
     if t != 0:
         thermoSystem.setTemperature(t)
@@ -1124,6 +1987,17 @@ def getPhysProp(function, thermoSystem, t=0, p=0):
 
 
 def enthalpy(thermoSystem, t=0, p=0):
+    """
+    Calculate the enthalpy of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (object): The thermodynamic system for which the enthalpy is to be calculated.
+    t (float, optional): Temperature at which the enthalpy is to be calculated. Default is 0.
+    p (float, optional): Pressure at which the enthalpy is to be calculated. Default is 0.
+
+    Returns:
+    float: The calculated enthalpy of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getEnthalpy)
     func.append(thermoSystem.getPhase(0).getEnthalpy)
@@ -1132,6 +2006,17 @@ def enthalpy(thermoSystem, t=0, p=0):
 
 
 def entropy(thermoSystem, t=0, p=0):
+    """
+    Calculate the entropy of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (object): The thermodynamic system for which entropy is to be calculated.
+    t (float, optional): Temperature at which entropy is to be calculated. Default is 0.
+    p (float, optional): Pressure at which entropy is to be calculated. Default is 0.
+
+    Returns:
+    float: The entropy of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getEntropy)
     func.append(thermoSystem.getPhase(0).getEntropy)
@@ -1140,11 +2025,31 @@ def entropy(thermoSystem, t=0, p=0):
 
 
 def densityGERG2008(phase):
+    """
+    Calculate the density of a given phase using the GERG-2008 equation of state.
+
+    Parameters:
+    phase (Phase): The phase object for which the density is to be calculated.
+
+    Returns:
+    float: The density of the specified phase.
+    """
     GERG2008 = jneqsim.thermo.util.GERG.NeqSimGERG2008()
     return GERG2008.getDensity(phase)
 
 
 def molvol(thermoSystem, t=0, p=0):
+    """
+    Calculate the molar volume of a thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system for which the molar volume is calculated.
+    t (float, optional): Temperature at which the molar volume is calculated. Default is 0.
+    p (float, optional): Pressure at which the molar volume is calculated. Default is 0.
+
+    Returns:
+    float: The molar volume of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getMolarVolume)
     func.append(thermoSystem.getPhase(0).getMolarVolume)
@@ -1153,6 +2058,17 @@ def molvol(thermoSystem, t=0, p=0):
 
 
 def energy(thermoSystem, t=0, p=0):
+    """
+    Calculate the internal energy of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (object): The thermodynamic system for which the internal energy is to be calculated.
+    t (float, optional): Temperature value to be used in the calculation. Default is 0.
+    p (float, optional): Pressure value to be used in the calculation. Default is 0.
+
+    Returns:
+    float: The calculated internal energy of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getInternalEnergy)
     func.append(thermoSystem.getPhase(0).getInternalEnergy)
@@ -1161,6 +2077,17 @@ def energy(thermoSystem, t=0, p=0):
 
 
 def gibbsenergy(thermoSystem, t=0, p=0):
+    """
+    Calculate the Gibbs energy of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system for which the Gibbs energy is to be calculated.
+    t (float, optional): Temperature at which the Gibbs energy is to be calculated. Default is 0.
+    p (float, optional): Pressure at which the Gibbs energy is to be calculated. Default is 0.
+
+    Returns:
+    float: The Gibbs energy of the thermodynamic system at the specified temperature and pressure.
+    """
     func = []
     func.append(thermoSystem.getGibbsEnergy)
     func.append(thermoSystem.getPhase(0).getGibbsEnergy)
@@ -1169,6 +2096,17 @@ def gibbsenergy(thermoSystem, t=0, p=0):
 
 
 def helmholtzenergy(thermoSystem, t=0, p=0):
+    """
+    Calculate the Helmholtz energy of a thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system for which the Helmholtz energy is calculated.
+    t (float, optional): Temperature at which the Helmholtz energy is calculated. Default is 0.
+    p (float, optional): Pressure at which the Helmholtz energy is calculated. Default is 0.
+
+    Returns:
+    float: The Helmholtz energy of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getHelmholtzEnergy)
     func.append(thermoSystem.getPhase(0).getHelmholtzEnergy)
@@ -1177,6 +2115,18 @@ def helmholtzenergy(thermoSystem, t=0, p=0):
 
 
 def molefrac(thermoSystem, comp, t=0, p=0):
+    """
+    Calculate the mole fraction of a component in different phases of a thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system containing the phases and components.
+    comp (str): The name of the component for which the mole fraction is to be calculated.
+    t (float, optional): Temperature at which the calculation is to be performed. Default is 0.
+    p (float, optional): Pressure at which the calculation is to be performed. Default is 0.
+
+    Returns:
+    float: The mole fraction of the component in the specified phases.
+    """
     func = []
     func.append(thermoSystem.getPhase(0).getComponent(comp).getz)
     func.append(thermoSystem.getPhase(0).getComponent(comp).getx)
@@ -1185,6 +2135,16 @@ def molefrac(thermoSystem, comp, t=0, p=0):
 
 
 def moles(thermoSystem, phase=0):
+    """
+    Calculate the number of moles in the specified phase of the thermoSystem.
+
+    Parameters:
+    thermoSystem (ThermoSystem): The thermodynamic system object.
+    phase (int, optional): The phase index to get the number of moles from. Defaults to 0.
+
+    Returns:
+    float: The number of moles in the specified phase of the thermoSystem.
+    """
     if phase == 0:
         return thermoSystem.getNumberOfMoles()
     else:
@@ -1192,6 +2152,17 @@ def moles(thermoSystem, phase=0):
 
 
 def beta(thermoSystem, t=0, p=0):
+    """
+    Calculate the beta value (gas compressibility) for the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system for which to calculate the beta value.
+    t (float, optional): Temperature value. Default is 0.
+    p (float, optional): Pressure value. Default is 0.
+
+    Returns:
+    float: The calculated beta value.
+    """
     func = []
     func.append(thermoSystem.getBeta)
     func.append(thermoSystem.getPhase(0).getBeta)
@@ -1200,6 +2171,17 @@ def beta(thermoSystem, t=0, p=0):
 
 
 def molarmass(thermoSystem, t=0, p=0):
+    """
+    Calculate the molar mass of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (object): The thermodynamic system for which the molar mass is to be calculated.
+    t (float, optional): Temperature at which the molar mass is to be calculated. Default is 0.
+    p (float, optional): Pressure at which the molar mass is to be calculated. Default is 0.
+
+    Returns:
+    float: The molar mass of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getMolarMass)
     func.append(thermoSystem.getPhase(0).getMolarMass)
@@ -1208,6 +2190,17 @@ def molarmass(thermoSystem, t=0, p=0):
 
 
 def Z(thermoSystem, t=0, p=0):
+    """
+    Calculate the compressibility factor (Z) for a given thermodynamic system.
+
+    Parameters:
+    thermoSystem (object): The thermodynamic system for which the compressibility factor is to be calculated.
+    t (float, optional): Temperature at which the calculation is to be performed. Default is 0.
+    p (float, optional): Pressure at which the calculation is to be performed. Default is 0.
+
+    Returns:
+    float: The compressibility factor (Z) of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getZ)
     func.append(thermoSystem.getPhase(0).getZ)
@@ -1216,6 +2209,20 @@ def Z(thermoSystem, t=0, p=0):
 
 
 def density(thermoSystem, volcor=1, t=0, p=0):
+    """
+    Calculate the density of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermoSystem): The thermodynamic system for which the density is to be calculated.
+    volcor (int, optional): Volume correction flag. If 1, physical properties are initialized and
+                            densities of phases are obtained from physical properties. If 0, densities
+                            are obtained directly from phases. Default is 1.
+    t (float, optional): Temperature at which the density is to be calculated. Default is 0.
+    p (float, optional): Pressure at which the density is to be calculated. Default is 0.
+
+    Returns:
+    float: The calculated density of the thermodynamic system.
+    """
     func = []
     func.append(thermoSystem.getDensity)
     if volcor == 1:
@@ -1229,6 +2236,17 @@ def density(thermoSystem, volcor=1, t=0, p=0):
 
 
 def viscosity(thermoSystem, t=0, p=0):
+    """
+    Calculate the viscosity of the given thermodynamic system.
+
+    Parameters:
+    thermoSystem (ThermodynamicSystem): The thermodynamic system for which the viscosity is to be calculated.
+    t (float, optional): Temperature at which the viscosity is to be calculated. Default is 0.
+    p (float, optional): Pressure at which the viscosity is to be calculated. Default is 0.
+
+    Returns:
+    float: The viscosity of the thermodynamic system at the specified temperature and pressure.
+    """
     func = []
     func.append(thermoSystem.getPhase(0).getPhysicalProperties().getViscosity)
     func.append(thermoSystem.getPhase(0).getPhysicalProperties().getViscosity)
@@ -1237,6 +2255,19 @@ def viscosity(thermoSystem, t=0, p=0):
 
 
 def WAT(testSystem):
+    """
+    Calculate the Wax Appearance Temperature (WAT) of a given thermodynamic system.
+
+    This function initializes a thermodynamic operation on the provided system,
+    calculates the WAT, reinitializes the system, and returns the temperature at
+    which wax appears.
+
+    Parameters:
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the WAT is to be calculated.
+
+    Returns:
+    float: The temperature at which wax appears in the system.
+    """
     testFlash = thermodynamicoperations(testSystem)
     testFlash.calcWAT()
     testSystem.init(3)
