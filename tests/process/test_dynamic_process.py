@@ -7,23 +7,17 @@ def test_dynamic_compressor():
     testSystem2.addComponent("ethane", 0.1)
     testSystem2.setMixingRule(2)
 
-    stream1 = jneqsim.process.equipment.stream.Stream(
-        "Stream1", testSystem2
-    )
+    stream1 = jneqsim.process.equipment.stream.Stream("Stream1", testSystem2)
     stream1.setFlowRate(5000.0, "kg/hr")
     stream1.setPressure(100.0, "bara")
     stream1.setTemperature(55.0, "C")
 
-    valve1 = jneqsim.process.equipment.valve.ThrottlingValve(
-        "valve_1", stream1
-    )
+    valve1 = jneqsim.process.equipment.valve.ThrottlingValve("valve_1", stream1)
     valve1.setOutletPressure(50.0)
     valve1.setPercentValveOpening(50)
     valve1.setCalculateSteadyState(False)
 
-    separator1 = jneqsim.process.equipment.separator.Separator(
-        "separator_1"
-    )
+    separator1 = jneqsim.process.equipment.separator.Separator("separator_1")
     separator1.addStream(valve1.getOutletStream())
     separator1.setCalculateSteadyState(False)
     separator1.setSeparatorLength(3.0)
@@ -36,9 +30,7 @@ def test_dynamic_compressor():
     compressor1.setCalculateSteadyState(False)
     compressor1.setOutletPressure(100.0)
 
-    separator2 = jneqsim.process.equipment.separator.Separator(
-        "separator_2"
-    )
+    separator2 = jneqsim.process.equipment.separator.Separator("separator_2")
     separator2.addStream(compressor1.getOutletStream())
     separator2.setCalculateSteadyState(False)
     separator2.setSeparatorLength(3.0)
@@ -61,10 +53,8 @@ def test_dynamic_compressor():
     p.add(valve2)
 
     p.run()
-    compchartgenerator = (
-        jneqsim.process.equipment.compressor.CompressorChartGenerator(
-            compressor1
-        )
+    compchartgenerator = jneqsim.process.equipment.compressor.CompressorChartGenerator(
+        compressor1
     )
     compressor1.setCompressorChart(compchartgenerator.generateCompressorChart("normal"))
     compressor1.getCompressorChart().setUseCompressorChart(True)
