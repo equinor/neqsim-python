@@ -560,7 +560,7 @@ a:hover tt, a:hover code {
         min-width: auto; /* fixes width on small screens, breaks .hll */
         padding: 0;
     }
-    
+
     .hll {
         /* "fixes" the breakage */
         width: max-content;
