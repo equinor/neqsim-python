@@ -16,6 +16,18 @@ def newProcess():
 
 
 def stream(name, thermoSystem, t=0, p=0):
+    """
+    Create a stream with the given name and thermodynamic system, optionally setting temperature and pressure.
+
+    Parameters:
+    name (str): The name of the stream.
+    thermoSystem (ThermoSystem): The thermodynamic system to be used in the stream.
+    t (float, optional): The temperature to set for the thermodynamic system. Defaults to 0.
+    p (float, optional): The pressure to set for the thermodynamic system. Defaults to 0.
+
+    Returns:
+    Stream: The created stream object.
+    """
     if t != 0:
         thermoSystem.setTemperature(t)
         if p != 0:
@@ -28,6 +40,16 @@ def stream(name, thermoSystem, t=0, p=0):
 
 
 def virtualstream(name, streamIn):
+    """
+    Create a virtual stream in the process simulation.
+
+    Parameters:
+    name (str): The name of the virtual stream.
+    streamIn (Stream): The input stream to be virtualized.
+
+    Returns:
+    VirtualStream: The created virtual stream object.
+    """
     stream = jneqsim.processsimulation.processequipment.stream.VirtualStream(
         name, streamIn
     )
@@ -36,6 +58,18 @@ def virtualstream(name, streamIn):
 
 
 def neqstream(name, thermoSystem, t=0, p=0):
+    """
+    Create a NeqStream with the specified name and thermodynamic system, optionally setting temperature and pressure.
+
+    Parameters:
+    name (str): The name of the stream.
+    thermoSystem (ThermodynamicSystem): The thermodynamic system to be used in the stream.
+    t (float, optional): The temperature to set for the thermodynamic system. Defaults to 0.
+    p (float, optional): The pressure to set for the thermodynamic system. Defaults to 0.
+
+    Returns:
+    NeqStream: The created NeqStream object.
+    """
     if t != 0:
         thermoSystem.setTemperature(t)
         if p != 0:
@@ -49,6 +83,16 @@ def neqstream(name, thermoSystem, t=0, p=0):
 
 
 def recycle(name, stream=None):
+    """
+    Create a recycle process unit and optionally add a stream to it.
+
+    Parameters:
+    name (str): The name of the recycle unit.
+    stream (optional): The stream to be added to the recycle unit. Default is None.
+
+    Returns:
+    Recycle: The created recycle process unit.
+    """
     recycle1 = jneqsim.processsimulation.processequipment.util.Recycle(name)
     if not stream is None:
         recycle1.addStream(stream)
@@ -57,6 +101,16 @@ def recycle(name, stream=None):
 
 
 def saturator(name, teststream):
+    """
+    Create a StreamSaturatorUtil object and add it to the process operations.
+
+    Parameters:
+    name (str): The name of the saturator.
+    teststream (Stream): The stream to be saturated.
+
+    Returns:
+    StreamSaturatorUtil: The created StreamSaturatorUtil object.
+    """
     streamsaturator = (
         jneqsim.processsimulation.processequipment.util.StreamSaturatorUtil(
             name, teststream
@@ -85,6 +139,16 @@ def openprocess(filename):
 
 
 def separator(name, teststream):
+    """
+    Create a two phase separator process equipment and add it to the process operations.
+
+    Parameters:
+    name (str): The name of the separator.
+    teststream (Stream): The test stream to be separated.
+
+    Returns:
+    Separator: The created separator object.
+    """
     separator = jneqsim.processsimulation.processequipment.separator.Separator(
         name, teststream
     )
@@ -94,6 +158,16 @@ def separator(name, teststream):
 
 
 def GORfitter(name, teststream):
+    """
+    Create and configure a GORfitter process equipment.
+
+    Parameters:
+    name (str): The name of the GORfitter.
+    teststream (Stream): The test stream to be used by the GORfitter.
+
+    Returns:
+    GORfitter: The configured GORfitter object.
+    """
     GORfitter1 = jneqsim.processsimulation.processequipment.util.GORfitter(
         name, name, teststream
     )
@@ -130,6 +204,16 @@ def gasscrubber(name, teststream):
 
 
 def separator3phase(name, teststream):
+    """
+    Create a three-phase separator and add it to the process operations.
+
+    Parameters:
+    name (str): The name of the separator.
+    teststream (Stream): The input stream to be separated.
+
+    Returns:
+    ThreePhaseSeparator: The created three-phase separator object.
+    """
     separator = (
         jneqsim.processsimulation.processequipment.separator.ThreePhaseSeparator(
             name, teststream
@@ -141,6 +225,17 @@ def separator3phase(name, teststream):
 
 
 def valve(name, teststream, p=1.0):
+    """
+    Create a throttling valve in the process simulation.
+
+    Parameters:
+    name (str): The name of the valve.
+    teststream (Stream): The stream that passes through the valve.
+    p (float, optional): The outlet pressure of the valve. Default is 1.0.
+
+    Returns:
+    ThrottlingValve: The created throttling valve object.
+    """
     valve = jneqsim.processsimulation.processequipment.valve.ThrottlingValve(
         name, teststream
     )
@@ -171,6 +266,17 @@ def filters(name, teststream):
 
 
 def compressor(name, teststream, pres=10.0):
+    """
+    Create and configure a compressor for a given stream.
+
+    Parameters:
+    name (str): The name of the compressor.
+    teststream: The stream to be compressed.
+    pres (float, optional): The outlet pressure of the compressor. Default is 10.0.
+
+    Returns:
+    Compressor: The configured compressor object.
+    """
     compressor = jneqsim.processsimulation.processequipment.compressor.Compressor(
         name, teststream
     )
@@ -214,6 +320,17 @@ def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWa
 
 
 def pump(name, teststream, p=1.0):
+    """
+    Create a pump process equipment and add it to the process operations.
+
+    Parameters:
+    name (str): The name of the pump.
+    teststream (Stream): The stream to be pumped.
+    p (float, optional): The outlet pressure of the pump. Default is 1.0.
+
+    Returns:
+    Pump: The created pump object.
+    """
     pump = jneqsim.processsimulation.processequipment.pump.Pump(name, teststream)
     pump.setOutletPressure(p)
     processoperations.add(pump)
@@ -221,6 +338,17 @@ def pump(name, teststream, p=1.0):
 
 
 def expander(name, teststream, p):
+    """
+    Create and configure an expander for the process simulation.
+
+    Parameters:
+    name (str): The name of the expander.
+    teststream (Stream): The stream to be expanded.
+    p (float): The outlet pressure of the expander.
+
+    Returns:
+    Expander: The configured expander object.
+    """
     expander = jneqsim.processsimulation.processequipment.expander.Expander(
         name, teststream
     )
@@ -231,6 +359,15 @@ def expander(name, teststream, p):
 
 
 def mixer(name=""):
+    """
+    Create and add a mixer to the process operations.
+
+    Parameters:
+    name (str): The name of the mixer. Default is an empty string.
+
+    Returns:
+    Mixer: An instance of the Mixer class.
+    """
     mixer = jneqsim.processsimulation.processequipment.mixer.Mixer(name)
     processoperations.add(mixer)
     return mixer
@@ -265,6 +402,20 @@ def compsplitter(name, teststream, splitfactors):
 
 
 def splitter(name, teststream, splitfactors=[]):
+    """
+    Create a splitter process equipment and add it to the process operations.
+
+    Parameters:
+    name (str): The name of the splitter.
+    teststream (Stream): The stream to be split.
+    splitfactors (list of float, optional): The factors by which to split the stream.
+                                            If provided, the length of this list determines
+                                            the number of splits, and the values determine
+                                            the split ratios.
+
+    Returns:
+    Splitter: The created splitter object.
+    """
     splitter = jneqsim.processsimulation.processequipment.splitter.Splitter(
         name, teststream
     )
@@ -276,6 +427,16 @@ def splitter(name, teststream, splitfactors=[]):
 
 
 def heater(name, teststream):
+    """
+    Create a heater process equipment and add it to the process operations.
+
+    Parameters:
+    name (str): The name of the heater.
+    teststream (Stream): The stream to be heated.
+
+    Returns:
+    Heater: The created heater object.
+    """
     heater = jneqsim.processsimulation.processequipment.heatexchanger.Heater(
         name, teststream
     )
@@ -298,6 +459,16 @@ def simplereservoir(
 
 
 def cooler(name, teststream):
+    """
+    Create and configure a cooler process equipment.
+
+    Parameters:
+    name (str): The name of the cooler.
+    teststream (Stream): The stream to be cooled.
+
+    Returns:
+    Cooler: The configured cooler object.
+    """
     cooler = jneqsim.processsimulation.processequipment.heatexchanger.Cooler(
         name, teststream
     )
@@ -307,6 +478,17 @@ def cooler(name, teststream):
 
 
 def heatExchanger(name, stream1, stream2=None):
+    """
+    Create a heat exchanger process unit.
+
+    Parameters:
+    name (str): The name of the heat exchanger.
+    stream1: The first input stream for the heat exchanger.
+    stream2 (optional): The second input stream for the heat exchanger. If not provided, a single stream heat exchanger is created.
+
+    Returns:
+    HeatExchanger: The created heat exchanger object.
+    """
     if stream2 is None:
         heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
             name, stream1
@@ -405,18 +587,42 @@ def pipeline(
 
 
 def clear():
+    """
+    Clear all process operations.
+
+    This function calls the `clearAll` method from the `processoperations` module
+    to remove all existing process operations.
+    """
     processoperations.clearAll()
 
 
 def run():
+    """
+    Execute the process operations.
+
+    This function calls the `run` method of the `processoperations` module to
+    perform the necessary process operations.
+    """
     processoperations.run()
 
 
 def clearProcess():
+    """
+    Clear all process operations.
+
+    This function clears all the process operations by calling the clearAll method
+    from the processoperations module.
+    """
     processoperations.clearAll()
 
 
 def runProcess():
+    """
+    Execute the process operations.
+
+    This function triggers the execution of the process operations by calling
+    the `run` method from the `processoperations` module.
+    """
     processoperations.run()
 
 
