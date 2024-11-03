@@ -209,9 +209,7 @@ def testNoUseOfThermosOrProcessTools():
     stream1.setTemperature(25.0, "C")
     stream1.setFlowRate(50.0, "kg/hr")
 
-    valve1 = jneqsim.process.equipment.valve.ThrottlingValve(
-        "valve_1", stream1
-    )
+    valve1 = jneqsim.process.equipment.valve.ThrottlingValve("valve_1", stream1)
     valve1.setOutletPressure(5.0, "bara")
 
     separator1 = jneqsim.process.equipment.separator.Separator("sep 1")
