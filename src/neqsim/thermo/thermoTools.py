@@ -449,8 +449,6 @@ def fluid_df(
 
 
 def createfluid(fluid_type="dry gas"):
-
-
     """
     Create a fluid object based on the specified fluid type.
 
@@ -1120,8 +1118,8 @@ def temperature(thermoSystem, temp, phase=-1):
     Parameters:
     thermoSystem (ThermoSystem): The thermodynamic system to modify.
     temp (float): The temperature to set.
-    phase (int, optional): The phase index to set the temperature for. 
-                           If -1, set the temperature for the entire system. 
+    phase (int, optional): The phase index to set the temperature for.
+                           If -1, set the temperature for the entire system.
                            Defaults to -1.
     Returns:
     None
@@ -1139,8 +1137,8 @@ def pressure(thermoSystem, pres, phase=-1):
     Parameters:
     thermoSystem (ThermodynamicSystem): The thermodynamic system to modify.
     pres (float): The pressure to set.
-    phase (int, optional): The phase index to set the pressure for. 
-                           If -1, sets the pressure for the entire system. 
+    phase (int, optional): The phase index to set the pressure for.
+                           If -1, sets the pressure for the entire system.
                            Defaults to -1.
 
     Returns:
@@ -1185,7 +1183,10 @@ def solidcheck(testSystem, solid=1):
 def solid(testSystem, solid=1):
     testSystem.setSolidPhaseCheck(solid)
 
+
 ()
+
+
 def GCV(testSystem, unit):
     """
     Calculate the Gross Calorific Value (GCV) of a given test system.
@@ -1623,7 +1624,7 @@ def checkScalePotential(fluid1):
     of the specified fluid in its aqueous phase. It returns the result in a table format.
 
     Parameters:
-    fluid1 (object): The fluid object to be analyzed. It should have a method 
+    fluid1 (object): The fluid object to be analyzed. It should have a method
                      `getPhaseNumberOfPhase` to get the phase number of the "aqueous" phase.
 
     Returns:
@@ -1748,15 +1749,15 @@ def waterdewt(testSystem):
 
     This function performs a water dew point temperature flash calculation on the provided
     thermodynamic system. If the calculation is successful, it returns the temperature of
-    the system. If an error occurs during the calculation, it logs an error message and 
+    the system. If an error occurs during the calculation, it logs an error message and
     returns NaN.
 
     Parameters:
-    testSystem (ThermodynamicSystem): The thermodynamic system for which the water dew point 
+    testSystem (ThermodynamicSystem): The thermodynamic system for which the water dew point
                                       temperature is to be calculated.
 
     Returns:
-    float: The temperature of the system after the water dew point temperature flash 
+    float: The temperature of the system after the water dew point temperature flash
            calculation, or NaN if an error occurs.
     """
     testFlash = thermodynamicoperations(testSystem)
@@ -2214,8 +2215,8 @@ def density(thermoSystem, volcor=1, t=0, p=0):
 
     Parameters:
     thermoSystem (ThermoSystem): The thermodynamic system for which the density is to be calculated.
-    volcor (int, optional): Volume correction flag. If 1, physical properties are initialized and 
-                            densities of phases are obtained from physical properties. If 0, densities 
+    volcor (int, optional): Volume correction flag. If 1, physical properties are initialized and
+                            densities of phases are obtained from physical properties. If 0, densities
                             are obtained directly from phases. Default is 1.
     t (float, optional): Temperature at which the density is to be calculated. Default is 0.
     p (float, optional): Pressure at which the density is to be calculated. Default is 0.
