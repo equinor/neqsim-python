@@ -16,7 +16,7 @@ RUN pip install --disable-pip-version-check --no-cache-dir -r /tmp/pip-tmp/requi
     && rm -rf /tmp/pip-tmp
 
 # Set PYTHONPATH for custom module paths
-ENV PYTHONPATH="${PYTHONPATH}:/workspaces/neqsimpython"
+ENV PYTHONPATH="${PYTHONPATH}:/workspaces/neqsim-python/src"
 
 # Install additional OS packages
 RUN apt-get update && \
