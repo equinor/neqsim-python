@@ -1123,7 +1123,6 @@ def temperature(thermoSystem, temp, phase=-1):
     phase (int, optional): The phase index to set the temperature for. 
                            If -1, set the temperature for the entire system. 
                            Defaults to -1.
-
     Returns:
     None
     """
@@ -1186,7 +1185,7 @@ def solidcheck(testSystem, solid=1):
 def solid(testSystem, solid=1):
     testSystem.setSolidPhaseCheck(solid)
 
-
+()
 def GCV(testSystem, unit):
     """
     Calculate the Gross Calorific Value (GCV) of a given test system.
