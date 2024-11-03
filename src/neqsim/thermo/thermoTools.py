@@ -1,5 +1,3 @@
-import logging
-
 """
 This module provides various functions for thermodynamic operations and fluid property calculations using the NeqSim library.
 
@@ -267,6 +265,7 @@ Functions:
 
 """
 
+import logging
 from typing import List, Union
 import jpype
 import pandas
