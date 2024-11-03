@@ -9,7 +9,7 @@ from jpype import JImplements, JOverride
 
 
 @JImplements(
-    jneqsim.processsimulation.processequipment.ProcessEquipmentInterface
+    jneqsim.process.equipment.ProcessEquipmentInterface
 )  # Use the fully qualified class name directly from the jneqsim package
 class unitop:
     def __init__(self):

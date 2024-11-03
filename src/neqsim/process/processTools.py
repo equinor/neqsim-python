@@ -4,7 +4,7 @@ import jpype.imports
 from jpype.types import *
 from neqsim.neqsimpython import jneqsim
 
-processoperations = jneqsim.processsimulation.processsystem.ProcessSystem()
+processoperations = jneqsim.process.processmodel.ProcessSystem()
 
 
 def newProcess():
@@ -12,7 +12,7 @@ def newProcess():
     Create a new process object
     """
     global processoperations
-    processoperations = jneqsim.processsimulation.processsystem.ProcessSystem()
+    processoperations = jneqsim.process.processmodel.ProcessSystem()
 
 
 def stream(name, thermoSystem, t=0, p=0):
@@ -32,7 +32,7 @@ def stream(name, thermoSystem, t=0, p=0):
         thermoSystem.setTemperature(t)
         if p != 0:
             thermoSystem.setPressure(p)
-    stream = jneqsim.processsimulation.processequipment.stream.Stream(
+    stream = jneqsim.process.equipment.stream.Stream(
         name, thermoSystem
     )
     processoperations.add(stream)
@@ -50,7 +50,7 @@ def virtualstream(name, streamIn):
     Returns:
     VirtualStream: The created virtual stream object.
     """
-    stream = jneqsim.processsimulation.processequipment.stream.VirtualStream(
+    stream = jneqsim.process.equipment.stream.VirtualStream(
         name, streamIn
     )
     processoperations.add(stream)
@@ -74,7 +74,7 @@ def neqstream(name, thermoSystem, t=0, p=0):
         thermoSystem.setTemperature(t)
         if p != 0:
             thermoSystem.setPressure(p)
-    stream = jneqsim.processsimulation.processequipment.stream.NeqStream(
+    stream = jneqsim.process.equipment.stream.NeqStream(
         name, thermoSystem
     )
     stream.setName(name)
@@ -93,7 +93,7 @@ def recycle(name, stream=None):
     Returns:
     Recycle: The created recycle process unit.
     """
-    recycle1 = jneqsim.processsimulation.processequipment.util.Recycle(name)
+    recycle1 = jneqsim.process.equipment.util.Recycle(name)
     if not stream is None:
         recycle1.addStream(stream)
     processoperations.add(recycle1)
@@ -112,7 +112,7 @@ def saturator(name, teststream):
     StreamSaturatorUtil: The created StreamSaturatorUtil object.
     """
     streamsaturator = (
-        jneqsim.processsimulation.processequipment.util.StreamSaturatorUtil(
+        jneqsim.process.equipment.util.StreamSaturatorUtil(
             name, teststream
         )
     )
@@ -122,7 +122,7 @@ def saturator(name, teststream):
 
 def glycoldehydrationlmodule(name, teststream):
     dehydrationlmodule = (
-        jneqsim.processsimulation.processsystem.processModules.GlycolDehydrationlModule(
+        jneqsim.process.processmodel.processModules.GlycolDehydrationlModule(
             name
         )
     )
@@ -132,7 +132,7 @@ def glycoldehydrationlmodule(name, teststream):
 
 
 def openprocess(filename):
-    processoperations = jneqsim.processsimulation.processsystem.ProcessSystem.open(
+    processoperations = jneqsim.process.processmodel.ProcessSystem.open(
         filename
     )
     return processoperations
@@ -149,7 +149,7 @@ def separator(name, teststream):
     Returns:
     Separator: The created separator object.
     """
-    separator = jneqsim.processsimulation.processequipment.separator.Separator(
+    separator = jneqsim.process.equipment.separator.Separator(
         name, teststream
     )
     separator.setName(name)
@@ -168,7 +168,7 @@ def GORfitter(name, teststream):
     Returns:
     GORfitter: The configured GORfitter object.
     """
-    GORfitter1 = jneqsim.processsimulation.processequipment.util.GORfitter(
+    GORfitter1 = jneqsim.process.equipment.util.GORfitter(
         name, name, teststream
     )
     GORfitter1.setName(name)
@@ -177,7 +177,7 @@ def GORfitter(name, teststream):
 
 
 def simpleTEGAbsorber(name):
-    absorber = jneqsim.processsimulation.processequipment.absorber.SimpleTEGAbsorber(
+    absorber = jneqsim.process.equipment.absorber.SimpleTEGAbsorber(
         name
     )
     absorber.setName(name)
@@ -186,7 +186,7 @@ def simpleTEGAbsorber(name):
 
 
 def waterStripperColumn(name):
-    stripper = jneqsim.processsimulation.processequipment.absorber.WaterStripperColumn(
+    stripper = jneqsim.process.equipment.absorber.WaterStripperColumn(
         name
     )
     stripper.setName(name)
@@ -195,7 +195,7 @@ def waterStripperColumn(name):
 
 
 def gasscrubber(name, teststream):
-    separator = jneqsim.processsimulation.processequipment.separator.GasScrubber(
+    separator = jneqsim.process.equipment.separator.GasScrubber(
         name, teststream
     )
     separator.setName(name)
@@ -215,7 +215,7 @@ def separator3phase(name, teststream):
     ThreePhaseSeparator: The created three-phase separator object.
     """
     separator = (
-        jneqsim.processsimulation.processequipment.separator.ThreePhaseSeparator(
+        jneqsim.process.equipment.separator.ThreePhaseSeparator(
             name, teststream
         )
     )
@@ -236,7 +236,7 @@ def valve(name, teststream, p=1.0):
     Returns:
     ThrottlingValve: The created throttling valve object.
     """
-    valve = jneqsim.processsimulation.processequipment.valve.ThrottlingValve(
+    valve = jneqsim.process.equipment.valve.ThrottlingValve(
         name, teststream
     )
     valve.setOutletPressure(p)
@@ -246,13 +246,13 @@ def valve(name, teststream, p=1.0):
 
 
 def calculator(name):
-    calc2 = jneqsim.processsimulation.processequipment.util.Calculator(name)
+    calc2 = jneqsim.process.equipment.util.Calculator(name)
     processoperations.add(calc2)
     return calc2
 
 
 def setpoint(name1, unit1, name2, unit2):
-    setp = jneqsim.processsimulation.processequipment.util.SetPoint(
+    setp = jneqsim.process.equipment.util.SetPoint(
         name1, unit1, name2, unit2
     )
     processoperations.add(setp)
@@ -260,7 +260,7 @@ def setpoint(name1, unit1, name2, unit2):
 
 
 def filters(name, teststream):
-    filter2 = jneqsim.processsimulation.processequipment.filter.Filter(name, teststream)
+    filter2 = jneqsim.process.equipment.filter.Filter(name, teststream)
     processoperations.add(filter2)
     return filter2
 
@@ -277,7 +277,7 @@ def compressor(name, teststream, pres=10.0):
     Returns:
     Compressor: The configured compressor object.
     """
-    compressor = jneqsim.processsimulation.processequipment.compressor.Compressor(
+    compressor = jneqsim.process.equipment.compressor.Compressor(
         name, teststream
     )
     compressor.setOutletPressure(pres)
@@ -331,7 +331,7 @@ def pump(name, teststream, p=1.0):
     Returns:
     Pump: The created pump object.
     """
-    pump = jneqsim.processsimulation.processequipment.pump.Pump(name, teststream)
+    pump = jneqsim.process.equipment.pump.Pump(name, teststream)
     pump.setOutletPressure(p)
     processoperations.add(pump)
     return pump
@@ -349,7 +349,7 @@ def expander(name, teststream, p):
     Returns:
     Expander: The configured expander object.
     """
-    expander = jneqsim.processsimulation.processequipment.expander.Expander(
+    expander = jneqsim.process.equipment.expander.Expander(
         name, teststream
     )
     expander.setOutletPressure(p)
@@ -368,13 +368,13 @@ def mixer(name=""):
     Returns:
     Mixer: An instance of the Mixer class.
     """
-    mixer = jneqsim.processsimulation.processequipment.mixer.Mixer(name)
+    mixer = jneqsim.process.equipment.mixer.Mixer(name)
     processoperations.add(mixer)
     return mixer
 
 
 def phasemixer(name):
-    mixer = jneqsim.processsimulation.processequipment.mixer.StaticPhaseMixer(name)
+    mixer = jneqsim.process.equipment.mixer.StaticPhaseMixer(name)
     processoperations.add(mixer)
     return mixer
 
@@ -382,7 +382,7 @@ def phasemixer(name):
 def nequnit(
     teststream, equipment="pipeline", flowpattern="stratified", numberOfNodes=100
 ):
-    neqUn = jneqsim.processsimulation.processequipment.util.NeqSimUnit(
+    neqUn = jneqsim.process.equipment.util.NeqSimUnit(
         teststream, equipment, flowpattern
     )
     neqUn.setNumberOfNodes(numberOfNodes)
@@ -392,7 +392,7 @@ def nequnit(
 
 def compsplitter(name, teststream, splitfactors):
     compSplitter = (
-        jneqsim.processsimulation.processequipment.splitter.ComponentSplitter(
+        jneqsim.process.equipment.splitter.ComponentSplitter(
             name, teststream
         )
     )
@@ -416,7 +416,7 @@ def splitter(name, teststream, splitfactors=[]):
     Returns:
     Splitter: The created splitter object.
     """
-    splitter = jneqsim.processsimulation.processequipment.splitter.Splitter(
+    splitter = jneqsim.process.equipment.splitter.Splitter(
         name, teststream
     )
     if len(splitfactors) > 0:
@@ -437,7 +437,7 @@ def heater(name, teststream):
     Returns:
     Heater: The created heater object.
     """
-    heater = jneqsim.processsimulation.processequipment.heatexchanger.Heater(
+    heater = jneqsim.process.equipment.heatexchanger.Heater(
         name, teststream
     )
     heater.setName(name)
@@ -452,7 +452,7 @@ def simplereservoir(
     oilvolume=120.0 * 1e6,
     watervolume=10.0e6,
 ):
-    reserv = jneqsim.processsimulation.processequipment.reservoir.SimpleReservoir(name)
+    reserv = jneqsim.process.equipment.reservoir.SimpleReservoir(name)
     reserv.setReservoirFluid(fluid, gasvolume, oilvolume, watervolume)
     processoperations.add(reserv)
     return reserv
@@ -469,7 +469,7 @@ def cooler(name, teststream):
     Returns:
     Cooler: The configured cooler object.
     """
-    cooler = jneqsim.processsimulation.processequipment.heatexchanger.Cooler(
+    cooler = jneqsim.process.equipment.heatexchanger.Cooler(
         name, teststream
     )
     cooler.setName(name)
@@ -490,11 +490,11 @@ def heatExchanger(name, stream1, stream2=None):
     HeatExchanger: The created heat exchanger object.
     """
     if stream2 is None:
-        heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
+        heater = jneqsim.process.equipment.heatexchanger.HeatExchanger(
             name, stream1
         )
     else:
-        heater = jneqsim.processsimulation.processequipment.heatexchanger.HeatExchanger(
+        heater = jneqsim.process.equipment.heatexchanger.HeatExchanger(
             name, stream1, stream2
         )
     heater.setName(name)
@@ -504,7 +504,7 @@ def heatExchanger(name, stream1, stream2=None):
 
 def distillationColumn(name, trays=5, reboil=True, condenser=True):
     distillationColumn = (
-        jneqsim.processsimulation.processequipment.distillation.DistillationColumn(
+        jneqsim.process.equipment.distillation.DistillationColumn(
             name, trays, reboil, condenser
         )
     )
@@ -513,7 +513,7 @@ def distillationColumn(name, trays=5, reboil=True, condenser=True):
 
 
 def neqheater(name, teststream):
-    neqheater = jneqsim.processsimulation.processequipment.heatexchanger.NeqHeater(
+    neqheater = jneqsim.process.equipment.heatexchanger.NeqHeater(
         name, teststream
     )
     processoperations.add(neqheater)
@@ -521,7 +521,7 @@ def neqheater(name, teststream):
 
 
 def twophasepipe(name, teststream, position, diameter, height, outTemp, rough):
-    pipe = jneqsim.processsimulation.processequipment.pipeline.TwoPhasePipeLine(
+    pipe = jneqsim.process.equipment.pipeline.TwoPhasePipeLine(
         name, teststream
     )
     pipe.setOutputFileName("c:/tempNew20.nc")
@@ -542,7 +542,7 @@ def twophasepipe(name, teststream, position, diameter, height, outTemp, rough):
 
 
 def pipe(name, teststream, length, deltaElevation, diameter, rough):
-    pipe = jneqsim.processsimulation.processequipment.pipeline.AdiabaticPipe(
+    pipe = jneqsim.process.equipment.pipeline.AdiabaticPipe(
         name, teststream
     )
     pipe.setDiameter(diameter)
@@ -566,22 +566,20 @@ def pipeline(
     pipeWallHeatTransferCoefficients,
     numberOfNodesInLeg=50,
 ):
-    pipe = jneqsim.processsimulation.processequipment.pipeline.OnePhasePipeLine(
+    pipe = jneqsim.process.equipment.pipeline.OnePhasePipeLine(
         name, teststream
     )
     pipe.setOutputFileName("c:/tempNew20.nc")
     numberOfLegs = len(position) - 1
     pipe.setNumberOfLegs(numberOfLegs)
     pipe.setNumberOfNodesInLeg(numberOfNodesInLeg)
-    pipe.setLegPositions(JDouble[:](position))
-    pipe.setHeightProfile(JDouble[:](height))
-    pipe.setPipeDiameters(JDouble[:](diameter))
-    pipe.setPipeWallRoughness(JDouble[:](rough))
-    pipe.setPipeOuterHeatTransferCoefficients(JDouble[:](outerHeatTransferCoefficients))
-    pipe.setPipeWallHeatTransferCoefficients(
-        JDouble[:](pipeWallHeatTransferCoefficients)
-    )
-    pipe.setOuterTemperatures(JDouble[:](outTemp))
+    pipe.setLegPositions(position)
+    pipe.setHeightProfile(height)
+    pipe.setPipeDiameters(diameter)
+    pipe.setPipeWallRoughness(rough)
+    pipe.setPipeOuterHeatTransferCoefficients(outerHeatTransferCoefficients)
+    pipe.setPipeWallHeatTransferCoefficients(pipeWallHeatTransferCoefficients)
+    pipe.setOuterTemperatures(outTemp)
     processoperations.add(pipe)
     return pipe
 
@@ -648,7 +646,7 @@ def viewProcess():
 
 def waterDewPointAnalyser(name, teststream):
     waterDewPointAnalyser = (
-        jneqsim.processsimulation.measurementdevice.WaterDewPointAnalyser(teststream)
+        jneqsim.process.measurementdevice.WaterDewPointAnalyser(teststream)
     )
     waterDewPointAnalyser.setName(name)
     processoperations.add(waterDewPointAnalyser)
@@ -656,7 +654,7 @@ def waterDewPointAnalyser(name, teststream):
 
 
 def hydrateEquilibriumTemperatureAnalyser(name, teststream):
-    hydrateEquilibriumTemperatureAnalyser = jneqsim.processsimulation.measurementdevice.HydrateEquilibriumTemperatureAnalyser(
+    hydrateEquilibriumTemperatureAnalyser = jneqsim.process.measurementdevice.HydrateEquilibriumTemperatureAnalyser(
         name, teststream
     )
     hydrateEquilibriumTemperatureAnalyser.setName(name)

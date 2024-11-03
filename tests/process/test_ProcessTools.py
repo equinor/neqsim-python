@@ -157,7 +157,7 @@ def test_flowSplitter():
     resycleOp = recycle("rec1")
     resycleOp.addStream(valve1.getOutletStream())
     resycleOp.setOutletStream(streamresycl)
-    resycleOp.setFlowAccuracy(1e-4)
+    resycleOp.setFlowTolerance(1e-4)
 
     exportStream = stream("stre3", streamSplit.getSplitStream(0))
     runProcess()
@@ -204,20 +204,20 @@ def testNoUseOfThermosOrProcessTools():
     fluid.addComponent("n-heptane", 1.00)
     fluid.setMixingRule(2)
 
-    stream1 = jneqsim.processsimulation.processequipment.stream.Stream("Stream1", fluid)
+    stream1 = jneqsim.process.equipment.stream.Stream("Stream1", fluid)
     stream1.setPressure(10.0, "bara")
     stream1.setTemperature(25.0, "C")
     stream1.setFlowRate(50.0, "kg/hr")
 
-    valve1 = jneqsim.processsimulation.processequipment.valve.ThrottlingValve(
+    valve1 = jneqsim.process.equipment.valve.ThrottlingValve(
         "valve_1", stream1
     )
     valve1.setOutletPressure(5.0, "bara")
 
-    separator1 = jneqsim.processsimulation.processequipment.separator.Separator("sep 1")
+    separator1 = jneqsim.process.equipment.separator.Separator("sep 1")
     separator1.addStream(valve1.getOutStream())
 
-    operation = jneqsim.processsimulation.processsystem.ProcessSystem()
+    operation = jneqsim.process.processmodel.ProcessSystem()
     operation.add(stream1)
     operation.add(valve1)
     operation.add(separator1)

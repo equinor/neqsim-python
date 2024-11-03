@@ -6,7 +6,7 @@ Created on Thu Jan  3 22:24:08 2019
 """
 import os
 from neqsim.neqsimpython import jneqsim
-
+import pandas as pd
 
 def test_Viscosity():
     thermoSystem = jneqsim.thermo.system.SystemSrkEos(280.0, 10.0)
@@ -34,9 +34,6 @@ def test_hasComponentDatabase():
 
 
 def test_fullOffshoreProcess():
-    import pandas as pd
-    import math
-
     # well stream composition (mole fractions)
     reservoirFluid = {
         "ComponentName": [
