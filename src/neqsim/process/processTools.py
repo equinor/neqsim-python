@@ -1,4 +1,3 @@
-
 import jpype
 import jpype.imports
 from jpype.types import *
