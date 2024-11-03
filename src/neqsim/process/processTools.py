@@ -1,5 +1,6 @@
 import jpype
 import jpype.imports
+
 from jpype.types import *
 from neqsim.neqsimpython import jneqsim
 
