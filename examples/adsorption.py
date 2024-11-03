@@ -7,7 +7,7 @@ Created on Mon Jan  6 12:58:36 2020
 
 from neqsim.thermo.thermoTools import *
 
-temperature = 20.0  # C
+temperature = 0.0  # C
 presssure = 10.0  # bara
 fluid1 = fluid("srk")
 fluid1.addComponent("CO2", 1.0, "mol/sec")
