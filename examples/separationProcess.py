@@ -38,7 +38,7 @@ fluid1.setMultiPhaseCheck(True)
 
 fluid1.setTemperature(55.0, "C")
 fluid1.setPressure(55.0, "bara")
-fluid1.initProperties()
+#fluid1.initProperties()
 
 clearProcess()
 feedStream = stream("feed fluid", fluid1)
