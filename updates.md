@@ -4,17 +4,17 @@ NeqSim version 3.0 introduces several important updates and changes in both the 
 
 ### Key Updates
 
-- **Naming Requirement for Process Equipment**:  
+- **Naming Requirement for Process Equipment**:
   All process equipment now requires a unique name upon creation. Previously, objects could be created without a specified name, such as `stream1 = stream(fluid1)`. In version 3, each stream or equipment must have a unique identifier:
 
   ```python
   stream1 = stream('stream name', fluid1)
   ```
 
-- **Standardized Package Naming**:  
+- **Standardized Package Naming**:
   Java package names are now consistently in lowercase. For example, what was previously `thermodynamicOperations` is now `thermodynamicoperations`. This change enhances consistency and aligns with Java package naming conventions.
 
-- **Simplified Package Names**:  
+- **Simplified Package Names**:
   To streamline code and reduce complexity, some package names have been shortened. For instance:
   - `processSimulation` is now `process`
   - `processEquipment` is now `equipment`
