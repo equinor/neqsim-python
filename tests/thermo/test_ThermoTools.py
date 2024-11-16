@@ -9,6 +9,7 @@ from neqsim.thermo import (
     fluidComposition,
     fluidflashproperties,
     hydt,
+    TPgradientFlash
 )
 from numpy import isnan
 
@@ -555,3 +556,19 @@ def test_TPflash():
     assert fluid1.getPhase("gas").getZ() == approx(1.0262852545644505, rel=1e-6)
     TPflash(fluid1, temperature=293.15, pressure=125.0)
     assert fluid1.getPhase("gas").getZ() == approx(1.0262852545644505, rel=1e-6)
+
+
+def test_gradient_flash():
+    fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
+    fluid1.setTemperature(70.0, "C")
+    fluid1.setPressure(100.0, "bara")
+    fluid1.addComponent("nitrogen", 1.0, "mol/sec")
+    fluid1.addComponent("CO2", 1.0, "mol/sec")
+    fluid1.addComponent("methane", 97.0, "mol/sec")
+    fluid1.addComponent("propane", 1.0, "mol/sec")
+    fluid1.setMixingRule("classic")  # classic will use binary kij
+    # True if more than two phases could be present
+    TPflash(fluid1)
+
+    deep_fluid = TPgradientFlash(fluid1, 1000.0, 273.15+70.0+10.0)
+    assert deep_fluid.getComponent('CO2').getx() == 0.010905853658496048

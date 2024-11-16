@@ -1266,7 +1266,7 @@ def TPgradientFlash(testSystem, height, temperature):
     None
     """
     testFlash = thermodynamicoperations(testSystem)
-    testFlash.TPgradientFlash(height, temperature)
+    return testFlash.TPgradientFlash(height, temperature)
 
 
 def TVflash(testSystem, volume, unit="m3"):
