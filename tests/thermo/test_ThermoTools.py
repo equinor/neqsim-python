@@ -9,7 +9,7 @@ from neqsim.thermo import (
     fluidComposition,
     fluidflashproperties,
     hydt,
-    TPgradientFlash
+    TPgradientFlash,
 )
 from numpy import isnan
 
@@ -570,5 +570,5 @@ def test_gradient_flash():
     # True if more than two phases could be present
     TPflash(fluid1)
 
-    deep_fluid = TPgradientFlash(fluid1, 1000.0, 273.15+70.0+10.0)
-    assert deep_fluid.getComponent('CO2').getx() == 0.010905853658496048
+    deep_fluid = TPgradientFlash(fluid1, 1000.0, 273.15 + 70.0 + 10.0)
+    assert deep_fluid.getComponent("CO2").getx() == 0.010905853658496048
