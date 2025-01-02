@@ -154,7 +154,7 @@ def GORfitter(name, teststream):
     Returns:
     GORfitter: The configured GORfitter object.
     """
-    GORfitter1 = jneqsim.process.equipment.util.GORfitter(name, name, teststream)
+    GORfitter1 = jneqsim.process.equipment.util.GORfitter(name, teststream)
     GORfitter1.setName(name)
     processoperations.add(GORfitter1)
     return GORfitter1
