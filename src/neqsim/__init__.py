@@ -7,6 +7,7 @@ It uses the Jpype module for bridging python and Java.
 from neqsim.neqsimpython import jneqsim, jpype
 import gzip
 
+
 def methods(checkClass):
     methods = checkClass.getClass().getMethods()
     for method in methods:
@@ -60,13 +61,13 @@ def save_neqsim(javaobject, filename):
     """
     # Instantiate XStream from the Java packages
     xstream = jpype.JPackage("com.thoughtworks.xstream").XStream()
-    
+
     # Convert the Java object to an XML string (java.lang.String)
     xml_java_string = xstream.toXML(javaobject)
-    
+
     # Convert java.lang.String to a native Python string
     xml_python_string = str(xml_java_string)
-    
+
     # Compress and save the string as UTF-8 bytes in a .gz file
     with gzip.open(filename, "wb") as f:
         f.write(xml_python_string.encode("utf-8"))
@@ -76,16 +77,16 @@ def save_neqsim(javaobject, filename):
 
 def open_neqsim(filename, allow_all=True, wildcard_permission=None):
     """
-    Decompress and deserialize a Java object (e.g., a NEQSim ProcessSystem) 
+    Decompress and deserialize a Java object (e.g., a NEQSim ProcessSystem)
     from a gzipped XStream XML file.
 
     Args:
         filename (str): Path to the gzipped file (e.g. 'process.neqsim').
         allow_all (bool): If True, uses AnyTypePermission to allow all classes
-            during deserialization. This is simple but not recommended for 
+            during deserialization. This is simple but not recommended for
             production security.
-        wildcard_permission (list of str, optional): 
-            A list of wildcard patterns for XStream to allow. For example, 
+        wildcard_permission (list of str, optional):
+            A list of wildcard patterns for XStream to allow. For example,
             ['neqsim.**'] would allow classes under 'neqsim'.
 
     Returns:
@@ -93,13 +94,13 @@ def open_neqsim(filename, allow_all=True, wildcard_permission=None):
                 or None if an error occurs.
 
     Raises:
-        Any exceptions raised by file I/O, gzip, XStream, or JPype will 
+        Any exceptions raised by file I/O, gzip, XStream, or JPype will
         propagate unless caught by the caller.
 
     Usage Example:
         # Ensure the JVM is started and the XStream JAR is on the classpath.
         # jpype.startJVM(..., classpath=[...])
-        
+
         # open_neqsim("myProcess.neqsim", allow_all=True)
     """
     # 1. Create an XStream instance
