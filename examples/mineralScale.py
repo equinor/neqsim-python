@@ -55,4 +55,4 @@ printFrame(fluid1)
 print(pandas.DataFrame(ionCompResults))
 print(pandas.DataFrame(scaleResults))
 
-fluid1.display()
+printFrame(fluid1)

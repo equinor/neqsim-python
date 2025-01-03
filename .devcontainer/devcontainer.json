@@ -36,7 +36,9 @@
                 "ms-python.pylint",
                 "ms-python.black-formatter",
                 "ms-python.flake8",
-                "ms-python.pylint"
+                "ms-python.pylint",
+                "GitHub.copilot",
+                "GitHub.copilot-chat"
             ]
         }
     },
