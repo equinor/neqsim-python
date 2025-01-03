@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
 """
+This script demonstrates the process of CO2 depressurization using the NeqSim library.
+
+The script performs the following steps:
+1. Creates a fluid object using the SRK equation of state.
+2. Adds 100 moles of CO2 to the fluid.
+3. Sets the initial temperature to -25°C and pressure to 18 bara.
+4. Enables multi-phase and solid-phase checks for CO2.
+5. Performs a temperature-pressure (TP) flash calculation.
+6. Calculates the bubble point temperature.
+7. Prints the fluid properties before depressurization.
+8. Initializes the fluid properties and calculates the enthalpy.
+9. Sets the pressure to 1 bara and performs a pressure-enthalpy (PH) flash calculation.
+10. Prints the fluid properties after depressurization.
+
+The script also includes commented-out lines for performing dew point and solid phase flash calculations.
+
 Created on Tue Jun 23 10:37:26 2020
 
 @author: ESOL
