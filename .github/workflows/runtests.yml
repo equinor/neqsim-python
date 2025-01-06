@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [3.8, 3.9, 3.13]
+        version: [3.8, 3.9, 3.12]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +27,5 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --no-interaction
-
       - name: Run tests with pytest
         run: poetry run pytest
