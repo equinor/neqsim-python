@@ -11,22 +11,29 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [3.8, 3.9, 3.12]
+        # Python 3.13 is still in beta; consider removing it or using a stable version like 3.12
+        version: [3.8, 3.9, 3.10, 3.12]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-        name: Install poetry
-      - run: pipx install poetry
-
-        name: Setup python
-      - uses: actions/setup-python@v5
+      
+      # Install the desired Python version first.
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.version }}
+
+      # Now install Poetry using pipx in that Python environment.
+      - name: Install poetry
+        run: |
+          pip install --upgrade pip
+          pip install pipx
+          pipx install poetry
 
       - name: Install dependencies
         run: |
           poetry install --no-interaction
 
       - name: Run tests with pytest
-        run: poetry run pytest
+        run: |
+          poetry run pytest
