@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [3.8, 3.9, 3.12]
+        version: [3.8, 3.9, 3.13]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
