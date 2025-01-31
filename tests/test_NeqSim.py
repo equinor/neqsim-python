@@ -31,7 +31,7 @@ def test_Viscosity():
 
 
 def test_hasComponentDatabase():
-    assert jneqsim.util.database.NeqSimDataBase.hasComponent("methane") == True
+    assert jneqsim.util.database.NeqSimDataBase.hasComponent("methane") is True
 
 
 def test_fullOffshoreProcess():
@@ -136,7 +136,6 @@ def test_fullOffshoreProcess():
         compressor,
         cooler,
         separator3phase,
-        getProcess,
         clearProcess,
         mixer,
         heater,
@@ -147,14 +146,7 @@ def test_fullOffshoreProcess():
         stream,
         saturator,
         valve,
-        filters,
-        heatExchanger,
-        simpleTEGAbsorber,
-        distillationColumn,
-        waterStripperColumn,
         recycle,
-        setpoint,
-        calculator,
     )
 
     clearProcess()  # reset process simulation

@@ -11,10 +11,7 @@ import pandas as pd
 from neqsim.thermo import (
     TPflash,
     calcproperties,
-    fluid,
     fluid_df,
-    phaseenvelope,
-    printFrame,
 )
 
 # create gas condensate fluid
