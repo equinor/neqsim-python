@@ -11,14 +11,17 @@ import pandas as pd
 
 import pytest
 
+
 def test_DsibleFaultHandeler():
     try:
         import faulthandler
+
         # Enable then disable to relinquish control of error handlers
         faulthandler.enable()
         faulthandler.disable()
     except Exception:
         pass
+
 
 def test_Viscosity():
     thermoSystem = jneqsim.thermo.system.SystemSrkEos(280.0, 10.0)
