@@ -1,6 +1,5 @@
 jpype1
 pandas
 matplotlib
-gzip
 pytest
 pre-commit
