@@ -9,15 +9,7 @@ from neqsim.neqsimpython import jneqsim
 import pandas as pd
 
 
-
-
 def test_Viscosity():
-    try:
-        import faulthandler
-        faulthandler.enable()
-        faulthandler.disable()
-    except Exception:
-        pass
     thermoSystem = jneqsim.thermo.system.SystemSrkEos(280.0, 10.0)
     thermoSystem.addComponent("methane", 10.0)
     thermoSystem.addComponent("water", 4.0)
