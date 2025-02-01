@@ -1,6 +1,4 @@
 from neqsim import jneqsim
-import jpype
-import jpype.imports
 from jpype import JImplements, JOverride
 
 # Ensure the JVM is started and neqsim is attached
@@ -40,7 +38,8 @@ class unitop:
     @JOverride  # Implement the missing 'setController' method
     def setController(self, controller):
         # Add the logic for setting the controller here.
-        # This will depend on how you want to handle controllers in your 'unitop' class.
+        # This will depend on how you want to handle controllers in your 
+        # 'unitop' class.
         pass  # Replace 'pass' with your implementation
 
     @JOverride  # Implement the missing 'getController' method
@@ -165,7 +164,8 @@ class unitop:
     def setTime(self, time):
         # Add the logic to calculate or retrieve the pressure.
         # This will depend on how pressure is handled in your 'unitop' class.
-        pass  # eturn 0.0  # Replace 0.0 with the actual pressure value or calculatio
+        pass  # eturn 0.0
+        # Replace 0.0 with the actual pressure value or calculation
         # Add the logic to calculate or retrieve the pressure.
 
     @JOverride  # Implement the missing 'getExergyChange' method
