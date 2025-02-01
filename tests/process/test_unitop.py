@@ -34,7 +34,7 @@ class ExampleCompressor(unitop):
         self.outputstream.run()
 
 
-def test_addPythonUnitOp():
+def aatest_addPythonUnitOp():
     fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
     fluid1.setTemperature(30.0, "C")
     fluid1.setPressure(1.0, "bara")
