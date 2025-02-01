@@ -10,7 +10,10 @@ if not jpype.isJVMStarted():
     elif jvm_version >= 11:
         jpype.addClassPath("./lib/java11/*")
     else:
-        print("Your version of Java is not supported. Please upgrade to Java version 8 or higher.")
+        print(
+            "Your version of Java is not supported. "
+            "Please upgrade to Java version 8 or higher."
+        )
         print("See: https://github.com/equinor/neqsimpython#prerequisites")
 
 # Register the shutdown function to be called at interpreter exit
