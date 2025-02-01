@@ -42,9 +42,7 @@ def test_addPythonUnitOp():
     uop.setName("example operation 1")
     uop.setInputStream(stream1)
 
-    stream2 = jneqsim.process.equipment.stream.Stream(
-        "stream2", uop.getOutputStream()
-    )
+    stream2 = jneqsim.process.equipment.stream.Stream("stream2", uop.getOutputStream())
 
     oilprocess = jneqsim.process.processmodel.ProcessSystem()
     oilprocess.add(stream1)
