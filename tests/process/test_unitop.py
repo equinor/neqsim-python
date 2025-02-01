@@ -1,14 +1,7 @@
 from neqsim.process.unitop import unitop
-from neqsim.process.processTools import (
-    pump,
-    stream,
-    clearProcess,
-    runProcess,
-    pumpChart,
-)
 from neqsim.thermo import fluid
 from neqsim import jneqsim
-from jpype import JImplements, JOverride
+from jpype import JOverride
 
 
 class ExampleCompressor(unitop):
@@ -49,7 +42,9 @@ def aatest_addPythonUnitOp():
     uop.setName("example operation 1")
     uop.setInputStream(stream1)
 
-    stream2 = jneqsim.process.equipment.stream.Stream("stream2", uop.getOutputStream())
+    stream2 = jneqsim.process.equipment.stream.Stream(
+        "stream2", uop.getOutputStream()
+    )
 
     oilprocess = jneqsim.process.processmodel.ProcessSystem()
     oilprocess.add(stream1)
