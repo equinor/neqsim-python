@@ -3,7 +3,7 @@ import atexit
 
 if not jpype.isJVMStarted():
     # Start the JVM with your specific options and classpath settings
-    jpype.startJVM(convertStrings=False)
+    jpype.startJVM("-Xms512m", "-Xmx2g", convertStrings=False)
     jvm_version = jpype.getJVMVersion()[0]
     if jvm_version == 1 and jpype.getJVMVersion()[1] >= 8:
         jpype.addClassPath("./lib/java8/*")
