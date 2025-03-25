@@ -1,4 +1,5 @@
 import jpype
+import json
 import jpype.imports
 
 from jpype.types import *
@@ -610,3 +611,9 @@ def hydrateEquilibriumTemperatureAnalyser(name, teststream):
     hydrateEquilibriumTemperatureAnalyser.setName(name)
     processoperations.add(hydrateEquilibriumTemperatureAnalyser)
     return hydrateEquilibriumTemperatureAnalyser
+
+
+def results_json(process):
+    json_report = str(process.getReport_json())
+    results = json.loads(json_report)
+    return results
