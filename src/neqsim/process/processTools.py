@@ -639,5 +639,3 @@ def results_json(process, filename=None):
     except Exception as e:
         print(f"Error generating JSON report: {e}")
         return None
-
-
