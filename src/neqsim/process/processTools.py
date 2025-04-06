@@ -613,7 +613,31 @@ def hydrateEquilibriumTemperatureAnalyser(name, teststream):
     return hydrateEquilibriumTemperatureAnalyser
 
 
-def results_json(process):
-    json_report = str(process.getReport_json())
-    results = json.loads(json_report)
-    return results
+def results_json(process, filename=None):
+    """
+    Generate a JSON report from the process and optionally save it to a file.
+
+    Parameters:
+    process: The process object to generate the report from.
+    filename (str, optional): The file path to save the JSON report. If None, the report is not saved.
+
+    Returns:
+    dict: The JSON report as a Python dictionary.
+    """
+    try:
+        # Generate the JSON report
+        json_report = str(process.getReport_json())
+        results = json.loads(json_report)
+
+        # Save to file if a filename is provided
+        if filename:
+            with open(filename, "w") as json_file:
+                json.dump(results, json_file, indent=4)
+            print(f"JSON report saved to {filename}")
+
+        return results
+    except Exception as e:
+        print(f"Error generating JSON report: {e}")
+        return None
+
+
