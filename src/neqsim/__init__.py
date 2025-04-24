@@ -64,8 +64,9 @@ def open_neqsim(filename, allow_all=True, wildcard_permission=None):
                 xml_bytes = f.read()
         elif ext == ".zip":
             import zipfile
-            with zipfile.ZipFile(filename, 'r') as zf:
-                with zf.open('process.xml') as f:
+
+            with zipfile.ZipFile(filename, "r") as zf:
+                with zf.open("process.xml") as f:
                     xml_bytes = f.read()
         else:
             raise ValueError(f"Unsupported file extension: {ext}")
@@ -96,7 +97,9 @@ def save_neqsim(javaobject, filename):
         bool: True if the file is successfully written, False otherwise.
     """
     if not jpype.isJVMStarted():
-        raise RuntimeError("JVM is not started. Please start the JVM with the correct classpath.")
+        raise RuntimeError(
+            "JVM is not started. Please start the JVM with the correct classpath."
+        )
 
     try:
         # Java imports

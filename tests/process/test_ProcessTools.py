@@ -420,6 +420,7 @@ def test_gasoilprocess():
 
     from neqsim import save_neqsim, open_neqsim
     from neqsim.process import getProcess
+
     save_neqsim(getProcess(), "test_gasoilprocess.zip")
 
     process1 = open_neqsim("test_gasoilprocess.zip")
