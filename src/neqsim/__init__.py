@@ -84,44 +84,55 @@ def open_neqsim(filename):
     """
     Load a NEQSim Java object from a ZIP file, regardless of file extension.
     The ZIP must contain a 'process.xml' file.
+    Suitable for large files.
     """
     if not jpype.isJVMStarted():
         raise RuntimeError(
-            "JVM is not started. Please start the JVM with the correct classpath."
+            "JVM is not started. Please start the JVM with the correct classpath and enough heap size (e.g., -Xmx2g)."
         )
 
-    try:
-        # Java imports
-        XStream = jpype.JClass("com.thoughtworks.xstream.XStream")
-        FileInputStream = jpype.JClass("java.io.FileInputStream")
-        BufferedInputStream = jpype.JClass("java.io.BufferedInputStream")
-        ZipInputStream = jpype.JClass("java.util.zip.ZipInputStream")
-        InputStreamReader = jpype.JClass("java.io.InputStreamReader")
-        File = jpype.JClass("java.io.File")
+    # Java imports
+    XStream = jpype.JClass("com.thoughtworks.xstream.XStream")
+    FileInputStream = jpype.JClass("java.io.FileInputStream")
+    BufferedInputStream = jpype.JClass("java.io.BufferedInputStream")
+    ZipInputStream = jpype.JClass("java.util.zip.ZipInputStream")
+    InputStreamReader = jpype.JClass("java.io.InputStreamReader")
+    File = jpype.JClass("java.io.File")
+    AnyTypePermission = jpype.JClass("com.thoughtworks.xstream.security.AnyTypePermission")
 
-        # Open ZIP file
+    zin = None
+    reader = None
+
+    try:
         file = File(filename)
         fin = BufferedInputStream(FileInputStream(file))
         zin = ZipInputStream(fin)
 
-        # Read the first entry (expected: process.xml)
         entry = zin.getNextEntry()
         if entry is None:
             raise ValueError("ZIP does not contain a valid XML entry.")
 
         reader = InputStreamReader(zin, "UTF-8")
 
-        # Deserialize
         xstream = XStream()
-        xstream.allowTypesByWildcard(["*"])
-        javaobject = xstream.fromXML(reader)
+        xstream.addPermission(AnyTypePermission.ANY)
 
-        zin.close()
+        javaobject = xstream.fromXML(reader)
         return javaobject
 
     except Exception as e:
         print(f"[load_neqsim] Failed to deserialize object: {e}")
         return None
+
+    finally:
+        # Ensure streams are closed properly
+        try:
+            if reader:
+                reader.close()
+            if zin:
+                zin.close()
+        except Exception as cleanup_error:
+            print(f"[load_neqsim] Cleanup warning: {cleanup_error}")
 
 
 def save_xml(javaobject, filename):
