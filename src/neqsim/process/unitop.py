@@ -73,6 +73,10 @@ class unitop:
     def setPressure(self, pressure):
         pass  # Replace 'pass' with your implementation
 
+    @JOverride  # Implement the missing 'setTemperature' method
+    def setTemperature(self, temperature):
+        pass  # Replace 'pass' with your implementation
+
     @JOverride  # Implement the missing 'getEntropyProduction' method
     def getEntropyProduction(self):
         # Add the logic to calculate or retrieve the pressure.
