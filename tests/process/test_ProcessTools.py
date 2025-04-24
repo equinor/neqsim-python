@@ -418,6 +418,13 @@ def test_gasoilprocess():
 
     runProcess()
 
+    from neqsim import save_neqsim, open_neqsim
+    from neqsim.process import getProcess
+    save_neqsim(getProcess(), "test_gasoilprocess.zip")
+
+    process1 = open_neqsim("test_gasoilprocess.zip")
+    process1.run()
+
     # assert 3859.9 == approx(recirc1stream.getFlowRate('kg/hr'), abs=1.0)
     # assert 22876.1 ==  approx(pipeloss1st.getOutletStream().getFlowRate("kg/hr"), abs=1.0)
     # assert separator3.getGasOutStream().getFlowRate("kg/hr") == pipeloss1st.getOutletStream().getFlowRate("kg/hr")
