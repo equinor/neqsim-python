@@ -31,70 +31,10 @@ def setDatabase(connectionString):
     jneqsim.util.database.NeqSimDataBase.setCreateTemporaryTables(True)
 
 
-def open_neqsim(filename, allow_all=True, wildcard_permission=None):
-    """
-    Open and deserialize a NEQSim Java object from either a .gz or .zip XStream-serialized XML file.
-
-    Supports:
-        - GZipped XML: .xml.gz
-        - Zipped XML: .zip (must contain a file named 'process.xml')
-
-    Returns:
-        object: The deserialized Java object.
-    """
-    import os
-
-    # Instantiate XStream
-    XStream = jpype.JClass("com.thoughtworks.xstream.XStream")
-    xstream = XStream()
-
-    # Configure security
-    security_pkg = jpype.JPackage("com.thoughtworks.xstream.security")
-    if allow_all:
-        xstream.addPermission(security_pkg.AnyTypePermission.ANY)
-    elif wildcard_permission is not None:
-        xstream.addPermission(security_pkg.WildcardTypePermission(wildcard_permission))
-
-    # Detect file format by extension
-    ext = os.path.splitext(filename)[-1].lower()
-
-    try:
-        if ext == ".gz":
-            with gzip.open(filename, "rb") as f:
-                xml_bytes = f.read()
-        elif ext == ".zip":
-            import zipfile
-
-            with zipfile.ZipFile(filename, "r") as zf:
-                with zf.open("process.xml") as f:
-                    xml_bytes = f.read()
-        else:
-            raise ValueError(f"Unsupported file extension: {ext}")
-    except Exception as e:
-        print(f"[open_neqsim] Failed to read/compress/decompress file: {e}")
-        return None
-
-    # Deserialize
-    try:
-        xml_str = xml_bytes.decode("utf-8")
-        java_object = xstream.fromXML(xml_str)
-        return java_object
-    except Exception as e:
-        print(f"[open_neqsim] Failed to deserialize object: {e}")
-        return None
-
-
 def save_neqsim(javaobject, filename):
     """
-    Serialize a Java object (e.g., NEQSim ProcessSystem) to XML using XStream,
-    and save it as a compressed ZIP file containing one XML file.
-
-    Args:
-        javaobject: A Java object that XStream can serialize.
-        filename (str): The path to the ZIP file to write (e.g., "myProcess.zip").
-
-    Returns:
-        bool: True if the file is successfully written, False otherwise.
+    Save a NEQSim Java object as a compressed ZIP file with any filename and extension.
+    Inside, the XML will be stored as 'process.xml'.
     """
     if not jpype.isJVMStarted():
         raise RuntimeError(
@@ -111,30 +51,77 @@ def save_neqsim(javaobject, filename):
         OutputStreamWriter = jpype.JClass("java.io.OutputStreamWriter")
         File = jpype.JClass("java.io.File")
 
-        # Create XStream instance and configure security
+        # Setup XStream
         xstream = XStream()
         xstream.allowTypesByWildcard(["neqsim.**"])
 
-        # Setup output stream and ZIP structure
+        # Prepare file output
         file = File(filename)
         fout = BufferedOutputStream(FileOutputStream(file))
         zout = ZipOutputStream(fout)
 
-        # Use a fixed name for the XML inside the ZIP
+        # Fixed entry name inside ZIP
         entry = ZipEntry("process.xml")
         zout.putNextEntry(entry)
 
+        # Stream XML directly into ZIP
         writer = OutputStreamWriter(zout, "UTF-8")
         xstream.toXML(javaobject, writer)
         writer.flush()
+
         zout.closeEntry()
         writer.close()
         zout.close()
 
         return True
+
     except Exception as e:
-        print(f"Error saving NEQSim object to ZIP: {e}")
+        print(f"[save_neqsim] Error saving file: {e}")
         return False
+
+
+def open_neqsim(filename):
+    """
+    Load a NEQSim Java object from a ZIP file, regardless of file extension.
+    The ZIP must contain a 'process.xml' file.
+    """
+    if not jpype.isJVMStarted():
+        raise RuntimeError(
+            "JVM is not started. Please start the JVM with the correct classpath."
+        )
+
+    try:
+        # Java imports
+        XStream = jpype.JClass("com.thoughtworks.xstream.XStream")
+        FileInputStream = jpype.JClass("java.io.FileInputStream")
+        BufferedInputStream = jpype.JClass("java.io.BufferedInputStream")
+        ZipInputStream = jpype.JClass("java.util.zip.ZipInputStream")
+        InputStreamReader = jpype.JClass("java.io.InputStreamReader")
+        File = jpype.JClass("java.io.File")
+
+        # Open ZIP file
+        file = File(filename)
+        fin = BufferedInputStream(FileInputStream(file))
+        zin = ZipInputStream(fin)
+
+        # Read the first entry (expected: process.xml)
+        entry = zin.getNextEntry()
+        if entry is None:
+            raise ValueError("ZIP does not contain a valid XML entry.")
+
+        reader = InputStreamReader(zin, "UTF-8")
+
+        # Deserialize
+        xstream = XStream()
+        xstream.allowTypesByWildcard(["neqsim.**"])
+        javaobject = xstream.fromXML(reader)
+
+        zin.close()
+        return javaobject
+
+    except Exception as e:
+        print(f"[load_neqsim] Failed to deserialize object: {e}")
+        return None
 
 
 def save_xml(javaobject, filename):
