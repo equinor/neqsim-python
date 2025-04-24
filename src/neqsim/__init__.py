@@ -113,7 +113,7 @@ def open_neqsim(filename):
 
         # Deserialize
         xstream = XStream()
-        xstream.allowTypesByWildcard(["neqsim.**"])
+        xstream.allowTypesByWildcard(["*"])
         javaobject = xstream.fromXML(reader)
 
         zin.close()
