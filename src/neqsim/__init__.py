@@ -132,7 +132,7 @@ def save_neqsim(javaobject, filename):
     except Exception as e:
         print(f"Error saving NEQSim object to ZIP: {e}")
         return False
-    
+
 
 def save_xml(javaobject, filename):
     xstream = jpype.JPackage("com.thoughtworks.xstream")
