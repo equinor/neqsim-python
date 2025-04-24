@@ -62,7 +62,7 @@ class unitop:
         # Add the logic to calculate or retrieve the pressure.
         # This will depend on how pressure is handled in your 'unitop' class.
         return 0.0  # Replace 0.0 with the actual pressure value or calculation
-    
+
     @JOverride  # Implement the missing 'getTemperature' method
     def getTemperature(self):
         # Add the logic to calculate or retrieve the temperature.
