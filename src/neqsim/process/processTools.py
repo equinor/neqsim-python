@@ -8,12 +8,13 @@ from neqsim.neqsimpython import jneqsim
 processoperations = jneqsim.process.processmodel.ProcessSystem()
 
 
-def newProcess():
+def newProcess(name=""):
     """
     Create a new process object
     """
     global processoperations
-    processoperations = jneqsim.process.processmodel.ProcessSystem()
+    processoperations = jneqsim.process.processmodel.ProcessSystem(name)
+    return processoperations
 
 
 def stream(name, thermoSystem, t=0, p=0):
