@@ -98,7 +98,9 @@ def open_neqsim(filename):
     ZipInputStream = jpype.JClass("java.util.zip.ZipInputStream")
     InputStreamReader = jpype.JClass("java.io.InputStreamReader")
     File = jpype.JClass("java.io.File")
-    AnyTypePermission = jpype.JClass("com.thoughtworks.xstream.security.AnyTypePermission")
+    AnyTypePermission = jpype.JClass(
+        "com.thoughtworks.xstream.security.AnyTypePermission"
+    )
 
     zin = None
     reader = None
