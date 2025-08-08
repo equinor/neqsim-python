@@ -1,10 +1,12 @@
 # import the package
 from neqsim.process.processTools import (
+    getProcess,
     separator,
     pump,
     heater,
     separator3phase,
     compsplitter,
+    set_loop_mode,
     waterDewPointAnalyser,
     hydrateEquilibriumTemperatureAnalyser,
     virtualstream,
@@ -424,11 +426,15 @@ def test_gasoilprocess():
     save_neqsim(getProcess(), "test_gasoilprocess.zip")
 
     process1 = open_neqsim("test_gasoilprocess.zip")
+    if process1 is None:
+        raise RuntimeError("Failed to open process from zip file.")
     process1.run()
 
     save_neqsim(getProcess(), "test_gasoilprocess.neqsim")
 
     process1 = open_neqsim("test_gasoilprocess.zip")
+    if process1 is None:
+        raise RuntimeError("Failed to open process from zip file.")
     process1.run()
 
     # assert 3859.9 == approx(recirc1stream.getFlowRate('kg/hr'), abs=1.0)
@@ -490,3 +496,30 @@ def test_AFR():
         ),
         abs=0.01,
     )
+
+
+def test_loop_mode():
+    fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
+    fluid1.setTemperature(28.15, "C")
+    fluid1.setPressure(100.0, "bara")
+    fluid1.addComponent("nitrogen", 1.0, "mol/sec")
+    fluid1.addComponent("methane", 5, "mol/sec")
+    fluid1.addComponent("ethane", 1, "mol/sec")
+    fluid1.addComponent("propane", 1, "mol/sec")
+    fluid1.addComponent("water", 50e-6, "mol/sec")
+    fluid1.setMixingRule(2)
+    clearProcess()
+    stream1 = stream("stream1", fluid1)
+    hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser("analyser1", stream1)
+    runProcess()
+    assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel=0.001)
+    assert getProcess().getAllUnitNames().size() > 0
+
+    clearProcess()
+    assert getProcess().getAllUnitNames().size() == 0
+    set_loop_mode(True)
+    stream1 = stream("stream1", fluid1)
+    hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser("analyser1", stream1)
+    assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel=0.001)
+    assert getProcess().getAllUnitNames().size() == 0
+    set_loop_mode(False)

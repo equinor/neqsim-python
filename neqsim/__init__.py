@@ -5,7 +5,6 @@ It uses the Jpype module for bridging python and Java.
 """
 
 from neqsim.neqsimpython import jneqsim, jpype
-import gzip
 
 
 def methods(checkClass):
