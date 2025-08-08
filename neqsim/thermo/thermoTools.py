@@ -266,7 +266,7 @@ Functions:
 """
 
 import logging
-from typing import List, Union
+from typing import List, Optional, Union
 import jpype
 import pandas
 from jpype.types import *
@@ -575,8 +575,8 @@ def fluidflashproperties(
     spec2: pandas.Series,
     mode: Union[int, str] = 1,
     system=None,
-    components: List[str] = None,
-    fractions: list = None,
+    components: Optional[List[str]] = None,
+    fractions: Optional[list] = None,
 ):
     """Perform flash and return fluid properties for a series of process properties.
 

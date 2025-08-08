@@ -1,11 +1,12 @@
-import jpype
 import json
-import jpype.imports
 
+from jpype.types import JDouble
 from jpype.types import *
+
 from neqsim.neqsimpython import jneqsim
 
 processoperations = jneqsim.process.processmodel.ProcessSystem()
+_loop_mode = False
 
 
 def newProcess(name=""):
@@ -15,6 +16,17 @@ def newProcess(name=""):
     global processoperations
     processoperations = jneqsim.process.processmodel.ProcessSystem(name)
     return processoperations
+
+
+def set_loop_mode(loop_mode):
+    """
+    Set the loop mode for process operations.
+
+    Parameters:
+    loop_mode (bool): If True, sets the loop mode to allow multiple runs without clearing the process.
+    """
+    global _loop_mode
+    _loop_mode = loop_mode
 
 
 def stream(name, thermoSystem, t=0, p=0):
@@ -35,7 +47,8 @@ def stream(name, thermoSystem, t=0, p=0):
         if p != 0:
             thermoSystem.setPressure(p)
     stream = jneqsim.process.equipment.stream.Stream(name, thermoSystem)
-    processoperations.add(stream)
+    if not _loop_mode:
+        processoperations.add(stream)
     return stream
 
 
@@ -51,7 +64,8 @@ def virtualstream(name, streamIn):
     VirtualStream: The created virtual stream object.
     """
     stream = jneqsim.process.equipment.stream.VirtualStream(name, streamIn)
-    processoperations.add(stream)
+    if not _loop_mode:
+        processoperations.add(stream)
     return stream
 
 
@@ -74,7 +88,8 @@ def neqstream(name, thermoSystem, t=0, p=0):
             thermoSystem.setPressure(p)
     stream = jneqsim.process.equipment.stream.NeqStream(name, thermoSystem)
     stream.setName(name)
-    processoperations.add(stream)
+    if not _loop_mode:
+        processoperations.add(stream)
     return stream
 
 
@@ -92,7 +107,8 @@ def recycle(name, stream=None):
     recycle1 = jneqsim.process.equipment.util.Recycle(name)
     if not stream is None:
         recycle1.addStream(stream)
-    processoperations.add(recycle1)
+    if not _loop_mode:
+        processoperations.add(recycle1)
     return recycle1
 
 
@@ -110,7 +126,8 @@ def saturator(name, teststream):
     streamsaturator = jneqsim.process.equipment.util.StreamSaturatorUtil(
         name, teststream
     )
-    processoperations.add(streamsaturator)
+    if not _loop_mode:
+        processoperations.add(streamsaturator)
     return streamsaturator
 
 
@@ -119,7 +136,8 @@ def glycoldehydrationlmodule(name, teststream):
         jneqsim.process.processmodel.processModules.GlycolDehydrationlModule(name)
     )
     dehydrationlmodule.addInputStream("gasStreamToAbsorber", teststream)
-    processoperations.add(dehydrationlmodule)
+    if not _loop_mode:
+        processoperations.add(dehydrationlmodule)
     return dehydrationlmodule
 
 
@@ -141,7 +159,8 @@ def separator(name, teststream):
     """
     separator = jneqsim.process.equipment.separator.Separator(name, teststream)
     separator.setName(name)
-    processoperations.add(separator)
+    if not _loop_mode:
+        processoperations.add(separator)
     return separator
 
 
@@ -158,28 +177,32 @@ def GORfitter(name, teststream):
     """
     GORfitter1 = jneqsim.process.equipment.util.GORfitter(name, teststream)
     GORfitter1.setName(name)
-    processoperations.add(GORfitter1)
+    if not _loop_mode:
+        processoperations.add(GORfitter1)
     return GORfitter1
 
 
 def simpleTEGAbsorber(name):
     absorber = jneqsim.process.equipment.absorber.SimpleTEGAbsorber(name)
     absorber.setName(name)
-    processoperations.add(absorber)
+    if not _loop_mode:
+        processoperations.add(absorber)
     return absorber
 
 
 def waterStripperColumn(name):
     stripper = jneqsim.process.equipment.absorber.WaterStripperColumn(name)
     stripper.setName(name)
-    processoperations.add(stripper)
+    if not _loop_mode:
+        processoperations.add(stripper)
     return stripper
 
 
 def gasscrubber(name, teststream):
     separator = jneqsim.process.equipment.separator.GasScrubber(name, teststream)
     separator.setName(name)
-    processoperations.add(separator)
+    if not _loop_mode:
+        processoperations.add(separator)
     return separator
 
 
@@ -198,7 +221,8 @@ def separator3phase(name, teststream):
         name, teststream
     )
     separator.setName(name)
-    processoperations.add(separator)
+    if not _loop_mode:
+        processoperations.add(separator)
     return separator
 
 
@@ -217,25 +241,29 @@ def valve(name, teststream, p=1.0):
     valve = jneqsim.process.equipment.valve.ThrottlingValve(name, teststream)
     valve.setOutletPressure(p)
     valve.setName(name)
-    processoperations.add(valve)
+    if not _loop_mode:
+        processoperations.add(valve)
     return valve
 
 
 def calculator(name):
     calc2 = jneqsim.process.equipment.util.Calculator(name)
-    processoperations.add(calc2)
+    if not _loop_mode:
+        processoperations.add(calc2)
     return calc2
 
 
 def setpoint(name1, unit1, name2, unit2):
     setp = jneqsim.process.equipment.util.SetPoint(name1, unit1, name2, unit2)
-    processoperations.add(setp)
+    if not _loop_mode:
+        processoperations.add(setp)
     return setp
 
 
 def filters(name, teststream):
     filter2 = jneqsim.process.equipment.filter.Filter(name, teststream)
-    processoperations.add(filter2)
+    if not _loop_mode:
+        processoperations.add(filter2)
     return filter2
 
 
@@ -253,7 +281,8 @@ def compressor(name, teststream, pres=10.0):
     """
     compressor = jneqsim.process.equipment.compressor.Compressor(name, teststream)
     compressor.setOutletPressure(pres)
-    processoperations.add(compressor)
+    if not _loop_mode:
+        processoperations.add(compressor)
     return compressor
 
 
@@ -305,7 +334,8 @@ def pump(name, teststream, p=1.0):
     """
     pump = jneqsim.process.equipment.pump.Pump(name, teststream)
     pump.setOutletPressure(p)
-    processoperations.add(pump)
+    if not _loop_mode:
+        processoperations.add(pump)
     return pump
 
 
@@ -324,7 +354,8 @@ def expander(name, teststream, p):
     expander = jneqsim.process.equipment.expander.Expander(name, teststream)
     expander.setOutletPressure(p)
     expander.setName(name)
-    processoperations.add(expander)
+    if not _loop_mode:
+        processoperations.add(expander)
     return expander
 
 
@@ -339,13 +370,15 @@ def mixer(name=""):
     Mixer: An instance of the Mixer class.
     """
     mixer = jneqsim.process.equipment.mixer.Mixer(name)
-    processoperations.add(mixer)
+    if not _loop_mode:
+        processoperations.add(mixer)
     return mixer
 
 
 def phasemixer(name):
     mixer = jneqsim.process.equipment.mixer.StaticPhaseMixer(name)
-    processoperations.add(mixer)
+    if not _loop_mode:
+        processoperations.add(mixer)
     return mixer
 
 
@@ -356,7 +389,8 @@ def nequnit(
         teststream, equipment, flowpattern
     )
     neqUn.setNumberOfNodes(numberOfNodes)
-    processoperations.add(neqUn)
+    if not _loop_mode:
+        processoperations.add(neqUn)
     return neqUn
 
 
@@ -365,7 +399,8 @@ def compsplitter(name, teststream, splitfactors):
         name, teststream
     )
     compSplitter.setSplitFactors(splitfactors)
-    processoperations.add(compSplitter)
+    if not _loop_mode:
+        processoperations.add(compSplitter)
     return compSplitter
 
 
@@ -388,7 +423,8 @@ def splitter(name, teststream, splitfactors=[]):
     if len(splitfactors) > 0:
         splitter.setSplitNumber(len(splitfactors))
         splitter.setSplitFactors(JDouble[:](splitfactors))
-    processoperations.add(splitter)
+    if not _loop_mode:
+        processoperations.add(splitter)
     return splitter
 
 
@@ -405,7 +441,8 @@ def heater(name, teststream):
     """
     heater = jneqsim.process.equipment.heatexchanger.Heater(name, teststream)
     heater.setName(name)
-    processoperations.add(heater)
+    if not _loop_mode:
+        processoperations.add(heater)
     return heater
 
 
@@ -418,7 +455,8 @@ def simplereservoir(
 ):
     reserv = jneqsim.process.equipment.reservoir.SimpleReservoir(name)
     reserv.setReservoirFluid(fluid, gasvolume, oilvolume, watervolume)
-    processoperations.add(reserv)
+    if not _loop_mode:
+        processoperations.add(reserv)
     return reserv
 
 
@@ -435,7 +473,8 @@ def cooler(name, teststream):
     """
     cooler = jneqsim.process.equipment.heatexchanger.Cooler(name, teststream)
     cooler.setName(name)
-    processoperations.add(cooler)
+    if not _loop_mode:
+        processoperations.add(cooler)
     return cooler
 
 
@@ -458,7 +497,8 @@ def heatExchanger(name, stream1, stream2=None):
             name, stream1, stream2
         )
     heater.setName(name)
-    processoperations.add(heater)
+    if not _loop_mode:
+        processoperations.add(heater)
     return heater
 
 
@@ -466,13 +506,15 @@ def distillationColumn(name, trays=5, reboil=True, condenser=True):
     distillationColumn = jneqsim.process.equipment.distillation.DistillationColumn(
         name, trays, reboil, condenser
     )
-    processoperations.add(distillationColumn)
+    if not _loop_mode:
+        processoperations.add(distillationColumn)
     return distillationColumn
 
 
 def neqheater(name, teststream):
     neqheater = jneqsim.process.equipment.heatexchanger.NeqHeater(name, teststream)
-    processoperations.add(neqheater)
+    if not _loop_mode:
+        processoperations.add(neqheater)
     return neqheater
 
 
@@ -491,7 +533,8 @@ def twophasepipe(name, teststream, position, diameter, height, outTemp, rough):
     pipe.setOuterTemperatures(outTemp)
     pipe.setEquilibriumMassTransfer(0)
     pipe.setEquilibriumHeatTransfer(1)
-    processoperations.add(pipe)
+    if not _loop_mode:
+        processoperations.add(pipe)
     return pipe
 
 
@@ -502,7 +545,8 @@ def pipe(name, teststream, length, deltaElevation, diameter, rough):
     pipe.setPipeWallRoughness(rough)
     pipe.setInletElevation(0.0)
     pipe.setOutletElevation(deltaElevation)
-    processoperations.add(pipe)
+    if not _loop_mode:
+        processoperations.add(pipe)
     return pipe
 
 
@@ -530,7 +574,8 @@ def pipeline(
     pipe.setPipeOuterHeatTransferCoefficients(outerHeatTransferCoefficients)
     pipe.setPipeWallHeatTransferCoefficients(pipeWallHeatTransferCoefficients)
     pipe.setOuterTemperatures(outTemp)
-    processoperations.add(pipe)
+    if not _loop_mode:
+        processoperations.add(pipe)
     return pipe
 
 
@@ -561,7 +606,7 @@ def clearProcess():
     This function clears all the process operations by calling the clearAll method
     from the processoperations module.
     """
-    processoperations.clearAll()
+    clear()
 
 
 def runProcess():
@@ -571,7 +616,7 @@ def runProcess():
     This function triggers the execution of the process operations by calling
     the `run` method from the `processoperations` module.
     """
-    processoperations.run()
+    run()
 
 
 def runProcessAsThread():
@@ -599,7 +644,8 @@ def waterDewPointAnalyser(name, teststream):
         teststream
     )
     waterDewPointAnalyser.setName(name)
-    processoperations.add(waterDewPointAnalyser)
+    if not _loop_mode:
+        processoperations.add(waterDewPointAnalyser)
     return waterDewPointAnalyser
 
 
@@ -610,7 +656,8 @@ def hydrateEquilibriumTemperatureAnalyser(name, teststream):
         )
     )
     hydrateEquilibriumTemperatureAnalyser.setName(name)
-    processoperations.add(hydrateEquilibriumTemperatureAnalyser)
+    if not _loop_mode:
+        processoperations.add(hydrateEquilibriumTemperatureAnalyser)
     return hydrateEquilibriumTemperatureAnalyser
 
 
