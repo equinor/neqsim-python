@@ -34,3 +34,6 @@ ENV/
 # SNYK
 .dccache
 poetry.lock
+
+test_gasoilprocess.zip
+test_gasoilprocess.neqsim
