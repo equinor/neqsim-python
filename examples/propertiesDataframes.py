@@ -146,9 +146,9 @@ def calcProperties(frame):
         frame["gasmolfraction[mol/mol]"] = gascondensateFluid.getMoleFraction(
             phaseNumber
         )
-        frame[
-            "gasvolumefraction[mol/mol]"
-        ] = gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+        frame["gasvolumefraction[mol/mol]"] = (
+            gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+        )
         frame["gasthermalconductivity[W/mK]"] = gascondensateFluid.getPhase(
             phaseNumber
         ).getThermalConductivity("W/mK")
@@ -164,9 +164,9 @@ def calcProperties(frame):
         frame["oilmolfraction[mol/mol]"] = gascondensateFluid.getMoleFraction(
             phaseNumber
         )
-        frame[
-            "oilvolumefraction[mol/mol]"
-        ] = gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+        frame["oilvolumefraction[mol/mol]"] = (
+            gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+        )
         frame["oilthermalconductivity[W/mK]"] = gascondensateFluid.getPhase(
             phaseNumber
         ).getThermalConductivity("W/mK")
@@ -179,9 +179,9 @@ def calcProperties(frame):
         frame["oilmolfraction[mol/mol]"] = gascondensateFluid.getMoleFraction(
             phaseNumber
         )
-        frame[
-            "oilvolumefraction[mol/mol]"
-        ] = gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+        frame["oilvolumefraction[mol/mol]"] = (
+            gascondensateFluid.getCorrectedVolumeFraction(phaseNumber)
+        )
         frame["oilthermalconductivity[W/mK]"] = gascondensateFluid.getPhase(
             phaseNumber
         ).getThermalConductivity("W/mK")
