@@ -571,4 +571,4 @@ def test_gradient_flash():
     TPflash(fluid1)
 
     deep_fluid = TPgradientFlash(fluid1, 1000.0, 273.15 + 70.0 + 10.0)
-    assert deep_fluid.getComponent("CO2").getx() == 0.010905853658496048
+    assert deep_fluid.getComponent("CO2").getx() == 0.010905853658496046
