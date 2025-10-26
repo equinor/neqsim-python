@@ -266,6 +266,7 @@ Functions:
 """
 
 import logging
+from dataclasses import dataclass
 from typing import List, Optional, Union
 import jpype
 import pandas
@@ -313,6 +314,91 @@ fluid_type = {
     "CPA-PR-EoS": jneqsim.thermo.system.SystemPrCPA,
     "SRK-TwuCoon-EOS": jneqsim.thermo.system.SystemSrkTwuCoonStatoilEos,
 }
+
+
+class ExtendedDatabaseError(Exception):
+    """Raised when a component cannot be resolved in the extended database."""
+
+
+@dataclass
+class _ChemicalComponentData:
+    name: str
+    CAS: str
+    tc: float
+    pc: float
+    omega: float
+
+
+def _create_extended_database_provider():
+    """Create a chemicals database provider."""
+
+    return _ChemicalsDatabaseProvider()
+
+
+class _ChemicalsDatabaseProvider:
+    """Lookup component data from the `chemicals` package."""
+
+    def __init__(self):
+        try:
+            from chemicals.identifiers import CAS_from_any
+            from chemicals.critical import Pc, Tc, omega
+        except ImportError as exc:  # pragma: no cover - import guard
+            raise ModuleNotFoundError(
+                "The 'chemicals' package is required to use the extended component database."
+            ) from exc
+
+        self._cas_from_any = CAS_from_any
+        self._tc = Tc
+        self._pc = Pc
+        self._omega = omega
+
+    def get_component(self, name: str) -> _ChemicalComponentData:
+        cas = self._cas_from_any(name)
+        if not cas:
+            raise ExtendedDatabaseError(
+                f"Component '{name}' was not found in the chemicals database."
+            )
+
+        tc = self._tc(cas)
+        pc = self._pc(cas)
+        omega = self._omega(cas)
+
+        if None in (tc, pc, omega):
+            raise ExtendedDatabaseError(
+                f"Incomplete property data for '{name}' (CAS {cas})."
+            )
+
+        return _ChemicalComponentData(
+            name=name,
+            CAS=cas,
+            tc=float(tc),
+            pc=float(pc) / 1.0e5,  # chemicals returns pressure in Pa
+            omega=float(omega),
+        )
+
+
+def _get_extended_provider(system):
+    provider = getattr(system, "_extended_database_provider", None)
+    if provider is None:
+        provider = _create_extended_database_provider()
+        system._extended_database_provider = provider  # type: ignore[attr-defined]
+    return provider
+
+
+@jpype.JImplementationFor("neqsim.thermo.system.SystemInterface")
+class _SystemInterface:
+    def useExtendedDatabase(self, enable: bool = True):
+        """Enable or disable usage of the chemicals based component database."""
+
+        if enable:
+            provider = _create_extended_database_provider()
+            self._use_extended_database = True  # type: ignore[attr-defined]
+            self._extended_database_provider = provider  # type: ignore[attr-defined]
+        else:
+            self._use_extended_database = False  # type: ignore[attr-defined]
+            if hasattr(self, "_extended_database_provider"):
+                delattr(self, "_extended_database_provider")
+        return self
 
 
 def fluid(name="srk", temperature=298.15, pressure=1.01325):
@@ -1100,6 +1186,33 @@ def addComponent(thermoSystem, name, moles, unit="no", phase=-10):
     Returns:
     None
     """
+    alias_name = name
+    try:
+        alias_name = jneqsim.thermo.component.Component.getComponentNameFromAlias(name)
+    except Exception:  # pragma: no cover - defensive alias resolution
+        pass
+
+    if getattr(thermoSystem, "_use_extended_database", False) and not jneqsim.util.database.NeqSimDataBase.hasComponent(alias_name):
+        try:
+            provider = _get_extended_provider(thermoSystem)
+            component_data = provider.get_component(name)
+        except (ExtendedDatabaseError, ModuleNotFoundError):
+            component_data = None
+        if component_data is not None:
+            if unit != "no" or phase != -10:
+                raise NotImplementedError(
+                    "Extended database currently supports components specified in moles (unit='no') "
+                    "without explicit phase targeting."
+                )
+            thermoSystem.addComponent(
+                name,
+                moles,
+                component_data.tc,
+                component_data.pc,
+                component_data.omega,
+            )
+            return
+
     if phase == -10 and unit == "no":
         thermoSystem.addComponent(name, moles)
     elif phase == -10:
