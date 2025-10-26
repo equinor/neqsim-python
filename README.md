@@ -29,6 +29,22 @@ Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be install
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
+### Development tooling
+
+This repository uses [`pre-commit`](https://pre-commit.com/) to run automated formatting and linting before each commit. After installing the project dependencies (for example with `poetry install`), point Git to the versioned hook scripts so the checks run automatically on every commit:
+
+```
+git config core.hooksPath .githooks
+```
+
+The configured hook calls `pre-commit` via Poetry when available, so the same tooling is used regardless of how the command is invoked. You can still install the hooks with `poetry run pre-commit install` if you prefer the standard workflow.
+
+Run all hooks against the codebase at any time with:
+
+```
+poetry run pre-commit run --all-files
+```
+
 
 ## Discussion forum
 
