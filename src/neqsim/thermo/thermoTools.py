@@ -265,9 +265,10 @@ Functions:
 
 """
 
+import importlib
 import logging
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 import jpype
 import pandas
 from jpype.types import *
@@ -327,6 +328,11 @@ class _ChemicalComponentData:
     tc: float
     pc: float
     omega: float
+    molar_mass: Optional[float] = None
+    normal_boiling_point: Optional[float] = None
+    triple_point_temperature: Optional[float] = None
+    critical_volume: Optional[float] = None
+    critical_compressibility: Optional[float] = None
 
 
 def _create_extended_database_provider():
@@ -341,16 +347,38 @@ class _ChemicalsDatabaseProvider:
     def __init__(self):
         try:
             from chemicals.identifiers import CAS_from_any
-            from chemicals.critical import Pc, Tc, omega
         except ImportError as exc:  # pragma: no cover - import guard
             raise ModuleNotFoundError(
                 "The 'chemicals' package is required to use the extended component database."
             ) from exc
 
         self._cas_from_any = CAS_from_any
-        self._tc = Tc
-        self._pc = Pc
-        self._omega = omega
+        critical = importlib.import_module("chemicals.critical")
+        try:
+            phase_change = importlib.import_module("chemicals.phase_change")
+        except ImportError:  # pragma: no cover - optional submodule
+            phase_change = None
+        try:
+            elements = importlib.import_module("chemicals.elements")
+        except ImportError:  # pragma: no cover - optional submodule
+            elements = None
+
+        self._tc = getattr(critical, "Tc")
+        self._pc = getattr(critical, "Pc")
+        self._omega = getattr(critical, "omega")
+        self._vc = getattr(critical, "Vc", None)
+        self._zc = getattr(critical, "Zc", None)
+        triple_point_candidates = [
+            getattr(critical, "Ttriple", None),
+            getattr(critical, "Tt", None),
+        ]
+        if phase_change is not None:
+            triple_point_candidates.append(getattr(phase_change, "Tt", None))
+        self._triple_point = next((func for func in triple_point_candidates if func), None)
+        self._tb = getattr(phase_change, "Tb", None) if phase_change is not None else None
+        self._molecular_weight = (
+            getattr(elements, "molecular_weight", None) if elements is not None else None
+        )
 
     def get_component(self, name: str) -> _ChemicalComponentData:
         cas = self._cas_from_any(name)
@@ -368,13 +396,56 @@ class _ChemicalsDatabaseProvider:
                 f"Incomplete property data for '{name}' (CAS {cas})."
             )
 
+        molar_mass = self._call_optional(self._molecular_weight, cas)
+        if molar_mass is not None:
+            molar_mass = float(molar_mass) / 1000.0
+
+        normal_boiling_point = self._call_optional(self._tb, cas)
+        triple_point_temperature = self._call_optional(self._triple_point, cas)
+
+        critical_volume = self._call_optional(self._vc, cas)
+        if critical_volume is not None:
+            critical_volume = float(critical_volume) * 1.0e6  # m^3/mol -> cm^3/mol
+
+        critical_compressibility = self._call_optional(self._zc, cas)
+
         return _ChemicalComponentData(
             name=name,
             CAS=cas,
             tc=float(tc),
             pc=float(pc) / 1.0e5,  # chemicals returns pressure in Pa
             omega=float(omega),
+            molar_mass=molar_mass,
+            normal_boiling_point=
+                float(normal_boiling_point) if normal_boiling_point is not None else None,
+            triple_point_temperature=
+                float(triple_point_temperature)
+                if triple_point_temperature is not None
+                else None,
+            critical_volume=critical_volume,
+            critical_compressibility=
+                float(critical_compressibility)
+                if critical_compressibility is not None
+                else None,
         )
+
+    @staticmethod
+    def _call_optional(func, cas):
+        if func is None:
+            return None
+        for call in (
+            lambda: func(cas),
+            lambda: func(CASRN=cas),
+        ):
+            try:
+                value = call()
+            except TypeError:
+                continue
+            except Exception:  # pragma: no cover - defensive fallback
+                return None
+            else:
+                return value
+        return None
 
 
 def _get_extended_provider(system):
@@ -383,6 +454,67 @@ def _get_extended_provider(system):
         provider = _create_extended_database_provider()
         system._extended_database_provider = provider  # type: ignore[attr-defined]
     return provider
+
+
+def _apply_extended_properties(
+    system, component_names: Tuple[str, ...], data: _ChemicalComponentData
+):
+    setter_map = {
+        "CAS": "setCASnumber",
+        "molar_mass": "setMolarMass",
+        "normal_boiling_point": "setNormalBoilingPoint",
+        "triple_point_temperature": "setTriplePointTemperature",
+        "critical_volume": "setCriticalVolume",
+        "critical_compressibility": "setCriticalCompressibilityFactor",
+    }
+
+    for phase_index in range(system.getNumberOfPhases()):
+        try:
+            phase = system.getPhase(phase_index)
+        except Exception:  # pragma: no cover - defensive fallback
+            continue
+        if not hasattr(phase, "hasComponent"):
+            continue
+        component = None
+        for name in component_names:
+            if phase.hasComponent(name):
+                component = phase.getComponent(name)
+                break
+        if component is None:
+            continue
+        for field, setter_name in setter_map.items():
+            value = getattr(data, field, None)
+            if value is None:
+                continue
+            setter = getattr(component, setter_name, None)
+            if setter is None:
+                continue
+            setter(value)
+
+def _system_interface_class():
+    """Return the JPype proxy for ``neqsim.thermo.system.SystemInterface``."""
+
+    if not hasattr(_system_interface_class, "_cached"):
+        _system_interface_class._cached = jpype.JClass(  # type: ignore[attr-defined]
+            "neqsim.thermo.system.SystemInterface"
+        )
+    return _system_interface_class._cached  # type: ignore[attr-defined]
+
+
+def _resolve_alias(name: str) -> str:
+    try:
+        return jneqsim.thermo.component.Component.getComponentNameFromAlias(name)
+    except Exception:  # pragma: no cover - defensive alias resolution
+        return name
+
+
+def _has_component_in_database(name: str) -> bool:
+    database = jneqsim.util.database.NeqSimDataBase
+    return database.hasComponent(name) or database.hasTempComponent(name)
+
+
+def _args_look_like_component_properties(args: Tuple[object, ...]) -> bool:
+    return len(args) == 3 and all(isinstance(value, (int, float)) for value in args)
 
 
 @jpype.JImplementationFor("neqsim.thermo.system.SystemInterface")
@@ -399,6 +531,40 @@ class _SystemInterface:
             if hasattr(self, "_extended_database_provider"):
                 delattr(self, "_extended_database_provider")
         return self
+
+    def addComponent(self, name, amount, *args):  # noqa: N802 - Java signature
+        alias_name = _resolve_alias(name)
+        component_data = None
+
+        if getattr(self, "_use_extended_database", False) and not _has_component_in_database(
+            alias_name
+        ):
+            try:
+                provider = _get_extended_provider(self)
+                component_data = provider.get_component(name)
+            except (ExtendedDatabaseError, ModuleNotFoundError):
+                component_data = None
+
+            if component_data is not None and not _args_look_like_component_properties(args):
+                if args:
+                    raise NotImplementedError(
+                        "Extended database currently supports components specified in moles (unit='no') "
+                        "without explicit phase targeting or alternative units."
+                    )
+                result = _system_interface_class().addComponent(
+                    self,
+                    name,
+                    float(amount),
+                    component_data.tc,
+                    component_data.pc,
+                    component_data.omega,
+                )
+
+                _apply_extended_properties(self, (alias_name, name), component_data)
+
+                return result
+
+        return _system_interface_class().addComponent(self, name, amount, *args)
 
 
 def fluid(name="srk", temperature=298.15, pressure=1.01325):
@@ -1186,13 +1352,9 @@ def addComponent(thermoSystem, name, moles, unit="no", phase=-10):
     Returns:
     None
     """
-    alias_name = name
-    try:
-        alias_name = jneqsim.thermo.component.Component.getComponentNameFromAlias(name)
-    except Exception:  # pragma: no cover - defensive alias resolution
-        pass
+    alias_name = _resolve_alias(name)
 
-    if getattr(thermoSystem, "_use_extended_database", False) and not jneqsim.util.database.NeqSimDataBase.hasComponent(alias_name):
+    if getattr(thermoSystem, "_use_extended_database", False) and not _has_component_in_database(alias_name):
         try:
             provider = _get_extended_provider(thermoSystem)
             component_data = provider.get_component(name)
