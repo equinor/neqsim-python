@@ -31,13 +31,15 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ### Development tooling
 
-This repository uses [`pre-commit`](https://pre-commit.com/) to run automated formatting and linting before each commit. After installing the project dependencies (for example with `poetry install`), enable the hooks locally with:
+This repository uses [`pre-commit`](https://pre-commit.com/) to run automated formatting and linting before each commit. After installing the project dependencies (for example with `poetry install`), point Git to the versioned hook scripts so the checks run automatically on every commit:
 
 ```
-poetry run pre-commit install
+git config core.hooksPath .githooks
 ```
 
-You can run all hooks against the codebase at any time with:
+The configured hook calls `pre-commit` via Poetry when available, so the same tooling is used regardless of how the command is invoked. You can still install the hooks with `poetry run pre-commit install` if you prefer the standard workflow.
+
+Run all hooks against the codebase at any time with:
 
 ```
 poetry run pre-commit run --all-files
