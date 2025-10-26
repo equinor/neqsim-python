@@ -374,10 +374,16 @@ class _ChemicalsDatabaseProvider:
         ]
         if phase_change is not None:
             triple_point_candidates.append(getattr(phase_change, "Tt", None))
-        self._triple_point = next((func for func in triple_point_candidates if func), None)
-        self._tb = getattr(phase_change, "Tb", None) if phase_change is not None else None
+        self._triple_point = next(
+            (func for func in triple_point_candidates if func), None
+        )
+        self._tb = (
+            getattr(phase_change, "Tb", None) if phase_change is not None else None
+        )
         self._molecular_weight = (
-            getattr(elements, "molecular_weight", None) if elements is not None else None
+            getattr(elements, "molecular_weight", None)
+            if elements is not None
+            else None
         )
 
     def get_component(self, name: str) -> _ChemicalComponentData:
@@ -416,17 +422,22 @@ class _ChemicalsDatabaseProvider:
             pc=float(pc) / 1.0e5,  # chemicals returns pressure in Pa
             omega=float(omega),
             molar_mass=molar_mass,
-            normal_boiling_point=
-                float(normal_boiling_point) if normal_boiling_point is not None else None,
-            triple_point_temperature=
+            normal_boiling_point=(
+                float(normal_boiling_point)
+                if normal_boiling_point is not None
+                else None
+            ),
+            triple_point_temperature=(
                 float(triple_point_temperature)
                 if triple_point_temperature is not None
-                else None,
+                else None
+            ),
             critical_volume=critical_volume,
-            critical_compressibility=
+            critical_compressibility=(
                 float(critical_compressibility)
                 if critical_compressibility is not None
-                else None,
+                else None
+            ),
         )
 
     @staticmethod
@@ -491,6 +502,7 @@ def _apply_extended_properties(
                 continue
             setter(value)
 
+
 def _system_interface_class():
     """Return the JPype proxy for ``neqsim.thermo.system.SystemInterface``."""
 
@@ -536,16 +548,18 @@ class _SystemInterface:
         alias_name = _resolve_alias(name)
         component_data = None
 
-        if getattr(self, "_use_extended_database", False) and not _has_component_in_database(
-            alias_name
-        ):
+        if getattr(
+            self, "_use_extended_database", False
+        ) and not _has_component_in_database(alias_name):
             try:
                 provider = _get_extended_provider(self)
                 component_data = provider.get_component(name)
             except (ExtendedDatabaseError, ModuleNotFoundError):
                 component_data = None
 
-            if component_data is not None and not _args_look_like_component_properties(args):
+            if component_data is not None and not _args_look_like_component_properties(
+                args
+            ):
                 if args:
                     raise NotImplementedError(
                         "Extended database currently supports components specified in moles (unit='no') "
@@ -1354,7 +1368,9 @@ def addComponent(thermoSystem, name, moles, unit="no", phase=-10):
     """
     alias_name = _resolve_alias(name)
 
-    if getattr(thermoSystem, "_use_extended_database", False) and not _has_component_in_database(alias_name):
+    if getattr(
+        thermoSystem, "_use_extended_database", False
+    ) and not _has_component_in_database(alias_name):
         try:
             provider = _get_extended_provider(thermoSystem)
             component_data = provider.get_component(name)

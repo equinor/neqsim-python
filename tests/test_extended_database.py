@@ -34,11 +34,17 @@ def test_use_extended_database_allows_missing_component():
 
     normal_boiling_point = Tb(cas)
     if normal_boiling_point is not None:
-        assert pytest.approx(component.getNormalBoilingPoint(), rel=1e-6) == normal_boiling_point
+        assert (
+            pytest.approx(component.getNormalBoilingPoint(), rel=1e-6)
+            == normal_boiling_point
+        )
 
     critical_volume = Vc(cas)
     if critical_volume is not None:
-        assert pytest.approx(component.getCriticalVolume(), rel=1e-6) == critical_volume * 1.0e6
+        assert (
+            pytest.approx(component.getCriticalVolume(), rel=1e-6)
+            == critical_volume * 1.0e6
+        )
 
     critical_compressibility = Zc(cas)
     if critical_compressibility is not None:
