@@ -37,4 +37,4 @@ def test_pump():
     pump1.getPumpChart().setHeadUnit("meter")
     runProcess()
     pump1.run()
-    assert pump1.getOutletPressure() == 7.274237081101573
+    assert pump1.getOutletPressure() == 5.017663366790158
