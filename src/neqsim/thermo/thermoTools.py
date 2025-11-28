@@ -433,7 +433,7 @@ def fluid_df(
         )
     else:
         # When only pseudo components exist, create an empty base fluid
-        fluid7 = fluid("srk")
+        fluid7 = fluid("pr")
     
     # Check if we have TBP/pseudo components to add (components with MolarMass)
     hasTBPComponents = (
