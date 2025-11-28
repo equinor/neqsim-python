@@ -432,8 +432,15 @@ def fluid_df(
             definedComponentsFrame["MolarComposition[-]"].tolist(),
         )
     else:
+        # When only pseudo components exist, create an empty base fluid
         fluid7 = fluid("srk")
-    if not TBPComponentsFrame.equals(reservoirFluiddf) and TBPComponentsFrame.size > 0:
+    
+    # Check if we have TBP/pseudo components to add (components with MolarMass)
+    hasTBPComponents = (
+        "MolarMass[kg/mol]" in reservoirFluiddf
+        and TBPComponentsFrame.size > 0
+    )
+    if hasTBPComponents:
         addOilFractions(
             fluid7,
             TBPComponentsFrame["ComponentName"].tolist(),
