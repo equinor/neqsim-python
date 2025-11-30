@@ -312,6 +312,10 @@ fluid_type = {
     "cpa-pr": jneqsim.thermo.system.SystemPrCPA,
     "CPA-PR-EoS": jneqsim.thermo.system.SystemPrCPA,
     "SRK-TwuCoon-EOS": jneqsim.thermo.system.SystemSrkTwuCoonStatoilEos,
+    "span-wagner": jneqsim.thermo.system.SystemSpanWagnerEos,
+    "gerg-2008": jneqsim.thermo.system.SystemGERG2008Eos,
+    "bwrs": jneqsim.thermo.system.SystemBWRSEos,
+    "ideal-gas": jneqsim.thermo.system.SystemIdealGas,
 }
 
 
