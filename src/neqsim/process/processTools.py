@@ -3,7 +3,7 @@ import json
 from jpype.types import JDouble
 from jpype.types import *
 
-from neqsim.neqsimpython import jneqsim
+from neqsim import jneqsim
 
 processoperations = jneqsim.process.processmodel.ProcessSystem()
 _loop_mode = False

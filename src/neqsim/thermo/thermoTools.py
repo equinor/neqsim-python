@@ -271,7 +271,7 @@ import jpype
 import pandas
 from jpype.types import *
 from neqsim import has_matplotlib, has_tabulate
-from neqsim.neqsimpython import jneqsim
+from neqsim import jneqsim
 from neqsim.standards import ISO6976
 import math
 
