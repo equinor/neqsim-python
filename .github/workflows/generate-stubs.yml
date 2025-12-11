@@ -42,4 +42,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: regenerate Java stubs"
-          file_pattern: "src/neqsim-stubs/**"
+          file_pattern: "src/jneqsim-stubs/**"
