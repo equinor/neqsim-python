@@ -1,0 +1,45 @@
+name: Generate Java Stubs
+
+on:
+  # Run when JAR files are updated
+  push:
+    paths:
+      - 'src/neqsim/lib/**/*.jar'
+  # Run on release
+  release:
+    types: [published]
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  generate-stubs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install --with dev
+      
+      - name: Generate stubs
+        run: |
+          poetry run python scripts/generate_stubs.py
+      
+      - name: Commit updated stubs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: regenerate Java stubs"
+          file_pattern: "src/jneqsim-stubs/**"
