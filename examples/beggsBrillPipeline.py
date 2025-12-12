@@ -34,11 +34,15 @@ multiphase_fluid.setPressure(80.0, "bara")
 multiphase_fluid.setTotalFlowRate(100000.0, "kg/hr")
 
 # Create inlet stream
-inlet_stream = jneqsim.process.equipment.stream.Stream("Pipeline Inlet", multiphase_fluid)
+inlet_stream = jneqsim.process.equipment.stream.Stream(
+    "Pipeline Inlet", multiphase_fluid
+)
 
 # Create Beggs and Brill pipeline
 # This pipeline goes uphill with significant elevation change
-pipe = jneqsim.process.equipment.pipeline.PipeBeggsAndBrills("Multiphase Pipeline", inlet_stream)
+pipe = jneqsim.process.equipment.pipeline.PipeBeggsAndBrills(
+    "Multiphase Pipeline", inlet_stream
+)
 
 # Set pipeline geometry
 pipe.setLength(10000.0)  # 10 km length

@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,8 +9,6 @@ import java.io
 import jneqsim.fluidmechanics.flowsolver.onephaseflowsolver
 import jneqsim.fluidmechanics.flowsolver.twophaseflowsolver
 import typing
-
-
 
 class FlowSolverInterface:
     def setBoundarySpecificationType(self, int: int) -> None: ...
@@ -29,11 +27,14 @@ class FlowSolver(FlowSolverInterface, java.io.Serializable):
     def solve(self) -> None: ...
     def solveTDMA(self) -> None: ...
 
-
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flowsolver")``.
 
     FlowSolver: typing.Type[FlowSolver]
     FlowSolverInterface: typing.Type[FlowSolverInterface]
-    onephaseflowsolver: jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.__module_protocol__
-    twophaseflowsolver: jneqsim.fluidmechanics.flowsolver.twophaseflowsolver.__module_protocol__
+    onephaseflowsolver: (
+        jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.__module_protocol__
+    )
+    twophaseflowsolver: (
+        jneqsim.fluidmechanics.flowsolver.twophaseflowsolver.__module_protocol__
+    )

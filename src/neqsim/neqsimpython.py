@@ -3,6 +3,7 @@ import jpype
 
 class NeqSimJVMError(Exception):
     """Exception raised when JVM initialization fails."""
+
     pass
 
 

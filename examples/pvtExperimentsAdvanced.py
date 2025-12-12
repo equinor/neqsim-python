@@ -111,20 +111,22 @@ for p in pressures:
     oil.setPressure(p, "bara")
     TPflash(oil)
     oil.initThermoProperties()
-    
+
     v_total = oil.getVolume("m3")
     rel_vol = v_total / v_sat
-    
+
     # Get phase properties
     if oil.hasPhaseType("oil"):
         rho_oil = oil.getPhase("oil").getDensity("kg/m3")
     else:
         rho_oil = oil.getDensity("kg/m3")
-    
+
     if oil.hasPhaseType("gas"):
         rho_gas = oil.getPhase("gas").getDensity("kg/m3")
         z_gas = oil.getPhase("gas").getZ()
-        print(f"{p:8.1f} | {rel_vol:7.4f} | {rho_oil:8.1f} | {rho_gas:8.2f} | {z_gas:.4f}")
+        print(
+            f"{p:8.1f} | {rel_vol:7.4f} | {rho_oil:8.1f} | {rho_gas:8.2f} | {z_gas:.4f}"
+        )
     else:
         print(f"{p:8.1f} | {rel_vol:7.4f} | {rho_oil:8.1f} | (single) | -")
 
@@ -168,16 +170,16 @@ for i, p in enumerate(pressures):
     diff_oil.setPressure(p, "bara")
     TPflash(diff_oil)
     diff_oil.initThermoProperties()
-    
+
     if diff_oil.hasPhaseType("gas") and diff_oil.hasPhaseType("oil"):
         v_oil = diff_oil.getPhase("oil").getVolume("m3")
         v_gas = diff_oil.getPhase("gas").getVolume("m3")
-        
+
         # Simple GOR calculation (approximate)
         n_gas = diff_oil.getPhase("gas").getNumberOfMolesInPhase()
         n_oil = diff_oil.getPhase("oil").getNumberOfMolesInPhase()
         gor = (n_gas / n_oil) * 100 if n_oil > 0 else 0
-        
+
         print(f"{p:8.1f} | {v_oil:.2e} | {v_gas:.2e} | {gor:.1f}")
     else:
         v_total = diff_oil.getVolume("m3")
@@ -204,9 +206,9 @@ sep_oil.setMultiPhaseCheck(True)
 
 # Separator conditions
 sep_stages = [
-    (50.0, 40.0),   # Stage 1: 50 bara, 40°C
-    (10.0, 30.0),   # Stage 2: 10 bara, 30°C
-    (1.0, 20.0),    # Stock tank: 1 bara, 20°C
+    (50.0, 40.0),  # Stage 1: 50 bara, 40°C
+    (10.0, 30.0),  # Stage 2: 10 bara, 30°C
+    (1.0, 20.0),  # Stock tank: 1 bara, 20°C
 ]
 
 print("\nStage | P [bara] | T [°C] | Gas Fraction | Oil Density")
@@ -217,14 +219,18 @@ for i, (p, t) in enumerate(sep_stages):
     sep_oil.setPressure(p, "bara")
     TPflash(sep_oil)
     sep_oil.initThermoProperties()
-    
+
     if sep_oil.hasPhaseType("gas"):
         gas_frac = sep_oil.getPhase("gas").getBeta()
-        oil_rho = sep_oil.getPhase("oil").getDensity("kg/m3") if sep_oil.hasPhaseType("oil") else 0
+        oil_rho = (
+            sep_oil.getPhase("oil").getDensity("kg/m3")
+            if sep_oil.hasPhaseType("oil")
+            else 0
+        )
     else:
         gas_frac = 0
         oil_rho = sep_oil.getDensity("kg/m3")
-    
+
     stage_name = f"Stage {i+1}" if i < 2 else "Tank"
     print(f"{stage_name:5} | {p:8.1f} | {t:6.1f} | {gas_frac:12.4f} | {oil_rho:.1f}")
 
@@ -268,14 +274,14 @@ for co2_pct in [0, 10, 20, 30]:
     swell_oil.addComponent("n-decane", 40.0 * scale, "mol%")
     swell_oil.setMixingRule("classic")
     swell_oil.setMultiPhaseCheck(True)
-    
+
     swell_oil.setTemperature(80.0, "C")
     psat_swell = bubblepoint(swell_oil)
     swell_oil.setPressure(psat_swell, "bara")
     TPflash(swell_oil)
     swell_oil.initThermoProperties()
     v_swell = swell_oil.getVolume("m3")
-    
+
     swelling_factor = v_swell / v_ref
     print(f"{co2_pct:9} | {swelling_factor:8.4f} | {psat_swell:8.1f}")
 
@@ -302,7 +308,7 @@ for t, p in [(25, 50), (50, 50), (100, 50), (100, 100), (100, 200)]:
     TPflash(visc_oil)
     visc_oil.initThermoProperties()
     visc_oil.initPhysicalProperties("viscosity")
-    
+
     mu = visc_oil.getViscosity("cP")
     print(f"{t:6} | {p:8} | {mu:.4f}")
 
@@ -311,15 +317,17 @@ for t, p in [(25, 50), (50, 50), (100, 50), (100, 100), (100, 200)]:
 # =============================================================================
 print("\n8. PVT EXPERIMENTS SUMMARY")
 print("-" * 40)
-print("""
+print(
+    """
 Experiment          | Purpose
 --------------------|----------------------------------------------
 CME                 | Oil compressibility, relative volume, GOR
-Differential        | Gas liberation, reservoir depletion behavior  
+Differential        | Gas liberation, reservoir depletion behavior
 Liberation          |
 Separator Test      | Optimize surface separation, stock tank oil
 Swelling Test       | EOR potential with gas injection (CO2, HC gas)
 Viscosity Study     | Flow assurance, production optimization
-""")
+"""
+)
 
 print("=" * 70)

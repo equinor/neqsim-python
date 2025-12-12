@@ -3,7 +3,7 @@
 Flare System Simulation Example
 
 This example demonstrates using the Flare unit operation in NeqSim.
-A flare is used to safely combust emergency relief gases, typically 
+A flare is used to safely combust emergency relief gases, typically
 from pressure safety valves (PSV) or blowdown systems.
 
 Features demonstrated:
@@ -82,9 +82,9 @@ if capacity_check.isOverloaded():
     print(f"  Mass utilization: {capacity_check.getMassUtilization() * 100:.1f}%")
 else:
     print(f"\n✓ Flare is within design capacity")
-    if not float('nan') == capacity_check.getHeatUtilization():
+    if not float("nan") == capacity_check.getHeatUtilization():
         print(f"  Heat utilization: {capacity_check.getHeatUtilization() * 100:.1f}%")
-    if not float('nan') == capacity_check.getMassUtilization():
+    if not float("nan") == capacity_check.getMassUtilization():
         print(f"  Mass utilization: {capacity_check.getMassUtilization() * 100:.1f}%")
 
 print("=" * 60)

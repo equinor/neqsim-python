@@ -92,9 +92,18 @@ for config in equipment_config:
 # List all available equipment types
 print("\n4. Available equipment types (partial list):")
 equipment_types = [
-    "Stream", "Compressor", "Pump", "Separator", "HeatExchanger",
-    "ThrottlingValve", "Mixer", "Splitter", "Cooler", "Heater",
-    "Expander", "Pipeline"
+    "Stream",
+    "Compressor",
+    "Pump",
+    "Separator",
+    "HeatExchanger",
+    "ThrottlingValve",
+    "Mixer",
+    "Splitter",
+    "Cooler",
+    "Heater",
+    "Expander",
+    "Pipeline",
 ]
 for eq_type in equipment_types:
     print(f"   - {eq_type}")

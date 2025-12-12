@@ -332,7 +332,9 @@ def fluid(name="srk", temperature=298.15, pressure=1.01325):
     object: An instance of the specified thermodynamic fluid system.
     """
     if name not in fluid_type:
-        raise ValueError(f"Fluid model {name} not found. Available models are {list(fluid_type.keys())}")
+        raise ValueError(
+            f"Fluid model {name} not found. Available models are {list(fluid_type.keys())}"
+        )
     fluid_function = fluid_type[name]
     return fluid_function(temperature, pressure)
 
@@ -440,11 +442,10 @@ def fluid_df(
     else:
         # When only pseudo components exist, create an empty base fluid
         fluid7 = fluid("pr")
-    
+
     # Check if we have TBP/pseudo components to add (components with MolarMass)
     hasTBPComponents = (
-        "MolarMass[kg/mol]" in reservoirFluiddf
-        and TBPComponentsFrame.size > 0
+        "MolarMass[kg/mol]" in reservoirFluiddf and TBPComponentsFrame.size > 0
     )
     if hasTBPComponents:
         addOilFractions(

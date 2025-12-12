@@ -76,14 +76,18 @@ print(f"  Total density: {natural_gas.getDensity('kg/m3'):.2f} kg/m³")
 if natural_gas.hasPhaseType("gas"):
     gas_phase = natural_gas.getPhase("gas")
     print(f"  Gas phase:")
-    print(f"    - Mole fraction: {natural_gas.getMoleFraction(natural_gas.getPhaseNumberOfPhase('gas')):.4f}")
+    print(
+        f"    - Mole fraction: {natural_gas.getMoleFraction(natural_gas.getPhaseNumberOfPhase('gas')):.4f}"
+    )
     print(f"    - Density: {gas_phase.getDensity('kg/m3'):.2f} kg/m³")
     print(f"    - Z-factor: {gas_phase.getZ():.4f}")
 
 if natural_gas.hasPhaseType("oil"):
     oil_phase = natural_gas.getPhase("oil")
     print(f"  Liquid phase:")
-    print(f"    - Mole fraction: {natural_gas.getMoleFraction(natural_gas.getPhaseNumberOfPhase('oil')):.4f}")
+    print(
+        f"    - Mole fraction: {natural_gas.getMoleFraction(natural_gas.getPhaseNumberOfPhase('oil')):.4f}"
+    )
     print(f"    - Density: {oil_phase.getDensity('kg/m3'):.2f} kg/m³")
 
 # =============================================================================
@@ -182,7 +186,8 @@ print(f"  New pressure: {new_pressure:.2f} bara")
 print("\n" + "=" * 70)
 print("FLASH CALCULATION SUMMARY")
 print("=" * 70)
-print("""
+print(
+    """
 Flash Type | Given          | Find           | Application
 -----------|----------------|----------------|---------------------------
 TPflash    | T, P           | Phases, comp.  | General equilibrium
@@ -191,5 +196,6 @@ PSflash    | P, S           | T, phases      | Compressors, turbines
 TVflash    | T, V           | P, phases      | Closed vessels
 VHflash    | V, H           | T, P, phases   | Adiabatic closed systems
 VUflash    | V, U           | T, P, phases   | Isolated systems
-""")
+"""
+)
 print("=" * 70)

@@ -34,9 +34,7 @@ def rename_package_in_stubs(stubs_dir: Path, old_name: str, new_name: str):
 
         # Replace import statements and type references
         # Match 'neqsim.' but not 'jneqsim.' (negative lookbehind)
-        new_content = re.sub(
-            rf"(?<!j){old_name}\.", f"{new_name}.", content
-        )
+        new_content = re.sub(rf"(?<!j){old_name}\.", f"{new_name}.", content)
 
         if new_content != content:
             pyi_file.write_text(new_content, encoding="utf-8")
@@ -109,7 +107,7 @@ def generate_stubs():
     print("\nFor VS Code with Pylance, add to settings.json:")
     print('  "python.analysis.extraPaths": ["src/jneqsim-stubs"]')
     print("\nFor mypy, add to pyproject.toml:")
-    print('  [tool.mypy]')
+    print("  [tool.mypy]")
     print('  mypy_path = "src/jneqsim-stubs"')
 
 

@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -7,8 +7,6 @@ else:
 
 import java.lang
 import typing
-
-
 
 class SurroundingEnvironment:
     def getHeatTransferCoefficient(self) -> float: ...
@@ -28,7 +26,6 @@ class PipeSurroundingEnvironment(SurroundingEnvironmentBaseClass):
     def __init__(self): ...
     @typing.overload
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.geometrydefinitions.surrounding")``.
