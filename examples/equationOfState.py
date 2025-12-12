@@ -12,6 +12,7 @@ Equations of State Covered:
     - PR: Peng-Robinson (similar to SRK, often better liquid density)
     - CPA: Cubic-Plus-Association (water, alcohols, glycols)
     - GERG-2008: Reference EoS for natural gas (very accurate)
+    - EOS-CG: For CO2 and combustion product gases
     - PR-Peneloux: Peng-Robinson with volume translation
 
 @author: NeqSim Team
@@ -38,7 +39,8 @@ EoS Name        | Description
 'cpa'           | CPA-SRK - polar & associating compounds
 'cpa-pr'        | CPA-Peng-Robinson
 'gerg-2008'     | GERG-2008 - reference EoS for natural gas
-'span-wagner'   | Span-Wagner - reference EoS for CO2
+'eos-cg'        | EOS-CG - CO2 and combustion gases (GERG-2008 based)
+'span-wagner'   | Span-Wagner - reference EoS for pure CO2
 'electrolyte'   | For brine/salt solutions
 'nrtl'          | Activity coefficient model
 'unifac'        | UNIFAC group contribution model
@@ -199,9 +201,58 @@ for eos in ["srk", "pr", "span-wagner"]:
         print(f"{eos:13} | Error: {e}")
 
 # =============================================================================
-# 6. GUIDELINES FOR EoS SELECTION
+# 6. EOS-CG FOR CO2 AND COMBUSTION GASES
 # =============================================================================
-print("\n6. GUIDELINES FOR EoS SELECTION")
+print("\n6. EOS-CG FOR CO2 AND COMBUSTION GASES")
+print("-" * 40)
+print("""
+EOS-CG (Equation of State for Combustion Gases) is based on GERG-2008
+but optimized for CO2-rich mixtures and combustion product gases.
+
+Best suited for:
+  - Carbon capture and storage (CCS)
+  - CO2 transport pipelines
+  - Flue gas/exhaust gas mixtures
+  - Oxy-fuel combustion systems
+  - Blue/green hydrogen with CO2
+
+Components: CO2, N2, O2, Ar, H2O, CO, H2, H2S, SO2, CH4
+""")
+
+# Create a typical flue gas / CCS mixture
+print("Example: CO2-rich CCS mixture")
+print("Composition: 95% CO2, 3% N2, 1% O2, 1% Ar")
+print(f"\nConditions: T = 25°C, P = 100 bara (dense phase CO2)")
+print("\nEoS           | Density [kg/m³] | Z-factor")
+print("-" * 45)
+
+for eos in ["srk", "pr", "eos-cg"]:
+    try:
+        ccs_gas = fluid(eos)
+        ccs_gas.addComponent("CO2", 95.0, "mol%")
+        ccs_gas.addComponent("nitrogen", 3.0, "mol%")
+        ccs_gas.addComponent("oxygen", 1.0, "mol%")
+        ccs_gas.addComponent("argon", 1.0, "mol%")
+        if eos not in ["eos-cg"]:
+            ccs_gas.setMixingRule("classic")
+        ccs_gas.setTemperature(25.0, "C")
+        ccs_gas.setPressure(100.0, "bara")
+        TPflash(ccs_gas)
+        ccs_gas.initThermoProperties()
+        
+        rho = ccs_gas.getDensity("kg/m3")
+        z = ccs_gas.getZ()
+        print(f"{eos:13} | {rho:15.2f} | {z:.5f}")
+    except Exception as e:
+        print(f"{eos:13} | Error: {e}")
+
+print("\nNote: EOS-CG provides higher accuracy for CO2 mixtures near")
+print("      critical conditions compared to cubic EoS (SRK/PR).")
+
+# =============================================================================
+# 7. GUIDELINES FOR EoS SELECTION
+# =============================================================================
+print("\n7. GUIDELINES FOR EoS SELECTION")
 print("-" * 40)
 print("""
 Application                          | Recommended EoS
@@ -214,8 +265,12 @@ Oil & gas upstream                   | SRK or PR with kij
 Glycol dehydration                   | CPA-SRK
 Water content in gas                 | CPA-SRK or CPA-PR
                                      |
-CO2 capture/storage                  | Span-Wagner (pure CO2)
-                                     | SRK/PR with kij (mixtures)
+CO2 capture/storage (CCS)            | EOS-CG (CO2 + impurities)
+                                     | Span-Wagner (pure CO2)
+                                     |
+CO2 transport pipelines              | EOS-CG
+                                     |
+Flue gas / combustion products       | EOS-CG
                                      |
 Refinery / petrochemical             | SRK or PR with kij
                                      |
