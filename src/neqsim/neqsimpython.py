@@ -13,8 +13,7 @@ def _get_jvm_error_message() -> str:
         "Common solutions:\n"
         "1. Install Java JDK 11+ from https://adoptium.net/\n"
         "2. Ensure JAVA_HOME environment variable is set\n"
-        "3. For Google Colab, run: !apt-get install -y default-jdk\n"
-        "4. Ensure 64-bit Python matches 64-bit Java (or 32-bit with 32-bit)\n\n"
+        "3. Ensure 64-bit Python matches 64-bit Java (or 32-bit with 32-bit)\n\n"
         "See: https://github.com/equinor/neqsim-python#prerequisites"
     )
 

@@ -140,9 +140,11 @@ def save_xml(javaobject, filename):
     xstream = jpype.JPackage("com.thoughtworks.xstream")
     streamer = xstream.XStream()
     xml = streamer.toXML(javaobject)
+    # Convert java.lang.String to Python str for file writing
+    xml_str = str(xml)
     with open(filename, "w") as f:
-        f.write(xml)
-    return xml
+        f.write(xml_str)
+    return xml_str
 
 
 def open_xml(filename):
