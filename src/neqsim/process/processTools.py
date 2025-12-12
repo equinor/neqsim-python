@@ -801,3 +801,163 @@ def results_json(process, filename=None):
     except Exception as e:
         print(f"Error generating JSON report: {e}")
         return None
+
+def ejector(name: str, motive_stream: Any, suction_stream: Any) -> Any:
+    """
+    Create an ejector (gas/steam jet) for mixing streams.
+
+    An ejector uses a high-pressure motive stream to entrain and compress
+    a low-pressure suction stream. Commonly used in vacuum systems and
+    refrigeration cycles.
+
+    Args:
+        name: Name of the ejector unit.
+        motive_stream: High-pressure driving stream.
+        suction_stream: Low-pressure stream to be entrained.
+
+    Returns:
+        Ejector: The created ejector object.
+
+    Example:
+        >>> ejector1 = ejector('ej1', high_p_stream, low_p_stream)
+        >>> runProcess()
+        >>> print(ejector1.getOutletStream().getPressure('bara'))
+    """
+    ejector_unit = jneqsim.process.equipment.ejector.Ejector(name, motive_stream, suction_stream)
+    if not _loop_mode:
+        processoperations.add(ejector_unit)
+    return ejector_unit
+
+
+def flare(name: str, inlet_stream: Any, flame_height: float = 30.0,
+          radiant_fraction: float = 0.18, tip_diameter: float = 0.3) -> Any:
+    """
+    Create a flare unit for combustion of relief gases.
+
+    A flare safely combusts emergency relief gases, typically from PSVs
+    or blowdown systems. Calculates heat release, CO2 emissions, and
+    thermal radiation.
+
+    Args:
+        name: Name of the flare unit.
+        inlet_stream: Stream of gas to be flared.
+        flame_height: Effective flame height in meters (default 30.0).
+        radiant_fraction: Fraction of heat radiated (default 0.18).
+        tip_diameter: Flare tip diameter in meters (default 0.3).
+
+    Returns:
+        Flare: The created flare object.
+
+    Example:
+        >>> flare1 = flare('main_flare', relief_gas, flame_height=50.0)
+        >>> runProcess()
+        >>> print(f"Heat duty: {flare1.getHeatDuty('MW'):.2f} MW")
+        >>> print(f"CO2: {flare1.getCO2Emission('kg/hr'):.0f} kg/hr")
+    """
+    flare_unit = jneqsim.process.equipment.flare.Flare(name, inlet_stream)
+    flare_unit.setFlameHeight(flame_height)
+    flare_unit.setRadiantFraction(radiant_fraction)
+    flare_unit.setTipDiameter(tip_diameter)
+    if not _loop_mode:
+        processoperations.add(flare_unit)
+    return flare_unit
+
+
+def safety_valve(name: str, inlet_stream: Any, set_pressure: float,
+                 full_open_pressure: float = None, blowdown: float = 7.0) -> Any:
+    """
+    Create a Pressure Safety Valve (PSV) for overpressure protection.
+
+    A PSV provides mechanical overpressure protection as a final safety
+    layer. Opens when pressure exceeds set pressure and reseats after
+    pressure drops below the blowdown threshold.
+
+    Args:
+        name: Name of the safety valve.
+        inlet_stream: Stream connected to the protected equipment.
+        set_pressure: Pressure at which PSV starts to open (bara).
+        full_open_pressure: Pressure at which PSV is fully open (bara).
+                          If None, defaults to set_pressure * 1.1.
+        blowdown: Percentage below set pressure at which PSV reseats
+                 (default 7.0, meaning reseats at 93% of set pressure).
+
+    Returns:
+        SafetyValve: The created safety valve object.
+
+    Example:
+        >>> psv = safety_valve('PSV-001', sep_gas_out, set_pressure=55.0)
+        >>> runProcess()
+        >>> if psv.getPercentValveOpening() > 0:
+        ...     print("PSV is relieving!")
+    """
+    psv = jneqsim.process.equipment.valve.SafetyValve(name, inlet_stream)
+    psv.setPressureSpec(set_pressure)
+    if full_open_pressure is None:
+        full_open_pressure = set_pressure * 1.1
+    psv.setFullOpenPressure(full_open_pressure)
+    psv.setBlowdown(blowdown)
+    if not _loop_mode:
+        processoperations.add(psv)
+    return psv
+
+
+def beggs_brill_pipe(name: str, inlet_stream: Any, length: float,
+                     diameter: float, elevation: float = 0.0,
+                     roughness: float = 50e-6) -> Any:
+    """
+    Create a Beggs and Brill multiphase pipeline.
+
+    Uses the Beggs and Brill correlation for multiphase flow including
+    flow pattern prediction, liquid holdup, and pressure drop with
+    elevation effects.
+
+    Args:
+        name: Name of the pipeline.
+        inlet_stream: Inlet stream to the pipeline.
+        length: Pipeline length in meters.
+        diameter: Internal diameter in meters.
+        elevation: Elevation change (outlet - inlet) in meters. Positive
+                  for uphill, negative for downhill. Default 0.0.
+        roughness: Pipe wall roughness in meters (default 50e-6).
+
+    Returns:
+        PipeBeggsAndBrills: The created pipeline object.
+
+    Example:
+        >>> pipe = beggs_brill_pipe('export', inlet, length=10000,
+        ...                         diameter=0.3, elevation=100)
+        >>> runProcess()
+        >>> print(f"Outlet P: {pipe.getOutletStream().getPressure('bara'):.1f}")
+    """
+    pipe = jneqsim.process.equipment.pipeline.PipeBeggsAndBrills(name, inlet_stream)
+    pipe.setLength(length)
+    pipe.setDiameter(diameter)
+    pipe.setElevation(elevation)
+    pipe.setPipeWallRoughness(roughness)
+    if not _loop_mode:
+        processoperations.add(pipe)
+    return pipe
+
+
+def create_equipment(name: str, equipment_type: str) -> Any:
+    """
+    Create process equipment using the equipment factory.
+
+    Allows dynamic creation of equipment by type name string, useful
+    for configuration-driven process design.
+
+    Args:
+        name: Name of the equipment.
+        equipment_type: Type of equipment. Valid types include:
+            'Stream', 'Compressor', 'Pump', 'Separator', 'HeatExchanger',
+            'ThrottlingValve', 'Mixer', 'Splitter', 'Cooler', 'Heater',
+            'Expander', 'Pipeline', 'WindTurbine', etc.
+
+    Returns:
+        ProcessEquipmentInterface: The created equipment object.
+
+    Example:
+        >>> valve = create_equipment('v1', 'ThrottlingValve')
+        >>> sep = create_equipment('sep1', 'Separator')
+    """
+    return jneqsim.process.equipment.EquipmentFactory.createEquipment(name, equipment_type)
