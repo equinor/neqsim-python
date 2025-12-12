@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -7,8 +7,6 @@ else:
 
 import java.lang
 import typing
-
-
 
 class MaterialLayer:
     def __init__(self, string: typing.Union[java.lang.String, str], double: float): ...
@@ -40,7 +38,6 @@ class Wall(WallInterface):
 
 class PipeWall(Wall):
     def __init__(self): ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.geometrydefinitions.internalgeometry.wall")``.

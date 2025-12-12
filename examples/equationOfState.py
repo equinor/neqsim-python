@@ -53,6 +53,7 @@ print(eos_list)
 print("\n2. COMPARING EoS FOR NATURAL GAS")
 print("-" * 40)
 
+
 # Define composition
 def create_natural_gas(eos_name):
     """Create a natural gas mixture with specified EoS."""
@@ -67,6 +68,7 @@ def create_natural_gas(eos_name):
     gas.addComponent("n-pentane", 0.5, "mol%")
     gas.setMixingRule("classic")
     return gas
+
 
 # Conditions
 temp_c = 25.0
@@ -85,16 +87,16 @@ for eos in ["srk", "pr", "gerg-2008"]:
         TPflash(gas)
         gas.initThermoProperties()
         gas.initPhysicalProperties()
-        
+
         z = gas.getZ()
         rho = gas.getDensity("kg/m3")
         cp = gas.getCp("J/molK")
-        
+
         if gas.hasPhaseType("gas"):
             sos = gas.getPhase("gas").getSoundSpeed()
         else:
             sos = gas.getPhase(0).getSoundSpeed()
-        
+
         print(f"{eos:11} | {z:9.5f} | {rho:9.2f} | {cp:9.2f} | {sos:8.1f}")
     except Exception as e:
         print(f"{eos:11} | Error: {e}")
@@ -106,6 +108,7 @@ print("\n3. CPA vs SRK FOR WATER-CONTAINING SYSTEMS")
 print("-" * 40)
 print("CPA handles hydrogen bonding (association) in water and alcohols")
 
+
 def create_wet_gas(eos_name):
     """Create a wet gas mixture with specified EoS."""
     if eos_name == "cpa":
@@ -114,12 +117,13 @@ def create_wet_gas(eos_name):
     else:
         gas = fluid(eos_name)
         gas.setMixingRule("classic")
-    
+
     gas.addComponent("methane", 90.0, "mol%")
     gas.addComponent("ethane", 5.0, "mol%")
     gas.addComponent("water", 5.0, "mol%")
     gas.setMultiPhaseCheck(True)
     return gas
+
 
 print(f"\nConditions: T = 25°C, P = 50 bara")
 print("Wet natural gas with 5 mol% water")
@@ -134,9 +138,9 @@ for eos in ["srk", "cpa"]:
         gas.setPressure(50.0, "bara")
         TPflash(gas)
         gas.initThermoProperties()
-        
+
         n_phases = gas.getNumberOfPhases()
-        
+
         if gas.hasPhaseType("gas"):
             gas_phase = gas.getPhase("gas")
             rho = gas_phase.getDensity("kg/m3")
@@ -146,7 +150,7 @@ for eos in ["srk", "cpa"]:
         else:
             rho = gas.getPhase(0).getDensity("kg/m3")
             water_in_gas = 0.0
-        
+
         print(f"{eos:6} | {n_phases:8} | {rho:11.2f} | {water_in_gas:.6f}")
     except Exception as e:
         print(f"{eos:6} | Error: {e}")
@@ -167,7 +171,7 @@ for eos in ["srk", "pr"]:
     heptane.setPressure(1.01325, "bara")
     TPflash(heptane)
     heptane.initThermoProperties()
-    
+
     rho = heptane.getDensity("kg/m3")
     print(f"{eos.upper()}: {rho:.1f} kg/m³")
 
@@ -193,7 +197,7 @@ for eos in ["srk", "pr", "span-wagner"]:
         co2.setPressure(80.0, "bara")
         TPflash(co2)
         co2.initThermoProperties()
-        
+
         rho = co2.getDensity("kg/m3")
         z = co2.getZ()
         print(f"{eos:13} | {rho:15.2f} | {z:.5f}")
@@ -205,7 +209,8 @@ for eos in ["srk", "pr", "span-wagner"]:
 # =============================================================================
 print("\n6. EOS-CG FOR CO2 AND COMBUSTION GASES")
 print("-" * 40)
-print("""
+print(
+    """
 EOS-CG (Equation of State for Combustion Gases) is based on GERG-2008
 but optimized for CO2-rich mixtures and combustion product gases.
 
@@ -217,7 +222,8 @@ Best suited for:
   - Blue/green hydrogen with CO2
 
 Components: CO2, N2, O2, Ar, H2O, CO, H2, H2S, SO2, CH4
-""")
+"""
+)
 
 # Create a typical flue gas / CCS mixture
 print("Example: CO2-rich CCS mixture")
@@ -239,7 +245,7 @@ for eos in ["srk", "pr", "eos-cg"]:
         ccs_gas.setPressure(100.0, "bara")
         TPflash(ccs_gas)
         ccs_gas.initThermoProperties()
-        
+
         rho = ccs_gas.getDensity("kg/m3")
         z = ccs_gas.getZ()
         print(f"{eos:13} | {rho:15.2f} | {z:.5f}")
@@ -254,7 +260,8 @@ print("      critical conditions compared to cubic EoS (SRK/PR).")
 # =============================================================================
 print("\n7. GUIDELINES FOR EoS SELECTION")
 print("-" * 40)
-print("""
+print(
+    """
 Application                          | Recommended EoS
 -------------------------------------|----------------------
 Natural gas properties               | GERG-2008 (most accurate)
@@ -279,5 +286,6 @@ Liquefied Natural Gas (LNG)          | GERG-2008 or PR
 Gas hydrates                         | CPA with hydrate model
                                      |
 Electrolyte solutions (brine)        | Electrolyte-CPA
-""")
+"""
+)
 print("=" * 70)

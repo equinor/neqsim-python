@@ -57,7 +57,9 @@ print("=" * 60)
 print("\nPump Specifications:")
 print(f"  Suction pressure:   {inlet_stream.getPressure('bara'):.1f} bara")
 print(f"  Discharge pressure: {outlet_stream.getPressure('bara'):.1f} bara")
-print(f"  Differential:       {outlet_stream.getPressure('bara') - inlet_stream.getPressure('bara'):.1f} bar")
+print(
+    f"  Differential:       {outlet_stream.getPressure('bara') - inlet_stream.getPressure('bara'):.1f} bar"
+)
 
 print("\nFlow Conditions:")
 print(f"  Volume flow:        {inlet_stream.getFlowRate('m3/hr'):.0f} m³/hr")
@@ -82,7 +84,7 @@ print("\nNPSH Analysis:")
 npsha = pump.getNPSHAvailable()
 if npsha > 0:
     print(f"  NPSHa (available):  {npsha:.2f} m")
-    
+
     # Check for cavitation
     if pump.isCavitating():
         print(f"  ⚠️  WARNING: CAVITATION RISK!")

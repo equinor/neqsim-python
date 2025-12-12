@@ -28,13 +28,13 @@ Use clearProcess() to reset, runProcess() to execute.
 
     >>> from neqsim.thermo import fluid
     >>> from neqsim.process import stream, compressor, runProcess, clearProcess
-    >>> 
+    >>>
     >>> clearProcess()
     >>> my_fluid = fluid('srk')
     >>> my_fluid.addComponent('methane', 1.0)
     >>> my_fluid.setTemperature(30.0, 'C')
     >>> my_fluid.setPressure(10.0, 'bara')
-    >>> 
+    >>>
     >>> inlet = stream('inlet', my_fluid)
     >>> comp = compressor('compressor1', inlet, pres=50.0)
     >>> runProcess()
@@ -50,12 +50,12 @@ independent processes running simultaneously.
 
     >>> from neqsim.thermo import fluid
     >>> from neqsim.process import ProcessContext
-    >>> 
+    >>>
     >>> with ProcessContext("Compression") as ctx:
     ...     my_fluid = fluid('srk')
     ...     my_fluid.addComponent('methane', 1.0)
     ...     my_fluid.setPressure(10.0, 'bara')
-    ...     
+    ...
     ...     inlet = ctx.stream('inlet', my_fluid)
     ...     comp = ctx.compressor('comp1', inlet, pres=50.0)
     ...     ctx.run()
@@ -71,16 +71,16 @@ Ideal for configuration-driven process construction.
 
     >>> from neqsim.thermo import fluid
     >>> from neqsim.process import ProcessBuilder
-    >>> 
+    >>>
     >>> my_fluid = fluid('srk')
     >>> my_fluid.addComponent('methane', 1.0)
     >>> my_fluid.setPressure(10.0, 'bara')
-    >>> 
+    >>>
     >>> process = (ProcessBuilder("Compression")
     ...     .add_stream('inlet', my_fluid)
     ...     .add_compressor('comp1', 'inlet', pressure=50.0)
     ...     .run())
-    >>> 
+    >>>
     >>> print(f"Power: {process.get('comp1').getPower()/1e6:.2f} MW")
 
 Pros: Very readable, chainable, equipment by name, declarative style
@@ -92,15 +92,15 @@ Create and manage ProcessSystem objects explicitly using jneqsim.
 
     >>> from neqsim import jneqsim
     >>> from neqsim.thermo import fluid
-    >>> 
+    >>>
     >>> my_fluid = fluid('srk')
     >>> my_fluid.addComponent('methane', 1.0)
     >>> my_fluid.setPressure(10.0, 'bara')
-    >>> 
+    >>>
     >>> inlet = jneqsim.process.equipment.stream.Stream('inlet', my_fluid)
     >>> comp = jneqsim.process.equipment.compressor.Compressor('comp1', inlet)
     >>> comp.setOutletPressure(50.0)
-    >>> 
+    >>>
     >>> process = jneqsim.process.processmodel.ProcessSystem()
     >>> process.add(inlet)
     >>> process.add(comp)
@@ -115,7 +115,7 @@ Wrapper functions accept an optional process= parameter for explicit
 process control while keeping concise syntax:
 
     >>> from neqsim.process import stream, compressor, newProcess
-    >>> 
+    >>>
     >>> my_process = newProcess('MyProcess')
     >>> inlet = stream('inlet', my_fluid, process=my_process)
     >>> comp = compressor('comp1', inlet, pres=50.0, process=my_process)
@@ -153,6 +153,7 @@ Power: windturbine, solarpanel, batterystorage, fuelcell, electrolyzer, co2elect
 
 Classes: ProcessContext, ProcessBuilder
 """
+
 from __future__ import annotations
 
 import json
@@ -171,105 +172,105 @@ _loop_mode: bool = False
 class ProcessContext:
     """
     Context manager for explicit process simulation management.
-    
+
     ProcessContext provides a clean way to create and manage process
     simulations without relying on global state. Each context has its
     own ProcessSystem, allowing multiple independent processes.
-    
+
     Args:
         name: Name of the process (optional).
-    
+
     Attributes:
         process: The underlying ProcessSystem object.
         equipment: Dictionary of equipment by name.
-    
+
     Example:
         >>> from neqsim.thermo import fluid
         >>> from neqsim.process import ProcessContext
-        >>> 
+        >>>
         >>> with ProcessContext("Compression") as ctx:
         ...     feed = fluid('srk')
         ...     feed.addComponent('methane', 1.0)
         ...     feed.setPressure(10.0, 'bara')
-        ...     
+        ...
         ...     inlet = ctx.stream('inlet', feed)
         ...     comp = ctx.compressor('comp1', inlet, pres=50.0)
         ...     ctx.run()
         ...     print(f"Power: {comp.getPower()/1e6:.2f} MW")
-    
+
     Example without context manager:
         >>> ctx = ProcessContext("MyProcess")
         >>> inlet = ctx.stream('inlet', my_fluid)
         >>> comp = ctx.compressor('comp1', inlet, pres=50.0)
         >>> ctx.run()
     """
-    
+
     def __init__(self, name: str = ""):
         """Create a new ProcessContext with its own ProcessSystem."""
         self.process = jneqsim.process.processmodel.ProcessSystem(name)
         self.equipment: Dict[str, Any] = {}
         self._name = name
-    
-    def __enter__(self) -> 'ProcessContext':
+
+    def __enter__(self) -> "ProcessContext":
         """Enter the context manager."""
         return self
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
         """Exit the context manager."""
         return False
-    
+
     def add(self, equipment: Any) -> Any:
         """
         Add equipment to the process.
-        
+
         Args:
             equipment: Equipment object to add.
-            
+
         Returns:
             The equipment object (for chaining).
         """
         self.process.add(equipment)
-        if hasattr(equipment, 'getName'):
+        if hasattr(equipment, "getName"):
             self.equipment[equipment.getName()] = equipment
         return equipment
-    
-    def run(self) -> 'ProcessContext':
+
+    def run(self) -> "ProcessContext":
         """
         Run the process simulation.
-        
+
         Returns:
             Self for method chaining.
         """
         self.process.run()
         return self
-    
-    def run_transient(self, dt: float, time: float) -> 'ProcessContext':
+
+    def run_transient(self, dt: float, time: float) -> "ProcessContext":
         """
         Run transient simulation.
-        
+
         Args:
             dt: Time step in seconds.
             time: Total simulation time in seconds.
-            
+
         Returns:
             Self for method chaining.
         """
         self.process.setTimeStep(dt)
         self.process.runTransient(time)
         return self
-    
+
     def get(self, name: str) -> Any:
         """
         Get equipment by name.
-        
+
         Args:
             name: Name of the equipment.
-            
+
         Returns:
             The equipment object.
         """
         return self.equipment.get(name)
-    
+
     def stream(self, name: str, thermo_system: Any, t: float = 0, p: float = 0) -> Any:
         """Create a stream and add to this process."""
         if t != 0:
@@ -278,90 +279,100 @@ class ProcessContext:
             thermo_system.setPressure(p)
         s = jneqsim.process.equipment.stream.Stream(name, thermo_system)
         return self.add(s)
-    
+
     def separator(self, name: str, inlet_stream: Any) -> Any:
         """Create a separator and add to this process."""
         sep = jneqsim.process.equipment.separator.Separator(name, inlet_stream)
         return self.add(sep)
-    
+
     def separator3phase(self, name: str, inlet_stream: Any) -> Any:
         """Create a 3-phase separator and add to this process."""
-        sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(name, inlet_stream)
+        sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(
+            name, inlet_stream
+        )
         return self.add(sep)
-    
-    def compressor(self, name: str, inlet_stream: Any, pres: float = 0, 
-                   efficiency: float = 0.75) -> Any:
+
+    def compressor(
+        self, name: str, inlet_stream: Any, pres: float = 0, efficiency: float = 0.75
+    ) -> Any:
         """Create a compressor and add to this process."""
         comp = jneqsim.process.equipment.compressor.Compressor(name, inlet_stream)
         if pres > 0:
             comp.setOutletPressure(pres)
         comp.setIsentropicEfficiency(efficiency)
         return self.add(comp)
-    
-    def pump(self, name: str, inlet_stream: Any, pres: float = 0,
-             efficiency: float = 0.75) -> Any:
+
+    def pump(
+        self, name: str, inlet_stream: Any, pres: float = 0, efficiency: float = 0.75
+    ) -> Any:
         """Create a pump and add to this process."""
         p = jneqsim.process.equipment.pump.Pump(name, inlet_stream)
         if pres > 0:
             p.setOutletPressure(pres)
         p.setIsentropicEfficiency(efficiency)
         return self.add(p)
-    
+
     def expander(self, name: str, inlet_stream: Any, pres: float = 0) -> Any:
         """Create an expander and add to this process."""
         exp = jneqsim.process.equipment.expander.Expander(name, inlet_stream)
         if pres > 0:
             exp.setOutletPressure(pres)
         return self.add(exp)
-    
+
     def valve(self, name: str, inlet_stream: Any, pres: float = 0) -> Any:
         """Create a valve and add to this process."""
         v = jneqsim.process.equipment.valve.ThrottlingValve(name, inlet_stream)
         if pres > 0:
             v.setOutletPressure(pres)
         return self.add(v)
-    
+
     def heater(self, name: str, inlet_stream: Any, temp: float = 0) -> Any:
         """Create a heater and add to this process."""
         h = jneqsim.process.equipment.heatexchanger.Heater(name, inlet_stream)
         if temp > 0:
             h.setOutTemperature(temp)
         return self.add(h)
-    
+
     def cooler(self, name: str, inlet_stream: Any, temp: float = 0) -> Any:
         """Create a cooler and add to this process."""
         c = jneqsim.process.equipment.heatexchanger.Cooler(name, inlet_stream)
         if temp > 0:
             c.setOutTemperature(temp)
         return self.add(c)
-    
+
     def mixer(self, name: str) -> Any:
         """Create a mixer and add to this process."""
         m = jneqsim.process.equipment.mixer.Mixer(name)
         return self.add(m)
-    
-    def splitter(self, name: str, inlet_stream: Any, split_factors: List[float] = None) -> Any:
+
+    def splitter(
+        self, name: str, inlet_stream: Any, split_factors: List[float] = None
+    ) -> Any:
         """Create a splitter and add to this process."""
         s = jneqsim.process.equipment.splitter.Splitter(name, inlet_stream)
         if split_factors:
             s.setSplitFactors(split_factors)
         return self.add(s)
-    
-    def heat_exchanger(self, name: str, hot_stream: Any, cold_stream: Any,
-                       approach_temp: float = 10.0) -> Any:
+
+    def heat_exchanger(
+        self, name: str, hot_stream: Any, cold_stream: Any, approach_temp: float = 10.0
+    ) -> Any:
         """Create a heat exchanger and add to this process."""
-        hx = jneqsim.process.equipment.heatexchanger.HeatExchanger(name, hot_stream, cold_stream)
+        hx = jneqsim.process.equipment.heatexchanger.HeatExchanger(
+            name, hot_stream, cold_stream
+        )
         hx.setApproachTemperature(approach_temp)
         return self.add(hx)
-    
-    def pipe(self, name: str, inlet_stream: Any, length: float = 100.0,
-             diameter: float = 0.1) -> Any:
+
+    def pipe(
+        self, name: str, inlet_stream: Any, length: float = 100.0, diameter: float = 0.1
+    ) -> Any:
         """Create a pipe and add to this process."""
         p = jneqsim.process.equipment.pipeline.AdiabaticPipe(name, inlet_stream)
         p.setLength(length)
         p.setDiameter(diameter)
         return self.add(p)
-    
+
     def recycle(self, name: str, inlet_stream: Any = None) -> Any:
         """Create a recycle and add to this process."""
         r = jneqsim.process.equipment.util.Recycle(name)
@@ -373,89 +384,159 @@ class ProcessContext:
 class ProcessBuilder:
     """
     Fluent builder for constructing process simulations.
-    
+
     ProcessBuilder provides a chainable API for building processes
     step by step. Equipment is referenced by name, making it easy
     to construct processes from configuration data.
-    
+
     Example:
         >>> from neqsim.thermo import fluid
         >>> from neqsim.process import ProcessBuilder
-        >>> 
+        >>>
         >>> feed = fluid('srk')
         >>> feed.addComponent('methane', 0.9)
         >>> feed.addComponent('ethane', 0.1)
         >>> feed.setPressure(30.0, 'bara')
         >>> feed.setTemperature(30.0, 'C')
-        >>> 
+        >>>
         >>> process = (ProcessBuilder("Compression Train")
         ...     .add_stream('inlet', feed)
         ...     .add_compressor('comp1', 'inlet', pressure=60.0)
         ...     .add_cooler('cooler1', 'comp1', temperature=303.15)
         ...     .add_compressor('comp2', 'cooler1', pressure=120.0)
         ...     .run())
-        >>> 
+        >>>
         >>> print(f"Stage 1 power: {process.get('comp1').getPower()/1e6:.2f} MW")
         >>> print(f"Stage 2 power: {process.get('comp2').getPower()/1e6:.2f} MW")
     """
-    
+
     def __init__(self, name: str = ""):
         """Create a new ProcessBuilder."""
         self.process = jneqsim.process.processmodel.ProcessSystem(name)
         self.equipment: Dict[str, Any] = {}
         self._name = name
-    
+
     def _get_outlet(self, ref: Union[str, Any]) -> Any:
-        """Get outlet stream from equipment reference (name or object)."""
+        """
+        Get outlet stream from equipment reference (name or object).
+
+        Supports dot notation for selecting specific outlets from separators:
+        - 'separator.gas' or 'separator.vapor' - gas/vapor outlet
+        - 'separator.liquid' - liquid outlet (2-phase separator)
+        - 'separator.oil' - oil outlet (3-phase separator)
+        - 'separator.water' or 'separator.aqueous' - water outlet (3-phase separator)
+
+        Examples:
+            >>> builder.add_compressor('comp', 'sep.gas', pressure=100)
+            >>> builder.add_pump('pump', 'sep.oil', pressure=50)
+        """
         if isinstance(ref, str):
+            # Check for dot notation (e.g., 'separator.gas')
+            if "." in ref:
+                parts = ref.split(".", 1)
+                equip_name = parts[0]
+                outlet_type = parts[1].lower()
+
+                equip = self.equipment.get(equip_name)
+                if equip is None:
+                    raise ValueError(f"Equipment '{equip_name}' not found")
+
+                # Map outlet type to method
+                outlet_methods = {
+                    "gas": ["getGasOutStream", "getOutletStream"],
+                    "vapor": ["getGasOutStream", "getOutletStream"],
+                    "liquid": ["getLiquidOutStream", "getOilOutStream"],
+                    "oil": ["getOilOutStream", "getLiquidOutStream"],
+                    "water": ["getWaterOutStream", "getAqueousOutStream"],
+                    "aqueous": ["getWaterOutStream", "getAqueousOutStream"],
+                }
+
+                if outlet_type not in outlet_methods:
+                    raise ValueError(
+                        f"Unknown outlet type '{outlet_type}'. "
+                        f"Valid types: {list(outlet_methods.keys())}"
+                    )
+
+                for method_name in outlet_methods[outlet_type]:
+                    if hasattr(equip, method_name):
+                        return getattr(equip, method_name)()
+
+                raise ValueError(
+                    f"Equipment '{equip_name}' does not have a '{outlet_type}' outlet"
+                )
+
+            # Standard lookup without dot notation
             equip = self.equipment.get(ref)
             if equip is None:
                 raise ValueError(f"Equipment '{ref}' not found")
-            if hasattr(equip, 'getOutletStream'):
+            if hasattr(equip, "getOutletStream"):
                 return equip.getOutletStream()
-            elif hasattr(equip, 'getOutStream'):
+            elif hasattr(equip, "getOutStream"):
                 return equip.getOutStream()
-            elif hasattr(equip, 'getGasOutStream'):
+            elif hasattr(equip, "getGasOutStream"):
                 return equip.getGasOutStream()
             return equip
         return ref
-    
-    def add_stream(self, name: str, thermo_system: Any, 
-                   temperature: float = None, pressure: float = None) -> 'ProcessBuilder':
+
+    def add_stream(
+        self,
+        name: str,
+        thermo_system: Any,
+        temperature: float = None,
+        pressure: float = None,
+        flow_rate: float = None,
+        flow_unit: str = "kg/sec",
+    ) -> "ProcessBuilder":
         """
         Add a stream to the process.
-        
+
         Args:
             name: Name of the stream.
             thermo_system: Fluid/thermodynamic system.
             temperature: Optional temperature in Kelvin.
             pressure: Optional pressure in bara.
-            
+            flow_rate: Optional flow rate. If not specified, uses the flow rate
+                already set on the fluid.
+            flow_unit: Unit for flow rate (default 'kg/sec'). Common units include
+                'kg/sec', 'kg/hr', 'MSm3/day', 'Sm3/day', 'mole/sec'.
+
         Returns:
             Self for method chaining.
+
+        Example:
+            >>> process = (ProcessBuilder("Test")
+            ...     .add_stream('inlet', feed, flow_rate=10.0, flow_unit='MSm3/day')
+            ...     .run())
         """
         if temperature is not None:
             thermo_system.setTemperature(temperature)
         if pressure is not None:
             thermo_system.setPressure(pressure)
+        if flow_rate is not None:
+            thermo_system.setTotalFlowRate(flow_rate, flow_unit)
         s = jneqsim.process.equipment.stream.Stream(name, thermo_system)
         self.equipment[name] = s
         self.process.add(s)
         return self
-    
-    def add_separator(self, name: str, inlet: str, three_phase: bool = False) -> 'ProcessBuilder':
+
+    def add_separator(
+        self, name: str, inlet: str, three_phase: bool = False
+    ) -> "ProcessBuilder":
         """Add a separator to the process."""
         inlet_stream = self._get_outlet(inlet)
         if three_phase:
-            sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(name, inlet_stream)
+            sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(
+                name, inlet_stream
+            )
         else:
             sep = jneqsim.process.equipment.separator.Separator(name, inlet_stream)
         self.equipment[name] = sep
         self.process.add(sep)
         return self
-    
-    def add_compressor(self, name: str, inlet: str, pressure: float = None,
-                       efficiency: float = 0.75) -> 'ProcessBuilder':
+
+    def add_compressor(
+        self, name: str, inlet: str, pressure: float = None, efficiency: float = 0.75
+    ) -> "ProcessBuilder":
         """Add a compressor to the process."""
         inlet_stream = self._get_outlet(inlet)
         comp = jneqsim.process.equipment.compressor.Compressor(name, inlet_stream)
@@ -465,9 +546,10 @@ class ProcessBuilder:
         self.equipment[name] = comp
         self.process.add(comp)
         return self
-    
-    def add_pump(self, name: str, inlet: str, pressure: float = None,
-                 efficiency: float = 0.75) -> 'ProcessBuilder':
+
+    def add_pump(
+        self, name: str, inlet: str, pressure: float = None, efficiency: float = 0.75
+    ) -> "ProcessBuilder":
         """Add a pump to the process."""
         inlet_stream = self._get_outlet(inlet)
         p = jneqsim.process.equipment.pump.Pump(name, inlet_stream)
@@ -477,8 +559,10 @@ class ProcessBuilder:
         self.equipment[name] = p
         self.process.add(p)
         return self
-    
-    def add_expander(self, name: str, inlet: str, pressure: float = None) -> 'ProcessBuilder':
+
+    def add_expander(
+        self, name: str, inlet: str, pressure: float = None
+    ) -> "ProcessBuilder":
         """Add an expander to the process."""
         inlet_stream = self._get_outlet(inlet)
         exp = jneqsim.process.equipment.expander.Expander(name, inlet_stream)
@@ -487,8 +571,10 @@ class ProcessBuilder:
         self.equipment[name] = exp
         self.process.add(exp)
         return self
-    
-    def add_valve(self, name: str, inlet: str, pressure: float = None) -> 'ProcessBuilder':
+
+    def add_valve(
+        self, name: str, inlet: str, pressure: float = None
+    ) -> "ProcessBuilder":
         """Add a valve to the process."""
         inlet_stream = self._get_outlet(inlet)
         v = jneqsim.process.equipment.valve.ThrottlingValve(name, inlet_stream)
@@ -497,9 +583,10 @@ class ProcessBuilder:
         self.equipment[name] = v
         self.process.add(v)
         return self
-    
-    def add_heater(self, name: str, inlet: str, temperature: float = None,
-                   duty: float = None) -> 'ProcessBuilder':
+
+    def add_heater(
+        self, name: str, inlet: str, temperature: float = None, duty: float = None
+    ) -> "ProcessBuilder":
         """Add a heater to the process."""
         inlet_stream = self._get_outlet(inlet)
         h = jneqsim.process.equipment.heatexchanger.Heater(name, inlet_stream)
@@ -510,9 +597,10 @@ class ProcessBuilder:
         self.equipment[name] = h
         self.process.add(h)
         return self
-    
-    def add_cooler(self, name: str, inlet: str, temperature: float = None,
-                   duty: float = None) -> 'ProcessBuilder':
+
+    def add_cooler(
+        self, name: str, inlet: str, temperature: float = None, duty: float = None
+    ) -> "ProcessBuilder":
         """Add a cooler to the process."""
         inlet_stream = self._get_outlet(inlet)
         c = jneqsim.process.equipment.heatexchanger.Cooler(name, inlet_stream)
@@ -523,8 +611,8 @@ class ProcessBuilder:
         self.equipment[name] = c
         self.process.add(c)
         return self
-    
-    def add_mixer(self, name: str, inlets: List[str]) -> 'ProcessBuilder':
+
+    def add_mixer(self, name: str, inlets: List[str]) -> "ProcessBuilder":
         """Add a mixer to the process."""
         m = jneqsim.process.equipment.mixer.Mixer(name)
         for inlet in inlets:
@@ -533,9 +621,10 @@ class ProcessBuilder:
         self.equipment[name] = m
         self.process.add(m)
         return self
-    
-    def add_splitter(self, name: str, inlet: str, 
-                     split_factors: List[float] = None) -> 'ProcessBuilder':
+
+    def add_splitter(
+        self, name: str, inlet: str, split_factors: List[float] = None
+    ) -> "ProcessBuilder":
         """Add a splitter to the process."""
         inlet_stream = self._get_outlet(inlet)
         s = jneqsim.process.equipment.splitter.Splitter(name, inlet_stream)
@@ -544,20 +633,29 @@ class ProcessBuilder:
         self.equipment[name] = s
         self.process.add(s)
         return self
-    
-    def add_heat_exchanger(self, name: str, hot_inlet: str, cold_inlet: str,
-                           approach_temp: float = 10.0) -> 'ProcessBuilder':
+
+    def add_heat_exchanger(
+        self, name: str, hot_inlet: str, cold_inlet: str, approach_temp: float = 10.0
+    ) -> "ProcessBuilder":
         """Add a heat exchanger to the process."""
         hot_stream = self._get_outlet(hot_inlet)
         cold_stream = self._get_outlet(cold_inlet)
-        hx = jneqsim.process.equipment.heatexchanger.HeatExchanger(name, hot_stream, cold_stream)
+        hx = jneqsim.process.equipment.heatexchanger.HeatExchanger(
+            name, hot_stream, cold_stream
+        )
         hx.setApproachTemperature(approach_temp)
         self.equipment[name] = hx
         self.process.add(hx)
         return self
-    
-    def add_pipe(self, name: str, inlet: str, length: float = 100.0,
-                 diameter: float = 0.1, elevation: float = 0.0) -> 'ProcessBuilder':
+
+    def add_pipe(
+        self,
+        name: str,
+        inlet: str,
+        length: float = 100.0,
+        diameter: float = 0.1,
+        elevation: float = 0.0,
+    ) -> "ProcessBuilder":
         """Add a pipe to the process."""
         inlet_stream = self._get_outlet(inlet)
         p = jneqsim.process.equipment.pipeline.AdiabaticPipe(name, inlet_stream)
@@ -568,38 +666,380 @@ class ProcessBuilder:
         self.equipment[name] = p
         self.process.add(p)
         return self
-    
-    def run(self) -> 'ProcessBuilder':
+
+    def add_equipment(
+        self, equipment_type: str, name: str, **kwargs
+    ) -> "ProcessBuilder":
+        """
+        Add equipment by type name. Useful for configuration-driven design.
+
+        Args:
+            equipment_type: Type of equipment ('stream', 'compressor', 'separator', etc.)
+            name: Name of the equipment.
+            **kwargs: Equipment-specific parameters.
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_equipment('compressor', 'comp1', inlet='inlet', pressure=100.0)
+        """
+        method_map = {
+            "stream": self.add_stream,
+            "separator": self.add_separator,
+            "compressor": self.add_compressor,
+            "pump": self.add_pump,
+            "expander": self.add_expander,
+            "valve": self.add_valve,
+            "heater": self.add_heater,
+            "cooler": self.add_cooler,
+            "mixer": self.add_mixer,
+            "splitter": self.add_splitter,
+            "heat_exchanger": self.add_heat_exchanger,
+            "pipe": self.add_pipe,
+        }
+        method = method_map.get(equipment_type.lower())
+        if method is None:
+            raise ValueError(
+                f"Unknown equipment type: {equipment_type}. "
+                f"Available: {list(method_map.keys())}"
+            )
+        return method(name, **kwargs)
+
+    def add_from_config(
+        self, equipment_list: List[Dict[str, Any]], fluids: Dict[str, Any] = None
+    ) -> "ProcessBuilder":
+        """
+        Add multiple equipment items from a configuration list.
+
+        Args:
+            equipment_list: List of equipment configurations. Each item should have
+                'type', 'name', and equipment-specific parameters.
+            fluids: Dictionary mapping fluid names to fluid objects. Used for streams.
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> config = [
+            ...     {'type': 'stream', 'name': 'inlet', 'fluid': 'feed'},
+            ...     {'type': 'compressor', 'name': 'comp1', 'inlet': 'inlet', 'pressure': 100.0}
+            ... ]
+            >>> builder.add_from_config(config, fluids={'feed': my_fluid})
+        """
+        fluids = fluids or {}
+
+        for item in equipment_list:
+            item = item.copy()  # Don't modify original
+            eq_type = item.pop("type")
+            name = item.pop("name")
+
+            # Handle fluid reference for streams
+            if eq_type == "stream" and "fluid" in item:
+                fluid_name = item.pop("fluid")
+                if fluid_name in fluids:
+                    item["thermo_system"] = fluids[fluid_name]
+                else:
+                    raise ValueError(f"Fluid '{fluid_name}' not found in fluids dict")
+
+            self.add_equipment(eq_type, name, **item)
+
+        return self
+
+    @classmethod
+    def from_dict(
+        cls, config: Dict[str, Any], fluids: Dict[str, Any] = None
+    ) -> "ProcessBuilder":
+        """
+        Create a ProcessBuilder from a dictionary configuration.
+
+        Args:
+            config: Dictionary with 'name' and 'equipment' keys.
+            fluids: Dictionary mapping fluid names to fluid objects.
+
+        Returns:
+            ProcessBuilder instance (not yet run).
+
+        Example:
+            >>> config = {
+            ...     'name': 'Compression Train',
+            ...     'equipment': [
+            ...         {'type': 'stream', 'name': 'inlet', 'fluid': 'feed'},
+            ...         {'type': 'separator', 'name': 'sep1', 'inlet': 'inlet'},
+            ...         {'type': 'compressor', 'name': 'comp1', 'inlet': 'sep1', 'pressure': 100.0}
+            ...     ]
+            ... }
+            >>> process = ProcessBuilder.from_dict(config, fluids={'feed': my_fluid}).run()
+        """
+        builder = cls(config.get("name", ""))
+        if "equipment" in config:
+            builder.add_from_config(config["equipment"], fluids)
+        return builder
+
+    @classmethod
+    def from_json(
+        cls, json_path: str, fluids: Dict[str, Any] = None
+    ) -> "ProcessBuilder":
+        """
+        Create a ProcessBuilder from a JSON file.
+
+        Args:
+            json_path: Path to JSON configuration file.
+            fluids: Dictionary mapping fluid names to fluid objects.
+
+        Returns:
+            ProcessBuilder instance (not yet run).
+
+        Example:
+            >>> # process_config.json:
+            >>> # {
+            >>> #   "name": "Compression Train",
+            >>> #   "equipment": [
+            >>> #     {"type": "stream", "name": "inlet", "fluid": "feed"},
+            >>> #     {"type": "compressor", "name": "comp1", "inlet": "inlet", "pressure": 100}
+            >>> #   ]
+            >>> # }
+            >>> process = ProcessBuilder.from_json('process_config.json',
+            ...                                    fluids={'feed': my_fluid}).run()
+        """
+        with open(json_path, "r") as f:
+            config = json.load(f)
+        return cls.from_dict(config, fluids)
+
+    @classmethod
+    def from_yaml(
+        cls, yaml_path: str, fluids: Dict[str, Any] = None
+    ) -> "ProcessBuilder":
+        """
+        Create a ProcessBuilder from a YAML file.
+
+        Requires PyYAML to be installed (pip install pyyaml).
+
+        Args:
+            yaml_path: Path to YAML configuration file.
+            fluids: Dictionary mapping fluid names to fluid objects.
+
+        Returns:
+            ProcessBuilder instance (not yet run).
+
+        Example:
+            >>> # process_config.yaml:
+            >>> # name: Compression Train
+            >>> # equipment:
+            >>> #   - type: stream
+            >>> #     name: inlet
+            >>> #     fluid: feed
+            >>> #   - type: compressor
+            >>> #     name: comp1
+            >>> #     inlet: inlet
+            >>> #     pressure: 100.0
+            >>> process = ProcessBuilder.from_yaml('process_config.yaml',
+            ...                                    fluids={'feed': my_fluid}).run()
+        """
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError(
+                "PyYAML is required for YAML support. Install with: pip install pyyaml"
+            )
+
+        with open(yaml_path, "r") as f:
+            config = yaml.safe_load(f)
+        return cls.from_dict(config, fluids)
+
+    def run(self) -> "ProcessBuilder":
         """
         Run the process simulation.
-        
+
         Returns:
             Self for method chaining.
         """
         self.process.run()
         return self
-    
+
     def get(self, name: str) -> Any:
         """
         Get equipment by name.
-        
+
         Args:
             name: Name of the equipment.
-            
+
         Returns:
             The equipment object.
         """
         return self.equipment.get(name)
-    
+
     def get_process(self) -> Any:
         """Get the underlying ProcessSystem object."""
         return self.process
+
+    def results_json(self) -> Dict[str, Any]:
+        """
+        Get simulation results as a JSON-compatible dictionary.
+
+        Returns:
+            Dictionary with all process results.
+
+        Example:
+            >>> process = ProcessBuilder("Test").add_stream(...).run()
+            >>> results = process.results_json()
+            >>> print(json.dumps(results, indent=2))
+        """
+        json_report = str(self.process.getReport_json())
+        return json.loads(json_report)
+
+    def results_dataframe(self) -> pd.DataFrame:
+        """
+        Get simulation results as a pandas DataFrame.
+
+        Returns:
+            DataFrame with equipment results including temperatures,
+            pressures, flow rates, power, and duties.
+
+        Example:
+            >>> process = ProcessBuilder("Test").add_stream(...).run()
+            >>> df = process.results_dataframe()
+            >>> print(df)
+        """
+        rows = []
+        for name, eq in self.equipment.items():
+            row = {"Equipment": name}
+
+            # Get outlet stream properties
+            out_stream = None
+            if hasattr(eq, "getOutletStream"):
+                out_stream = eq.getOutletStream()
+            elif hasattr(eq, "getOutStream"):
+                out_stream = eq.getOutStream()
+            elif hasattr(eq, "getGasOutStream"):
+                out_stream = eq.getGasOutStream()
+
+            if out_stream:
+                try:
+                    row["T_out (°C)"] = round(out_stream.getTemperature() - 273.15, 2)
+                except:
+                    pass
+                try:
+                    row["P_out (bara)"] = round(out_stream.getPressure(), 2)
+                except:
+                    pass
+                try:
+                    row["Flow (kg/hr)"] = round(out_stream.getFlowRate("kg/hr"), 1)
+                except:
+                    pass
+
+            # Get power/duty
+            if hasattr(eq, "getPower"):
+                try:
+                    row["Power (kW)"] = round(eq.getPower() / 1e3, 2)
+                except:
+                    pass
+            if hasattr(eq, "getDuty"):
+                try:
+                    row["Duty (kW)"] = round(eq.getDuty() / 1e3, 2)
+                except:
+                    pass
+
+            rows.append(row)
+
+        return pd.DataFrame(rows)
+
+    def print_results(self) -> "ProcessBuilder":
+        """
+        Print a formatted summary of simulation results.
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> (ProcessBuilder("Test")
+            ...     .add_stream('inlet', feed)
+            ...     .add_compressor('comp1', 'inlet', pressure=100)
+            ...     .run()
+            ...     .print_results())
+        """
+        print(f"\n{'='*60}")
+        print(f"Process Results: {self._name}")
+        print(f"{'='*60}\n")
+
+        for name, eq in self.equipment.items():
+            print(f"📦 {name}")
+
+            # Get outlet stream properties
+            out_stream = None
+            if hasattr(eq, "getOutletStream"):
+                out_stream = eq.getOutletStream()
+            elif hasattr(eq, "getOutStream"):
+                out_stream = eq.getOutStream()
+            elif hasattr(eq, "getGasOutStream"):
+                out_stream = eq.getGasOutStream()
+
+            if out_stream:
+                try:
+                    print(
+                        f"   Temperature: {out_stream.getTemperature() - 273.15:.1f} °C"
+                    )
+                except:
+                    pass
+                try:
+                    print(f"   Pressure: {out_stream.getPressure():.1f} bara")
+                except:
+                    pass
+                try:
+                    print(f"   Flow rate: {out_stream.getFlowRate('kg/hr'):.0f} kg/hr")
+                except:
+                    pass
+
+            if hasattr(eq, "getPower"):
+                try:
+                    print(f"   Power: {eq.getPower()/1e3:.2f} kW")
+                except:
+                    pass
+            if hasattr(eq, "getDuty"):
+                try:
+                    print(f"   Duty: {eq.getDuty()/1e3:.2f} kW")
+                except:
+                    pass
+            print()
+
+        return self
+
+    def save_results(self, filename: str, format: str = "json") -> "ProcessBuilder":
+        """
+        Save simulation results to a file.
+
+        Args:
+            filename: Output file path.
+            format: Output format - 'json', 'csv', or 'excel'.
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> process.run().save_results('results.json')
+            >>> process.save_results('results.csv', format='csv')
+            >>> process.save_results('results.xlsx', format='excel')
+        """
+        if format == "json":
+            with open(filename, "w") as f:
+                json.dump(self.results_json(), f, indent=2)
+        elif format == "csv":
+            self.results_dataframe().to_csv(filename, index=False)
+        elif format == "excel":
+            self.results_dataframe().to_excel(filename, index=False)
+        else:
+            raise ValueError(
+                f"Unknown format: {format}. Use 'json', 'csv', or 'excel'."
+            )
+
+        print(f"Results saved to {filename}")
+        return self
 
 
 def _add_to_process(equipment: Any, process: Any = None) -> None:
     """
     Helper to add equipment to a process.
-    
+
     If process is provided, adds to that process.
     Otherwise, adds to global processoperations if not in loop mode.
     """
@@ -653,8 +1093,9 @@ def set_loop_mode(loop_mode: bool) -> None:
     _loop_mode = loop_mode
 
 
-def stream(name: str, thermoSystem: Any, t: float = 0, p: float = 0, 
-           process: Any = None) -> Any:
+def stream(
+    name: str, thermoSystem: Any, t: float = 0, p: float = 0, process: Any = None
+) -> Any:
     """
     Create a stream with the given name and thermodynamic system.
 
@@ -666,7 +1107,7 @@ def stream(name: str, thermoSystem: Any, t: float = 0, p: float = 0,
         thermoSystem: The thermodynamic system (fluid) for the stream.
         t: Temperature to set (optional). If 0, uses system default.
         p: Pressure to set (optional). If 0, uses system default.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
@@ -677,7 +1118,7 @@ def stream(name: str, thermoSystem: Any, t: float = 0, p: float = 0,
         >>> my_fluid = fluid('srk')
         >>> my_fluid.addComponent('methane', 1.0)
         >>> inlet_stream = stream('inlet', my_fluid, t=25.0, p=10.0)
-        
+
         # With explicit process:
         >>> my_process = newProcess('MyProcess')
         >>> inlet = stream('inlet', my_fluid, process=my_process)
@@ -792,12 +1233,12 @@ def separator(name: str, teststream: Any, process: Any = None) -> Any:
     Args:
         name: The name of the separator.
         teststream: The inlet stream to be separated.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Separator: The created separator object.
-        
+
     Example:
         >>> sep = separator('HP separator', inlet_stream)
         >>> gas = sep.getGasOutStream()
@@ -858,21 +1299,19 @@ def separator3phase(name: str, teststream: Any, process: Any = None) -> Any:
     Args:
         name: The name of the separator.
         teststream: The inlet stream to be separated.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         ThreePhaseSeparator: The created three-phase separator object.
-        
+
     Example:
         >>> sep3 = separator3phase('3-phase sep', inlet_stream)
         >>> gas = sep3.getGasOutStream()
         >>> oil = sep3.getOilOutStream()
         >>> water = sep3.getWaterOutStream()
     """
-    sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(
-        name, teststream
-    )
+    sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(name, teststream)
     sep.setName(name)
     _add_to_process(sep, process)
     return sep
@@ -886,12 +1325,12 @@ def valve(name: str, teststream: Any, p: float = 1.0, process: Any = None) -> An
         name: The name of the valve.
         teststream: The inlet stream.
         p: The outlet pressure in bara. Default is 1.0.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         ThrottlingValve: The created throttling valve object.
-        
+
     Example:
         >>> v = valve('letdown valve', inlet_stream, p=10.0)
         >>> runProcess()
@@ -925,8 +1364,9 @@ def filters(name, teststream):
     return filter2
 
 
-def compressor(name: str, teststream: Any, pres: float = 10.0, 
-               process: Any = None) -> Any:
+def compressor(
+    name: str, teststream: Any, pres: float = 10.0, process: Any = None
+) -> Any:
     """
     Create and configure a compressor for a given stream.
 
@@ -934,7 +1374,7 @@ def compressor(name: str, teststream: Any, pres: float = 10.0,
         name: The name of the compressor.
         teststream: The inlet stream to be compressed.
         pres: The outlet pressure in bara. Defaults to 10.0.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
@@ -945,7 +1385,7 @@ def compressor(name: str, teststream: Any, pres: float = 10.0,
         >>> runProcess()
         >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
         >>> print(f"Polytropic efficiency: {comp.getPolytropicEfficiency():.2%}")
-        
+
         # With explicit process:
         >>> my_process = newProcess('Compression')
         >>> comp = compressor('comp1', inlet, pres=50.0, process=my_process)
@@ -998,12 +1438,12 @@ def pump(name: str, teststream: Any, p: float = 1.0, process: Any = None) -> Any
         name: The name of the pump.
         teststream: The inlet stream to be pumped.
         p: The outlet pressure in bara. Default is 1.0.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Pump: The created pump object.
-        
+
     Example:
         >>> p = pump('feed pump', liquid_stream, p=50.0)
         >>> runProcess()
@@ -1023,12 +1463,12 @@ def expander(name: str, teststream: Any, p: float, process: Any = None) -> Any:
         name: The name of the expander.
         teststream: The inlet stream to be expanded.
         p: The outlet pressure in bara.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Expander: The configured expander object.
-        
+
     Example:
         >>> exp = expander('turbo expander', gas_stream, p=20.0)
         >>> runProcess()
@@ -1047,12 +1487,12 @@ def mixer(name: str = "", process: Any = None) -> Any:
 
     Args:
         name: The name of the mixer. Default is empty string.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Mixer: An instance of the Mixer class.
-        
+
     Example:
         >>> m = mixer('gas mixer')
         >>> m.addStream(stream1)
@@ -1094,8 +1534,9 @@ def compsplitter(name, teststream, splitfactors):
     return compSplitter
 
 
-def splitter(name: str, teststream: Any, splitfactors: List[float] = None, 
-             process: Any = None) -> Any:
+def splitter(
+    name: str, teststream: Any, splitfactors: List[float] = None, process: Any = None
+) -> Any:
     """
     Create a splitter process equipment.
 
@@ -1104,12 +1545,12 @@ def splitter(name: str, teststream: Any, splitfactors: List[float] = None,
         teststream: The inlet stream to be split.
         splitfactors: List of split fractions. Length determines number of outlets.
             Values should sum to 1.0.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Splitter: The created splitter object.
-        
+
     Example:
         >>> sp = splitter('flow split', inlet, splitfactors=[0.3, 0.7])
         >>> runProcess()
@@ -1131,12 +1572,12 @@ def heater(name: str, teststream: Any, process: Any = None) -> Any:
     Args:
         name: The name of the heater.
         teststream: The inlet stream to be heated.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Heater: The created heater object.
-        
+
     Example:
         >>> h = heater('feed heater', cold_stream)
         >>> h.setOutTemperature(350.0)  # Kelvin
@@ -1170,12 +1611,12 @@ def cooler(name: str, teststream: Any, process: Any = None) -> Any:
     Args:
         name: The name of the cooler.
         teststream: The inlet stream to be cooled.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         Cooler: The configured cooler object.
-        
+
     Example:
         >>> c = cooler('discharge cooler', hot_stream)
         >>> c.setOutTemperature(303.15)  # 30°C in Kelvin
@@ -1188,22 +1629,23 @@ def cooler(name: str, teststream: Any, process: Any = None) -> Any:
     return c
 
 
-def heatExchanger(name: str, stream1: Any, stream2: Any = None, 
-                  process: Any = None) -> Any:
+def heatExchanger(
+    name: str, stream1: Any, stream2: Any = None, process: Any = None
+) -> Any:
     """
     Create a heat exchanger process unit.
 
     Args:
         name: The name of the heat exchanger.
         stream1: The first (hot) input stream.
-        stream2: The second (cold) input stream. If not provided, 
+        stream2: The second (cold) input stream. If not provided,
             creates a single-stream heat exchanger.
-        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder 
+        process: Optional ProcessSystem, ProcessContext, or ProcessBuilder
             to add this equipment to. If None, uses global process.
 
     Returns:
         HeatExchanger: The created heat exchanger object.
-        
+
     Example:
         >>> hx = heatExchanger('economizer', hot_gas, cold_feed)
         >>> hx.setApproachTemperature(10.0)  # 10 K approach
@@ -1409,31 +1851,35 @@ def process_report(process: Optional[Any] = None) -> pd.DataFrame:
         rows = []
         for unit_name, unit_data in results.items():
             if isinstance(unit_data, dict):
-                row = {'Unit Name': unit_name}
+                row = {"Unit Name": unit_name}
                 # Extract common properties
-                if 'feed' in unit_data:
-                    feed = unit_data['feed']
-                    if 'temperature' in feed:
-                        row['Feed Temp [C]'] = feed.get('temperature', {}).get('value')
-                    if 'pressure' in feed:
-                        row['Feed Pres [bara]'] = feed.get('pressure', {}).get('value')
-                if 'product' in unit_data:
-                    product = unit_data['product']
-                    if 'temperature' in product:
-                        row['Product Temp [C]'] = product.get('temperature', {}).get('value')
-                    if 'pressure' in product:
-                        row['Product Pres [bara]'] = product.get('pressure', {}).get('value')
-                if 'power' in unit_data:
-                    row['Power [kW]'] = unit_data.get('power', {}).get('value')
+                if "feed" in unit_data:
+                    feed = unit_data["feed"]
+                    if "temperature" in feed:
+                        row["Feed Temp [C]"] = feed.get("temperature", {}).get("value")
+                    if "pressure" in feed:
+                        row["Feed Pres [bara]"] = feed.get("pressure", {}).get("value")
+                if "product" in unit_data:
+                    product = unit_data["product"]
+                    if "temperature" in product:
+                        row["Product Temp [C]"] = product.get("temperature", {}).get(
+                            "value"
+                        )
+                    if "pressure" in product:
+                        row["Product Pres [bara]"] = product.get("pressure", {}).get(
+                            "value"
+                        )
+                if "power" in unit_data:
+                    row["Power [kW]"] = unit_data.get("power", {}).get("value")
                 rows.append(row)
 
         if rows:
             return pd.DataFrame(rows)
         else:
-            return pd.DataFrame({'Message': ['No unit operations found in process']})
+            return pd.DataFrame({"Message": ["No unit operations found in process"]})
 
     except Exception as e:
-        return pd.DataFrame({'Error': [f'Failed to generate report: {e}']})
+        return pd.DataFrame({"Error": [f"Failed to generate report: {e}"]})
 
 
 def results_json(process, filename=None):
@@ -1463,6 +1909,7 @@ def results_json(process, filename=None):
         print(f"Error generating JSON report: {e}")
         return None
 
+
 def ejector(name: str, motive_stream: Any, suction_stream: Any) -> Any:
     """
     Create an ejector (gas/steam jet) for mixing streams.
@@ -1484,14 +1931,21 @@ def ejector(name: str, motive_stream: Any, suction_stream: Any) -> Any:
         >>> runProcess()
         >>> print(ejector1.getOutletStream().getPressure('bara'))
     """
-    ejector_unit = jneqsim.process.equipment.ejector.Ejector(name, motive_stream, suction_stream)
+    ejector_unit = jneqsim.process.equipment.ejector.Ejector(
+        name, motive_stream, suction_stream
+    )
     if not _loop_mode:
         processoperations.add(ejector_unit)
     return ejector_unit
 
 
-def flare(name: str, inlet_stream: Any, flame_height: float = 30.0,
-          radiant_fraction: float = 0.18, tip_diameter: float = 0.3) -> Any:
+def flare(
+    name: str,
+    inlet_stream: Any,
+    flame_height: float = 30.0,
+    radiant_fraction: float = 0.18,
+    tip_diameter: float = 0.3,
+) -> Any:
     """
     Create a flare unit for combustion of relief gases.
 
@@ -1524,8 +1978,13 @@ def flare(name: str, inlet_stream: Any, flame_height: float = 30.0,
     return flare_unit
 
 
-def safety_valve(name: str, inlet_stream: Any, set_pressure: float,
-                 full_open_pressure: float = None, blowdown: float = 7.0) -> Any:
+def safety_valve(
+    name: str,
+    inlet_stream: Any,
+    set_pressure: float,
+    full_open_pressure: float = None,
+    blowdown: float = 7.0,
+) -> Any:
     """
     Create a Pressure Safety Valve (PSV) for overpressure protection.
 
@@ -1562,9 +2021,14 @@ def safety_valve(name: str, inlet_stream: Any, set_pressure: float,
     return psv
 
 
-def beggs_brill_pipe(name: str, inlet_stream: Any, length: float,
-                     diameter: float, elevation: float = 0.0,
-                     roughness: float = 50e-6) -> Any:
+def beggs_brill_pipe(
+    name: str,
+    inlet_stream: Any,
+    length: float,
+    diameter: float,
+    elevation: float = 0.0,
+    roughness: float = 50e-6,
+) -> Any:
     """
     Create a Beggs and Brill multiphase pipeline.
 
@@ -1621,7 +2085,9 @@ def create_equipment(name: str, equipment_type: str) -> Any:
         >>> valve = create_equipment('v1', 'ThrottlingValve')
         >>> sep = create_equipment('sep1', 'Separator')
     """
-    return jneqsim.process.equipment.EquipmentFactory.createEquipment(name, equipment_type)
+    return jneqsim.process.equipment.EquipmentFactory.createEquipment(
+        name, equipment_type
+    )
 
 
 def staticmixer(name: str) -> Any:
@@ -1947,7 +2413,9 @@ def co2electrolyzer(name: str, inlet_stream: Any = None) -> Any:
         >>> runProcess()
     """
     if inlet_stream is not None:
-        elec = jneqsim.process.equipment.electrolyzer.CO2Electrolyzer(name, inlet_stream)
+        elec = jneqsim.process.equipment.electrolyzer.CO2Electrolyzer(
+            name, inlet_stream
+        )
     else:
         elec = jneqsim.process.equipment.electrolyzer.CO2Electrolyzer(name)
     if not _loop_mode:
@@ -2005,8 +2473,9 @@ def setter(name: str) -> Any:
     return setter_unit
 
 
-def wellflow(name: str, inlet_stream: Any, well_depth: float = 1000.0,
-             well_diameter: float = 0.1) -> Any:
+def wellflow(
+    name: str, inlet_stream: Any, well_depth: float = 1000.0, well_diameter: float = 0.1
+) -> Any:
     """
     Create a well flow model for production or injection wells.
 
@@ -2023,7 +2492,7 @@ def wellflow(name: str, inlet_stream: Any, well_depth: float = 1000.0,
         Well flow object.
 
     Example:
-        >>> well = wellflow('prod_well_1', reservoir_stream, 
+        >>> well = wellflow('prod_well_1', reservoir_stream,
         ...                 well_depth=2500.0, well_diameter=0.1)
         >>> runProcess()
         >>> wellhead = well.getOutletStream()

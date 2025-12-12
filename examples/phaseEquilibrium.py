@@ -107,7 +107,7 @@ try:
     cricondenbar_P = envelope.get("cricondenbarP")[0]
     cricondentherm_T = envelope.get("cricondenthermT")[0] - 273.15
     cricondentherm_P = envelope.get("cricondenthermP")[0]
-    
+
     print(f"\nPhase Envelope Properties:")
     print(f"  Cricondenbar (max pressure):")
     print(f"    P = {cricondenbar_P:.2f} bara at T = {cricondenbar_T:.1f}°C")
@@ -120,13 +120,13 @@ except Exception as e:
 try:
     temps = envelope.get("Tsat")
     pressures = envelope.get("Psat")
-    
+
     if temps and pressures:
         print(f"\n  Phase envelope points calculated: {len(temps)}")
         print("\n  Selected points on the envelope:")
         print("  T [°C]   | P [bara]")
         print("  ---------|----------")
-        
+
         # Print every 5th point
         step = max(1, len(temps) // 8)
         for i in range(0, len(temps), step):
@@ -141,13 +141,15 @@ except Exception as e:
 # =============================================================================
 print("\n4. RETROGRADE CONDENSATION")
 print("-" * 40)
-print("""
+print(
+    """
 Retrograde condensation is a unique phenomenon in gas condensate systems
 where REDUCING pressure causes MORE liquid to form (counterintuitive!).
 
 This occurs between the cricondentherm and critical point at pressures
 below the cricondenbar. It's important for gas condensate reservoirs.
-""")
+"""
+)
 
 # Demonstrate retrograde behavior
 print("Demonstrating retrograde behavior with the rich gas:")
@@ -170,7 +172,7 @@ for p in [120, 100, 80, 60, 40, 20]:
     test_gas.setTemperature(20.0, "C")
     test_gas.setPressure(p, "bara")
     TPflash(test_gas)
-    
+
     n_phases = test_gas.getNumberOfPhases()
     if n_phases > 1 and test_gas.hasPhaseType("oil"):
         liq_frac = test_gas.getPhase("oil").getBeta()
@@ -215,7 +217,8 @@ for p in [50, 75, 100, 150]:
 # =============================================================================
 print("\n6. CRICONDENBAR & CRICONDENTHERM SIGNIFICANCE")
 print("-" * 40)
-print("""
+print(
+    """
 ┌─────────────────────────────────────────────────────────────────┐
 │                    PHASE ENVELOPE                                │
 │                                                                  │
@@ -237,6 +240,7 @@ print("""
 │  ● Above cricondentherm: Heating cannot cause condensation     │
 │  ● Critical point: Liquid and gas become indistinguishable     │
 └─────────────────────────────────────────────────────────────────┘
-""")
+"""
+)
 
 print("=" * 70)

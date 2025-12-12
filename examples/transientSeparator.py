@@ -2,7 +2,7 @@
 """
 Transient Separator Simulation Example
 
-This example demonstrates transient (dynamic) simulation of a 
+This example demonstrates transient (dynamic) simulation of a
 separator in NeqSim. Transient simulation tracks how equipment
 responds over time to changing conditions.
 
@@ -92,30 +92,32 @@ while time <= simulation_time:
         feed_fluid.setTotalFlowRate(60000.0, "kg/hr")  # 20% increase
         feed_stream.setFluid(feed_fluid)
         print(f">>> Feed rate increased to 60,000 kg/hr at t={time:.0f}s <<<")
-    
+
     # At t=90s, decrease feed rate back to original
     if time == 90.0:
         feed_fluid.setTotalFlowRate(50000.0, "kg/hr")  # Back to original
         feed_stream.setFluid(feed_fluid)
         print(f">>> Feed rate decreased to 50,000 kg/hr at t={time:.0f}s <<<")
-    
+
     # Run feed stream
     feed_stream.run()
-    
+
     # Run separator transient step
     run_id = uuid.uuid4()
     separator.runTransient(time_step, jneqsim.util.util.UUIDJVM.randomUUID())
-    
+
     # Run outlet streams
     gas_outlet.run()
     liquid_outlet.run()
-    
+
     # Print results every 10 seconds
     if time % 10.0 == 0:
-        print(f"{time:8.0f} | {separator.getPressure():15.2f} | "
-              f"{gas_outlet.getFlowRate('kg/hr'):16.0f} | "
-              f"{liquid_outlet.getFlowRate('kg/hr'):18.0f}")
-    
+        print(
+            f"{time:8.0f} | {separator.getPressure():15.2f} | "
+            f"{gas_outlet.getFlowRate('kg/hr'):16.0f} | "
+            f"{liquid_outlet.getFlowRate('kg/hr'):18.0f}"
+        )
+
     time += time_step
 
 print("-" * 70)

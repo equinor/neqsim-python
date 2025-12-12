@@ -136,4 +136,4 @@ class measurement:
     def getAlarmConfig(self):
         # Add the logic to get alarm configuration.
         # This is a placeholder implementation.
-        return getattr(self, 'alarmConfig', None)
+        return getattr(self, "alarmConfig", None)

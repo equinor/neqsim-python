@@ -30,7 +30,8 @@ print("=" * 70)
 # =============================================================================
 print("\n1. AVAILABLE VISCOSITY MODELS")
 print("-" * 40)
-print("""
+print(
+    """
 Model              | Keyword            | Best For
 -------------------|--------------------|---------------------------------
 LBC                | "LBC"              | General oil, reservoir fluids
@@ -41,7 +42,8 @@ PFCT Heavy Oil     | "PFCT-Heavy-Oil"   | Heavy oils, bitumen
 The LBC model is based on corresponding states principle using critical
 properties. Friction Theory links viscosity to EoS pressure terms,
 providing thermodynamic consistency.
-""")
+"""
+)
 
 # =============================================================================
 # 2. BASIC VISCOSITY CALCULATION
@@ -87,11 +89,12 @@ for model in ["LBC", "friction theory", "PFCT"]:
 # =============================================================================
 print("\n3. LBC MODEL (LOHRENZ-BRAY-CLARK)")
 print("-" * 40)
-print("""
+print(
+    """
 The LBC model calculates viscosity as:
-    
+
     η = η* + η_dense / ξ_m
-    
+
 Where:
     η*      = Low-pressure gas viscosity contribution
     η_dense = Dense-fluid contribution (function of reduced density)
@@ -100,7 +103,7 @@ Where:
 Dense-fluid contribution uses a polynomial:
 
     (η_dense * ξ_m + 10^-4)^0.25 = a0 + a1*ρr + a2*ρr² + a3*ρr³ + a4*ρr⁴
-    
+
 Default LBC parameters (a0 to a4):
     a0 = 0.10230
     a1 = 0.023364
@@ -109,7 +112,8 @@ Default LBC parameters (a0 to a4):
     a4 = 0.0093324
 
 These parameters can be tuned to match laboratory viscosity data.
-""")
+"""
+)
 
 # =============================================================================
 # 4. TUNING LBC MODEL PARAMETERS
@@ -135,36 +139,37 @@ if tuning_oil.hasPhaseType("oil"):
     tuning_oil.getPhase("oil").getPhysicalProperties().setViscosityModel("LBC")
     tuning_oil.initPhysicalProperties()
     default_visc = tuning_oil.getPhase("oil").getViscosity("cP")
-    
+
     print(f"\nDefault LBC viscosity: {default_visc:.4f} cP")
-    
+
     # Suppose lab measurement is 2.5 cP - we need to tune
     lab_viscosity = 2.5
     print(f"Laboratory measurement: {lab_viscosity:.4f} cP")
-    
+
     # Method 1: Set all five parameters at once
     # Increasing coefficients generally increases viscosity
     # Default: [0.10230, 0.023364, 0.058533, -0.040758, 0.0093324]
     tuned_params = [0.15, 0.04, 0.08, -0.03, 0.015]  # Increased values
-    
+
     tuning_oil.getPhase("oil").getPhysicalProperties().setLbcParameters(tuned_params)
     tuning_oil.initPhysicalProperties()
     tuned_visc_1 = tuning_oil.getPhase("oil").getViscosity("cP")
-    
+
     print(f"\nTuned viscosity (all params): {tuned_visc_1:.4f} cP")
-    
+
     # Method 2: Adjust individual parameter
     # Parameter indices: a0=0, a1=1, a2=2, a3=3, a4=4
     # a0 (index 0) has most influence at low density
     # a4 (index 4) has most influence at high density
-    
+
     tuning_oil.getPhase("oil").getPhysicalProperties().setLbcParameter(2, 0.10)
     tuning_oil.initPhysicalProperties()
     tuned_visc_2 = tuning_oil.getPhase("oil").getViscosity("cP")
-    
+
     print(f"Further adjusted (a2=0.10): {tuned_visc_2:.4f} cP")
 
-print("""
+print(
+    """
 LBC Tuning Guidelines:
 ----------------------
 • a0 (index 0): Baseline offset - increase for higher overall viscosity
@@ -172,18 +177,20 @@ LBC Tuning Guidelines:
 • a2 (index 2): Quadratic term - significant for liquid viscosity
 • a3 (index 3): Cubic term - fine-tuning at high density
 • a4 (index 4): Quartic term - extreme density behavior
-""")
+"""
+)
 
 # =============================================================================
 # 5. FRICTION THEORY MODEL
 # =============================================================================
 print("\n5. FRICTION THEORY MODEL")
 print("-" * 40)
-print("""
+print(
+    """
 Friction Theory (f-theory) links viscosity to EoS pressure terms:
 
     η = η0 + ηf
-    
+
 Where:
     η0 = Dilute gas viscosity (Chung correlation)
     ηf = Friction contribution from EoS
@@ -195,7 +202,8 @@ Advantages:
     ✓ Consistent with phase equilibrium calculations
     ✓ Better extrapolation behavior
     ✓ Works well for wide T/P ranges
-""")
+"""
+)
 
 # =============================================================================
 # 6. TUNING FRICTION THEORY - TBP CORRECTION FACTOR
@@ -222,47 +230,49 @@ if ft_oil.hasPhaseType("oil"):
     # Set friction theory model
     ft_oil.getPhase("oil").getPhysicalProperties().setViscosityModel("friction theory")
     ft_oil.initPhysicalProperties()
-    
+
     # Get default viscosity
     default_ft_visc = ft_oil.getPhase("oil").getViscosity("cP")
     print(f"\nDefault Friction Theory viscosity: {default_ft_visc:.4f} cP")
-    
+
     # Apply TBP viscosity correction factor
     # Factor > 1.0 increases viscosity
     # Factor < 1.0 decreases viscosity
     visc_model = ft_oil.getPhase("oil").getPhysicalProperties().getViscosityModel()
-    
+
     # Access the FrictionTheoryViscosityMethod directly
     print("\nApplying TBP correction factors:")
     print("\nCorrection Factor | Viscosity [cP]")
     print("------------------|----------------")
-    
+
     for correction in [0.8, 1.0, 1.2, 1.5, 2.0]:
         try:
             # Set the TBP correction factor
             visc_model.setTBPviscosityCorrection(correction)
             ft_oil.initPhysicalProperties()
-            
+
             corrected_visc = ft_oil.getPhase("oil").getViscosity("cP")
             print(f"{correction:17.1f} | {corrected_visc:.4f}")
         except Exception as e:
             print(f"{correction:17.1f} | Error: {e}")
-    
+
     # Reset to default
     visc_model.setTBPviscosityCorrection(1.0)
 
-print("""
+print(
+    """
 Friction Theory Tuning Guidelines:
 ----------------------------------
 • TBP Correction Factor:
   - Default = 1.0 (no correction)
   - > 1.0: Increases viscosity for heavy fractions
   - < 1.0: Decreases viscosity
-  
+
 • Use when TBP fractions give incorrect viscosity predictions
 • Tune to match laboratory viscosity at one T/P condition
 • Model will extrapolate to other conditions
-""")
+"""
+)
 
 # =============================================================================
 # 7. ADVANCED: TUNING WITH EXPERIMENTAL DATA
@@ -284,7 +294,8 @@ print("-------|----------|---------------")
 for pt in exp_data:
     print(f"{pt['T_C']:6} | {pt['P_bara']:8} | {pt['visc_cP']:.2f}")
 
-print("""
+print(
+    """
 Tuning Workflow:
 ----------------
 1. Create fluid with accurate composition
@@ -299,7 +310,8 @@ Tuning Workflow:
 
 For automatic optimization, use NeqSim's parameter fitting capabilities
 with the ViscosityFunction class in PVT simulation.
-""")
+"""
+)
 
 # =============================================================================
 # 8. MODEL COMPARISON AT DIFFERENT CONDITIONS
@@ -332,18 +344,20 @@ for t_c, p_bara in conditions:
     comp_oil.setPressure(p_bara, "bara")
     TPflash(comp_oil)
     comp_oil.initThermoProperties()
-    
+
     if comp_oil.hasPhaseType("oil"):
         # LBC
         comp_oil.getPhase("oil").getPhysicalProperties().setViscosityModel("LBC")
         comp_oil.initPhysicalProperties()
         lbc_visc = comp_oil.getPhase("oil").getViscosity("cP")
-        
+
         # Friction Theory
-        comp_oil.getPhase("oil").getPhysicalProperties().setViscosityModel("friction theory")
+        comp_oil.getPhase("oil").getPhysicalProperties().setViscosityModel(
+            "friction theory"
+        )
         comp_oil.initPhysicalProperties()
         ft_visc = comp_oil.getPhase("oil").getViscosity("cP")
-        
+
         ratio = lbc_visc / ft_visc if ft_visc > 0 else 0
         print(f"{t_c:6} | {p_bara:8} | {lbc_visc:9.4f} | {ft_visc:13.4f} | {ratio:.3f}")
 
@@ -352,7 +366,8 @@ for t_c, p_bara in conditions:
 # =============================================================================
 print("\n9. HEAVY OIL CONSIDERATIONS")
 print("-" * 40)
-print("""
+print(
+    """
 For heavy oils (API < 20°, viscosity > 100 cP), consider:
 
 1. Use PFCT-Heavy-Oil model:
@@ -365,14 +380,16 @@ For heavy oils (API < 20°, viscosity > 100 cP), consider:
 4. Temperature sensitivity is critical - ensure accurate measurements
 
 5. Consider using Pedersen corresponding states for very heavy systems
-""")
+"""
+)
 
 # =============================================================================
 # 10. SUMMARY
 # =============================================================================
 print("\n10. SUMMARY: MODEL SELECTION GUIDELINES")
 print("-" * 40)
-print("""
+print(
+    """
 ┌────────────────────┬──────────────────────────────────────────┐
 │ Oil Type           │ Recommended Model & Notes                │
 ├────────────────────┼──────────────────────────────────────────┤
@@ -388,6 +405,7 @@ print("""
 │ Extra-heavy        │ Specialized correlations                 │
 │ (API < 10°)        │ May require custom viscosity data        │
 └────────────────────┴──────────────────────────────────────────┘
-""")
+"""
+)
 
 print("=" * 70)

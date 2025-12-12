@@ -29,9 +29,10 @@ print("=" * 70)
 # =============================================================================
 print("\n1. INTRODUCTION TO MINERAL SCALE")
 print("-" * 40)
-print("""
+print(
+    """
 Mineral scale forms when dissolved ions precipitate as solid deposits:
-                    
+
 Type              | Formula  | Common Causes
 ------------------|----------|--------------------------------
 Calcium Carbonate | CaCO3    | Pressure drop (CO2 release)
@@ -45,14 +46,16 @@ Scale risks:
   - Equipment damage
   - Increased operating costs
   - Production loss
-""")
+"""
+)
 
 # =============================================================================
 # 2. SATURATION INDEX CONCEPT
 # =============================================================================
 print("\n2. SATURATION INDEX (SI)")
 print("-" * 40)
-print("""
+print(
+    """
 SI = log(IAP / Ksp)
 
 Where:
@@ -63,7 +66,8 @@ Interpretation:
   SI > 0: Supersaturated → Scale WILL form
   SI = 0: At equilibrium → Borderline
   SI < 0: Undersaturated → Scale will NOT form
-""")
+"""
+)
 
 # =============================================================================
 # 3. CREATING FORMATION WATER
@@ -82,7 +86,7 @@ formation_water.addComponent("Cl-", 1.6, "mol")
 formation_water.addComponent("Ca++", 0.02, "mol")
 formation_water.addComponent("Ba++", 0.0001, "mol")  # 10 mg/L Ba
 formation_water.addComponent("SO4--", 0.001, "mol")  # Low sulfate
-formation_water.addComponent("HCO3-", 0.01, "mol")   # Bicarbonate
+formation_water.addComponent("HCO3-", 0.01, "mol")  # Bicarbonate
 formation_water.setMixingRule("classic")
 
 print("Formation water composition (per kg water):")
@@ -117,10 +121,12 @@ print("  Mg++:   0.05 mol (1.2 g/L)")
 print("  SO4--:  0.028 mol (2.7 g/L)  ← HIGH!")
 print("  HCO3-:  0.002 mol (122 mg/L)")
 
-print("""
+print(
+    """
 ⚠️  WARNING: Mixing formation water (high Ba++) with seawater (high SO4--)
              causes severe BaSO4 scale!
-""")
+"""
+)
 
 # =============================================================================
 # 5. SCALE POTENTIAL CALCULATION
@@ -141,7 +147,7 @@ print("Calculating scale potential at 80°C, 200 bara...")
 try:
     # Get ion composition analysis
     ion_analysis = ioncomposition(formation_water)
-    
+
     if ion_analysis is not None:
         print("\nIon composition analysis:")
         # The ion analysis provides various metrics
@@ -159,7 +165,8 @@ print("  - Ba++ present → BaSO4 risk if mixed with SO4- water")
 # =============================================================================
 print("\n6. EFFECT OF PRESSURE DROP ON CaCO3 SCALE")
 print("-" * 40)
-print("""
+print(
+    """
 CaCO3 (calcite) precipitation is driven by CO2 loss:
 
 Ca++ + 2HCO3- ⇌ CaCO3↓ + H2O + CO2↑
@@ -174,7 +181,8 @@ This commonly occurs at:
   - Wellhead chokes
   - First stage separator
   - ESPs (Electrical Submersible Pumps)
-""")
+"""
+)
 
 print("\nPressure | Expected CaCO3 Scaling Tendency")
 print("---------|----------------------------------")
@@ -188,7 +196,8 @@ print(" 10 bara | Very High (CO2 released)")
 # =============================================================================
 print("\n7. BaSO4 SCALE FROM WATER MIXING")
 print("-" * 40)
-print("""
+print(
+    """
 Barite (BaSO4) is one of the hardest scales to remove:
 
 Ba++ (formation water) + SO4-- (seawater) → BaSO4↓
@@ -203,15 +212,21 @@ Prevention:
   - Low-sulfate seawater injection
   - Scale inhibitor squeeze treatments
   - Careful mixing ratio control
-""")
+"""
+)
 
 # Simulate mixing at different ratios
 print("\nMixing formation water with seawater:")
 print("Seawater% | Relative BaSO4 Precipitation Risk")
 print("----------|-----------------------------------")
 
-risks = ["Very Low (no sulfate)", "High (max mixing)", "High",
-         "Moderate", "Low (Ba diluted)"]
+risks = [
+    "Very Low (no sulfate)",
+    "High (max mixing)",
+    "High",
+    "Moderate",
+    "Low (Ba diluted)",
+]
 for pct, risk in zip([0, 10, 30, 50, 90], risks):
     print(f"{pct:9} | {risk}")
 
@@ -220,7 +235,8 @@ for pct, risk in zip([0, 10, 30, 50, 90], risks):
 # =============================================================================
 print("\n8. SCALE INHIBITORS")
 print("-" * 40)
-print("""
+print(
+    """
 Scale inhibitors prevent crystal growth even when supersaturated:
 
 Type                | Target Scales
@@ -236,14 +252,16 @@ Application Methods:
   3. Batch treatment (periodic)
 
 Typical dosages: 5-50 ppm based on water volume
-""")
+"""
+)
 
 # =============================================================================
 # 9. PRACTICAL SCALE ASSESSMENT WORKFLOW
 # =============================================================================
 print("\n9. PRACTICAL SCALE ASSESSMENT WORKFLOW")
 print("-" * 40)
-print("""
+print(
+    """
 Step 1: Water Analysis
    └─ Measure: Na, K, Ca, Mg, Ba, Sr, Fe, Cl, SO4, HCO3, CO2
 
@@ -267,14 +285,16 @@ Step 6: Mitigation Strategy
    └─ Inhibitor selection and dosage
    └─ Operating condition optimization
    └─ Monitoring and intervention plan
-""")
+"""
+)
 
 # =============================================================================
 # 10. TEMPERATURE EFFECTS SUMMARY
 # =============================================================================
 print("\n10. TEMPERATURE EFFECTS ON SCALE")
 print("-" * 40)
-print("""
+print(
+    """
 Scale Type    | Solubility vs Temperature
 --------------|--------------------------------
 CaCO3         | Decreases with increasing T
@@ -293,6 +313,7 @@ NaCl          | Increases with T
               |
 SiO2          | Increases significantly with T
 (Silica)      | (Normal solubility)
-""")
+"""
+)
 
 print("=" * 70)

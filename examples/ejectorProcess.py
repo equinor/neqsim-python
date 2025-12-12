@@ -3,7 +3,7 @@
 Ejector Process Simulation Example
 
 This example demonstrates using an ejector (steam/gas jet) in NeqSim.
-Ejectors are used in vacuum systems, refrigeration cycles, and 
+Ejectors are used in vacuum systems, refrigeration cycles, and
 for mixing/boosting low-pressure gas with a high-pressure motive stream.
 
 The ejector calculation uses a quasi one-dimensional formulation combining
@@ -37,10 +37,14 @@ suction_fluid.setTotalFlowRate(2000.0, "kg/hr")
 
 # Create streams
 motive_stream = jneqsim.process.equipment.stream.Stream("Motive Stream", motive_fluid)
-suction_stream = jneqsim.process.equipment.stream.Stream("Suction Stream", suction_fluid)
+suction_stream = jneqsim.process.equipment.stream.Stream(
+    "Suction Stream", suction_fluid
+)
 
 # Create ejector
-ejector = jneqsim.process.equipment.ejector.Ejector("Gas Ejector", motive_stream, suction_stream)
+ejector = jneqsim.process.equipment.ejector.Ejector(
+    "Gas Ejector", motive_stream, suction_stream
+)
 
 # Create process system and run
 process = jneqsim.process.processmodel.ProcessSystem()
@@ -75,7 +79,9 @@ print(f"  Temperature: {outlet_temperature:.1f} °C")
 print(f"  Flow rate:   {outlet_flow:.0f} kg/hr")
 
 # Get entrainment ratio (mass of suction per mass of motive)
-entrainment_ratio = suction_fluid.getFlowRate("kg/hr") / motive_fluid.getFlowRate("kg/hr")
+entrainment_ratio = suction_fluid.getFlowRate("kg/hr") / motive_fluid.getFlowRate(
+    "kg/hr"
+)
 print(f"\nEntrainment Ratio: {entrainment_ratio:.3f}")
 print(f"Compression Ratio: {outlet_pressure / suction_stream.getPressure('bara'):.2f}")
 print("=" * 60)

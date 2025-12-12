@@ -249,7 +249,7 @@ for temp in [0, 25, 50, 75, 100]:
     TPflash(simple_gas)
     simple_gas.initThermoProperties()
     simple_gas.initPhysicalProperties()
-    
+
     if simple_gas.hasPhaseType("gas"):
         gas = simple_gas.getPhase("gas")
         rho = gas.getDensity("kg/m3")

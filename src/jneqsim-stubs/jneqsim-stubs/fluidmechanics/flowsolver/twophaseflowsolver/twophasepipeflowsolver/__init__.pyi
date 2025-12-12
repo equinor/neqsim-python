@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,24 +10,42 @@ import jneqsim.fluidmechanics.flowsystem
 import jneqsim.thermo
 import typing
 
-
-
-class TwoPhasePipeFlowSolver(jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.OnePhaseFlowSolver):
+class TwoPhasePipeFlowSolver(
+    jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.OnePhaseFlowSolver
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, flowSystemInterface: jneqsim.fluidmechanics.flowsystem.FlowSystemInterface, double: float, int: int): ...
-    def clone(self) -> 'TwoPhasePipeFlowSolver': ...
+    def __init__(
+        self,
+        flowSystemInterface: jneqsim.fluidmechanics.flowsystem.FlowSystemInterface,
+        double: float,
+        int: int,
+    ): ...
+    def clone(self) -> "TwoPhasePipeFlowSolver": ...
 
-class TwoPhaseFixedStaggeredGridSolver(TwoPhasePipeFlowSolver, jneqsim.thermo.ThermodynamicConstantsInterface):
+class TwoPhaseFixedStaggeredGridSolver(
+    TwoPhasePipeFlowSolver, jneqsim.thermo.ThermodynamicConstantsInterface
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, flowSystemInterface: jneqsim.fluidmechanics.flowsystem.FlowSystemInterface, double: float, int: int): ...
+    def __init__(
+        self,
+        flowSystemInterface: jneqsim.fluidmechanics.flowsystem.FlowSystemInterface,
+        double: float,
+        int: int,
+    ): ...
     @typing.overload
-    def __init__(self, flowSystemInterface: jneqsim.fluidmechanics.flowsystem.FlowSystemInterface, double: float, int: int, boolean: bool): ...
+    def __init__(
+        self,
+        flowSystemInterface: jneqsim.fluidmechanics.flowsystem.FlowSystemInterface,
+        double: float,
+        int: int,
+        boolean: bool,
+    ): ...
     def calcFluxes(self) -> None: ...
-    def clone(self) -> 'TwoPhaseFixedStaggeredGridSolver': ...
+    def clone(self) -> "TwoPhaseFixedStaggeredGridSolver": ...
     def initComposition(self, int: int, int2: int) -> None: ...
     def initFinalResults(self, int: int) -> None: ...
     def initMatrix(self) -> None: ...
@@ -44,7 +62,6 @@ class TwoPhaseFixedStaggeredGridSolver(TwoPhasePipeFlowSolver, jneqsim.thermo.Th
     def setMassConservationMatrix(self, int: int) -> None: ...
     def setPhaseFractionMatrix(self, int: int) -> None: ...
     def solveTDMA(self) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flowsolver.twophaseflowsolver.twophasepipeflowsolver")``.

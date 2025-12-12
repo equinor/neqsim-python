@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,8 +9,6 @@ import java.lang
 import java.util
 import jneqsim.process.equipment
 import typing
-
-
 
 class BatteryStorage(jneqsim.process.equipment.ProcessEquipmentBaseClass):
     @typing.overload
@@ -30,7 +28,6 @@ class BatteryStorage(jneqsim.process.equipment.ProcessEquipmentBaseClass):
     def run(self, uUID: java.util.UUID) -> None: ...
     def setCapacity(self, double: float) -> None: ...
     def setStateOfCharge(self, double: float) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.equipment.battery")``.

@@ -35,7 +35,7 @@ print("-" * 40)
 gas = fluid("srk")  # Soave-Redlich-Kwong EoS
 
 # Add components one by one
-gas.addComponent("methane", 1.0)     # Default: mole fraction
+gas.addComponent("methane", 1.0)  # Default: mole fraction
 gas.addComponent("ethane", 0.1)
 gas.addComponent("propane", 0.05)
 gas.setMixingRule("classic")
@@ -92,10 +92,18 @@ import pandas as pd
 
 # Define composition in a DataFrame
 composition_data = {
-    'ComponentName': ['nitrogen', 'CO2', 'methane', 'ethane', 'propane', 
-                      'i-butane', 'n-butane', 'i-pentane', 'n-pentane'],
-    'MolarComposition[-]': [0.02, 0.01, 0.85, 0.05, 0.03, 
-                            0.01, 0.015, 0.005, 0.01]
+    "ComponentName": [
+        "nitrogen",
+        "CO2",
+        "methane",
+        "ethane",
+        "propane",
+        "i-butane",
+        "n-butane",
+        "i-pentane",
+        "n-pentane",
+    ],
+    "MolarComposition[-]": [0.02, 0.01, 0.85, 0.05, 0.03, 0.01, 0.015, 0.005, 0.01],
 }
 df = pd.DataFrame(composition_data)
 
@@ -218,8 +226,12 @@ cloned = original.clone()
 cloned.setTemperature(100.0, "C")
 cloned.setPressure(100.0, "bara")
 
-print(f"Original fluid: T = {original.getTemperature('C'):.1f}°C, P = {original.getPressure('bara'):.1f} bara")
-print(f"Cloned fluid:   T = {cloned.getTemperature('C'):.1f}°C, P = {cloned.getPressure('bara'):.1f} bara")
+print(
+    f"Original fluid: T = {original.getTemperature('C'):.1f}°C, P = {original.getPressure('bara'):.1f} bara"
+)
+print(
+    f"Cloned fluid:   T = {cloned.getTemperature('C'):.1f}°C, P = {cloned.getPressure('bara'):.1f} bara"
+)
 print("(Changes to clone don't affect original)")
 
 # =============================================================================
@@ -257,7 +269,8 @@ print(f"\nMixed stream total flow: {stream1.getTotalNumberOfMoles():.1f} mol")
 # =============================================================================
 print("\n9. COMMONLY USED COMPONENTS")
 print("-" * 40)
-print("""
+print(
+    """
 Category           | Component Names
 -------------------|------------------------------------------------
 Light gases        | nitrogen, oxygen, argon, helium, hydrogen, H2S
@@ -272,7 +285,8 @@ Pseudo-components  | C6, C7, C8, C9, C10, C11-C14, C15-C20 (from DB)
 
 Note: For components not in database, use addTBPfraction() or
       addPlusFraction() with MW and density.
-""")
+"""
+)
 
 # =============================================================================
 # 10. ELECTROLYTE FLUIDS

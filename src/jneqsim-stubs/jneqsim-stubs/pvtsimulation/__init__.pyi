@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,7 +10,6 @@ import jneqsim.pvtsimulation.reservoirproperties
 import jneqsim.pvtsimulation.simulation
 import jneqsim.pvtsimulation.util
 import typing
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.pvtsimulation")``.

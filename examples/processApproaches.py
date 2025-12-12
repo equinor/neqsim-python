@@ -109,14 +109,14 @@ with ProcessContext("Compression Train") as ctx:
     comp1 = ctx.compressor("1st stage", sep.getGasOutStream(), pres=60.0)
     cool = ctx.cooler("intercooler", comp1.getOutletStream(), temp=303.15)
     comp2 = ctx.compressor("2nd stage", cool.getOutletStream(), pres=120.0)
-    
+
     # Run this specific process
     ctx.run()
-    
+
     # Access equipment by name
     stage1 = ctx.get("1st stage")
     stage2 = ctx.get("2nd stage")
-    
+
     print(f"\nResults (Approach 2):")
     print(f"  Stage 1 power: {stage1.getPower()/1e6:.3f} MW")
     print(f"  Stage 2 power: {stage2.getPower()/1e6:.3f} MW")
@@ -147,13 +147,15 @@ feed_fluid3.setPressure(30.0, "bara")
 feed_fluid3.setTotalFlowRate(5.0, "MSm3/day")
 
 # Build process with fluent API - all chained together
-process = (ProcessBuilder("Compression Train")
+process = (
+    ProcessBuilder("Compression Train")
     .add_stream("inlet", feed_fluid3)
     .add_separator("HP separator", "inlet")
     .add_compressor("1st stage", "HP separator", pressure=60.0)
     .add_cooler("intercooler", "1st stage", temperature=303.15)
     .add_compressor("2nd stage", "intercooler", pressure=120.0)
-    .run())
+    .run()
+)
 
 # Access results
 comp1 = process.get("1st stage")
@@ -213,7 +215,8 @@ print(f"  Total power:   {(comp1.getPower() + comp2.getPower())/1e6:.3f} MW")
 print("\n" + "=" * 70)
 print("CHOOSING AN APPROACH")
 print("=" * 70)
-print("""
+print(
+    """
 | Use Case                        | Recommended Approach          |
 |---------------------------------|-------------------------------|
 | Learning / tutorials            | Wrappers (global process)     |
@@ -225,4 +228,5 @@ print("""
 | Clean declarative style         | ProcessBuilder                |
 | Mixing wrapper convenience      | Hybrid (process= parameter)   |
   with explicit control           |                               |
-""")
+"""
+)

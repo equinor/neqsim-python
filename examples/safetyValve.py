@@ -49,7 +49,9 @@ psv.setFullOpenPressure(60.5)  # Full open pressure in bara
 psv.setBlowdown(7.0)  # Blowdown percentage
 
 # Create PSV relief stream
-psv_relief = jneqsim.process.equipment.stream.Stream("PSV Relief", psv.getOutletStream())
+psv_relief = jneqsim.process.equipment.stream.Stream(
+    "PSV Relief", psv.getOutletStream()
+)
 
 # Create flare header (mixer to collect relief streams)
 flare_header = jneqsim.process.equipment.mixer.Mixer("Flare Header")
@@ -89,7 +91,9 @@ print(f"  Reseat pressure:    {55.0 * 0.93:.1f} bara")
 
 print("\nNormal Operating Conditions (50 bara):")
 print(f"  Separator pressure: {separator.getPressure():.1f} bara")
-print(f"  PSV status:         {'CLOSED' if psv.getPercentValveOpening() < 0.1 else 'OPEN'}")
+print(
+    f"  PSV status:         {'CLOSED' if psv.getPercentValveOpening() < 0.1 else 'OPEN'}"
+)
 print(f"  PSV opening:        {psv.getPercentValveOpening():.1f}%")
 
 # Simulate overpressure by increasing separator pressure

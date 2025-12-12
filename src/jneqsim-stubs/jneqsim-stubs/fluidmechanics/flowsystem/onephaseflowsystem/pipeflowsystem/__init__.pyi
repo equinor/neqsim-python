@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,9 +9,9 @@ import java.util
 import jneqsim.fluidmechanics.flowsystem.onephaseflowsystem
 import typing
 
-
-
-class PipeFlowSystem(jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.OnePhaseFlowSystem):
+class PipeFlowSystem(
+    jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.OnePhaseFlowSystem
+):
     def __init__(self): ...
     def createSystem(self) -> None: ...
     def init(self) -> None: ...
@@ -23,7 +23,6 @@ class PipeFlowSystem(jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.OnePha
     def solveTransient(self, int: int) -> None: ...
     @typing.overload
     def solveTransient(self, int: int, uUID: java.util.UUID) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.pipeflowsystem")``.

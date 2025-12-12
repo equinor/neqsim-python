@@ -12,6 +12,7 @@ NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimho
 NeqSim Python is distributed as a pip package. Please read the [Prerequisites](#prerequisites).
 
 End-users should install neqsim python with some additional packages by running
+
 ```
 pip install neqsim
 ```
@@ -95,7 +96,7 @@ print(f"Compressor power: {process.get('compressor').getPower()/1e6:.2f} MW")
 
 ### 4. Direct Java Access (Full control)
 
-Explicit process management using jneqsim - for advanced features:
+Explicit process management using jneqsim - for advanced features see [neqsim java API](https://github.com/equinor/neqsim):
 
 ```python
 from neqsim import jneqsim
@@ -125,14 +126,14 @@ print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
 
 ### Choosing an Approach
 
-| Use Case | Recommended Approach |
-|----------|---------------------|
-| Learning & prototyping | Python wrappers |
-| Jupyter notebooks | Python wrappers |
-| Production applications | ProcessContext |
-| Multiple parallel processes | ProcessContext |
-| Configuration-driven design | ProcessBuilder |
-| Advanced Java features | Direct Java access |
+| Use Case                    | Recommended Approach |
+| --------------------------- | -------------------- |
+| Learning & prototyping      | Python wrappers      |
+| Jupyter notebooks           | Python wrappers      |
+| Production applications     | ProcessContext       |
+| Multiple parallel processes | ProcessContext       |
+| Configuration-driven design | ProcessBuilder       |
+| Advanced Java features      | Direct Java access   |
 
 See the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples) for more process simulation examples, including [processApproaches.py](https://github.com/equinor/neqsim-python/blob/master/examples/processApproaches.py) which demonstrates all four approaches.
 
@@ -140,11 +141,9 @@ See the [examples folder](https://github.com/equinor/neqsim-python/tree/master/e
 
 Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsim-python/network/dependencies).
 
-
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
-
 
 ## Discussion forum
 
