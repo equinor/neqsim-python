@@ -1,46 +1,97 @@
-import json
+"""
+Process simulation tools for NeqSim.
 
+This module provides Python wrapper functions for creating and running
+process simulations using the NeqSim Java library. It includes equipment
+like compressors, pumps, heat exchangers, separators, and more.
+
+Example usage in Google Colab:
+    >>> from neqsim.thermo import fluid
+    >>> from neqsim.process import stream, compressor, runProcess, clearProcess
+    >>> 
+    >>> clearProcess()
+    >>> my_fluid = fluid('srk')
+    >>> my_fluid.addComponent('methane', 1.0)
+    >>> inlet = stream('inlet', my_fluid)
+    >>> inlet.setPressure(10.0, 'bara')
+    >>> comp = compressor('compressor1', inlet, pres=50.0)
+    >>> runProcess()
+    >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
+"""
+from __future__ import annotations
+
+import json
+from typing import Any, Optional, List, Dict, Union
+
+import pandas as pd
 from jpype.types import JDouble
 from jpype.types import *
 
 from neqsim import jneqsim
 
 processoperations = jneqsim.process.processmodel.ProcessSystem()
-_loop_mode = False
+_loop_mode: bool = False
 
 
-def newProcess(name=""):
+def newProcess(name: str = "") -> Any:
     """
-    Create a new process object
+    Create a new process simulation object.
+
+    Args:
+        name: The name of the process. Defaults to empty string.
+
+    Returns:
+        ProcessSystem: A new process system object.
+
+    Example:
+        >>> process = newProcess("MyProcess")
     """
     global processoperations
     processoperations = jneqsim.process.processmodel.ProcessSystem(name)
     return processoperations
 
 
-def set_loop_mode(loop_mode):
+def set_loop_mode(loop_mode: bool) -> None:
     """
     Set the loop mode for process operations.
 
-    Parameters:
-    loop_mode (bool): If True, sets the loop mode to allow multiple runs without clearing the process.
+    When loop mode is enabled, unit operations are not automatically added
+    to the global process. This is useful for creating reusable process
+    components or running optimization loops.
+
+    Args:
+        loop_mode: If True, enables loop mode.
+
+    Example:
+        >>> set_loop_mode(True)
+        >>> # Create units without adding to global process
+        >>> set_loop_mode(False)
     """
     global _loop_mode
     _loop_mode = loop_mode
 
 
-def stream(name, thermoSystem, t=0, p=0):
+def stream(name: str, thermoSystem: Any, t: float = 0, p: float = 0) -> Any:
     """
-    Create a stream with the given name and thermodynamic system, optionally setting temperature and pressure.
+    Create a stream with the given name and thermodynamic system.
 
-    Parameters:
-    name (str): The name of the stream.
-    thermoSystem (ThermoSystem): The thermodynamic system to be used in the stream.
-    t (float, optional): The temperature to set for the thermodynamic system. Defaults to 0.
-    p (float, optional): The pressure to set for the thermodynamic system. Defaults to 0.
+    A stream represents a material flow in the process simulation.
+    Optionally set temperature and pressure.
+
+    Args:
+        name: The name of the stream.
+        thermoSystem: The thermodynamic system (fluid) for the stream.
+        t: Temperature to set (optional). If 0, uses system default.
+        p: Pressure to set (optional). If 0, uses system default.
 
     Returns:
-    Stream: The created stream object.
+        Stream: The created stream object.
+
+    Example:
+        >>> from neqsim.thermo import fluid
+        >>> my_fluid = fluid('srk')
+        >>> my_fluid.addComponent('methane', 1.0)
+        >>> inlet_stream = stream('inlet', my_fluid, t=25.0, p=10.0)
     """
     if t != 0:
         thermoSystem.setTemperature(t)
@@ -267,17 +318,23 @@ def filters(name, teststream):
     return filter2
 
 
-def compressor(name, teststream, pres=10.0):
+def compressor(name: str, teststream: Any, pres: float = 10.0) -> Any:
     """
     Create and configure a compressor for a given stream.
 
-    Parameters:
-    name (str): The name of the compressor.
-    teststream: The stream to be compressed.
-    pres (float, optional): The outlet pressure of the compressor. Default is 10.0.
+    Args:
+        name: The name of the compressor.
+        teststream: The inlet stream to be compressed.
+        pres: The outlet pressure in bara. Defaults to 10.0.
 
     Returns:
-    Compressor: The configured compressor object.
+        Compressor: The configured compressor object.
+
+    Example:
+        >>> comp = compressor('comp1', inlet_stream, pres=50.0)
+        >>> runProcess()
+        >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
+        >>> print(f"Polytropic efficiency: {comp.getPolytropicEfficiency():.2%}")
     """
     compressor = jneqsim.process.equipment.compressor.Compressor(name, teststream)
     compressor.setOutletPressure(pres)
@@ -659,6 +716,63 @@ def hydrateEquilibriumTemperatureAnalyser(name, teststream):
     if not _loop_mode:
         processoperations.add(hydrateEquilibriumTemperatureAnalyser)
     return hydrateEquilibriumTemperatureAnalyser
+
+
+def process_report(process: Optional[Any] = None) -> pd.DataFrame:
+    """
+    Generate a summary DataFrame of all streams and unit operations in the process.
+
+    This is a convenience function that extracts key information from the process
+    simulation results into a pandas DataFrame for easy analysis and display.
+
+    Args:
+        process: The process object. If None, uses the global processoperations.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing unit operation names, types,
+                      and key properties like temperature, pressure, and flow rates.
+
+    Example:
+        >>> runProcess()
+        >>> df = process_report()
+        >>> print(df)
+        >>> df.to_excel('process_results.xlsx')
+    """
+    if process is None:
+        process = processoperations
+
+    try:
+        json_report = str(process.getReport_json())
+        results = json.loads(json_report)
+
+        rows = []
+        for unit_name, unit_data in results.items():
+            if isinstance(unit_data, dict):
+                row = {'Unit Name': unit_name}
+                # Extract common properties
+                if 'feed' in unit_data:
+                    feed = unit_data['feed']
+                    if 'temperature' in feed:
+                        row['Feed Temp [C]'] = feed.get('temperature', {}).get('value')
+                    if 'pressure' in feed:
+                        row['Feed Pres [bara]'] = feed.get('pressure', {}).get('value')
+                if 'product' in unit_data:
+                    product = unit_data['product']
+                    if 'temperature' in product:
+                        row['Product Temp [C]'] = product.get('temperature', {}).get('value')
+                    if 'pressure' in product:
+                        row['Product Pres [bara]'] = product.get('pressure', {}).get('value')
+                if 'power' in unit_data:
+                    row['Power [kW]'] = unit_data.get('power', {}).get('value')
+                rows.append(row)
+
+        if rows:
+            return pd.DataFrame(rows)
+        else:
+            return pd.DataFrame({'Message': ['No unit operations found in process']})
+
+    except Exception as e:
+        return pd.DataFrame({'Error': [f'Failed to generate report: {e}']})
 
 
 def results_json(process, filename=None):
