@@ -421,7 +421,8 @@ class ProcessBuilder:
         return ref
     
     def add_stream(self, name: str, thermo_system: Any, 
-                   temperature: float = None, pressure: float = None) -> 'ProcessBuilder':
+                   temperature: float = None, pressure: float = None,
+                   flow_rate: float = None, flow_unit: str = 'kg/sec') -> 'ProcessBuilder':
         """
         Add a stream to the process.
         
@@ -430,14 +431,25 @@ class ProcessBuilder:
             thermo_system: Fluid/thermodynamic system.
             temperature: Optional temperature in Kelvin.
             pressure: Optional pressure in bara.
+            flow_rate: Optional flow rate. If not specified, uses the flow rate 
+                already set on the fluid.
+            flow_unit: Unit for flow rate (default 'kg/sec'). Common units include
+                'kg/sec', 'kg/hr', 'MSm3/day', 'Sm3/day', 'mole/sec'.
             
         Returns:
             Self for method chaining.
+        
+        Example:
+            >>> process = (ProcessBuilder("Test")
+            ...     .add_stream('inlet', feed, flow_rate=10.0, flow_unit='MSm3/day')
+            ...     .run())
         """
         if temperature is not None:
             thermo_system.setTemperature(temperature)
         if pressure is not None:
             thermo_system.setPressure(pressure)
+        if flow_rate is not None:
+            thermo_system.setTotalFlowRate(flow_rate, flow_unit)
         s = jneqsim.process.equipment.stream.Stream(name, thermo_system)
         self.equipment[name] = s
         self.process.add(s)
