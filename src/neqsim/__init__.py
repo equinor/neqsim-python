@@ -140,7 +140,8 @@ def save_xml(javaobject, filename):
     xstream = jpype.JPackage("com.thoughtworks.xstream")
     streamer = xstream.XStream()
     xml = streamer.toXML(javaobject)
-    print(xml, file=open(filename, "w"))
+    with open(filename, "w") as f:
+        f.write(xml)
     return xml
 
 
@@ -148,6 +149,7 @@ def open_xml(filename):
     xstream = jpype.JPackage("com.thoughtworks.xstream")
     streamer = xstream.XStream()
     streamer.addPermission(xstream.security.AnyTypePermission.ANY)
-    str = open(filename, "r").read()
-    neqsimobj = streamer.fromXML(str)
+    with open(filename, "r") as f:
+        xml_content = f.read()
+    neqsimobj = streamer.fromXML(xml_content)
     return neqsimobj

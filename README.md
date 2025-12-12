@@ -5,7 +5,7 @@
 
 # NeqSim Python
 
-NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimhome/). NeqSim Python is a Python interface to the [NeqSim Java library](https://github.com/equinor/neqsim) for estimation of fluid behavior and process design for oil and gas production. NeqSim Python toolboxes (eg. [thermoTools](https://github.com/equinor/neqsimpython/blob/master/neqsim/thermo/thermoTools.py) and [processTools](https://github.com/equinor/neqsimpython/blob/master/neqsim/process/processTools.py)) are implemented to streamline use of neqsim in Python. Examples of use are given in the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples).
+NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimhome/). NeqSim Python is a Python interface to the [NeqSim Java library](https://github.com/equinor/neqsim) for estimation of fluid behavior and process design for oil and gas production. NeqSim Python toolboxes (eg. [thermoTools](https://github.com/equinor/neqsim-python/blob/master/src/neqsim/thermo/thermoTools.py) and [processTools](https://github.com/equinor/neqsim-python/blob/master/src/neqsim/process/processTools.py)) are implemented to streamline use of neqsim in Python. Examples of use are given in the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples).
 
 ## Releases
 
@@ -18,11 +18,11 @@ pip install neqsim
 
 ## Getting Started
 
-See the [NeqSim Python Wiki](https://github.com/equinor/neqsimpython/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf). Learn and ask questions in [Discussions for use and development of NeqSim](https://github.com/equinor/neqsim/discussions).
+See the [NeqSim Python Wiki](https://github.com/equinor/neqsim-python/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf). Learn and ask questions in [Discussions for use and development of NeqSim](https://github.com/equinor/neqsim/discussions).
 
 ### Prerequisites
 
-Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsimpython/network/dependencies).
+Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsim-python/network/dependencies).
 
 
 ## Contributing
