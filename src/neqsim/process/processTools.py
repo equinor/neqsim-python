@@ -581,6 +581,173 @@ class ProcessBuilder:
         self.process.add(p)
         return self
     
+    def add_equipment(self, equipment_type: str, name: str, **kwargs) -> 'ProcessBuilder':
+        """
+        Add equipment by type name. Useful for configuration-driven design.
+        
+        Args:
+            equipment_type: Type of equipment ('stream', 'compressor', 'separator', etc.)
+            name: Name of the equipment.
+            **kwargs: Equipment-specific parameters.
+            
+        Returns:
+            Self for method chaining.
+            
+        Example:
+            >>> builder.add_equipment('compressor', 'comp1', inlet='inlet', pressure=100.0)
+        """
+        method_map = {
+            'stream': self.add_stream,
+            'separator': self.add_separator,
+            'compressor': self.add_compressor,
+            'pump': self.add_pump,
+            'expander': self.add_expander,
+            'valve': self.add_valve,
+            'heater': self.add_heater,
+            'cooler': self.add_cooler,
+            'mixer': self.add_mixer,
+            'splitter': self.add_splitter,
+            'heat_exchanger': self.add_heat_exchanger,
+            'pipe': self.add_pipe,
+        }
+        method = method_map.get(equipment_type.lower())
+        if method is None:
+            raise ValueError(f"Unknown equipment type: {equipment_type}. "
+                           f"Available: {list(method_map.keys())}")
+        return method(name, **kwargs)
+    
+    def add_from_config(self, equipment_list: List[Dict[str, Any]], 
+                        fluids: Dict[str, Any] = None) -> 'ProcessBuilder':
+        """
+        Add multiple equipment items from a configuration list.
+        
+        Args:
+            equipment_list: List of equipment configurations. Each item should have
+                'type', 'name', and equipment-specific parameters.
+            fluids: Dictionary mapping fluid names to fluid objects. Used for streams.
+            
+        Returns:
+            Self for method chaining.
+            
+        Example:
+            >>> config = [
+            ...     {'type': 'stream', 'name': 'inlet', 'fluid': 'feed'},
+            ...     {'type': 'compressor', 'name': 'comp1', 'inlet': 'inlet', 'pressure': 100.0}
+            ... ]
+            >>> builder.add_from_config(config, fluids={'feed': my_fluid})
+        """
+        fluids = fluids or {}
+        
+        for item in equipment_list:
+            item = item.copy()  # Don't modify original
+            eq_type = item.pop('type')
+            name = item.pop('name')
+            
+            # Handle fluid reference for streams
+            if eq_type == 'stream' and 'fluid' in item:
+                fluid_name = item.pop('fluid')
+                if fluid_name in fluids:
+                    item['thermo_system'] = fluids[fluid_name]
+                else:
+                    raise ValueError(f"Fluid '{fluid_name}' not found in fluids dict")
+            
+            self.add_equipment(eq_type, name, **item)
+        
+        return self
+    
+    @classmethod
+    def from_dict(cls, config: Dict[str, Any], fluids: Dict[str, Any] = None) -> 'ProcessBuilder':
+        """
+        Create a ProcessBuilder from a dictionary configuration.
+        
+        Args:
+            config: Dictionary with 'name' and 'equipment' keys.
+            fluids: Dictionary mapping fluid names to fluid objects.
+            
+        Returns:
+            ProcessBuilder instance (not yet run).
+            
+        Example:
+            >>> config = {
+            ...     'name': 'Compression Train',
+            ...     'equipment': [
+            ...         {'type': 'stream', 'name': 'inlet', 'fluid': 'feed'},
+            ...         {'type': 'separator', 'name': 'sep1', 'inlet': 'inlet'},
+            ...         {'type': 'compressor', 'name': 'comp1', 'inlet': 'sep1', 'pressure': 100.0}
+            ...     ]
+            ... }
+            >>> process = ProcessBuilder.from_dict(config, fluids={'feed': my_fluid}).run()
+        """
+        builder = cls(config.get('name', ''))
+        if 'equipment' in config:
+            builder.add_from_config(config['equipment'], fluids)
+        return builder
+    
+    @classmethod
+    def from_json(cls, json_path: str, fluids: Dict[str, Any] = None) -> 'ProcessBuilder':
+        """
+        Create a ProcessBuilder from a JSON file.
+        
+        Args:
+            json_path: Path to JSON configuration file.
+            fluids: Dictionary mapping fluid names to fluid objects.
+            
+        Returns:
+            ProcessBuilder instance (not yet run).
+            
+        Example:
+            >>> # process_config.json:
+            >>> # {
+            >>> #   "name": "Compression Train",
+            >>> #   "equipment": [
+            >>> #     {"type": "stream", "name": "inlet", "fluid": "feed"},
+            >>> #     {"type": "compressor", "name": "comp1", "inlet": "inlet", "pressure": 100}
+            >>> #   ]
+            >>> # }
+            >>> process = ProcessBuilder.from_json('process_config.json', 
+            ...                                    fluids={'feed': my_fluid}).run()
+        """
+        with open(json_path, 'r') as f:
+            config = json.load(f)
+        return cls.from_dict(config, fluids)
+    
+    @classmethod
+    def from_yaml(cls, yaml_path: str, fluids: Dict[str, Any] = None) -> 'ProcessBuilder':
+        """
+        Create a ProcessBuilder from a YAML file.
+        
+        Requires PyYAML to be installed (pip install pyyaml).
+        
+        Args:
+            yaml_path: Path to YAML configuration file.
+            fluids: Dictionary mapping fluid names to fluid objects.
+            
+        Returns:
+            ProcessBuilder instance (not yet run).
+            
+        Example:
+            >>> # process_config.yaml:
+            >>> # name: Compression Train
+            >>> # equipment:
+            >>> #   - type: stream
+            >>> #     name: inlet
+            >>> #     fluid: feed
+            >>> #   - type: compressor
+            >>> #     name: comp1
+            >>> #     inlet: inlet
+            >>> #     pressure: 100.0
+            >>> process = ProcessBuilder.from_yaml('process_config.yaml',
+            ...                                    fluids={'feed': my_fluid}).run()
+        """
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError("PyYAML is required for YAML support. Install with: pip install pyyaml")
+        
+        with open(yaml_path, 'r') as f:
+            config = yaml.safe_load(f)
+        return cls.from_dict(config, fluids)
+    
     def run(self) -> 'ProcessBuilder':
         """
         Run the process simulation.
