@@ -1,22 +1,140 @@
-"""
-Process simulation tools for NeqSim.
+"""Process simulation tools for NeqSim.
 
 This module provides Python wrapper functions for creating and running
 process simulations using the NeqSim Java library. It includes equipment
 like compressors, pumps, heat exchangers, separators, and more.
 
-Example usage in Google Colab:
+Two Approaches for Process Simulation
+=====================================
+
+NeqSim Python offers two ways to build process simulations:
+
+1. **Python Wrappers (Recommended for beginners)**
+   Uses simple Python functions with a global process. Best for quick
+   prototyping, Jupyter notebooks, and learning.
+
+2. **Direct Java Access (Full control)**
+   Uses the jneqsim module to access NeqSim Java classes directly.
+   Best for production code, multiple processes, and advanced features.
+
+Approach 1: Python Wrappers (Global Process)
+--------------------------------------------
+Simple functions that automatically add equipment to a global process.
+Use clearProcess() to reset, runProcess() to execute.
+
     >>> from neqsim.thermo import fluid
     >>> from neqsim.process import stream, compressor, runProcess, clearProcess
     >>> 
     >>> clearProcess()
     >>> my_fluid = fluid('srk')
     >>> my_fluid.addComponent('methane', 1.0)
+    >>> my_fluid.setTemperature(30.0, 'C')
+    >>> my_fluid.setPressure(10.0, 'bara')
+    >>> my_fluid.setTotalFlowRate(1.0, 'MSm3/day')
+    >>> 
     >>> inlet = stream('inlet', my_fluid)
-    >>> inlet.setPressure(10.0, 'bara')
     >>> comp = compressor('compressor1', inlet, pres=50.0)
     >>> runProcess()
     >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
+
+Pros:
+    - Concise, readable code
+    - Tab completion and docstrings in IDE
+    - No Java knowledge required
+    - Great for learning and prototyping
+
+Cons:
+    - Global state limits to one process at a time
+    - Not all Java features may be exposed
+    - Less control over process execution
+
+Approach 2: Direct Java Access (Explicit Process)
+--------------------------------------------------
+Create and manage ProcessSystem objects explicitly using jneqsim.
+
+    >>> from neqsim import jneqsim
+    >>> from neqsim.thermo import fluid
+    >>> 
+    >>> # Create fluid
+    >>> my_fluid = fluid('srk')
+    >>> my_fluid.addComponent('methane', 1.0)
+    >>> my_fluid.setTemperature(30.0, 'C')
+    >>> my_fluid.setPressure(10.0, 'bara')
+    >>> my_fluid.setTotalFlowRate(1.0, 'MSm3/day')
+    >>> 
+    >>> # Create equipment using Java classes
+    >>> inlet = jneqsim.process.equipment.stream.Stream('inlet', my_fluid)
+    >>> comp = jneqsim.process.equipment.compressor.Compressor('compressor1', inlet)
+    >>> comp.setOutletPressure(50.0)
+    >>> 
+    >>> # Create and run process explicitly
+    >>> process = jneqsim.process.processmodel.ProcessSystem()
+    >>> process.add(inlet)
+    >>> process.add(comp)
+    >>> process.run()
+    >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
+
+Pros:
+    - Full access to all NeqSim Java features
+    - Multiple independent processes possible
+    - Explicit control over process construction
+    - Better for production code and testing
+
+Cons:
+    - More verbose code
+    - Requires understanding of Java class structure
+    - Less IDE support (though stubs help)
+
+Choosing an Approach
+--------------------
+Use **Python wrappers** when:
+    - Learning NeqSim or thermodynamics
+    - Quick calculations in Jupyter notebooks
+    - Single process simulations
+    - Prototyping process designs
+
+Use **direct Java access** when:
+    - Building production applications
+    - Running multiple processes in parallel
+    - Need features not exposed by wrappers
+    - Writing automated tests
+    - Configuration-driven process construction
+
+Hybrid Approach
+---------------
+You can mix both approaches. Create equipment with wrappers, then access
+Java methods directly:
+
+    >>> from neqsim.process import stream, compressor, runProcess, clearProcess
+    >>> from neqsim.thermo import fluid
+    >>> 
+    >>> clearProcess()
+    >>> my_fluid = fluid('srk')
+    >>> my_fluid.addComponent('methane', 1.0)
+    >>> inlet = stream('inlet', my_fluid)
+    >>> comp = compressor('comp1', inlet, pres=50.0)
+    >>> 
+    >>> # Access Java methods not exposed by wrapper
+    >>> comp.setPolytropicEfficiency(0.78)
+    >>> comp.setUsePolytropicCalc(True)
+    >>> 
+    >>> runProcess()
+
+Available Equipment
+-------------------
+Streams: stream, virtualstream, neqstream, energystream
+Separation: separator, separator3phase, gasscrubber, filters
+Compression: compressor, pump, expander
+Heat Transfer: heater, cooler, heatExchanger
+Valves: valve, safety_valve
+Mixing/Splitting: mixer, phasemixer, splitter, compsplitter, staticmixer
+Pipelines: pipe, pipeline, beggs_brill_pipe, wellflow
+Columns: distillationColumn, simpleTEGAbsorber, waterStripperColumn
+Control: calculator, setpoint, adjuster, flowrateadjuster, setter, flowsetter
+Special: ejector, flare, flarestack, recycle, saturator, GORfitter
+Storage: tank, simplereservoir, manifold
+Measurement: waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser
+Power: windturbine, solarpanel, batterystorage, fuelcell, electrolyzer, co2electrolyzer
 """
 from __future__ import annotations
 

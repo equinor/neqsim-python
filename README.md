@@ -20,6 +20,76 @@ pip install neqsim
 
 See the [NeqSim Python Wiki](https://github.com/equinor/neqsim-python/wiki) for how to use NeqSim Python via Python or in Jupyter notebooks. Also see [examples of use of NeqSim for Gas Processing in Colab](https://colab.research.google.com/github/EvenSol/NeqSim-Colab/blob/master/notebooks/examples_of_NeqSim_in_Colab.ipynb#scrollTo=kHt6u-utpvYf). Learn and ask questions in [Discussions for use and development of NeqSim](https://github.com/equinor/neqsim/discussions).
 
+## Process Simulation
+
+NeqSim Python provides two ways to build process simulations:
+
+### 1. Python Wrappers (Recommended for beginners)
+
+Simple functions with a global process - great for notebooks and prototyping:
+
+```python
+from neqsim.thermo import fluid
+from neqsim.process import stream, compressor, separator, runProcess, clearProcess
+
+clearProcess()
+feed = fluid('srk')
+feed.addComponent('methane', 0.9)
+feed.addComponent('ethane', 0.1)
+feed.setTemperature(30.0, 'C')
+feed.setPressure(50.0, 'bara')
+feed.setTotalFlowRate(10.0, 'MSm3/day')
+
+inlet = stream('inlet', feed)
+sep = separator('separator', inlet)
+comp = compressor('compressor', sep.getGasOutStream(), pres=100.0)
+runProcess()
+
+print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
+```
+
+### 2. Direct Java Access (Full control)
+
+Explicit process management using jneqsim - best for production code:
+
+```python
+from neqsim import jneqsim
+from neqsim.thermo import fluid
+
+feed = fluid('srk')
+feed.addComponent('methane', 0.9)
+feed.addComponent('ethane', 0.1)
+feed.setTemperature(30.0, 'C')
+feed.setPressure(50.0, 'bara')
+
+# Create equipment using Java classes
+inlet = jneqsim.process.equipment.stream.Stream('inlet', feed)
+sep = jneqsim.process.equipment.separator.Separator('separator', inlet)
+comp = jneqsim.process.equipment.compressor.Compressor('compressor', sep.getGasOutStream())
+comp.setOutletPressure(100.0)
+
+# Create and run process explicitly
+process = jneqsim.process.processmodel.ProcessSystem()
+process.add(inlet)
+process.add(sep)
+process.add(comp)
+process.run()
+
+print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
+```
+
+### Choosing an Approach
+
+| Use Case | Recommended Approach |
+|----------|---------------------|
+| Learning & prototyping | Python wrappers |
+| Jupyter notebooks | Python wrappers |
+| Production applications | Direct Java access |
+| Multiple parallel processes | Direct Java access |
+| Advanced Java features | Direct Java access |
+
+See the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples) for more process simulation examples.
+
 ### Prerequisites
 
 Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsim-python/network/dependencies).
