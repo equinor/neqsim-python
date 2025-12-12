@@ -406,8 +406,51 @@ class ProcessBuilder:
         self._name = name
     
     def _get_outlet(self, ref: Union[str, Any]) -> Any:
-        """Get outlet stream from equipment reference (name or object)."""
+        """
+        Get outlet stream from equipment reference (name or object).
+        
+        Supports dot notation for selecting specific outlets from separators:
+        - 'separator.gas' or 'separator.vapor' - gas/vapor outlet
+        - 'separator.liquid' - liquid outlet (2-phase separator)
+        - 'separator.oil' - oil outlet (3-phase separator)
+        - 'separator.water' or 'separator.aqueous' - water outlet (3-phase separator)
+        
+        Examples:
+            >>> builder.add_compressor('comp', 'sep.gas', pressure=100)
+            >>> builder.add_pump('pump', 'sep.oil', pressure=50)
+        """
         if isinstance(ref, str):
+            # Check for dot notation (e.g., 'separator.gas')
+            if '.' in ref:
+                parts = ref.split('.', 1)
+                equip_name = parts[0]
+                outlet_type = parts[1].lower()
+                
+                equip = self.equipment.get(equip_name)
+                if equip is None:
+                    raise ValueError(f"Equipment '{equip_name}' not found")
+                
+                # Map outlet type to method
+                outlet_methods = {
+                    'gas': ['getGasOutStream', 'getOutletStream'],
+                    'vapor': ['getGasOutStream', 'getOutletStream'],
+                    'liquid': ['getLiquidOutStream', 'getOilOutStream'],
+                    'oil': ['getOilOutStream', 'getLiquidOutStream'],
+                    'water': ['getWaterOutStream', 'getAqueousOutStream'],
+                    'aqueous': ['getWaterOutStream', 'getAqueousOutStream'],
+                }
+                
+                if outlet_type not in outlet_methods:
+                    raise ValueError(f"Unknown outlet type '{outlet_type}'. "
+                                   f"Valid types: {list(outlet_methods.keys())}")
+                
+                for method_name in outlet_methods[outlet_type]:
+                    if hasattr(equip, method_name):
+                        return getattr(equip, method_name)()
+                
+                raise ValueError(f"Equipment '{equip_name}' does not have a '{outlet_type}' outlet")
+            
+            # Standard lookup without dot notation
             equip = self.equipment.get(ref)
             if equip is None:
                 raise ValueError(f"Equipment '{ref}' not found")
@@ -773,6 +816,164 @@ class ProcessBuilder:
     def get_process(self) -> Any:
         """Get the underlying ProcessSystem object."""
         return self.process
+    
+    def results_json(self) -> Dict[str, Any]:
+        """
+        Get simulation results as a JSON-compatible dictionary.
+        
+        Returns:
+            Dictionary with all process results.
+            
+        Example:
+            >>> process = ProcessBuilder("Test").add_stream(...).run()
+            >>> results = process.results_json()
+            >>> print(json.dumps(results, indent=2))
+        """
+        json_report = str(self.process.getReport_json())
+        return json.loads(json_report)
+    
+    def results_dataframe(self) -> pd.DataFrame:
+        """
+        Get simulation results as a pandas DataFrame.
+        
+        Returns:
+            DataFrame with equipment results including temperatures,
+            pressures, flow rates, power, and duties.
+            
+        Example:
+            >>> process = ProcessBuilder("Test").add_stream(...).run()
+            >>> df = process.results_dataframe()
+            >>> print(df)
+        """
+        rows = []
+        for name, eq in self.equipment.items():
+            row = {'Equipment': name}
+            
+            # Get outlet stream properties
+            out_stream = None
+            if hasattr(eq, 'getOutletStream'):
+                out_stream = eq.getOutletStream()
+            elif hasattr(eq, 'getOutStream'):
+                out_stream = eq.getOutStream()
+            elif hasattr(eq, 'getGasOutStream'):
+                out_stream = eq.getGasOutStream()
+            
+            if out_stream:
+                try:
+                    row['T_out (°C)'] = round(out_stream.getTemperature() - 273.15, 2)
+                except:
+                    pass
+                try:
+                    row['P_out (bara)'] = round(out_stream.getPressure(), 2)
+                except:
+                    pass
+                try:
+                    row['Flow (kg/hr)'] = round(out_stream.getFlowRate('kg/hr'), 1)
+                except:
+                    pass
+            
+            # Get power/duty
+            if hasattr(eq, 'getPower'):
+                try:
+                    row['Power (kW)'] = round(eq.getPower() / 1e3, 2)
+                except:
+                    pass
+            if hasattr(eq, 'getDuty'):
+                try:
+                    row['Duty (kW)'] = round(eq.getDuty() / 1e3, 2)
+                except:
+                    pass
+            
+            rows.append(row)
+        
+        return pd.DataFrame(rows)
+    
+    def print_results(self) -> 'ProcessBuilder':
+        """
+        Print a formatted summary of simulation results.
+        
+        Returns:
+            Self for method chaining.
+            
+        Example:
+            >>> (ProcessBuilder("Test")
+            ...     .add_stream('inlet', feed)
+            ...     .add_compressor('comp1', 'inlet', pressure=100)
+            ...     .run()
+            ...     .print_results())
+        """
+        print(f"\n{'='*60}")
+        print(f"Process Results: {self._name}")
+        print(f"{'='*60}\n")
+        
+        for name, eq in self.equipment.items():
+            print(f"📦 {name}")
+            
+            # Get outlet stream properties
+            out_stream = None
+            if hasattr(eq, 'getOutletStream'):
+                out_stream = eq.getOutletStream()
+            elif hasattr(eq, 'getOutStream'):
+                out_stream = eq.getOutStream()
+            elif hasattr(eq, 'getGasOutStream'):
+                out_stream = eq.getGasOutStream()
+            
+            if out_stream:
+                try:
+                    print(f"   Temperature: {out_stream.getTemperature() - 273.15:.1f} °C")
+                except:
+                    pass
+                try:
+                    print(f"   Pressure: {out_stream.getPressure():.1f} bara")
+                except:
+                    pass
+                try:
+                    print(f"   Flow rate: {out_stream.getFlowRate('kg/hr'):.0f} kg/hr")
+                except:
+                    pass
+            
+            if hasattr(eq, 'getPower'):
+                try:
+                    print(f"   Power: {eq.getPower()/1e3:.2f} kW")
+                except:
+                    pass
+            if hasattr(eq, 'getDuty'):
+                try:
+                    print(f"   Duty: {eq.getDuty()/1e3:.2f} kW")
+                except:
+                    pass
+            print()
+        
+        return self
+    
+    def save_results(self, filename: str, format: str = 'json') -> 'ProcessBuilder':
+        """
+        Save simulation results to a file.
+        
+        Args:
+            filename: Output file path.
+            format: Output format - 'json', 'csv', or 'excel'.
+            
+        Returns:
+            Self for method chaining.
+            
+        Example:
+            >>> process.run().save_results('results.json')
+            >>> process.save_results('results.csv', format='csv')
+            >>> process.save_results('results.xlsx', format='excel')
+        """
+        if format == 'json':
+            with open(filename, 'w') as f:
+                json.dump(self.results_json(), f, indent=2)
+        elif format == 'csv':
+            self.results_dataframe().to_csv(filename, index=False)
+        elif format == 'excel':
+            self.results_dataframe().to_excel(filename, index=False)
+        else:
+            raise ValueError(f"Unknown format: {format}. Use 'json', 'csv', or 'excel'.")
+        
+        print(f"Results saved to {filename}")
+        return self
 
 
 def _add_to_process(equipment: Any, process: Any = None) -> None:
