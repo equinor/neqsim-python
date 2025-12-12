@@ -961,3 +961,442 @@ def create_equipment(name: str, equipment_type: str) -> Any:
         >>> sep = create_equipment('sep1', 'Separator')
     """
     return jneqsim.process.equipment.EquipmentFactory.createEquipment(name, equipment_type)
+
+
+def staticmixer(name: str) -> Any:
+    """
+    Create a static mixer without thermodynamic equilibrium flash.
+
+    A static mixer combines streams without performing a flash calculation,
+    preserving the phase distribution from the inlet streams. Useful for
+    mixing streams where you want to maintain phase compositions.
+
+    Args:
+        name: Name of the static mixer.
+
+    Returns:
+        StaticMixer: The created static mixer object.
+
+    Example:
+        >>> smixer = staticmixer('makeup_mixer')
+        >>> smixer.addStream(lean_stream)
+        >>> smixer.addStream(makeup_stream)
+        >>> runProcess()
+    """
+    static_mixer = jneqsim.process.equipment.mixer.StaticMixer(name)
+    if not _loop_mode:
+        processoperations.add(static_mixer)
+    return static_mixer
+
+
+def tank(name: str, inlet_stream: Any = None) -> Any:
+    """
+    Create a storage tank with separate gas and liquid outlets.
+
+    A tank provides holdup volume for process fluids and separates
+    gas and liquid phases. Can be used for buffer storage or as
+    an atmospheric separator.
+
+    Args:
+        name: Name of the tank.
+        inlet_stream: Optional inlet stream to the tank.
+
+    Returns:
+        Tank: The created tank object.
+
+    Example:
+        >>> storage = tank('oil_storage', feed_stream)
+        >>> storage.setLiquidVolume(1000.0)  # m3
+        >>> storage.setGasVolume(500.0)  # m3
+        >>> runProcess()
+        >>> oil_out = storage.getLiquidOutStream()
+        >>> gas_out = storage.getGasOutStream()
+    """
+    if inlet_stream is not None:
+        tank_unit = jneqsim.process.equipment.tank.Tank(name, inlet_stream)
+    else:
+        tank_unit = jneqsim.process.equipment.tank.Tank(name)
+    if not _loop_mode:
+        processoperations.add(tank_unit)
+    return tank_unit
+
+
+def adjuster(name: str) -> Any:
+    """
+    Create an adjuster for process variable control.
+
+    An adjuster modifies an adjusted variable to match a target value.
+    Useful for solving process specifications like maintaining a
+    certain flow rate, pressure, or temperature.
+
+    Args:
+        name: Name of the adjuster.
+
+    Returns:
+        Adjuster: The created adjuster object.
+
+    Example:
+        >>> adj = adjuster('flow_controller')
+        >>> adj.setAdjustedVariable(inlet_stream, 'flow', 'kg/hr')
+        >>> adj.setTargetVariable(outlet_stream, 'pressure', 50.0, 'bara')
+        >>> runProcess()
+    """
+    adjuster_unit = jneqsim.process.equipment.util.Adjuster(name)
+    if not _loop_mode:
+        processoperations.add(adjuster_unit)
+    return adjuster_unit
+
+
+def flowrateadjuster(name: str, inlet_stream: Any = None) -> Any:
+    """
+    Create a flow rate adjuster for setting gas/oil/water rates.
+
+    Adjusts the outlet stream to match specified gas, oil, and water
+    flow rates. Useful for well modeling or flow allocation.
+
+    Args:
+        name: Name of the flow rate adjuster.
+        inlet_stream: Optional inlet stream.
+
+    Returns:
+        FlowRateAdjuster: The created flow rate adjuster object.
+
+    Example:
+        >>> fra = flowrateadjuster('well_rates', well_stream)
+        >>> fra.setAdjustedFlowRates(100000, 5000, 1000, 'Sm3/day')  # gas, oil, water
+        >>> runProcess()
+    """
+    if inlet_stream is not None:
+        fra = jneqsim.process.equipment.util.FlowRateAdjuster(name, inlet_stream)
+    else:
+        fra = jneqsim.process.equipment.util.FlowRateAdjuster(name)
+    if not _loop_mode:
+        processoperations.add(fra)
+    return fra
+
+
+def manifold(name: str) -> Any:
+    """
+    Create a manifold for collecting multiple streams.
+
+    A manifold combines multiple inlet streams into a single outlet,
+    similar to a mixer but representing physical piping manifolds.
+
+    Args:
+        name: Name of the manifold.
+
+    Returns:
+        Manifold: The created manifold object.
+
+    Example:
+        >>> prod_manifold = manifold('production_manifold')
+        >>> prod_manifold.addStream(well1_stream)
+        >>> prod_manifold.addStream(well2_stream)
+        >>> runProcess()
+    """
+    manifold_unit = jneqsim.process.equipment.manifold.Manifold(name)
+    if not _loop_mode:
+        processoperations.add(manifold_unit)
+    return manifold_unit
+
+
+def flarestack(name: str, inlet_stream: Any = None) -> Any:
+    """
+    Create a flare stack for emergency gas disposal.
+
+    A flare stack is a vertical structure for safely burning waste
+    gases at elevation. Includes flame arrestor and pilot systems.
+
+    Args:
+        name: Name of the flare stack.
+        inlet_stream: Optional inlet stream of gas to be flared.
+
+    Returns:
+        FlareStack: The created flare stack object.
+
+    Example:
+        >>> flare = flarestack('emergency_flare', relief_gas)
+        >>> flare.setStackHeight(60.0)  # meters
+        >>> runProcess()
+    """
+    if inlet_stream is not None:
+        flare = jneqsim.process.equipment.flare.FlareStack(name, inlet_stream)
+    else:
+        flare = jneqsim.process.equipment.flare.FlareStack(name)
+    if not _loop_mode:
+        processoperations.add(flare)
+    return flare
+
+
+def windturbine(name: str, power_output: float = 5.0) -> Any:
+    """
+    Create a wind turbine for power generation.
+
+    Models a wind turbine converting wind energy to electrical power.
+    Can be used in hybrid energy system simulations.
+
+    Args:
+        name: Name of the wind turbine.
+        power_output: Rated power output in MW (default 5.0).
+
+    Returns:
+        WindTurbine: The created wind turbine object.
+
+    Example:
+        >>> turbine = windturbine('offshore_turbine', power_output=8.0)
+        >>> turbine.setWindSpeed(12.0)  # m/s
+        >>> runProcess()
+        >>> print(f"Power: {turbine.getPower('MW'):.1f} MW")
+    """
+    wt = jneqsim.process.equipment.powergeneration.WindTurbine(name)
+    wt.setPower(power_output * 1e6)  # Convert MW to W
+    if not _loop_mode:
+        processoperations.add(wt)
+    return wt
+
+
+def solarpanel(name: str, area: float = 100.0) -> Any:
+    """
+    Create a solar panel array for power generation.
+
+    Models photovoltaic panels converting solar radiation to
+    electrical power. Can be used in hybrid energy system simulations.
+
+    Args:
+        name: Name of the solar panel array.
+        area: Total panel area in m² (default 100.0).
+
+    Returns:
+        SolarPanel: The created solar panel object.
+
+    Example:
+        >>> solar = solarpanel('roof_panels', area=500.0)
+        >>> solar.setSolarIrradiance(800.0)  # W/m²
+        >>> runProcess()
+        >>> print(f"Power: {solar.getPower('kW'):.1f} kW")
+    """
+    sp = jneqsim.process.equipment.powergeneration.SolarPanel(name)
+    sp.setArea(area)
+    if not _loop_mode:
+        processoperations.add(sp)
+    return sp
+
+
+def batterystorage(name: str, capacity: float = 100.0) -> Any:
+    """
+    Create a battery storage system.
+
+    Models battery energy storage for grid stabilization or
+    backup power. Can charge from or discharge to the grid.
+
+    Args:
+        name: Name of the battery storage.
+        capacity: Storage capacity in MWh (default 100.0).
+
+    Returns:
+        BatteryStorage: The created battery storage object.
+
+    Example:
+        >>> battery = batterystorage('grid_battery', capacity=50.0)
+        >>> battery.setChargeRate(10.0)  # MW
+        >>> runProcess()
+    """
+    bs = jneqsim.process.equipment.battery.BatteryStorage(name)
+    bs.setCapacity(capacity)
+    if not _loop_mode:
+        processoperations.add(bs)
+    return bs
+
+
+def fuelcell(name: str, inlet_stream: Any = None) -> Any:
+    """
+    Create a fuel cell for power generation from hydrogen.
+
+    Models a fuel cell converting hydrogen and oxygen to
+    electricity and water. Used in hydrogen economy simulations.
+
+    Args:
+        name: Name of the fuel cell.
+        inlet_stream: Optional hydrogen feed stream.
+
+    Returns:
+        FuelCell: The created fuel cell object.
+
+    Example:
+        >>> fc = fuelcell('hydrogen_fc', h2_stream)
+        >>> fc.setEfficiency(0.55)
+        >>> runProcess()
+        >>> print(f"Power: {fc.getPower('MW'):.2f} MW")
+    """
+    if inlet_stream is not None:
+        fc = jneqsim.process.equipment.powergeneration.FuelCell(name, inlet_stream)
+    else:
+        fc = jneqsim.process.equipment.powergeneration.FuelCell(name)
+    if not _loop_mode:
+        processoperations.add(fc)
+    return fc
+
+
+def electrolyzer(name: str, inlet_stream: Any = None) -> Any:
+    """
+    Create an electrolyzer for hydrogen production.
+
+    Models water electrolysis to produce hydrogen and oxygen
+    using electrical power. Used in green hydrogen simulations.
+
+    Args:
+        name: Name of the electrolyzer.
+        inlet_stream: Optional water feed stream.
+
+    Returns:
+        Electrolyzer: The created electrolyzer object.
+
+    Example:
+        >>> elec = electrolyzer('h2_production', water_stream)
+        >>> elec.setPower(10.0, 'MW')
+        >>> runProcess()
+        >>> h2_stream = elec.getOutletStream()
+    """
+    if inlet_stream is not None:
+        elec = jneqsim.process.equipment.electrolyzer.Electrolyzer(name, inlet_stream)
+    else:
+        elec = jneqsim.process.equipment.electrolyzer.Electrolyzer(name)
+    if not _loop_mode:
+        processoperations.add(elec)
+    return elec
+
+
+def co2electrolyzer(name: str, inlet_stream: Any = None) -> Any:
+    """
+    Create a CO2 electrolyzer for carbon utilization.
+
+    Models electrochemical conversion of CO2 to valuable products
+    like syngas, formic acid, or methanol using electrical power.
+
+    Args:
+        name: Name of the CO2 electrolyzer.
+        inlet_stream: Optional CO2 feed stream.
+
+    Returns:
+        CO2Electrolyzer: The created CO2 electrolyzer object.
+
+    Example:
+        >>> co2elec = co2electrolyzer('co2_conversion', co2_stream)
+        >>> co2elec.setPower(5.0, 'MW')
+        >>> runProcess()
+    """
+    if inlet_stream is not None:
+        elec = jneqsim.process.equipment.electrolyzer.CO2Electrolyzer(name, inlet_stream)
+    else:
+        elec = jneqsim.process.equipment.electrolyzer.CO2Electrolyzer(name)
+    if not _loop_mode:
+        processoperations.add(elec)
+    return elec
+
+
+def flowsetter(name: str, inlet_stream: Any) -> Any:
+    """
+    Create a flow setter for specifying stream flow rates.
+
+    Sets the gas, oil, and water flow rates of a stream based
+    on a reference process. Useful for well testing analysis.
+
+    Args:
+        name: Name of the flow setter.
+        inlet_stream: Input stream to adjust.
+
+    Returns:
+        FlowSetter: The created flow setter object.
+
+    Example:
+        >>> fs = flowsetter('well_test', well_stream)
+        >>> fs.setGasFlowRate(50000, 'Sm3/hr')
+        >>> fs.setOilFlowRate(100, 'm3/hr')
+        >>> runProcess()
+    """
+    fs = jneqsim.process.equipment.util.FlowSetter(name, inlet_stream)
+    if not _loop_mode:
+        processoperations.add(fs)
+    return fs
+
+
+def setter(name: str) -> Any:
+    """
+    Create a setter for modifying equipment parameters.
+
+    A setter allows programmatic modification of equipment
+    parameters during process simulation.
+
+    Args:
+        name: Name of the setter.
+
+    Returns:
+        Setter: The created setter object.
+
+    Example:
+        >>> s = setter('pressure_setter')
+        >>> s.setVariable(compressor, 'outletPressure', 50.0)
+        >>> runProcess()
+    """
+    setter_unit = jneqsim.process.equipment.util.Setter(name)
+    if not _loop_mode:
+        processoperations.add(setter_unit)
+    return setter_unit
+
+
+def wellflow(name: str, inlet_stream: Any, well_depth: float = 1000.0,
+             well_diameter: float = 0.1) -> Any:
+    """
+    Create a well flow model for production or injection wells.
+
+    Models fluid flow in a wellbore including pressure drop,
+    temperature change, and phase behavior.
+
+    Args:
+        name: Name of the well.
+        inlet_stream: Inlet stream (bottomhole for producer, wellhead for injector).
+        well_depth: True vertical depth in meters (default 1000.0).
+        well_diameter: Well tubing internal diameter in meters (default 0.1).
+
+    Returns:
+        Well flow object.
+
+    Example:
+        >>> well = wellflow('prod_well_1', reservoir_stream, 
+        ...                 well_depth=2500.0, well_diameter=0.1)
+        >>> runProcess()
+        >>> wellhead = well.getOutletStream()
+    """
+    well = jneqsim.process.equipment.pipeline.PipeBeggsAndBrills(name, inlet_stream)
+    well.setLength(well_depth)
+    well.setDiameter(well_diameter)
+    well.setElevation(-well_depth)  # Negative for upward flow
+    if not _loop_mode:
+        processoperations.add(well)
+    return well
+
+
+def energystream(name: str, power: float = 0.0) -> Any:
+    """
+    Create an energy stream for heat/power transfer.
+
+    An energy stream represents the transfer of thermal or
+    electrical energy between equipment units.
+
+    Args:
+        name: Name of the energy stream.
+        power: Power in Watts (default 0.0).
+
+    Returns:
+        EnergyStream: The created energy stream object.
+
+    Example:
+        >>> heat = energystream('reboiler_heat', power=5e6)  # 5 MW
+        >>> column.setReboilerEnergy(heat)
+        >>> runProcess()
+    """
+    es = jneqsim.process.equipment.stream.EnergyStream(name)
+    es.setDuty(power)
+    if not _loop_mode:
+        processoperations.add(es)
+    return es
