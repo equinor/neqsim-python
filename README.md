@@ -22,7 +22,7 @@ See the [NeqSim Python Wiki](https://github.com/equinor/neqsim-python/wiki) for 
 
 ## Process Simulation
 
-NeqSim Python provides two ways to build process simulations:
+NeqSim Python provides multiple ways to build process simulations:
 
 ### 1. Python Wrappers (Recommended for beginners)
 
@@ -48,9 +48,54 @@ runProcess()
 print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
 ```
 
-### 2. Direct Java Access (Full control)
+### 2. ProcessContext (Recommended for production)
 
-Explicit process management using jneqsim - best for production code:
+Context manager with explicit process control - supports multiple independent processes:
+
+```python
+from neqsim.thermo import fluid
+from neqsim.process import ProcessContext
+
+feed = fluid('srk')
+feed.addComponent('methane', 0.9)
+feed.addComponent('ethane', 0.1)
+feed.setTemperature(30.0, 'C')
+feed.setPressure(50.0, 'bara')
+
+with ProcessContext("Compression Train") as ctx:
+    inlet = ctx.stream('inlet', feed)
+    sep = ctx.separator('separator', inlet)
+    comp = ctx.compressor('compressor', sep.getGasOutStream(), pres=100.0)
+    ctx.run()
+    print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
+```
+
+### 3. ProcessBuilder (Fluent API)
+
+Chainable builder pattern - ideal for configuration-driven design:
+
+```python
+from neqsim.thermo import fluid
+from neqsim.process import ProcessBuilder
+
+feed = fluid('srk')
+feed.addComponent('methane', 0.9)
+feed.addComponent('ethane', 0.1)
+feed.setTemperature(30.0, 'C')
+feed.setPressure(50.0, 'bara')
+
+process = (ProcessBuilder("Compression Train")
+    .add_stream('inlet', feed)
+    .add_separator('separator', 'inlet')
+    .add_compressor('compressor', 'separator', pressure=100.0)
+    .run())
+
+print(f"Compressor power: {process.get('compressor').getPower()/1e6:.2f} MW")
+```
+
+### 4. Direct Java Access (Full control)
+
+Explicit process management using jneqsim - for advanced features:
 
 ```python
 from neqsim import jneqsim
@@ -84,11 +129,12 @@ print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
 |----------|---------------------|
 | Learning & prototyping | Python wrappers |
 | Jupyter notebooks | Python wrappers |
-| Production applications | Direct Java access |
-| Multiple parallel processes | Direct Java access |
+| Production applications | ProcessContext |
+| Multiple parallel processes | ProcessContext |
+| Configuration-driven design | ProcessBuilder |
 | Advanced Java features | Direct Java access |
 
-See the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples) for more process simulation examples.
+See the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples) for more process simulation examples, including [processApproaches.py](https://github.com/equinor/neqsim-python/blob/master/examples/processApproaches.py) which demonstrates all four approaches.
 
 ### Prerequisites
 

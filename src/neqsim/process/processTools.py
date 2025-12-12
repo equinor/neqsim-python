@@ -4,18 +4,22 @@ This module provides Python wrapper functions for creating and running
 process simulations using the NeqSim Java library. It includes equipment
 like compressors, pumps, heat exchangers, separators, and more.
 
-Two Approaches for Process Simulation
-=====================================
+Four Approaches for Process Simulation
+======================================
 
-NeqSim Python offers two ways to build process simulations:
+NeqSim Python offers four ways to build process simulations:
 
-1. **Python Wrappers (Recommended for beginners)**
-   Uses simple Python functions with a global process. Best for quick
-   prototyping, Jupyter notebooks, and learning.
+1. **Python Wrappers with Global Process** (Recommended for beginners)
+   Simple functions that auto-add equipment to a global process.
 
-2. **Direct Java Access (Full control)**
-   Uses the jneqsim module to access NeqSim Java classes directly.
-   Best for production code, multiple processes, and advanced features.
+2. **ProcessContext** (Recommended for production)
+   Context manager with its own process - supports multiple processes.
+
+3. **ProcessBuilder** (Fluent API)
+   Chainable builder pattern - great for configuration-driven design.
+
+4. **Direct Java Access** (Full control)
+   Direct jneqsim access for advanced features.
 
 Approach 1: Python Wrappers (Global Process)
 --------------------------------------------
@@ -30,95 +34,106 @@ Use clearProcess() to reset, runProcess() to execute.
     >>> my_fluid.addComponent('methane', 1.0)
     >>> my_fluid.setTemperature(30.0, 'C')
     >>> my_fluid.setPressure(10.0, 'bara')
-    >>> my_fluid.setTotalFlowRate(1.0, 'MSm3/day')
     >>> 
     >>> inlet = stream('inlet', my_fluid)
     >>> comp = compressor('compressor1', inlet, pres=50.0)
     >>> runProcess()
     >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
 
-Pros:
-    - Concise, readable code
-    - Tab completion and docstrings in IDE
-    - No Java knowledge required
-    - Great for learning and prototyping
+Pros: Concise, readable, great for learning and prototyping
+Cons: Global state limits to one process at a time
 
-Cons:
-    - Global state limits to one process at a time
-    - Not all Java features may be exposed
-    - Less control over process execution
+Approach 2: ProcessContext (Explicit Process Management)
+---------------------------------------------------------
+Context manager that creates its own ProcessSystem. Supports multiple
+independent processes running simultaneously.
 
-Approach 2: Direct Java Access (Explicit Process)
+    >>> from neqsim.thermo import fluid
+    >>> from neqsim.process import ProcessContext
+    >>> 
+    >>> with ProcessContext("Compression") as ctx:
+    ...     my_fluid = fluid('srk')
+    ...     my_fluid.addComponent('methane', 1.0)
+    ...     my_fluid.setPressure(10.0, 'bara')
+    ...     
+    ...     inlet = ctx.stream('inlet', my_fluid)
+    ...     comp = ctx.compressor('comp1', inlet, pres=50.0)
+    ...     ctx.run()
+    ...     print(f"Power: {comp.getPower()/1e6:.2f} MW")
+
+Pros: Multiple processes, explicit control, clean resource management
+Cons: Slightly more verbose than global wrappers
+
+Approach 3: ProcessBuilder (Fluent/Chainable API)
 --------------------------------------------------
+Builder pattern with method chaining. Equipment referenced by name.
+Ideal for configuration-driven process construction.
+
+    >>> from neqsim.thermo import fluid
+    >>> from neqsim.process import ProcessBuilder
+    >>> 
+    >>> my_fluid = fluid('srk')
+    >>> my_fluid.addComponent('methane', 1.0)
+    >>> my_fluid.setPressure(10.0, 'bara')
+    >>> 
+    >>> process = (ProcessBuilder("Compression")
+    ...     .add_stream('inlet', my_fluid)
+    ...     .add_compressor('comp1', 'inlet', pressure=50.0)
+    ...     .run())
+    >>> 
+    >>> print(f"Power: {process.get('comp1').getPower()/1e6:.2f} MW")
+
+Pros: Very readable, chainable, equipment by name, declarative style
+Cons: Less direct access during construction
+
+Approach 4: Direct Java Access
+-------------------------------
 Create and manage ProcessSystem objects explicitly using jneqsim.
 
     >>> from neqsim import jneqsim
     >>> from neqsim.thermo import fluid
     >>> 
-    >>> # Create fluid
     >>> my_fluid = fluid('srk')
     >>> my_fluid.addComponent('methane', 1.0)
-    >>> my_fluid.setTemperature(30.0, 'C')
     >>> my_fluid.setPressure(10.0, 'bara')
-    >>> my_fluid.setTotalFlowRate(1.0, 'MSm3/day')
     >>> 
-    >>> # Create equipment using Java classes
     >>> inlet = jneqsim.process.equipment.stream.Stream('inlet', my_fluid)
-    >>> comp = jneqsim.process.equipment.compressor.Compressor('compressor1', inlet)
+    >>> comp = jneqsim.process.equipment.compressor.Compressor('comp1', inlet)
     >>> comp.setOutletPressure(50.0)
     >>> 
-    >>> # Create and run process explicitly
     >>> process = jneqsim.process.processmodel.ProcessSystem()
     >>> process.add(inlet)
     >>> process.add(comp)
     >>> process.run()
-    >>> print(f"Power: {comp.getPower()/1e6:.2f} MW")
 
-Pros:
-    - Full access to all NeqSim Java features
-    - Multiple independent processes possible
-    - Explicit control over process construction
-    - Better for production code and testing
+Pros: Full access to all Java features, maximum flexibility
+Cons: Verbose, requires Java knowledge
 
-Cons:
-    - More verbose code
-    - Requires understanding of Java class structure
-    - Less IDE support (though stubs help)
+Hybrid Approach: Wrappers with process= Parameter
+--------------------------------------------------
+Wrapper functions accept an optional process= parameter for explicit
+process control while keeping concise syntax:
+
+    >>> from neqsim.process import stream, compressor, newProcess
+    >>> 
+    >>> my_process = newProcess('MyProcess')
+    >>> inlet = stream('inlet', my_fluid, process=my_process)
+    >>> comp = compressor('comp1', inlet, pres=50.0, process=my_process)
+    >>> my_process.run()
 
 Choosing an Approach
 --------------------
-Use **Python wrappers** when:
-    - Learning NeqSim or thermodynamics
-    - Quick calculations in Jupyter notebooks
-    - Single process simulations
-    - Prototyping process designs
-
-Use **direct Java access** when:
-    - Building production applications
-    - Running multiple processes in parallel
-    - Need features not exposed by wrappers
-    - Writing automated tests
-    - Configuration-driven process construction
-
-Hybrid Approach
----------------
-You can mix both approaches. Create equipment with wrappers, then access
-Java methods directly:
-
-    >>> from neqsim.process import stream, compressor, runProcess, clearProcess
-    >>> from neqsim.thermo import fluid
-    >>> 
-    >>> clearProcess()
-    >>> my_fluid = fluid('srk')
-    >>> my_fluid.addComponent('methane', 1.0)
-    >>> inlet = stream('inlet', my_fluid)
-    >>> comp = compressor('comp1', inlet, pres=50.0)
-    >>> 
-    >>> # Access Java methods not exposed by wrapper
-    >>> comp.setPolytropicEfficiency(0.78)
-    >>> comp.setUsePolytropicCalc(True)
-    >>> 
-    >>> runProcess()
++----------------------------------+--------------------------------+
+| Use Case                         | Recommended Approach           |
++==================================+================================+
+| Learning / tutorials             | Wrappers (global process)      |
+| Jupyter notebooks                | Wrappers (global process)      |
+| Quick prototyping                | Wrappers (global process)      |
+| Production applications          | ProcessContext                 |
+| Multiple parallel processes      | ProcessContext                 |
+| Configuration-driven design      | ProcessBuilder                 |
+| Full Java API access             | Direct jneqsim                 |
++----------------------------------+--------------------------------+
 
 Available Equipment
 -------------------
@@ -135,6 +150,8 @@ Special: ejector, flare, flarestack, recycle, saturator, GORfitter
 Storage: tank, simplereservoir, manifold
 Measurement: waterDewPointAnalyser, hydrateEquilibriumTemperatureAnalyser
 Power: windturbine, solarpanel, batterystorage, fuelcell, electrolyzer, co2electrolyzer
+
+Classes: ProcessContext, ProcessBuilder
 """
 from __future__ import annotations
 
