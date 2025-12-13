@@ -1119,11 +1119,11 @@ class ProcessBuilder:
         Examples:
             # Using split factors (fractions)
             >>> builder.add_splitter('split', 'feed', split_factors=[0.5, 0.5])
-            
+
             # Using absolute flow rates
-            >>> builder.add_splitter('split', 'feed', 
+            >>> builder.add_splitter('split', 'feed',
             ...     flow_rates=[5.0, 2.0], flow_unit='MSm3/day')
-            
+
             # Auto-calculate one outlet (use -1)
             >>> builder.add_splitter('split', 'feed',
             ...     flow_rates=[-1, 1.0], flow_unit='MSm3/day')  # First gets remainder
@@ -1874,12 +1874,12 @@ class ProcessBuilder:
             >>> builder.add_manifold('prod_manifold',
             ...     inlets=['well1', 'well2', 'well3'],
             ...     split_factors=[0.5, 0.3, 0.2])
-            
+
             # Using absolute flow rates
             >>> builder.add_manifold('prod_manifold',
             ...     inlets=['well1', 'well2'],
             ...     flow_rates=[10.0, 5.0], flow_unit='MSm3/day')
-        
+
         Note:
             For manifolds, flow_rates are set on the internal splitter after
             the streams are mixed. Use -1 for one outlet to auto-calculate.
@@ -1894,7 +1894,7 @@ class ProcessBuilder:
             # First set split factors to initialize the right number of outlets
             m.setSplitFactors([1.0 / len(flow_rates)] * len(flow_rates))
             # Then set flow rates on internal splitter
-            if hasattr(m, 'localsplitter'):
+            if hasattr(m, "localsplitter"):
                 m.localsplitter.setFlowRates(flow_rates, flow_unit)
         elif split_factors is not None:
             m.setSplitFactors(split_factors)
