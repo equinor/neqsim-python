@@ -1,0 +1,215 @@
+# NeqSim Process Configuration Example
+# =====================================
+# This YAML file demonstrates the format for create_process_from_config()
+#
+# Usage:
+#   from neqsim.process import create_process_from_config
+#   process = create_process_from_config('process_config_example.yaml')
+#   print(process.results_dataframe())
+
+# Process name (optional)
+name: "Gas Compression and Separation Example"
+
+# =============================================================================
+# FLUIDS SECTION
+# =============================================================================
+# Define fluids inline - these are automatically created.
+# Each fluid can specify:
+#   - model: Equation of state (srk, pr, cpa, etc.)
+#   - temperature: Initial temperature in Kelvin
+#   - pressure: Initial pressure in bara
+#   - components: List of components with amounts
+#   - mixing_rule: Optional mixing rule
+#   - multiphase: Enable multiphase calculations (true/false)
+
+fluids:
+  # Natural gas feed
+  feed_gas:
+    model: srk
+    temperature: 303.15  # 30°C
+    pressure: 50.0
+    components:
+      - name: methane
+        moles: 0.85
+      - name: ethane
+        moles: 0.07
+      - name: propane
+        moles: 0.04
+      - name: n-butane
+        moles: 0.02
+      - name: CO2
+        moles: 0.01
+      - name: nitrogen
+        moles: 0.01
+
+  # Alternative: Using flow rates instead of mole fractions
+  glycol_stream:
+    model: cpa
+    temperature: 298.15
+    pressure: 1.0
+    components:
+      - name: MEG
+        rate: 100.0
+        unit: kg/hr
+      - name: water
+        rate: 5.0
+        unit: kg/hr
+
+  # Predefined fluid types
+  dry_gas:
+    type: predefined
+    name: dry gas
+
+# =============================================================================
+# EQUIPMENT SECTION
+# =============================================================================
+# Equipment is processed in order. Each item must have:
+#   - type: Equipment type (stream, compressor, separator, etc.)
+#   - name: Unique name for the equipment
+#   - Additional parameters specific to each equipment type
+#
+# Outlet Notation:
+#   - separator: use .gas or .liquid
+#   - three_phase_separator: use .gas, .oil, or .water
+#   - splitter: use .split_0, .split_1, etc.
+#   - manifold: use .mixed or .split_0, .split_1, etc.
+#   - virtual_stream: use .out
+
+equipment:
+  # ----- INLET STREAM -----
+  - type: stream
+    name: inlet
+    fluid: feed_gas        # Reference to fluid defined in 'fluids' section
+    temperature: 303.15    # Override fluid temperature
+    pressure: 50.0         # Override fluid pressure
+    flow_rate: 10.0        # Standard volume flow
+    flow_unit: MSm3/day    # Flow unit
+
+  # ----- HEATING -----
+  - type: heater
+    name: inlet_heater
+    inlet: inlet
+    temperature: 320.0     # Target outlet temperature in K
+
+  # ----- TWO-PHASE SEPARATION -----
+  - type: separator
+    name: inlet_separator
+    inlet: inlet_heater
+    # Outputs: inlet_separator.gas, inlet_separator.liquid
+
+  # ----- GAS COMPRESSION -----
+  - type: compressor
+    name: stage1_compressor
+    inlet: inlet_separator.gas  # Use .gas outlet from separator
+    pressure: 100.0             # Discharge pressure in bara
+    # Optional: polytropic_efficiency: 0.75
+
+  # ----- COOLING -----
+  - type: cooler
+    name: aftercooler1
+    inlet: stage1_compressor
+    temperature: 303.15
+
+  # ----- SECOND STAGE COMPRESSION -----
+  - type: compressor
+    name: stage2_compressor
+    inlet: aftercooler1
+    pressure: 150.0
+
+  # ----- FINAL COOLING -----
+  - type: cooler
+    name: aftercooler2
+    inlet: stage2_compressor
+    temperature: 303.15
+
+  # ----- FLOW SPLITTING -----
+  # Split stream into multiple outlets based on fractions
+  - type: splitter
+    name: product_splitter
+    inlet: aftercooler2
+    split_factors:
+      - 0.7   # 70% to split_0
+      - 0.3   # 30% to split_1
+    # Alternative: Use absolute flow rates
+    # flow_rates:
+    #   - 7.0
+    #   - 3.0
+    # flow_unit: MSm3/day
+    # Outputs: product_splitter.split_0, product_splitter.split_1
+
+  # ----- VALVE -----
+  - type: valve
+    name: export_valve
+    inlet: product_splitter.split_0  # Main product
+    pressure: 70.0                   # Downstream pressure
+
+  # ----- THREE-PHASE SEPARATION -----
+  - type: three_phase_separator
+    name: final_separator
+    inlet: product_splitter.split_1
+    # Outputs: final_separator.gas, final_separator.oil, final_separator.water
+
+  # ----- STREAM MIXING -----
+  # Combine multiple streams
+  - type: mixer
+    name: gas_mixer
+    inlets:
+      - inlet_separator.liquid  # Liquid from first separator
+      - final_separator.oil     # Oil from three-phase separator
+
+# =============================================================================
+# RECYCLE LOOPS (Example)
+# =============================================================================
+# For recycle loops, use virtual_stream and recycle equipment:
+#
+#   - type: virtual_stream
+#     name: recycle_estimate
+#     fluid: feed_gas
+#     temperature: 320.0
+#     pressure: 50.0
+#     flow_rate: 0.5
+#
+#   - type: mixer
+#     name: recycle_mixer
+#     inlets:
+#       - inlet
+#       - recycle_estimate.out
+#
+#   # ... process equipment ...
+#
+#   - type: splitter
+#     name: recycle_splitter
+#     inlet: some_equipment
+#     split_factors: [0.9, 0.1]
+#
+#   - type: recycle
+#     name: recycle_loop
+#     inlet: recycle_splitter.split_1
+#     target_stream: recycle_estimate
+#     tolerance: 1e-4
+#     max_iterations: 50
+
+# =============================================================================
+# MANIFOLD (Multiple Inlets/Outlets)
+# =============================================================================
+# Manifolds combine multiple inlet streams and optionally split the output:
+#
+#   - type: manifold
+#     name: well_manifold
+#     inlets:
+#       - well_1
+#       - well_2
+#       - well_3
+#     split_factors: [0.5, 0.3, 0.2]  # Optional: split output
+#     # Outputs: well_manifold.mixed, well_manifold.split_0, etc.
+
+# =============================================================================
+# HEAT EXCHANGER
+# =============================================================================
+# Two-stream heat exchangers:
+#
+#   - type: heat_exchanger
+#     name: gas_gas_exchanger
+#     hot_inlet: hot_stream
+#     cold_inlet: cold_stream
+#     approach_temperature: 10.0  # Minimum temperature approach

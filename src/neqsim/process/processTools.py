@@ -5438,3 +5438,350 @@ def energystream(name: str, power: float = 0.0) -> Any:
     if not _loop_mode:
         processoperations.add(es)
     return es
+
+
+# =============================================================================
+# YAML/Config-Based Process Creation Functions
+# =============================================================================
+
+
+def create_fluid_from_config(config: Dict[str, Any]) -> Any:
+    """
+    Create a fluid (thermodynamic system) from a configuration dictionary.
+
+    Supports various fluid creation methods:
+    - Predefined types: 'dry gas', 'black oil', etc.
+    - Custom compositions with equation of state
+    - DataFrame-based reservoir fluids
+
+    Args:
+        config: Dictionary with fluid configuration. Supported keys:
+            - type: 'predefined', 'custom', or 'dataframe' (default 'custom')
+            - model: Equation of state ('srk', 'pr', 'cpa', etc.)
+            - name: Predefined fluid name (for type='predefined')
+            - temperature: Initial temperature in Kelvin (default 298.15)
+            - pressure: Initial pressure in bara (default 1.01325)
+            - components: List of component definitions for custom fluids
+            - dataframe: Dict with 'data' for DataFrame-based fluids
+
+    Returns:
+        Fluid object (thermodynamic system).
+
+    Example:
+        >>> # Predefined fluid
+        >>> config = {'type': 'predefined', 'name': 'dry gas'}
+        >>> fluid = create_fluid_from_config(config)
+
+        >>> # Custom fluid with composition
+        >>> config = {
+        ...     'model': 'srk',
+        ...     'temperature': 303.15,
+        ...     'pressure': 50.0,
+        ...     'components': [
+        ...         {'name': 'methane', 'moles': 0.9},
+        ...         {'name': 'ethane', 'moles': 0.05},
+        ...         {'name': 'propane', 'moles': 0.03},
+        ...         {'name': 'n-butane', 'moles': 0.02}
+        ...     ]
+        ... }
+        >>> fluid = create_fluid_from_config(config)
+
+        >>> # Custom with flow rates
+        >>> config = {
+        ...     'model': 'cpa',
+        ...     'temperature': 288.15,
+        ...     'pressure': 100.0,
+        ...     'components': [
+        ...         {'name': 'water', 'rate': 100.0, 'unit': 'kg/hr'},
+        ...         {'name': 'MEG', 'rate': 500.0, 'unit': 'kg/hr'}
+        ...     ]
+        ... }
+        >>> fluid = create_fluid_from_config(config)
+    """
+    from neqsim.thermo import thermoTools
+
+    fluid_type = config.get("type", "custom")
+
+    # Predefined fluid types
+    if fluid_type == "predefined":
+        name = config.get("name", "dry gas")
+        return thermoTools.createfluid(name)
+
+    # Custom fluid with components
+    model = config.get("model", "srk")
+    temperature = config.get("temperature", 298.15)
+    pressure = config.get("pressure", 1.01325)
+
+    # Create base fluid
+    thermo_system = thermoTools.fluid(model, temperature, pressure)
+
+    # Add components
+    components = config.get("components", [])
+    for comp in components:
+        comp_name = comp.get("name")
+        if comp_name is None:
+            continue
+
+        # Support different ways to specify amount
+        if "moles" in comp:
+            thermoTools.addComponent(thermo_system, comp_name, comp["moles"])
+        elif "rate" in comp:
+            rate = comp["rate"]
+            unit = comp.get("unit", "mol/sec")
+            thermoTools.addComponent(thermo_system, comp_name, rate, unit)
+        elif "mole_fraction" in comp:
+            # Will normalize later
+            thermoTools.addComponent(thermo_system, comp_name, comp["mole_fraction"])
+        else:
+            # Default to 1 mole
+            thermoTools.addComponent(thermo_system, comp_name, 1.0)
+
+    # Apply mixing rule if specified
+    mixing_rule = config.get("mixing_rule")
+    if mixing_rule:
+        ge_model = config.get("ge_model", "")
+        thermoTools.mixingRule(thermo_system, mixing_rule, ge_model)
+
+    # Enable multiphase if specified
+    if config.get("multiphase", False):
+        thermoTools.multiphase(thermo_system, 1)
+
+    # Enable solid check if specified
+    if config.get("solid_check", False):
+        thermoTools.solidcheck(thermo_system, 1)
+
+    return thermo_system
+
+
+def create_process_from_config(
+    config: Union[str, Dict[str, Any]],
+    fluids: Dict[str, Any] = None,
+    run: bool = True,
+) -> "ProcessBuilder":
+    """
+    Create a complete process from a YAML file or configuration dictionary.
+
+    This is a general-purpose function for building NeqSim processes from
+    configuration files. It can automatically create fluids from configuration
+    or use pre-created fluid objects.
+
+    Args:
+        config: Either a path to a YAML file or a configuration dictionary.
+        fluids: Optional dictionary mapping fluid names to fluid objects.
+            If the config includes a 'fluids' section, fluids are created
+            automatically and merged with this dictionary.
+        run: If True (default), run the process after building.
+
+    Returns:
+        ProcessBuilder instance with the built process.
+
+    YAML Format:
+        The YAML file should have this structure:
+
+        ```yaml
+        # Process configuration
+        name: "My Process"
+
+        # Optional: Define fluids inline (auto-created)
+        fluids:
+          feed:
+            model: srk
+            temperature: 303.15
+            pressure: 50.0
+            components:
+              - name: methane
+                moles: 0.85
+              - name: ethane
+                moles: 0.10
+              - name: propane
+                moles: 0.05
+
+          glycol:
+            model: cpa
+            temperature: 298.15
+            pressure: 1.0
+            components:
+              - name: MEG
+                rate: 100.0
+                unit: kg/hr
+
+        # Equipment list (processed in order)
+        equipment:
+          - type: stream
+            name: inlet
+            fluid: feed  # References fluid defined above or in fluids dict
+            temperature: 303.15
+            pressure: 50.0
+            flow_rate: 10.0
+            flow_unit: MSm3/day
+
+          - type: heater
+            name: heater1
+            inlet: inlet
+            temperature: 320.0
+
+          - type: separator
+            name: sep1
+            inlet: heater1
+
+          - type: compressor
+            name: comp1
+            inlet: sep1.gas
+            pressure: 100.0
+
+          - type: cooler
+            name: cooler1
+            inlet: comp1
+            temperature: 303.15
+
+          - type: splitter
+            name: split1
+            inlet: cooler1
+            split_factors: [0.7, 0.3]
+
+          - type: mixer
+            name: mixer1
+            inlets:
+              - split1.split_0
+              - some_other_stream
+        ```
+
+    Equipment Types:
+        The following equipment types are supported (use lowercase):
+        - stream: Process stream (requires 'fluid' reference)
+        - heater, cooler: Temperature changers
+        - separator, three_phase_separator: Phase separators
+        - compressor, expander: Pressure changers
+        - pump, valve: Liquid/gas handling
+        - heat_exchanger: Two-stream heat exchange
+        - mixer, splitter: Stream combining/splitting
+        - manifold: Multiple inlet/outlet handling
+        - recycle, virtual_stream: Recycle loops
+        - distillation_column, absorber: Columns
+        - And many more...
+
+    Outlet Notation:
+        For equipment with multiple outlets, use dot notation:
+        - separator: .gas, .liquid
+        - three_phase_separator: .gas, .oil, .water
+        - splitter: .split_0, .split_1, .split_2, ...
+        - manifold: .mixed (combined), .split_0, .split_1, ...
+        - virtual_stream: .out
+
+    Example:
+        >>> # From YAML file
+        >>> process = create_process_from_config('process.yaml')
+        >>> print(process.results_dataframe())
+
+        >>> # From dictionary with pre-created fluids
+        >>> from neqsim.thermo import fluid, addComponent
+        >>> feed = fluid('srk')
+        >>> addComponent(feed, 'methane', 0.9)
+        >>> addComponent(feed, 'ethane', 0.1)
+        >>>
+        >>> config = {
+        ...     'name': 'Simple Compression',
+        ...     'equipment': [
+        ...         {'type': 'stream', 'name': 'inlet', 'fluid': 'feed',
+        ...          'temperature': 300, 'pressure': 10, 'flow_rate': 5},
+        ...         {'type': 'compressor', 'name': 'comp1', 'inlet': 'inlet',
+        ...          'pressure': 50}
+        ...     ]
+        ... }
+        >>> process = create_process_from_config(config, fluids={'feed': feed})
+
+        >>> # Don't run immediately
+        >>> process = create_process_from_config('process.yaml', run=False)
+        >>> # ... modify process ...
+        >>> process.run()
+
+    See Also:
+        - ProcessBuilder.from_yaml(): Class method for YAML loading
+        - ProcessBuilder.from_dict(): Class method for dict loading
+        - create_fluid_from_config(): Create fluids from config
+    """
+    # Load config from file if string path provided
+    if isinstance(config, str):
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError(
+                "PyYAML is required for YAML support. Install with: pip install pyyaml"
+            )
+
+        with open(config, "r") as f:
+            config = yaml.safe_load(f)
+
+    # Initialize fluids dictionary
+    all_fluids = fluids.copy() if fluids else {}
+
+    # Create fluids from config if 'fluids' section exists
+    if "fluids" in config:
+        for fluid_name, fluid_config in config["fluids"].items():
+            if fluid_name not in all_fluids:  # Don't override provided fluids
+                all_fluids[fluid_name] = create_fluid_from_config(fluid_config)
+
+    # Build process using ProcessBuilder
+    builder = ProcessBuilder.from_dict(config, all_fluids)
+
+    # Run if requested
+    if run:
+        builder.run()
+
+    return builder
+
+
+def load_process_config(yaml_path: str) -> Dict[str, Any]:
+    """
+    Load a process configuration from a YAML file without creating the process.
+
+    Useful for inspecting or modifying configurations before building.
+
+    Args:
+        yaml_path: Path to YAML configuration file.
+
+    Returns:
+        Dictionary with the configuration.
+
+    Example:
+        >>> config = load_process_config('process.yaml')
+        >>> # Modify configuration
+        >>> config['equipment'][0]['pressure'] = 100.0
+        >>> # Now create process
+        >>> process = create_process_from_config(config)
+    """
+    try:
+        import yaml
+    except ImportError:
+        raise ImportError(
+            "PyYAML is required for YAML support. Install with: pip install pyyaml"
+        )
+
+    with open(yaml_path, "r") as f:
+        return yaml.safe_load(f)
+
+
+def save_process_config(config: Dict[str, Any], yaml_path: str) -> None:
+    """
+    Save a process configuration to a YAML file.
+
+    Args:
+        config: Configuration dictionary.
+        yaml_path: Path to save the YAML file.
+
+    Example:
+        >>> config = {
+        ...     'name': 'My Process',
+        ...     'equipment': [...]
+        ... }
+        >>> save_process_config(config, 'process.yaml')
+    """
+    try:
+        import yaml
+    except ImportError:
+        raise ImportError(
+            "PyYAML is required for YAML support. Install with: pip install pyyaml"
+        )
+
+    with open(yaml_path, "w") as f:
+        yaml.dump(config, f, default_flow_style=False, sort_keys=False)
