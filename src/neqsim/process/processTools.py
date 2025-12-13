@@ -380,6 +380,104 @@ class ProcessContext:
             r.addStream(inlet_stream)
         return self.add(r)
 
+    def gas_scrubber(self, name: str, inlet_stream: Any) -> Any:
+        """Create a gas scrubber and add to this process."""
+        scrubber = jneqsim.process.equipment.separator.GasScrubber(name, inlet_stream)
+        return self.add(scrubber)
+
+    def distillation_column(
+        self, name: str, trays: int = 5, reboiler: bool = True, condenser: bool = True
+    ) -> Any:
+        """Create a distillation column and add to this process."""
+        column = jneqsim.process.equipment.distillation.DistillationColumn(
+            trays, reboiler, condenser
+        )
+        column.setName(name)
+        return self.add(column)
+
+    def teg_absorber(self, name: str) -> Any:
+        """Create a simple TEG absorber and add to this process."""
+        absorber = jneqsim.process.equipment.absorber.SimpleTEGAbsorber(name)
+        return self.add(absorber)
+
+    def water_stripper_column(self, name: str) -> Any:
+        """Create a water stripper column and add to this process."""
+        column = jneqsim.process.equipment.absorber.WaterStripperColumn(name)
+        return self.add(column)
+
+    def component_splitter(
+        self, name: str, inlet_stream: Any, split_factors: List[float] = None
+    ) -> Any:
+        """Create a component splitter and add to this process."""
+        splitter = jneqsim.process.equipment.splitter.ComponentSplitter(
+            name, inlet_stream
+        )
+        if split_factors:
+            splitter.setSplitFactors(split_factors)
+        return self.add(splitter)
+
+    def saturator(self, name: str, inlet_stream: Any) -> Any:
+        """Create a stream saturator and add to this process."""
+        sat = jneqsim.process.equipment.util.StreamSaturatorUtil(name, inlet_stream)
+        return self.add(sat)
+
+    def filters(self, name: str, inlet_stream: Any) -> Any:
+        """Create a filter and add to this process."""
+        f = jneqsim.process.equipment.filter.Filter(name, inlet_stream)
+        return self.add(f)
+
+    def calculator(self, name: str) -> Any:
+        """Create a calculator and add to this process."""
+        calc = jneqsim.process.equipment.util.Calculator(name)
+        return self.add(calc)
+
+    def setpoint(
+        self,
+        name: str,
+        target_equipment: Any,
+        target_variable: str,
+        source_equipment: Any,
+    ) -> Any:
+        """Create a setpoint controller and add to this process."""
+        sp = jneqsim.process.equipment.util.SetPoint(
+            name, target_equipment, target_variable, source_equipment
+        )
+        return self.add(sp)
+
+    def adjuster(
+        self,
+        name: str,
+        target_equipment: Any = None,
+        target_variable: str = None,
+        target_value: float = None,
+    ) -> Any:
+        """Create an adjuster and add to this process."""
+        adj = jneqsim.process.equipment.util.Adjuster(name)
+        if target_equipment is not None and target_variable is not None:
+            adj.setAdjustedVariable(target_equipment, target_variable)
+        if target_value is not None:
+            adj.setTargetValue(target_value)
+        return self.add(adj)
+
+    def ejector(self, name: str, motive_stream: Any, suction_stream: Any) -> Any:
+        """Create an ejector and add to this process."""
+        ej = jneqsim.process.equipment.ejector.Ejector(name, motive_stream, suction_stream)
+        return self.add(ej)
+
+    def flare(self, name: str, inlet_stream: Any = None) -> Any:
+        """Create a flare and add to this process."""
+        f = jneqsim.process.equipment.flare.Flare(name)
+        if inlet_stream is not None:
+            f.addStream(inlet_stream)
+        return self.add(f)
+
+    def tank(self, name: str, inlet_stream: Any = None) -> Any:
+        """Create a tank and add to this process."""
+        t = jneqsim.process.equipment.tank.Tank(name)
+        if inlet_stream is not None:
+            t.addStream(inlet_stream)
+        return self.add(t)
+
 
 class ProcessBuilder:
     """
@@ -389,25 +487,319 @@ class ProcessBuilder:
     step by step. Equipment is referenced by name, making it easy
     to construct processes from configuration data.
 
-    Example:
-        >>> from neqsim.thermo import fluid
-        >>> from neqsim.process import ProcessBuilder
-        >>>
-        >>> feed = fluid('srk')
-        >>> feed.addComponent('methane', 0.9)
-        >>> feed.addComponent('ethane', 0.1)
-        >>> feed.setPressure(30.0, 'bara')
-        >>> feed.setTemperature(30.0, 'C')
-        >>>
-        >>> process = (ProcessBuilder("Compression Train")
-        ...     .add_stream('inlet', feed)
-        ...     .add_compressor('comp1', 'inlet', pressure=60.0)
-        ...     .add_cooler('cooler1', 'comp1', temperature=303.15)
-        ...     .add_compressor('comp2', 'cooler1', pressure=120.0)
-        ...     .run())
-        >>>
-        >>> print(f"Stage 1 power: {process.get('comp1').getPower()/1e6:.2f} MW")
-        >>> print(f"Stage 2 power: {process.get('comp2').getPower()/1e6:.2f} MW")
+    QUICK START
+    ===========
+
+    Basic usage follows a simple pattern:
+    1. Create a fluid (thermodynamic system)
+    2. Create a ProcessBuilder
+    3. Chain equipment additions using the fluent API
+    4. Call .run() to execute the simulation
+    5. Access results via .get() or .results()
+
+    Example::
+
+        from neqsim.thermo import fluid
+        from neqsim.process import ProcessBuilder
+
+        # Create feed fluid
+        feed = fluid('srk')
+        feed.addComponent('methane', 0.9)
+        feed.addComponent('ethane', 0.1)
+        feed.setMolarFlowRate(100.0, 'mol/sec')
+        feed.setTemperature(25.0, 'C')
+        feed.setPressure(10.0, 'bara')
+
+        # Build and run process
+        process = (
+            ProcessBuilder("My Process")
+            .add_stream('feed', feed)
+            .add_compressor('comp', 'feed', outlet_pressure=50.0)
+            .add_cooler('cooler', 'comp', outlet_temperature=30.0)
+            .add_separator('sep', 'cooler')
+            .run()
+        )
+
+        # Access results
+        print(f"Compressor power: {process.get('comp').getPower()/1e3:.1f} kW")
+        print(f"Gas out temp: {process.get('sep').getGasOutStream().getTemperature('C'):.1f} C")
+
+    FLUENT API PATTERN
+    ==================
+
+    All add_* methods return ``self``, enabling method chaining::
+
+        builder = (
+            ProcessBuilder()
+            .add_stream(...)
+            .add_compressor(...)
+            .add_cooler(...)
+            .run()
+        )
+
+    EQUIPMENT CONNECTIONS
+    =====================
+
+    Equipment is connected by referencing upstream equipment by name.
+    The builder automatically gets the appropriate outlet stream.
+
+    **Basic connection** - just use the equipment name::
+
+        .add_compressor('comp', inlet='feed')    # Gets feed's outlet
+        .add_cooler('cooler', inlet='comp')       # Gets comp's outlet
+
+    **Separator outlets** - use dot notation for specific outlets::
+
+        .add_separator('sep', inlet='cooler')
+        .add_compressor('gas_comp', inlet='sep.gas')      # Gas outlet
+        .add_pump('oil_pump', inlet='sep.oil')            # Oil outlet
+        .add_pump('water_pump', inlet='sep.water')        # Water outlet (3-phase)
+
+    **Available outlet types**:
+        - ``.gas`` or ``.vapor`` - gas/vapor phase outlet
+        - ``.liquid`` - liquid outlet (2-phase separator)
+        - ``.oil`` - oil outlet (3-phase separator)
+        - ``.water`` or ``.aqueous`` - water outlet (3-phase separator)
+        - ``.out`` - generic outlet (VirtualStream, etc.)
+
+    EQUIPMENT CATEGORIES
+    ====================
+
+    **Streams**::
+
+        .add_stream(name, fluid, temperature=None, pressure=None,
+                    flow_rate=None, flow_unit='kg/sec')
+        .add_virtual_stream(name, source=None, flow_rate=None, ...)
+        .add_neq_stream(name, fluid)              # Non-equilibrium stream
+        .add_energy_stream(name)                  # Energy/duty stream
+        .add_well_stream(name, fluid)             # Well stream
+
+    **Separation**::
+
+        .add_separator(name, inlet)               # 2-phase separator
+        .add_three_phase_separator(name, inlet)   # 3-phase separator
+        .add_separator_with_dimensions(name, inlet, inner_diameter, length)
+        .add_gas_scrubber(name, inlet)
+        .add_gas_scrubber_with_options(name, inlet, ...)
+
+    **Compression**::
+
+        .add_compressor(name, inlet, outlet_pressure=None, isentropic_efficiency=None)
+        .add_compressor_with_chart(name, inlet)   # With performance curves
+        .add_polytopic_compressor(name, inlet, outlet_pressure, efficiency)
+
+    **Pumping**::
+
+        .add_pump(name, inlet, outlet_pressure=None, efficiency=None)
+
+    **Heat Transfer**::
+
+        .add_heater(name, inlet, outlet_temperature=None)
+        .add_cooler(name, inlet, outlet_temperature=None)
+        .add_heat_exchanger(name, hot_inlet=None, cold_inlet=None)
+
+    **Pressure Control**::
+
+        .add_valve(name, inlet, outlet_pressure=None)
+        .add_valve_with_options(name, inlet, outlet_pressure, cv=None, ...)
+
+    **Mixing/Splitting**::
+
+        .add_mixer(name, inlets=None)             # List of inlet names
+        .add_static_mixer(name, inlets=None)
+        .add_splitter(name, inlet, split_fractions=None)
+        .add_splitter_with_flowrates(name, inlet, flowrates, flow_unit)
+
+    **Pipelines**::
+
+        .add_pipe(name, inlet, length=None, diameter=None)
+        .add_beggs_brill_pipe(name, inlet, length, elevation, diameter, ...)
+        .add_two_phase_pipe(name, inlet, length, elevation, diameter, ...)
+
+    **Distillation/Absorption**::
+
+        .add_distillation_column(name, trays=5, reboiler=True, condenser=True)
+        .add_teg_absorber(name)
+        .add_simple_absorber(name, inlet_gas=None, inlet_liquid=None)
+        .add_water_stripper(name)
+
+    **Process Control**::
+
+        .add_setpoint(name, source_equipment, source_variable, target_equipment,
+                      target_variable, target_value)
+        .add_adjuster(name, target_equipment, target_variable, target_value,
+                      adjust_equipment, adjust_variable)
+        .add_calculator(name)
+        .add_pid_controller(name, transmitter=None, valve=None, setpoint=None, ...)
+
+    **Measurement**::
+
+        .add_pressure_transmitter(name, equipment, measurement_point='outlet')
+        .add_temperature_transmitter(name, equipment, measurement_point='outlet')
+        .add_flow_transmitter(name, equipment, measurement_point='outlet')
+        .add_level_transmitter(name, separator)
+
+    **Other Equipment**::
+
+        .add_ejector(name, motive_inlet=None, suction_inlet=None)
+        .add_flare(name, inlet=None)
+        .add_tank(name, inlet=None)
+        .add_saturator(name, inlet=None)
+        .add_filter(name, inlet=None)
+        .add_reactor(name, inlet)                 # Gibbs reactor
+        .add_component_splitter(name, inlet, split_factors=None)
+
+    RECYCLE LOOPS
+    =============
+
+    Recycles handle "streams that go back" - a common challenge because you
+    need to reference equipment that doesn't exist yet.
+
+    **The Pattern**: Create a virtual stream (initial guess) FIRST, build
+    forward through the process, then connect the actual output back.
+
+    Example - Anti-surge recycle::
+
+        process = (
+            ProcessBuilder()
+            .add_stream('feed', fluid, flow_rate=100, flow_unit='kg/hr')
+
+            # Step 1: Create virtual stream as initial guess
+            .add_virtual_stream('recycle_guess', source='feed',
+                                flow_rate=5.0, flow_unit='kg/hr')
+
+            # Step 2: Build forward using the guess
+            .add_mixer('mixer', inlets=['feed', 'recycle_guess.out'])
+            .add_compressor('compressor', inlet='mixer', outlet_pressure=50)
+            .add_cooler('cooler', inlet='compressor', outlet_temperature=30)
+            .add_separator('separator', inlet='cooler')
+
+            # Step 3: Connect actual output back to virtual stream
+            .add_recycle('antisurge',
+                         inlet='separator.liquid',    # actual stream
+                         outlet='recycle_guess.out',  # virtual stream
+                         tolerance=1e-6)
+            .run()
+        )
+
+    **Alternative helper methods**::
+
+        # Using setup/close pattern
+        .setup_recycle_loop('my_recycle', 'recycle_guess', 'feed',
+                            initial_flow=5.0, initial_flow_unit='kg/hr')
+        # ... build process ...
+        .close_recycle_loop('my_recycle', 'separator.liquid')
+
+    CONFIGURATION & ACCESS
+    ======================
+
+    **Configure equipment after creation**::
+
+        .configure('equipment_name', lambda eq: eq.setSomeProperty(value))
+
+    **Access equipment**::
+
+        process.get('compressor')           # Get Java equipment object
+        process.get('separator').run()      # Run single equipment
+        process['compressor']               # Dict-style access
+
+    **Get results**::
+
+        process.results()                   # Returns underlying ProcessSystem
+        process.run()                       # Run simulation, returns self
+
+    BUILDING FROM CONFIG
+    ====================
+
+    For dynamic process construction, use ``add()`` or ``add_from_config()``::
+
+        # Single equipment with type string
+        builder.add('compressor', 'comp1', inlet='feed', outlet_pressure=50)
+
+        # From configuration list
+        config = [
+            {'type': 'stream', 'name': 'feed', 'fluid': my_fluid},
+            {'type': 'compressor', 'name': 'comp', 'inlet': 'feed',
+             'outlet_pressure': 50},
+            {'type': 'cooler', 'name': 'cooler', 'inlet': 'comp',
+             'outlet_temperature': 30},
+        ]
+        builder.add_from_config(config, fluids={'feed_fluid': my_fluid})
+
+    COMPLETE EXAMPLES
+    =================
+
+    **Gas Compression Train**::
+
+        feed = fluid('srk')
+        feed.addComponent('methane', 0.85)
+        feed.addComponent('ethane', 0.10)
+        feed.addComponent('propane', 0.05)
+        feed.setMolarFlowRate(1000, 'mol/sec')
+        feed.setTemperature(25, 'C')
+        feed.setPressure(5, 'bara')
+
+        process = (
+            ProcessBuilder("Compression Train")
+            .add_stream('inlet', feed)
+            .add_gas_scrubber('scrubber', 'inlet')
+            .add_compressor('stage1', 'scrubber.gas', outlet_pressure=15)
+            .add_cooler('ic1', 'stage1', outlet_temperature=35)
+            .add_gas_scrubber('kd1', 'ic1')
+            .add_compressor('stage2', 'kd1.gas', outlet_pressure=45)
+            .add_cooler('ic2', 'stage2', outlet_temperature=35)
+            .add_gas_scrubber('kd2', 'ic2')
+            .add_compressor('stage3', 'kd2.gas', outlet_pressure=120)
+            .add_cooler('aftercooler', 'stage3', outlet_temperature=40)
+            .run()
+        )
+
+        total_power = sum(
+            process.get(f'stage{i}').getPower() for i in [1, 2, 3]
+        ) / 1e6
+        print(f"Total compression power: {total_power:.2f} MW")
+
+    **Oil/Gas Separation**::
+
+        wellstream = fluid('srk')
+        # ... configure wellstream ...
+
+        process = (
+            ProcessBuilder("Separation")
+            .add_stream('well', wellstream)
+            .add_heater('heater', 'well', outlet_temperature=80)
+            .add_three_phase_separator('hp_sep', 'heater')
+            .add_valve('gas_valve', 'hp_sep.gas', outlet_pressure=20)
+            .add_valve('oil_valve', 'hp_sep.oil', outlet_pressure=5)
+            .add_three_phase_separator('lp_sep', 'oil_valve')
+            .add_pump('export_pump', 'lp_sep.oil', outlet_pressure=30)
+            .run()
+        )
+
+    **With Recycle (TEG Dehydration)**::
+
+        process = (
+            ProcessBuilder("TEG Dehydration")
+            .add_stream('wet_gas', wet_gas_fluid)
+            .add_virtual_stream('lean_teg_recycle', source='teg_stream',
+                                flow_rate=1000, flow_unit='kg/hr')
+            .add_teg_absorber('absorber')
+            .configure('absorber', lambda a: (
+                a.addGasInStream(process.get('wet_gas').getOutletStream()),
+                a.addSolventInStream(process.get('lean_teg_recycle').getOutStream())
+            ))
+            # ... regeneration equipment ...
+            .add_recycle('teg_recycle',
+                         inlet='teg_cooler',
+                         outlet='lean_teg_recycle.out',
+                         tolerance=1e-4)
+            .run()
+        )
+
+    See Also
+    --------
+    neqsim.thermo.fluid : Create thermodynamic systems
+    neqsim.process.newProcess : Alternative process creation function
     """
 
     def __init__(self, name: str = ""):
@@ -425,10 +817,12 @@ class ProcessBuilder:
         - 'separator.liquid' - liquid outlet (2-phase separator)
         - 'separator.oil' - oil outlet (3-phase separator)
         - 'separator.water' or 'separator.aqueous' - water outlet (3-phase separator)
+        - 'virtual_stream.out' - output from VirtualStream
 
         Examples:
             >>> builder.add_compressor('comp', 'sep.gas', pressure=100)
             >>> builder.add_pump('pump', 'sep.oil', pressure=50)
+            >>> builder.add_mixer('mixer', inlets=['feed', 'recycle_guess.out'])
         """
         if isinstance(ref, str):
             # Check for dot notation (e.g., 'separator.gas')
@@ -440,6 +834,16 @@ class ProcessBuilder:
                 equip = self.equipment.get(equip_name)
                 if equip is None:
                     raise ValueError(f"Equipment '{equip_name}' not found")
+
+                # Handle VirtualStream .out notation
+                if outlet_type == "out":
+                    if hasattr(equip, "getOutStream"):
+                        return equip.getOutStream()
+                    elif hasattr(equip, "getOutletStream"):
+                        return equip.getOutletStream()
+                    raise ValueError(
+                        f"Equipment '{equip_name}' does not have an output stream method"
+                    )
 
                 # Map outlet type to method
                 outlet_methods = {
@@ -454,7 +858,7 @@ class ProcessBuilder:
                 if outlet_type not in outlet_methods:
                     raise ValueError(
                         f"Unknown outlet type '{outlet_type}'. "
-                        f"Valid types: {list(outlet_methods.keys())}"
+                        f"Valid types: {list(outlet_methods.keys()) + ['out']}"
                     )
 
                 for method_name in outlet_methods[outlet_type]:
@@ -667,6 +1071,1705 @@ class ProcessBuilder:
         self.process.add(p)
         return self
 
+    def add_gas_scrubber(self, name: str, inlet: str) -> "ProcessBuilder":
+        """
+        Add a gas scrubber to the process.
+
+        Args:
+            name: Name of the gas scrubber.
+            inlet: Name of inlet equipment or stream.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        scrubber = jneqsim.process.equipment.separator.GasScrubber(name, inlet_stream)
+        self.equipment[name] = scrubber
+        self.process.add(scrubber)
+        return self
+
+    def add_recycle(
+        self,
+        name: str,
+        inlet: str = None,
+        outlet: str = None,
+        tolerance: float = 1e-4,
+        priority: int = None,
+        max_iterations: int = None,
+        downstream_property: str = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a recycle stream to the process.
+
+        RECYCLE PATTERN EXPLANATION:
+        ============================
+        Recycles handle "streams that go back" in a process. The pattern is:
+
+        1. Create a virtual stream FIRST as an initial guess for the recycle
+        2. Build forward through the process (using virtual stream as input)
+        3. Add the recycle to connect actual output back to virtual stream
+
+        Example - Anti-surge recycle loop:
+        ----------------------------------
+        ```python
+        builder = (
+            ProcessBuilder()
+            .add_stream("feed", fluid, flow_rate=100, flow_unit="kg/hr")
+            # Step 1: Create virtual stream as initial guess for recycle
+            .add_virtual_stream("recycle_guess", source="feed")
+            # Configure it with estimated recycle flow
+            .configure("recycle_guess", lambda vs: vs.setFlowRate(10.0, "kg/hr"))
+            # Step 2: Mix feed with recycle guess
+            .add_mixer("suction_mixer", inlets=["feed", "recycle_guess.out"])
+            # Continue forward through process
+            .add_compressor("compressor", inlet="suction_mixer", outlet_pressure=50.0)
+            .add_cooler("aftercooler", inlet="compressor", outlet_temperature=30.0)
+            .add_separator("separator", inlet="aftercooler")
+            # Step 3: Add recycle connecting separator liquid back to virtual stream
+            .add_recycle("antisurge_recycle",
+                         inlet="separator.liquid",
+                         outlet="recycle_guess.out",
+                         tolerance=1e-6)
+            .run()
+        )
+        ```
+
+        Args:
+            name: Name of the recycle.
+            inlet: Name of inlet equipment (the actual stream to recycle).
+            outlet: Name of outlet stream (typically a virtual stream's output).
+            tolerance: Convergence tolerance for recycle iteration (default 1e-4).
+            priority: Recycle priority (higher = later in solve order).
+            max_iterations: Maximum iterations for this recycle.
+            downstream_property: Property to pass downstream (e.g., "flow rate").
+
+        Returns:
+            Self for method chaining.
+        """
+        r = jneqsim.process.equipment.util.Recycle(name)
+        if inlet is not None:
+            inlet_stream = self._get_outlet(inlet)
+            r.addStream(inlet_stream)
+        if outlet is not None:
+            outlet_stream = self._get_outlet(outlet)
+            r.setOutletStream(outlet_stream)
+        r.setTolerance(tolerance)
+        if priority is not None:
+            r.setPriority(priority)
+        if max_iterations is not None:
+            r.setMaximumIterations(max_iterations)
+        if downstream_property is not None:
+            r.setDownstreamProperty(downstream_property)
+        self.equipment[name] = r
+        self.process.add(r)
+        return self
+
+    def setup_recycle_loop(
+        self,
+        recycle_name: str,
+        virtual_stream_name: str,
+        source_stream: str,
+        initial_flow: float = None,
+        initial_flow_unit: str = "kg/hr",
+    ) -> "ProcessBuilder":
+        """
+        Set up a recycle loop by creating a virtual stream for the initial guess.
+
+        This is a convenience method that creates a virtual stream to be used
+        as the recycle guess. You then build your process forward using this
+        virtual stream, and finally connect the actual recycle back to it.
+
+        Example workflow:
+        -----------------
+        ```python
+        builder = (
+            ProcessBuilder()
+            .add_stream("feed", fluid, flow_rate=100, flow_unit="kg/hr")
+            # Set up the recycle initial guess
+            .setup_recycle_loop("my_recycle", "recycle_guess", "feed", 
+                                initial_flow=10.0, initial_flow_unit="kg/hr")
+            # Mix feed with recycle
+            .add_mixer("mixer", inlets=["feed", "recycle_guess.out"])
+            # Process forward...
+            .add_separator("sep", inlet="mixer")
+            # Close the loop
+            .close_recycle_loop("my_recycle", "sep.liquid", "recycle_guess.out")
+            .run()
+        )
+        ```
+
+        Args:
+            recycle_name: Name for the recycle (used later in close_recycle_loop).
+            virtual_stream_name: Name for the virtual stream.
+            source_stream: Stream to use as template for composition.
+            initial_flow: Initial guess for recycle flow rate.
+            initial_flow_unit: Unit for the flow rate.
+
+        Returns:
+            Self for method chaining.
+        """
+        # Create the virtual stream
+        source = self._get_outlet(source_stream)
+        vs = jneqsim.process.equipment.stream.VirtualStream(virtual_stream_name, source)
+        if initial_flow is not None:
+            vs.setFlowRate(initial_flow, initial_flow_unit)
+        self.equipment[virtual_stream_name] = vs
+        self.process.add(vs)
+        # Store recycle info for later
+        if not hasattr(self, "_pending_recycles"):
+            self._pending_recycles = {}
+        self._pending_recycles[recycle_name] = virtual_stream_name
+        return self
+
+    def close_recycle_loop(
+        self,
+        recycle_name: str,
+        inlet: str,
+        outlet: str = None,
+        tolerance: float = 1e-4,
+        priority: int = None,
+    ) -> "ProcessBuilder":
+        """
+        Close a recycle loop that was set up with setup_recycle_loop.
+
+        This creates the actual Recycle object that connects the process
+        output back to the virtual stream.
+
+        Args:
+            recycle_name: Name for the recycle (should match setup_recycle_loop).
+            inlet: The actual stream to recycle (e.g., "separator.liquid").
+            outlet: The virtual stream output (if None, uses the one from setup).
+            tolerance: Convergence tolerance.
+            priority: Recycle priority.
+
+        Returns:
+            Self for method chaining.
+        """
+        # Get the virtual stream from setup if outlet not specified
+        if outlet is None:
+            if hasattr(self, "_pending_recycles") and recycle_name in self._pending_recycles:
+                vs_name = self._pending_recycles[recycle_name]
+                outlet = f"{vs_name}.out"
+            else:
+                raise ValueError(
+                    f"No outlet specified and no setup_recycle_loop found for '{recycle_name}'"
+                )
+        return self.add_recycle(
+            recycle_name, inlet=inlet, outlet=outlet, tolerance=tolerance, priority=priority
+        )
+
+    def add_distillation_column(
+        self,
+        name: str,
+        trays: int = 5,
+        reboiler: bool = True,
+        condenser: bool = True,
+    ) -> "ProcessBuilder":
+        """
+        Add a distillation column to the process.
+
+        Args:
+            name: Name of the column.
+            trays: Number of theoretical trays.
+            reboiler: Whether to include a reboiler.
+            condenser: Whether to include a condenser.
+
+        Returns:
+            Self for method chaining.
+
+        Note:
+            Use get() to access the column and add feed streams, set temperatures, etc.
+        """
+        column = jneqsim.process.equipment.distillation.DistillationColumn(
+            trays, reboiler, condenser
+        )
+        column.setName(name)
+        self.equipment[name] = column
+        self.process.add(column)
+        return self
+
+    def add_teg_absorber(self, name: str) -> "ProcessBuilder":
+        """
+        Add a simple TEG absorber to the process.
+
+        Args:
+            name: Name of the absorber.
+
+        Returns:
+            Self for method chaining.
+
+        Note:
+            Use get() to access the absorber and configure it (add streams, set parameters).
+        """
+        absorber = jneqsim.process.equipment.absorber.SimpleTEGAbsorber(name)
+        self.equipment[name] = absorber
+        self.process.add(absorber)
+        return self
+
+    def add_water_stripper(self, name: str) -> "ProcessBuilder":
+        """
+        Add a water stripper column to the process.
+
+        Args:
+            name: Name of the stripper.
+
+        Returns:
+            Self for method chaining.
+        """
+        column = jneqsim.process.equipment.absorber.WaterStripperColumn(name)
+        self.equipment[name] = column
+        self.process.add(column)
+        return self
+
+    def add_component_splitter(
+        self, name: str, inlet: str, split_factors: List[float] = None
+    ) -> "ProcessBuilder":
+        """
+        Add a component splitter to the process.
+
+        A component splitter separates a stream by component, useful for
+        creating pseudo-streams for specific components.
+
+        Args:
+            name: Name of the splitter.
+            inlet: Name of inlet equipment.
+            split_factors: List of split factors for each component (0 to 1).
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        splitter = jneqsim.process.equipment.splitter.ComponentSplitter(
+            name, inlet_stream
+        )
+        if split_factors:
+            splitter.setSplitFactors(split_factors)
+        self.equipment[name] = splitter
+        self.process.add(splitter)
+        return self
+
+    def add_saturator(self, name: str, inlet: str) -> "ProcessBuilder":
+        """
+        Add a stream saturator to the process.
+
+        A saturator ensures the stream is at its saturation point.
+
+        Args:
+            name: Name of the saturator.
+            inlet: Name of inlet equipment.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        sat = jneqsim.process.equipment.util.StreamSaturatorUtil(name, inlet_stream)
+        self.equipment[name] = sat
+        self.process.add(sat)
+        return self
+
+    def add_filter(self, name: str, inlet: str) -> "ProcessBuilder":
+        """
+        Add a filter to the process.
+
+        Args:
+            name: Name of the filter.
+            inlet: Name of inlet equipment.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        f = jneqsim.process.equipment.filter.Filter(name, inlet_stream)
+        self.equipment[name] = f
+        self.process.add(f)
+        return self
+
+    def add_calculator(self, name: str) -> "ProcessBuilder":
+        """
+        Add a calculator to the process.
+
+        Calculators allow custom calculations based on process variables.
+
+        Args:
+            name: Name of the calculator.
+
+        Returns:
+            Self for method chaining.
+
+        Note:
+            Use get() to access the calculator and configure it.
+        """
+        calc = jneqsim.process.equipment.util.Calculator(name)
+        self.equipment[name] = calc
+        self.process.add(calc)
+        return self
+
+    def add_setpoint(
+        self,
+        name: str,
+        target: str,
+        target_variable: str,
+        source: str,
+    ) -> "ProcessBuilder":
+        """
+        Add a setpoint controller to the process.
+
+        A setpoint sets a variable in one unit based on another unit's property.
+
+        Args:
+            name: Name of the setpoint.
+            target: Name of target equipment to control.
+            target_variable: Variable name to control (e.g., 'pressure', 'temperature').
+            source: Name of source equipment to read from.
+
+        Returns:
+            Self for method chaining.
+        """
+        target_eq = self.equipment.get(target)
+        source_eq = self.equipment.get(source)
+        if target_eq is None:
+            raise ValueError(f"Target equipment '{target}' not found")
+        if source_eq is None:
+            raise ValueError(f"Source equipment '{source}' not found")
+        sp = jneqsim.process.equipment.util.SetPoint(
+            name, target_eq, target_variable, source_eq
+        )
+        self.equipment[name] = sp
+        self.process.add(sp)
+        return self
+
+    def add_adjuster(
+        self,
+        name: str,
+        adjust_equipment: str = None,
+        adjust_variable: str = None,
+        target_equipment: str = None,
+        target_variable: str = None,
+        target_value: float = None,
+    ) -> "ProcessBuilder":
+        """
+        Add an adjuster to the process.
+
+        An adjuster iteratively adjusts a variable to achieve a target value.
+
+        Args:
+            name: Name of the adjuster.
+            adjust_equipment: Name of equipment with variable to adjust.
+            adjust_variable: Variable name to adjust.
+            target_equipment: Name of equipment with target variable.
+            target_variable: Target variable name.
+            target_value: Target value to achieve.
+
+        Returns:
+            Self for method chaining.
+        """
+        adj = jneqsim.process.equipment.util.Adjuster(name)
+        if adjust_equipment is not None and adjust_variable is not None:
+            adj_eq = self.equipment.get(adjust_equipment)
+            if adj_eq is None:
+                raise ValueError(f"Adjust equipment '{adjust_equipment}' not found")
+            adj.setAdjustedVariable(adj_eq, adjust_variable)
+        if target_equipment is not None and target_variable is not None:
+            tgt_eq = self.equipment.get(target_equipment)
+            if tgt_eq is None:
+                raise ValueError(f"Target equipment '{target_equipment}' not found")
+            adj.setTargetVariable(tgt_eq, target_variable)
+        if target_value is not None:
+            adj.setTargetValue(target_value)
+        self.equipment[name] = adj
+        self.process.add(adj)
+        return self
+
+    def add_ejector(
+        self, name: str, motive_inlet: str, suction_inlet: str
+    ) -> "ProcessBuilder":
+        """
+        Add an ejector to the process.
+
+        Args:
+            name: Name of the ejector.
+            motive_inlet: Name of motive (high-pressure) stream equipment.
+            suction_inlet: Name of suction (low-pressure) stream equipment.
+
+        Returns:
+            Self for method chaining.
+        """
+        motive_stream = self._get_outlet(motive_inlet)
+        suction_stream = self._get_outlet(suction_inlet)
+        ej = jneqsim.process.equipment.ejector.Ejector(name, motive_stream, suction_stream)
+        self.equipment[name] = ej
+        self.process.add(ej)
+        return self
+
+    def add_flare(self, name: str, inlet: str = None) -> "ProcessBuilder":
+        """
+        Add a flare to the process.
+
+        Args:
+            name: Name of the flare.
+            inlet: Optional name of inlet equipment.
+
+        Returns:
+            Self for method chaining.
+        """
+        f = jneqsim.process.equipment.flare.Flare(name)
+        if inlet is not None:
+            inlet_stream = self._get_outlet(inlet)
+            f.addStream(inlet_stream)
+        self.equipment[name] = f
+        self.process.add(f)
+        return self
+
+    def add_tank(self, name: str, inlet: str = None) -> "ProcessBuilder":
+        """
+        Add a tank to the process.
+
+        Args:
+            name: Name of the tank.
+            inlet: Optional name of inlet equipment.
+
+        Returns:
+            Self for method chaining.
+        """
+        t = jneqsim.process.equipment.tank.Tank(name)
+        if inlet is not None:
+            inlet_stream = self._get_outlet(inlet)
+            t.addStream(inlet_stream)
+        self.equipment[name] = t
+        self.process.add(t)
+        return self
+
+    def add_virtual_stream(
+        self,
+        name: str,
+        source: str = None,
+        flow_rate: float = None,
+        flow_unit: str = "kg/hr",
+        temperature: float = None,
+        temperature_unit: str = "C",
+        pressure: float = None,
+        pressure_unit: str = "bara",
+    ) -> "ProcessBuilder":
+        """
+        Add a virtual stream to the process.
+
+        Virtual streams are used with recycling to create initial guesses
+        for recycle convergence. They copy composition from a source stream
+        but can have independent flow/T/P settings.
+
+        USAGE WITH RECYCLES:
+        ====================
+        Virtual streams are essential for recycle loops. The pattern is:
+
+        1. Create virtual stream as initial guess (copies composition from source)
+        2. Use virtual_stream.out as input to equipment in the loop
+        3. Create a Recycle that connects actual output back to virtual_stream.out
+
+        Example:
+        --------
+        ```python
+        builder = (
+            ProcessBuilder()
+            .add_stream("feed", fluid, flow_rate=100, flow_unit="kg/hr")
+            # Virtual stream as recycle guess (small flow to start)
+            .add_virtual_stream("recycle_guess", source="feed", 
+                                flow_rate=5.0, flow_unit="kg/hr")
+            # Mix feed with recycle
+            .add_mixer("mixer", inlets=["feed", "recycle_guess.out"])
+            .add_separator("sep", inlet="mixer")
+            # Connect separator liquid back to virtual stream
+            .add_recycle("recycle", inlet="sep.liquid", outlet="recycle_guess.out")
+            .run()
+        )
+        ```
+
+        Args:
+            name: Name of the virtual stream.
+            source: Name of source stream to copy composition from.
+            flow_rate: Initial flow rate guess.
+            flow_unit: Unit for flow rate (default "kg/hr").
+            temperature: Temperature (if different from source).
+            temperature_unit: Unit for temperature (default "C").
+            pressure: Pressure (if different from source).
+            pressure_unit: Unit for pressure (default "bara").
+
+        Returns:
+            Self for method chaining.
+
+        Note:
+            Access the virtual stream's output with '.out' suffix in inlet parameters,
+            e.g., 'virtual_stream_name.out' or just 'virtual_stream_name' (auto-detected).
+        """
+        if source is not None:
+            source_stream = self._get_outlet(source)
+            vs = jneqsim.process.equipment.stream.VirtualStream(name, source_stream)
+        else:
+            vs = jneqsim.process.equipment.stream.VirtualStream(name)
+        if flow_rate is not None:
+            vs.setFlowRate(flow_rate, flow_unit)
+        if temperature is not None:
+            vs.setTemperature(temperature, temperature_unit)
+        if pressure is not None:
+            vs.setPressure(pressure, pressure_unit)
+        self.equipment[name] = vs
+        self.process.add(vs)
+        return self
+
+    def add_water_stream(
+        self,
+        name: str,
+        temperature: float = None,
+        temperature_unit: str = "C",
+        pressure: float = None,
+        pressure_unit: str = "bara",
+        flow_rate: float = None,
+        flow_unit: str = "kg/hr",
+    ) -> "ProcessBuilder":
+        """
+        Add a water stream to the process.
+
+        Creates a stream containing pure water at specified conditions.
+
+        Args:
+            name: Name of the stream.
+            temperature: Temperature value.
+            temperature_unit: Unit for temperature (default 'C').
+            pressure: Pressure value.
+            pressure_unit: Unit for pressure (default 'bara').
+            flow_rate: Flow rate value.
+            flow_unit: Unit for flow rate (default 'kg/hr').
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_water_stream('water_feed', temperature=80.0, pressure=10.0, flow_rate=1000.0)
+        """
+        water_fluid = jneqsim.thermo.system.SystemSrkEos(273.15 + 25.0, 1.0)
+        water_fluid.addComponent("water", 1.0)
+        water_fluid.setMixingRule(2)
+        water_fluid.init(0)
+
+        s = jneqsim.process.equipment.stream.Stream(name, water_fluid)
+        if temperature is not None:
+            s.setTemperature(temperature, temperature_unit)
+        if pressure is not None:
+            s.setPressure(pressure, pressure_unit)
+        if flow_rate is not None:
+            s.setFlowRate(flow_rate, flow_unit)
+        self.equipment[name] = s
+        self.process.add(s)
+        return self
+
+    def add_three_phase_separator(
+        self,
+        name: str,
+        inlet: str = None,
+        inlets: List[str] = None,
+        entrainment: Dict[str, Any] = None,
+        internal_diameter: float = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a three-phase separator to the process.
+
+        Three-phase separators separate gas, oil, and water phases.
+
+        Args:
+            name: Name of the separator.
+            inlet: Name of primary inlet equipment (for single inlet).
+            inlets: List of inlet equipment names (for multiple inlets).
+            entrainment: Optional entrainment settings dict with keys:
+                - 'value': entrainment fraction
+                - 'from_phase': source phase ('feed')
+                - 'unit': unit type ('volume')
+                - 'from': phase to entrain from ('aqueous', 'oil', 'gas')
+                - 'to': phase to entrain to ('oil', 'gas', 'aqueous')
+            internal_diameter: Optional internal diameter in meters.
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_three_phase_separator(
+            ...     '1st_stage_sep',
+            ...     inlet='feed_heater',
+            ...     entrainment={'value': 0.001, 'from_phase': 'feed', 'unit': 'volume',
+            ...                  'from': 'aqueous', 'to': 'oil'}
+            ... )
+        """
+        if inlet is not None:
+            inlet_stream = self._get_outlet(inlet)
+            sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(
+                name, inlet_stream
+            )
+        else:
+            sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(name)
+
+        # Add additional inlet streams
+        if inlets is not None:
+            for inlet_name in inlets:
+                inlet_stream = self._get_outlet(inlet_name)
+                sep.addStream(inlet_stream)
+
+        if entrainment is not None:
+            sep.setEntrainment(
+                entrainment.get("value", 0.0),
+                entrainment.get("from_phase", "feed"),
+                entrainment.get("unit", "volume"),
+                entrainment.get("from", "aqueous"),
+                entrainment.get("to", "oil"),
+            )
+
+        if internal_diameter is not None:
+            sep.setInternalDiameter(internal_diameter)
+
+        self.equipment[name] = sep
+        self.process.add(sep)
+        return self
+
+    def add_manifold(
+        self,
+        name: str,
+        inlet: str = None,
+        split_factors: List[float] = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a manifold to the process.
+
+        A manifold distributes a stream to multiple outlets based on split factors.
+
+        Args:
+            name: Name of the manifold.
+            inlet: Name of inlet equipment.
+            split_factors: List of split fractions for each outlet (should sum to 1).
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_manifold('gas_manifold', inlet='compressor_out',
+            ...                      split_factors=[0.5, 0.3, 0.2])
+        """
+        m = jneqsim.process.equipment.manifold.Manifold(name)
+        if inlet is not None:
+            inlet_stream = self._get_outlet(inlet)
+            m.addStream(inlet_stream)
+        if split_factors is not None:
+            m.setSplitFactors(split_factors)
+        self.equipment[name] = m
+        self.process.add(m)
+        return self
+
+    def add_compressor_with_chart(
+        self,
+        name: str,
+        inlet: str,
+        outlet_pressure: float = None,
+        pressure_unit: str = "bara",
+        polytopic_efficiency: float = 0.75,
+        use_polytropic: bool = True,
+        speed: float = None,
+        chart_conditions: Any = None,
+        chart_speeds: List[float] = None,
+        chart_flow: List[List[float]] = None,
+        chart_head: List[List[float]] = None,
+        chart_eff_flow: List[List[float]] = None,
+        chart_efficiency: List[List[float]] = None,
+        surge_flow: List[float] = None,
+        surge_head: List[float] = None,
+        use_chart: bool = False,
+        use_energy_efficiency_chart: bool = True,
+    ) -> "ProcessBuilder":
+        """
+        Add a compressor with performance charts to the process.
+
+        This method provides full control over compressor performance curves
+        including surge curves.
+
+        Args:
+            name: Name of the compressor.
+            inlet: Name of inlet equipment.
+            outlet_pressure: Outlet pressure.
+            pressure_unit: Unit for pressure (default 'bara').
+            polytopic_efficiency: Polytropic efficiency (0-1).
+            use_polytropic: Use polytropic calculation (default True).
+            speed: Rotational speed in RPM.
+            chart_conditions: Reference conditions for chart.
+            chart_speeds: List of speeds for chart curves.
+            chart_flow: Nested list of flow values for each speed.
+            chart_head: Nested list of head values for each speed.
+            chart_eff_flow: Nested list of flow values for efficiency.
+            chart_efficiency: Nested list of efficiency values.
+            surge_flow: Flow values for surge curve.
+            surge_head: Head values for surge curve.
+            use_chart: Whether to use compressor chart (default False).
+            use_energy_efficiency_chart: Use energy efficiency chart (default True).
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        comp = jneqsim.process.equipment.compressor.Compressor(name, inlet_stream)
+        comp.setCompressorChartType("interpolate and extrapolate")
+
+        if use_polytropic:
+            comp.setUsePolytropicCalc(True)
+            comp.setPolytropicEfficiency(polytopic_efficiency)
+        else:
+            comp.setIsentropicEfficiency(polytopic_efficiency)
+
+        if outlet_pressure is not None:
+            comp.setOutletPressure(outlet_pressure, pressure_unit)
+
+        if speed is not None:
+            comp.setSpeed(speed)
+
+        # Set performance chart if provided
+        if chart_conditions is not None and chart_speeds is not None:
+            comp.getCompressorChart().setCurves(
+                chart_conditions,
+                chart_speeds,
+                chart_flow,
+                chart_head,
+                chart_eff_flow,
+                chart_efficiency,
+            )
+
+        comp.getCompressorChart().setUseCompressorChart(use_chart)
+        comp.setUseEnergyEfficiencyChart(use_energy_efficiency_chart)
+
+        # Set surge curve if provided
+        if surge_flow is not None and surge_head is not None and chart_conditions is not None:
+            comp.getCompressorChart().getSurgeCurve().setCurve(
+                chart_conditions, surge_flow, surge_head
+            )
+
+        self.equipment[name] = comp
+        self.process.add(comp)
+        return self
+
+    def add_valve_with_options(
+        self,
+        name: str,
+        inlet: str,
+        outlet_pressure: float = None,
+        delta_pressure: float = None,
+        pressure_unit: str = "bara",
+        percent_opening: float = None,
+        tag_name: str = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a throttling valve with extended options.
+
+        Args:
+            name: Name of the valve.
+            inlet: Name of inlet equipment.
+            outlet_pressure: Outlet pressure value.
+            delta_pressure: Pressure drop across valve (alternative to outlet_pressure).
+            pressure_unit: Unit for pressure (default 'bara').
+            percent_opening: Valve opening percentage (0-100).
+            tag_name: Equipment tag for identification.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        v = jneqsim.process.equipment.valve.ThrottlingValve(name, inlet_stream)
+
+        if outlet_pressure is not None:
+            v.setOutletPressure(outlet_pressure, pressure_unit)
+        elif delta_pressure is not None:
+            v.setDeltaPressure(delta_pressure, pressure_unit)
+
+        if percent_opening is not None:
+            v.setPercentValveOpening(percent_opening)
+
+        if tag_name is not None:
+            v.setTagName(tag_name)
+
+        self.equipment[name] = v
+        self.process.add(v)
+        return self
+
+    def add_splitter_with_flowrates(
+        self,
+        name: str,
+        inlet: str,
+        flow_rates: List[float] = None,
+        flow_unit: str = "kg/hr",
+        split_factors: List[float] = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a splitter with flow rate specifications.
+
+        Use -1 in flow_rates to indicate "remainder" (balance stream).
+
+        Args:
+            name: Name of the splitter.
+            inlet: Name of inlet equipment.
+            flow_rates: List of flow rates for each split (-1 for remainder).
+            flow_unit: Unit for flow rates (default 'kg/hr').
+            split_factors: Alternative: split by fractions (0 to 1 each).
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> # Split with specific flow rate and remainder
+            >>> builder.add_splitter_with_flowrates('splitter', 'stream',
+            ...                                     flow_rates=[-1, 100.0])
+        """
+        inlet_stream = self._get_outlet(inlet)
+        spl = jneqsim.process.equipment.splitter.Splitter(name, inlet_stream)
+
+        if flow_rates is not None:
+            spl.setFlowRates(flow_rates, flow_unit)
+        elif split_factors is not None:
+            spl.setSplitFactors(split_factors)
+
+        self.equipment[name] = spl
+        self.process.add(spl)
+        return self
+
+    def add_gas_scrubber_with_options(
+        self,
+        name: str,
+        inlet: str,
+        internal_diameter: float = None,
+        orientation: str = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a gas scrubber with configuration options.
+
+        Args:
+            name: Name of the scrubber.
+            inlet: Name of inlet equipment.
+            internal_diameter: Internal diameter in meters.
+            orientation: 'vertical' or 'horizontal'.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        scrubber = jneqsim.process.equipment.separator.GasScrubber(name, inlet_stream)
+
+        if internal_diameter is not None:
+            scrubber.setInternalDiameter(internal_diameter)
+
+        if orientation is not None:
+            scrubber.setOrientation(orientation)
+
+        self.equipment[name] = scrubber
+        self.process.add(scrubber)
+        return self
+
+    def add_stream_from_outlet(
+        self,
+        name: str,
+        source: str,
+    ) -> "ProcessBuilder":
+        """
+        Add a named stream from another equipment's outlet.
+
+        Useful for creating named reference streams from separator outlets
+        or other equipment.
+
+        Args:
+            name: Name of the new stream.
+            source: Source equipment with optional outlet spec (e.g., 'sep.water').
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_stream_from_outlet('water_product', 'separator.water')
+        """
+        source_stream = self._get_outlet(source)
+        s = jneqsim.process.equipment.stream.Stream(name, source_stream)
+        self.equipment[name] = s
+        self.process.add(s)
+        return self
+
+    def add_process(
+        self,
+        sub_process: "ProcessBuilder",
+        prefix: str = "",
+    ) -> "ProcessBuilder":
+        """
+        Add all equipment from another ProcessBuilder as a sub-process.
+
+        This allows building modular process sections that can be combined.
+
+        Args:
+            sub_process: Another ProcessBuilder instance to incorporate.
+            prefix: Optional prefix to add to all equipment names.
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> compression_train = (ProcessBuilder("Compression")
+            ...     .add_compressor('comp1', 'inlet', pressure=50)
+            ...     .add_cooler('cooler1', 'comp1', temperature=303))
+            >>> main_process = (ProcessBuilder("Main")
+            ...     .add_stream('feed', fluid)
+            ...     .add_process(compression_train, prefix='train1_'))
+        """
+        for eq_name, eq in sub_process.equipment.items():
+            new_name = f"{prefix}{eq_name}" if prefix else eq_name
+            self.equipment[new_name] = eq
+            self.process.add(eq)
+        return self
+
+    def configure(self, equipment_name: str, **kwargs) -> "ProcessBuilder":
+        """
+        Configure an existing equipment item with additional settings.
+
+        This method allows setting arbitrary properties on equipment
+        after it has been added to the process.
+
+        Args:
+            equipment_name: Name of the equipment to configure.
+            **kwargs: Property-value pairs to set. Property names should
+                match Java setter methods (without 'set' prefix).
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_stream('feed', fluid)
+            >>> builder.configure('feed', Temperature=(80, 'C'), Pressure=(10, 'bara'))
+        """
+        eq = self.equipment.get(equipment_name)
+        if eq is None:
+            raise ValueError(f"Equipment '{equipment_name}' not found")
+
+        for prop, value in kwargs.items():
+            setter_name = f"set{prop}"
+            if hasattr(eq, setter_name):
+                setter = getattr(eq, setter_name)
+                if isinstance(value, (tuple, list)):
+                    setter(*value)
+                else:
+                    setter(value)
+            else:
+                raise ValueError(
+                    f"Equipment '{equipment_name}' has no setter '{setter_name}'"
+                )
+
+        return self
+
+    # ============ PIPELINE EQUIPMENT ============
+
+    def add_beggs_brill_pipe(
+        self,
+        name: str,
+        inlet: str,
+        length: float = 100.0,
+        diameter: float = 0.1,
+        elevation: float = 0.0,
+        wall_roughness: float = 1e-5,
+        increments: int = 10,
+    ) -> "ProcessBuilder":
+        """
+        Add a Beggs and Brill pipeline to the process.
+
+        Beggs-Brill is a multiphase flow correlation commonly used for
+        oil and gas pipelines.
+
+        Args:
+            name: Name of the pipe.
+            inlet: Name of inlet equipment.
+            length: Pipe length in meters (default 100.0).
+            diameter: Pipe internal diameter in meters (default 0.1).
+            elevation: Elevation change in meters (default 0.0).
+            wall_roughness: Pipe wall roughness in meters (default 1e-5).
+            increments: Number of calculation increments (default 10).
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        p = jneqsim.process.equipment.pipeline.PipeBeggsAndBrills(name, inlet_stream)
+        p.setLength(length)
+        p.setDiameter(diameter)
+        p.setElevation(elevation)
+        p.setPipeWallRoughness(wall_roughness)
+        p.setNumberOfIncrements(increments)
+        self.equipment[name] = p
+        self.process.add(p)
+        return self
+
+    def add_two_phase_pipe(
+        self,
+        name: str,
+        inlet: str,
+        length: float = 100.0,
+        diameter: float = 0.1,
+        elevation: float = 0.0,
+    ) -> "ProcessBuilder":
+        """
+        Add a two-phase pipeline to the process.
+
+        Args:
+            name: Name of the pipe.
+            inlet: Name of inlet equipment.
+            length: Pipe length in meters (default 100.0).
+            diameter: Pipe internal diameter in meters (default 0.1).
+            elevation: Elevation change in meters (default 0.0).
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        p = jneqsim.process.equipment.pipeline.TwoPhasePipeLine(name, inlet_stream)
+        p.setLength(length)
+        p.setDiameter(diameter)
+        if elevation != 0:
+            p.setElevation(elevation)
+        self.equipment[name] = p
+        self.process.add(p)
+        return self
+
+    # ============ MEASUREMENT DEVICES ============
+
+    def add_pressure_transmitter(
+        self,
+        name: str,
+        inlet: str,
+        unit: str = "bara",
+        min_value: float = 0.0,
+        max_value: float = 100.0,
+    ) -> "ProcessBuilder":
+        """
+        Add a pressure transmitter to the process.
+
+        Args:
+            name: Name of the transmitter.
+            inlet: Name of stream to measure.
+            unit: Pressure unit (default 'bara').
+            min_value: Minimum value for scaling.
+            max_value: Maximum value for scaling.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        pt = jneqsim.process.measurementdevice.PressureTransmitter(inlet_stream)
+        pt.setName(name)
+        pt.setUnit(unit)
+        pt.setMinimumValue(min_value)
+        pt.setMaximumValue(max_value)
+        self.equipment[name] = pt
+        self.process.add(pt)
+        return self
+
+    def add_level_transmitter(
+        self,
+        name: str,
+        separator: str,
+        min_value: float = 0.0,
+        max_value: float = 1.0,
+    ) -> "ProcessBuilder":
+        """
+        Add a level transmitter to the process.
+
+        Args:
+            name: Name of the transmitter.
+            separator: Name of separator to measure level.
+            min_value: Minimum value for scaling (default 0.0).
+            max_value: Maximum value for scaling (default 1.0).
+
+        Returns:
+            Self for method chaining.
+        """
+        sep = self.equipment.get(separator)
+        if sep is None:
+            raise ValueError(f"Separator '{separator}' not found")
+        lt = jneqsim.process.measurementdevice.LevelTransmitter(sep)
+        lt.setName(name)
+        lt.setMinimumValue(min_value)
+        lt.setMaximumValue(max_value)
+        self.equipment[name] = lt
+        self.process.add(lt)
+        return self
+
+    def add_flow_transmitter(
+        self,
+        name: str,
+        inlet: str,
+        unit: str = "kg/hr",
+        min_value: float = 0.0,
+        max_value: float = 1000.0,
+    ) -> "ProcessBuilder":
+        """
+        Add a volume/mass flow transmitter to the process.
+
+        Args:
+            name: Name of the transmitter.
+            inlet: Name of stream to measure.
+            unit: Flow unit (default 'kg/hr').
+            min_value: Minimum value for scaling.
+            max_value: Maximum value for scaling.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        ft = jneqsim.process.measurementdevice.VolumeFlowTransmitter(inlet_stream)
+        ft.setName(name)
+        ft.setUnit(unit)
+        ft.setMinimumValue(min_value)
+        ft.setMaximumValue(max_value)
+        self.equipment[name] = ft
+        self.process.add(ft)
+        return self
+
+    def add_temperature_transmitter(
+        self,
+        name: str,
+        inlet: str,
+        unit: str = "C",
+        min_value: float = -50.0,
+        max_value: float = 200.0,
+    ) -> "ProcessBuilder":
+        """
+        Add a temperature transmitter to the process.
+
+        Args:
+            name: Name of the transmitter.
+            inlet: Name of stream to measure.
+            unit: Temperature unit (default 'C').
+            min_value: Minimum value for scaling.
+            max_value: Maximum value for scaling.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        tt = jneqsim.process.measurementdevice.TemperatureTransmitter(inlet_stream)
+        tt.setName(name)
+        tt.setUnit(unit)
+        tt.setMinimumValue(min_value)
+        tt.setMaximumValue(max_value)
+        self.equipment[name] = tt
+        self.process.add(tt)
+        return self
+
+    # ============ CONTROLLERS ============
+
+    def add_pid_controller(
+        self,
+        name: str,
+        transmitter: str,
+        setpoint: float,
+        kp: float = 1.0,
+        ti: float = 100.0,
+        td: float = 0.0,
+        reverse_acting: bool = False,
+    ) -> "ProcessBuilder":
+        """
+        Add a PID controller to the process.
+
+        Args:
+            name: Name of the controller.
+            transmitter: Name of transmitter to use as input.
+            setpoint: Controller setpoint value.
+            kp: Proportional gain (default 1.0).
+            ti: Integral time constant (default 100.0).
+            td: Derivative time constant (default 0.0).
+            reverse_acting: If True, controller output decreases when 
+                process variable increases (default False).
+
+        Returns:
+            Self for method chaining.
+
+        Note:
+            After adding, use builder.get(name) to access the controller and
+            attach it to equipment with equipment.setController(controller).
+        """
+        trans = self.equipment.get(transmitter)
+        if trans is None:
+            raise ValueError(f"Transmitter '{transmitter}' not found")
+        ctrl = jneqsim.process.controllerdevice.ControllerDeviceBaseClass(name)
+        ctrl.setTransmitter(trans)
+        ctrl.setControllerSetPoint(setpoint)
+        ctrl.setControllerParameters(kp, ti, td)
+        ctrl.setReverseActing(reverse_acting)
+        self.equipment[name] = ctrl
+        # Note: Controllers are not added to process.add() in NeqSim
+        # They are attached to equipment using equipment.setController()
+        return self
+
+    # ============ FLOW UTILITIES ============
+
+    def add_flow_setter(
+        self,
+        name: str,
+        inlet: str,
+        gas_flow: float = None,
+        oil_flow: float = None,
+        water_flow: float = None,
+        gas_unit: str = "Sm3/day",
+        oil_unit: str = "m3/hr",
+        water_unit: str = "m3/hr",
+    ) -> "ProcessBuilder":
+        """
+        Add a flow setter to the process.
+
+        Flow setters adjust the composition and flow rates of a stream
+        to match specified gas, oil, and water rates.
+
+        Args:
+            name: Name of the flow setter.
+            inlet: Name of inlet equipment.
+            gas_flow: Desired gas flow rate.
+            oil_flow: Desired oil flow rate.
+            water_flow: Desired water flow rate.
+            gas_unit: Gas flow unit (default 'Sm3/day').
+            oil_unit: Oil flow unit (default 'm3/hr').
+            water_unit: Water flow unit (default 'm3/hr').
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        fs = jneqsim.process.equipment.util.FlowSetter(name, inlet_stream)
+        if gas_flow is not None:
+            fs.setGasFlowRate(gas_flow, gas_unit)
+        if oil_flow is not None:
+            fs.setOilFlowRate(oil_flow, oil_unit)
+        if water_flow is not None:
+            fs.setWaterFlowRate(water_flow, water_unit)
+        self.equipment[name] = fs
+        self.process.add(fs)
+        return self
+
+    def add_flow_rate_adjuster(
+        self,
+        name: str,
+        inlet: str,
+        gas_flow: float = None,
+        oil_flow: float = None,
+        water_flow: float = None,
+        unit: str = "Sm3/hr",
+    ) -> "ProcessBuilder":
+        """
+        Add a flow rate adjuster to the process.
+
+        Flow rate adjusters modify stream composition to achieve
+        desired phase flow rates.
+
+        Args:
+            name: Name of the flow rate adjuster.
+            inlet: Name of inlet equipment.
+            gas_flow: Desired gas flow rate.
+            oil_flow: Desired oil flow rate.
+            water_flow: Desired water flow rate (optional).
+            unit: Flow rate unit for all phases (default 'Sm3/hr').
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        fra = jneqsim.process.equipment.util.FlowRateAdjuster(name, inlet_stream)
+        if water_flow is not None:
+            fra.setAdjustedFlowRates(gas_flow or 0.0, oil_flow or 0.0, water_flow, unit)
+        elif gas_flow is not None or oil_flow is not None:
+            fra.setAdjustedFlowRates(gas_flow or 0.0, oil_flow or 0.0, unit)
+        self.equipment[name] = fra
+        self.process.add(fra)
+        return self
+
+    # ============ STREAM VARIANTS ============
+
+    def add_neq_stream(
+        self,
+        name: str,
+        thermo_system: Any,
+        temperature: float = None,
+        pressure: float = None,
+        flow_rate: float = None,
+        flow_unit: str = "kg/sec",
+    ) -> "ProcessBuilder":
+        """
+        Add a non-equilibrium stream to the process.
+
+        NeqStream uses non-equilibrium thermodynamics for better accuracy
+        in some conditions.
+
+        Args:
+            name: Name of the stream.
+            thermo_system: Fluid/thermodynamic system.
+            temperature: Optional temperature in Kelvin.
+            pressure: Optional pressure in bara.
+            flow_rate: Optional flow rate.
+            flow_unit: Unit for flow rate (default 'kg/sec').
+
+        Returns:
+            Self for method chaining.
+        """
+        if temperature is not None:
+            thermo_system.setTemperature(temperature)
+        if pressure is not None:
+            thermo_system.setPressure(pressure)
+        if flow_rate is not None:
+            thermo_system.setTotalFlowRate(flow_rate, flow_unit)
+        s = jneqsim.process.equipment.stream.NeqStream(name, thermo_system)
+        self.equipment[name] = s
+        self.process.add(s)
+        return self
+
+    def add_energy_stream(self, name: str, duty: float = 0.0) -> "ProcessBuilder":
+        """
+        Add an energy stream to the process.
+
+        Energy streams are used to connect heat/work flows between equipment.
+
+        Args:
+            name: Name of the energy stream.
+            duty: Initial energy/duty in kW (default 0.0).
+
+        Returns:
+            Self for method chaining.
+        """
+        es = jneqsim.process.equipment.stream.EnergyStream(name)
+        if duty != 0.0:
+            es.setDuty(duty)
+        self.equipment[name] = es
+        self.process.add(es)
+        return self
+
+    # ============ ENHANCED SEPARATOR ============
+
+    def add_separator_with_dimensions(
+        self,
+        name: str,
+        inlet: str,
+        three_phase: bool = False,
+        length: float = None,
+        diameter: float = None,
+        liquid_level: float = None,
+        orientation: str = None,
+    ) -> "ProcessBuilder":
+        """
+        Add a separator with physical dimensions to the process.
+
+        Used for dynamic simulations and mechanical design calculations.
+
+        Args:
+            name: Name of the separator.
+            inlet: Name of inlet equipment.
+            three_phase: If True, creates a ThreePhaseSeparator.
+            length: Separator length in meters.
+            diameter: Internal diameter in meters.
+            liquid_level: Initial liquid level (0-1 fraction).
+            orientation: 'horizontal' or 'vertical'.
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        if three_phase:
+            sep = jneqsim.process.equipment.separator.ThreePhaseSeparator(
+                name, inlet_stream
+            )
+        else:
+            sep = jneqsim.process.equipment.separator.Separator(name, inlet_stream)
+
+        if length is not None:
+            sep.setSeparatorLength(length)
+        if diameter is not None:
+            sep.setInternalDiameter(diameter)
+        if liquid_level is not None:
+            sep.setLiquidLevel(liquid_level)
+        if orientation is not None:
+            sep.setOrientation(orientation)
+        self.equipment[name] = sep
+        self.process.add(sep)
+        return self
+
+    # ============ ENHANCED COMPRESSOR ============
+
+    def add_polytopic_compressor(
+        self,
+        name: str,
+        inlet: str,
+        pressure: float = None,
+        polytopic_efficiency: float = 0.75,
+        use_polytopic_calc: bool = True,
+    ) -> "ProcessBuilder":
+        """
+        Add a compressor using polytropic calculation method.
+
+        Args:
+            name: Name of the compressor.
+            inlet: Name of inlet equipment.
+            pressure: Outlet pressure in bara.
+            polytopic_efficiency: Polytropic efficiency (0-1, default 0.75).
+            use_polytopic_calc: If True, use polytropic calculation (default True).
+
+        Returns:
+            Self for method chaining.
+        """
+        inlet_stream = self._get_outlet(inlet)
+        comp = jneqsim.process.equipment.compressor.Compressor(name, inlet_stream)
+        if pressure is not None:
+            comp.setOutletPressure(pressure)
+        comp.setPolytropicEfficiency(polytopic_efficiency)
+        comp.setUsePolytropicCalc(use_polytopic_calc)
+        self.equipment[name] = comp
+        self.process.add(comp)
+        return self
+
+    # ============ MIXERS ============
+
+    def add_static_mixer(self, name: str, inlets: List[str] = None) -> "ProcessBuilder":
+        """
+        Add a static mixer to the process.
+
+        Static mixers instantaneously mix streams without pressure drop.
+
+        Args:
+            name: Name of the mixer.
+            inlets: List of inlet equipment names (optional, can add later).
+
+        Returns:
+            Self for method chaining.
+        """
+        m = jneqsim.process.equipment.mixer.StaticMixer(name)
+        if inlets:
+            for inlet in inlets:
+                inlet_stream = self._get_outlet(inlet)
+                m.addStream(inlet_stream)
+        self.equipment[name] = m
+        self.process.add(m)
+        return self
+
+    def add_static_phase_mixer(
+        self, name: str, inlets: List[str] = None
+    ) -> "ProcessBuilder":
+        """
+        Add a static phase mixer to the process.
+
+        Static phase mixers mix phases without equilibrium calculation.
+
+        Args:
+            name: Name of the mixer.
+            inlets: List of inlet equipment names (optional).
+
+        Returns:
+            Self for method chaining.
+        """
+        m = jneqsim.process.equipment.mixer.StaticPhaseMixer(name)
+        if inlets:
+            for inlet in inlets:
+                inlet_stream = self._get_outlet(inlet)
+                m.addStream(inlet_stream)
+        self.equipment[name] = m
+        self.process.add(m)
+        return self
+
+    # ============ TRANSIENT SIMULATION HELPERS ============
+
+    def set_transient_mode(
+        self, equipment_name: str, steady_state: bool = False
+    ) -> "ProcessBuilder":
+        """
+        Set equipment to transient calculation mode.
+
+        Args:
+            equipment_name: Name of equipment to configure.
+            steady_state: If False, use transient calculation (default False).
+
+        Returns:
+            Self for method chaining.
+        """
+        eq = self.equipment.get(equipment_name)
+        if eq is None:
+            raise ValueError(f"Equipment '{equipment_name}' not found")
+        if hasattr(eq, "setCalculateSteadyState"):
+            eq.setCalculateSteadyState(steady_state)
+        else:
+            raise ValueError(
+                f"Equipment '{equipment_name}' does not support transient mode"
+            )
+        return self
+
+    def set_valve_opening(
+        self, valve_name: str, opening: float, min_opening: float = None
+    ) -> "ProcessBuilder":
+        """
+        Set valve opening percentage.
+
+        Args:
+            valve_name: Name of the valve.
+            opening: Valve opening percentage (0-100).
+            min_opening: Minimum valve opening percentage (optional).
+
+        Returns:
+            Self for method chaining.
+        """
+        valve = self.equipment.get(valve_name)
+        if valve is None:
+            raise ValueError(f"Valve '{valve_name}' not found")
+        valve.setPercentValveOpening(opening)
+        if min_opening is not None:
+            valve.setMinimumValveOpening(min_opening)
+        return self
+
+    def attach_controller(
+        self, equipment_name: str, controller_name: str
+    ) -> "ProcessBuilder":
+        """
+        Attach a controller to equipment.
+
+        Args:
+            equipment_name: Name of equipment to attach controller to.
+            controller_name: Name of the controller.
+
+        Returns:
+            Self for method chaining.
+        """
+        eq = self.equipment.get(equipment_name)
+        if eq is None:
+            raise ValueError(f"Equipment '{equipment_name}' not found")
+        ctrl = self.equipment.get(controller_name)
+        if ctrl is None:
+            raise ValueError(f"Controller '{controller_name}' not found")
+        if hasattr(eq, "setController"):
+            eq.setController(ctrl)
+        else:
+            raise ValueError(
+                f"Equipment '{equipment_name}' does not support controllers"
+            )
+        return self
+
+    # ============ REACTOR ============
+
+    def add_reactor(
+        self,
+        name: str,
+        inlet: str = None,
+        reactor_type: str = "gibbs",
+    ) -> "ProcessBuilder":
+        """
+        Add a reactor to the process.
+
+        Args:
+            name: Name of the reactor.
+            inlet: Name of inlet equipment (optional).
+            reactor_type: Type of reactor - 'gibbs' (default), 'plug_flow', etc.
+
+        Returns:
+            Self for method chaining.
+        """
+        if reactor_type.lower() == "gibbs":
+            r = jneqsim.process.equipment.reactor.GibbsReactor(name)
+        else:
+            r = jneqsim.process.equipment.reactor.GibbsReactor(name)
+
+        if inlet is not None:
+            inlet_stream = self._get_outlet(inlet)
+            r.addStream(inlet_stream)
+        self.equipment[name] = r
+        self.process.add(r)
+        return self
+
+    # ============ ABSORPTION/STRIPPING ============
+
+    def add_simple_absorber(
+        self,
+        name: str,
+        gas_inlet: str = None,
+        liquid_inlet: str = None,
+        stages: int = 5,
+    ) -> "ProcessBuilder":
+        """
+        Add a simple absorber to the process.
+
+        Args:
+            name: Name of the absorber.
+            gas_inlet: Name of gas inlet stream.
+            liquid_inlet: Name of liquid inlet stream (e.g., lean TEG).
+            stages: Number of equilibrium stages (default 5).
+
+        Returns:
+            Self for method chaining.
+        """
+        absorber = jneqsim.process.equipment.absorber.SimpleTEGAbsorber(name)
+        absorber.setNumberOfStages(stages)
+        if gas_inlet is not None:
+            gas_stream = self._get_outlet(gas_inlet)
+            absorber.addGasInStream(gas_stream)
+        if liquid_inlet is not None:
+            liquid_stream = self._get_outlet(liquid_inlet)
+            absorber.addSolventInStream(liquid_stream)
+        self.equipment[name] = absorber
+        self.process.add(absorber)
+        return self
+
+    # ============ WELL/RESERVOIR ============
+
+    def add_well_stream(
+        self,
+        name: str,
+        thermo_system: Any,
+        gor: float = None,
+        wc: float = None,
+        flow_rate: float = None,
+        flow_unit: str = "Sm3/day",
+    ) -> "ProcessBuilder":
+        """
+        Add a well stream with GOR and water cut specifications.
+
+        Args:
+            name: Name of the stream.
+            thermo_system: Fluid/thermodynamic system.
+            gor: Gas-oil ratio (Sm3/Sm3).
+            wc: Water cut (fraction 0-1).
+            flow_rate: Oil flow rate.
+            flow_unit: Flow rate unit (default 'Sm3/day').
+
+        Returns:
+            Self for method chaining.
+        """
+        s = jneqsim.process.equipment.stream.Stream(name, thermo_system)
+        if flow_rate is not None:
+            s.setFlowRate(flow_rate, flow_unit)
+        self.equipment[name] = s
+        self.process.add(s)
+        return self
+
+    def add_stream_to(self, target: str, source: str) -> "ProcessBuilder":
+        """
+        Add a stream from one equipment to another (e.g., adding feed to separator).
+
+        Some equipment types like ThreePhaseSeparator allow multiple inlets.
+
+        Args:
+            target: Name of target equipment to add stream to.
+            source: Name of source equipment (the stream to add).
+
+        Returns:
+            Self for method chaining.
+
+        Example:
+            >>> builder.add_stream_to('separator', 'recycle_stream')
+        """
+        target_eq = self.equipment.get(target)
+        if target_eq is None:
+            raise ValueError(f"Target equipment '{target}' not found")
+
+        source_stream = self._get_outlet(source)
+
+        if hasattr(target_eq, "addStream"):
+            target_eq.addStream(source_stream)
+        else:
+            raise ValueError(f"Equipment '{target}' does not support addStream()")
+
+        return self
+
     def add_equipment(
         self, equipment_type: str, name: str, **kwargs
     ) -> "ProcessBuilder":
@@ -697,6 +2800,63 @@ class ProcessBuilder:
             "splitter": self.add_splitter,
             "heat_exchanger": self.add_heat_exchanger,
             "pipe": self.add_pipe,
+            "gas_scrubber": self.add_gas_scrubber,
+            "recycle": self.add_recycle,
+            "distillation_column": self.add_distillation_column,
+            "teg_absorber": self.add_teg_absorber,
+            "water_stripper": self.add_water_stripper,
+            "component_splitter": self.add_component_splitter,
+            "saturator": self.add_saturator,
+            "filter": self.add_filter,
+            "calculator": self.add_calculator,
+            "setpoint": self.add_setpoint,
+            "adjuster": self.add_adjuster,
+            "ejector": self.add_ejector,
+            "flare": self.add_flare,
+            "tank": self.add_tank,
+            "virtual_stream": self.add_virtual_stream,
+            # Extended equipment types
+            "water_stream": self.add_water_stream,
+            "three_phase_separator": self.add_three_phase_separator,
+            "manifold": self.add_manifold,
+            "compressor_with_chart": self.add_compressor_with_chart,
+            "valve_with_options": self.add_valve_with_options,
+            "splitter_with_flowrates": self.add_splitter_with_flowrates,
+            "gas_scrubber_with_options": self.add_gas_scrubber_with_options,
+            "stream_from_outlet": self.add_stream_from_outlet,
+            # Pipeline equipment
+            "beggs_brill_pipe": self.add_beggs_brill_pipe,
+            "two_phase_pipe": self.add_two_phase_pipe,
+            # Measurement devices
+            "pressure_transmitter": self.add_pressure_transmitter,
+            "level_transmitter": self.add_level_transmitter,
+            "flow_transmitter": self.add_flow_transmitter,
+            "temperature_transmitter": self.add_temperature_transmitter,
+            # Controllers
+            "pid_controller": self.add_pid_controller,
+            # Flow utilities
+            "flow_setter": self.add_flow_setter,
+            "flow_rate_adjuster": self.add_flow_rate_adjuster,
+            # Stream variants
+            "neq_stream": self.add_neq_stream,
+            "energy_stream": self.add_energy_stream,
+            # Enhanced equipment
+            "separator_with_dimensions": self.add_separator_with_dimensions,
+            "polytopic_compressor": self.add_polytopic_compressor,
+            "polytropic_compressor": self.add_polytopic_compressor,  # Alias
+            # Mixers
+            "static_mixer": self.add_static_mixer,
+            "static_phase_mixer": self.add_static_phase_mixer,
+            # Reactor
+            "reactor": self.add_reactor,
+            "gibbs_reactor": self.add_reactor,
+            # Absorption
+            "simple_absorber": self.add_simple_absorber,
+            # Well
+            "well_stream": self.add_well_stream,
+            # Recycle helpers
+            "recycle_loop": self.setup_recycle_loop,
+            "close_recycle": self.close_recycle_loop,
         }
         method = method_map.get(equipment_type.lower())
         if method is None:
