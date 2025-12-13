@@ -812,17 +812,28 @@ class ProcessBuilder:
         """
         Get outlet stream from equipment reference (name or object).
 
-        Supports dot notation for selecting specific outlets from separators:
+        Supports dot notation for selecting specific outlets:
+
+        Separators:
         - 'separator.gas' or 'separator.vapor' - gas/vapor outlet
         - 'separator.liquid' - liquid outlet (2-phase separator)
         - 'separator.oil' - oil outlet (3-phase separator)
-        - 'separator.water' or 'separator.aqueous' - water outlet (3-phase separator)
-        - 'virtual_stream.out' - output from VirtualStream
+        - 'separator.water' or 'separator.aqueous' - water outlet
+
+        Splitters and Manifolds:
+        - 'splitter.split_0', 'splitter.split_1', etc. - numbered outlets
+        - 'manifold.split_0', 'manifold.split_1', etc. - numbered outlets
+        - 'manifold.mixed' - mixed stream (before splitting)
+
+        Other:
+        - 'virtual_stream.out' - output from VirtualStream/Recycle
 
         Examples:
             >>> builder.add_compressor('comp', 'sep.gas', pressure=100)
             >>> builder.add_pump('pump', 'sep.oil', pressure=50)
             >>> builder.add_mixer('mixer', inlets=['feed', 'recycle_guess.out'])
+            >>> builder.add_valve('valve1', 'splitter.split_0', pressure=10)
+            >>> builder.add_compressor('comp1', 'manifold.split_0', pressure=100)
         """
         if isinstance(ref, str):
             # Check for dot notation (e.g., 'separator.gas')
@@ -845,6 +856,35 @@ class ProcessBuilder:
                         f"Equipment '{equip_name}' does not have an output stream method"
                     )
 
+                # Handle manifold mixed stream outlet (.mixed)
+                if outlet_type == "mixed":
+                    if hasattr(equip, "getMixedStream"):
+                        return equip.getMixedStream()
+                    raise ValueError(
+                        f"Equipment '{equip_name}' does not have a mixed stream outlet"
+                    )
+
+                # Handle splitter/manifold outlets (.split_0, .split_1, etc.)
+                if outlet_type.startswith("split_"):
+                    if hasattr(equip, "getSplitStream"):
+                        try:
+                            index = int(outlet_type.replace("split_", ""))
+                            split_stream = equip.getSplitStream(index)
+                            if split_stream is not None:
+                                return split_stream
+                            raise ValueError(
+                                f"Equipment '{equip_name}' does not have outlet at index {index}"
+                            )
+                        except ValueError as e:
+                            if "does not have outlet" in str(e):
+                                raise
+                            raise ValueError(
+                                f"Invalid splitter outlet format: '{outlet_type}'. Use 'split_0', 'split_1', etc."
+                            )
+                    raise ValueError(
+                        f"Equipment '{equip_name}' is not a splitter or manifold"
+                    )
+
                 # Map outlet type to method
                 outlet_methods = {
                     "gas": ["getGasOutStream", "getOutletStream"],
@@ -858,7 +898,7 @@ class ProcessBuilder:
                 if outlet_type not in outlet_methods:
                     raise ValueError(
                         f"Unknown outlet type '{outlet_type}'. "
-                        f"Valid types: {list(outlet_methods.keys()) + ['out']}"
+                        f"Valid types: {list(outlet_methods.keys()) + ['out', 'mixed', 'split_N']}"
                     )
 
                 for method_name in outlet_methods[outlet_type]:
@@ -1017,7 +1057,25 @@ class ProcessBuilder:
         return self
 
     def add_mixer(self, name: str, inlets: List[str]) -> "ProcessBuilder":
-        """Add a mixer to the process."""
+        """
+        Add a mixer to the process.
+
+        Args:
+            name: Name of the mixer.
+            inlets: List of inlet stream/equipment names. Supports dot notation:
+                - 'equipment_name' - default outlet
+                - 'separator.gas', 'separator.liquid' - separator outlets
+                - 'splitter.split_0', 'splitter.split_1' - splitter outlets
+                - 'virtual_stream.out' - virtual stream outlet
+
+        Returns:
+            Self for method chaining.
+
+        Examples:
+            >>> builder.add_mixer('mixer', inlets=['stream1', 'stream2'])
+            >>> builder.add_mixer('mix', inlets=['splitter.split_0', 'splitter.split_1'])
+            >>> builder.add_mixer('recycle_mix', inlets=['feed', 'recycle_guess.out'])
+        """
         m = jneqsim.process.equipment.mixer.Mixer(name)
         for inlet in inlets:
             inlet_stream = self._get_outlet(inlet)
@@ -1027,12 +1085,52 @@ class ProcessBuilder:
         return self
 
     def add_splitter(
-        self, name: str, inlet: str, split_factors: List[float] = None
+        self,
+        name: str,
+        inlet: str,
+        split_factors: List[float] = None,
+        flow_rates: List[float] = None,
+        flow_unit: str = "MSm3/day",
     ) -> "ProcessBuilder":
-        """Add a splitter to the process."""
+        """
+        Add a splitter to the process.
+
+        Args:
+            name: Name of the splitter.
+            inlet: Name of inlet stream/equipment.
+            split_factors: List of split fractions (should sum to 1.0).
+                Length determines number of outlets. Use this OR flow_rates.
+            flow_rates: List of absolute flow rates for each outlet.
+                Use -1 for one outlet to auto-calculate remainder.
+            flow_unit: Unit for flow_rates (default 'MSm3/day').
+                Options: 'MSm3/day', 'Sm3/day', 'kg/hr', 'kg/sec', 'mole/sec'
+
+        Returns:
+            Self for method chaining.
+
+        Notes:
+            Access splitter outlets using dot notation:
+            - 'splitter.split_0' for first outlet
+            - 'splitter.split_1' for second outlet
+            - etc.
+
+        Examples:
+            # Using split factors (fractions)
+            >>> builder.add_splitter('split', 'feed', split_factors=[0.5, 0.5])
+            
+            # Using absolute flow rates
+            >>> builder.add_splitter('split', 'feed', 
+            ...     flow_rates=[5.0, 2.0], flow_unit='MSm3/day')
+            
+            # Auto-calculate one outlet (use -1)
+            >>> builder.add_splitter('split', 'feed',
+            ...     flow_rates=[-1, 1.0], flow_unit='MSm3/day')  # First gets remainder
+        """
         inlet_stream = self._get_outlet(inlet)
         s = jneqsim.process.equipment.splitter.Splitter(name, inlet_stream)
-        if split_factors:
+        if flow_rates is not None:
+            s.setFlowRates(flow_rates, flow_unit)
+        elif split_factors is not None:
             s.setSplitFactors(split_factors)
         self.equipment[name] = s
         self.process.add(s)
@@ -1730,31 +1828,64 @@ class ProcessBuilder:
     def add_manifold(
         self,
         name: str,
-        inlet: str = None,
+        inlets: List[str] = None,
         split_factors: List[float] = None,
+        flow_rates: List[float] = None,
+        flow_unit: str = "MSm3/day",
     ) -> "ProcessBuilder":
         """
         Add a manifold to the process.
 
-        A manifold distributes a stream to multiple outlets based on split factors.
+        A manifold combines multiple inlet streams (like a mixer) and then
+        distributes to multiple outlets (like a splitter).
 
         Args:
             name: Name of the manifold.
-            inlet: Name of inlet equipment.
+            inlets: List of inlet equipment/stream names. Supports dot notation.
             split_factors: List of split fractions for each outlet (should sum to 1).
+                Use this OR flow_rates.
+            flow_rates: List of absolute flow rates for each outlet.
+                Use -1 for one outlet to auto-calculate remainder.
+            flow_unit: Unit for flow_rates (default 'MSm3/day').
+                Options: 'MSm3/day', 'Sm3/day', 'kg/hr', 'kg/sec', 'mole/sec'
 
         Returns:
             Self for method chaining.
 
-        Example:
-            >>> builder.add_manifold('gas_manifold', inlet='compressor_out',
-            ...                      split_factors=[0.5, 0.3, 0.2])
+        Notes:
+            Access manifold outlets using dot notation:
+            - 'manifold.split_0' for first outlet
+            - 'manifold.split_1' for second outlet
+            - 'manifold.mixed' for the mixed stream (before splitting)
+
+        Examples:
+            # Using split factors
+            >>> builder.add_manifold('prod_manifold',
+            ...     inlets=['well1', 'well2', 'well3'],
+            ...     split_factors=[0.5, 0.3, 0.2])
+            
+            # Using absolute flow rates
+            >>> builder.add_manifold('prod_manifold',
+            ...     inlets=['well1', 'well2'],
+            ...     flow_rates=[10.0, 5.0], flow_unit='MSm3/day')
+        
+        Note:
+            For manifolds, flow_rates are set on the internal splitter after
+            the streams are mixed. Use -1 for one outlet to auto-calculate.
         """
         m = jneqsim.process.equipment.manifold.Manifold(name)
-        if inlet is not None:
-            inlet_stream = self._get_outlet(inlet)
-            m.addStream(inlet_stream)
-        if split_factors is not None:
+        if inlets is not None:
+            for inlet in inlets:
+                inlet_stream = self._get_outlet(inlet)
+                m.addStream(inlet_stream)
+        if flow_rates is not None:
+            # Manifold uses internal splitter - access via localsplitter field
+            # First set split factors to initialize the right number of outlets
+            m.setSplitFactors([1.0 / len(flow_rates)] * len(flow_rates))
+            # Then set flow rates on internal splitter
+            if hasattr(m, 'localsplitter'):
+                m.localsplitter.setFlowRates(flow_rates, flow_unit)
+        elif split_factors is not None:
             m.setSplitFactors(split_factors)
         self.equipment[name] = m
         self.process.add(m)
@@ -3531,9 +3662,13 @@ class ProcessBuilder:
             if not outlets:
                 outlets.append("out")
 
-        # For splitters, check for multiple outlets
+        # For manifolds, add mixed stream outlet
+        if hasattr(equip, "getMixedStream"):
+            outlets.append("mixed")
+
+        # For splitters and manifolds, check for multiple split outlets
         if hasattr(equip, "getSplitStream"):
-            # Splitters have numbered outlets
+            # Splitters/Manifolds have numbered outlets
             try:
                 for i in range(10):  # Check up to 10 outlets
                     if equip.getSplitStream(i) is not None:
