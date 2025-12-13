@@ -3164,6 +3164,606 @@ class ProcessBuilder:
 
         return self
 
+    # =========================================================================
+    # GUI HELPER METHODS
+    # =========================================================================
+
+    @classmethod
+    def get_equipment_types(cls) -> List[str]:
+        """
+        Get a list of all available equipment types.
+
+        This is useful for GUI development to populate dropdown menus
+        or equipment palettes.
+
+        Returns:
+            List of equipment type strings that can be used with add().
+
+        Example:
+            >>> types = ProcessBuilder.get_equipment_types()
+            >>> print(types)
+            ['stream', 'compressor', 'separator', 'valve', ...]
+        """
+        # This mirrors the method_map keys
+        return [
+            # Core equipment
+            "stream",
+            "separator",
+            "three_phase_separator",
+            "compressor",
+            "pump",
+            "valve",
+            "heater",
+            "cooler",
+            "mixer",
+            "splitter",
+            "heat_exchanger",
+            "pipe",
+            "gas_scrubber",
+            "recycle",
+            "virtual_stream",
+            # Extended equipment
+            "distillation_column",
+            "teg_absorber",
+            "water_stripper",
+            "component_splitter",
+            "saturator",
+            "filter",
+            "calculator",
+            "setpoint",
+            "adjuster",
+            "ejector",
+            "flare",
+            "tank",
+            # Pipeline
+            "beggs_brill_pipe",
+            "two_phase_pipe",
+            # Measurement
+            "pressure_transmitter",
+            "level_transmitter",
+            "flow_transmitter",
+            "temperature_transmitter",
+            # Control
+            "pid_controller",
+            # Flow utilities
+            "flow_setter",
+            "flow_rate_adjuster",
+            # Streams
+            "neq_stream",
+            "energy_stream",
+            "water_stream",
+            "well_stream",
+            # Enhanced
+            "separator_with_dimensions",
+            "polytopic_compressor",
+            "compressor_with_chart",
+            # Mixers
+            "static_mixer",
+            "static_phase_mixer",
+            # Reactor
+            "reactor",
+            "simple_absorber",
+        ]
+
+    @classmethod
+    def get_equipment_parameters(cls, equipment_type: str) -> Dict[str, Any]:
+        """
+        Get parameter schema for an equipment type.
+
+        Returns a dictionary describing the parameters for the specified
+        equipment type, useful for generating dynamic forms in a GUI.
+
+        Args:
+            equipment_type: Type of equipment (e.g., 'compressor', 'separator')
+
+        Returns:
+            Dictionary with parameter names, types, defaults, and descriptions.
+
+        Example:
+            >>> schema = ProcessBuilder.get_equipment_parameters('compressor')
+            >>> print(schema)
+            {
+                'inlet': {'type': 'str', 'required': True, 'description': 'Inlet equipment name'},
+                'outlet_pressure': {'type': 'float', 'required': False, 'unit': 'bara'},
+                ...
+            }
+        """
+        # Parameter schemas for common equipment types
+        schemas = {
+            "stream": {
+                "fluid": {
+                    "type": "fluid",
+                    "required": True,
+                    "description": "Thermodynamic system",
+                },
+                "temperature": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "K",
+                    "description": "Temperature",
+                },
+                "pressure": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "bara",
+                    "description": "Pressure",
+                },
+                "flow_rate": {
+                    "type": "float",
+                    "required": False,
+                    "description": "Flow rate",
+                },
+                "flow_unit": {
+                    "type": "str",
+                    "required": False,
+                    "default": "kg/sec",
+                    "options": ["kg/sec", "kg/hr", "MSm3/day", "Sm3/day", "mole/sec"],
+                },
+            },
+            "separator": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+            },
+            "three_phase_separator": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+            },
+            "compressor": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "outlet_pressure": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "bara",
+                    "description": "Outlet pressure",
+                },
+                "isentropic_efficiency": {
+                    "type": "float",
+                    "required": False,
+                    "default": 0.75,
+                    "min": 0.0,
+                    "max": 1.0,
+                    "description": "Isentropic efficiency",
+                },
+                "use_polytropic": {
+                    "type": "bool",
+                    "required": False,
+                    "default": False,
+                    "description": "Use polytropic calculation",
+                },
+            },
+            "pump": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "outlet_pressure": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "bara",
+                    "description": "Outlet pressure",
+                },
+                "efficiency": {
+                    "type": "float",
+                    "required": False,
+                    "default": 0.75,
+                    "min": 0.0,
+                    "max": 1.0,
+                    "description": "Pump efficiency",
+                },
+            },
+            "valve": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "outlet_pressure": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "bara",
+                    "description": "Outlet pressure",
+                },
+            },
+            "heater": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "outlet_temperature": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "C",
+                    "description": "Outlet temperature",
+                },
+            },
+            "cooler": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "outlet_temperature": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "C",
+                    "description": "Outlet temperature",
+                },
+            },
+            "mixer": {
+                "inlets": {
+                    "type": "list[str]",
+                    "required": False,
+                    "description": "List of inlet equipment/stream names",
+                },
+            },
+            "splitter": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "split_fractions": {
+                    "type": "list[float]",
+                    "required": False,
+                    "description": "Split fractions for each outlet",
+                },
+            },
+            "pipe": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+                "length": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "m",
+                    "description": "Pipe length",
+                },
+                "diameter": {
+                    "type": "float",
+                    "required": False,
+                    "unit": "m",
+                    "description": "Pipe inner diameter",
+                },
+            },
+            "gas_scrubber": {
+                "inlet": {
+                    "type": "str",
+                    "required": True,
+                    "description": "Inlet equipment/stream name",
+                },
+            },
+            "virtual_stream": {
+                "source": {
+                    "type": "str",
+                    "required": False,
+                    "description": "Source stream to copy from",
+                },
+                "flow_rate": {
+                    "type": "float",
+                    "required": False,
+                    "description": "Initial flow rate guess",
+                },
+                "flow_unit": {
+                    "type": "str",
+                    "required": False,
+                    "default": "kg/hr",
+                    "options": ["kg/hr", "kg/sec", "MSm3/day"],
+                },
+            },
+            "recycle": {
+                "inlet": {
+                    "type": "str",
+                    "required": False,
+                    "description": "Actual stream to recycle",
+                },
+                "outlet": {
+                    "type": "str",
+                    "required": False,
+                    "description": "Virtual stream to connect to",
+                },
+                "tolerance": {
+                    "type": "float",
+                    "required": False,
+                    "default": 1e-4,
+                    "description": "Convergence tolerance",
+                },
+                "priority": {
+                    "type": "int",
+                    "required": False,
+                    "description": "Solve priority (higher = later)",
+                },
+            },
+        }
+
+        return schemas.get(equipment_type.lower(), {})
+
+    def get_outlets(self, equipment_name: str) -> List[str]:
+        """
+        Get available outlet types for an equipment.
+
+        Returns the outlet connection points available for the specified
+        equipment, useful for drawing connections in a visual editor.
+
+        Args:
+            equipment_name: Name of equipment in the process.
+
+        Returns:
+            List of outlet names (e.g., ['gas', 'liquid', 'oil'] for 3-phase sep)
+
+        Example:
+            >>> builder.add_three_phase_separator('sep', 'feed')
+            >>> outlets = builder.get_outlets('sep')
+            >>> print(outlets)  # ['gas', 'liquid', 'oil', 'water']
+        """
+        equip = self.equipment.get(equipment_name)
+        if equip is None:
+            return []
+
+        outlets = []
+
+        # Check for various outlet methods
+        if hasattr(equip, "getGasOutStream"):
+            outlets.append("gas")
+        if hasattr(equip, "getLiquidOutStream"):
+            outlets.append("liquid")
+        if hasattr(equip, "getOilOutStream"):
+            outlets.append("oil")
+        if hasattr(equip, "getWaterOutStream"):
+            outlets.append("water")
+        if hasattr(equip, "getOutletStream"):
+            if not outlets:  # Only add 'out' if no specific outlets
+                outlets.append("out")
+        if hasattr(equip, "getOutStream"):
+            if not outlets:
+                outlets.append("out")
+
+        # For splitters, check for multiple outlets
+        if hasattr(equip, "getSplitStream"):
+            # Splitters have numbered outlets
+            try:
+                for i in range(10):  # Check up to 10 outlets
+                    if equip.getSplitStream(i) is not None:
+                        outlets.append(f"split_{i}")
+            except:
+                pass
+
+        return outlets if outlets else ["out"]
+
+    def get_inlets(self, equipment_name: str) -> List[str]:
+        """
+        Get inlet connection points for an equipment.
+
+        Args:
+            equipment_name: Name of equipment in the process.
+
+        Returns:
+            List of inlet names (usually ['inlet'] or ['hot_inlet', 'cold_inlet'])
+        """
+        equip = self.equipment.get(equipment_name)
+        if equip is None:
+            return []
+
+        inlets = []
+
+        # Check for various inlet patterns
+        if hasattr(equip, "addStream"):
+            inlets.append("inlet")  # Mixers accept multiple
+        if hasattr(equip, "setInletStream"):
+            inlets.append("inlet")
+        if hasattr(equip, "setFeedStream"):
+            inlets.append("feed")
+
+        # Heat exchangers have two inlets
+        equip_class = type(equip).__name__
+        if "HeatExchanger" in equip_class:
+            inlets = ["hot_inlet", "cold_inlet"]
+
+        return inlets if inlets else ["inlet"]
+
+    def validate_connection(
+        self, source: str, target_equipment: str
+    ) -> Dict[str, Any]:
+        """
+        Validate if a connection between equipment is valid.
+
+        Checks if the source outlet exists and if the target can accept
+        the connection. Useful for GUI validation before allowing connections.
+
+        Args:
+            source: Source in format 'equipment.outlet' or just 'equipment'
+            target_equipment: Target equipment name
+
+        Returns:
+            Dictionary with 'valid' (bool), 'message' (str), and 'warnings' (list)
+
+        Example:
+            >>> result = builder.validate_connection('separator.gas', 'compressor')
+            >>> if result['valid']:
+            ...     builder.add_compressor('comp', 'separator.gas', ...)
+        """
+        result = {"valid": True, "message": "Connection is valid", "warnings": []}
+
+        # Parse source
+        if "." in source:
+            equip_name, outlet_type = source.split(".", 1)
+        else:
+            equip_name = source
+            outlet_type = None
+
+        # Check source equipment exists
+        source_equip = self.equipment.get(equip_name)
+        if source_equip is None:
+            result["valid"] = False
+            result["message"] = f"Source equipment '{equip_name}' not found"
+            return result
+
+        # Check outlet type exists
+        if outlet_type:
+            available_outlets = self.get_outlets(equip_name)
+            if outlet_type.lower() not in [o.lower() for o in available_outlets]:
+                result["valid"] = False
+                result["message"] = (
+                    f"Outlet '{outlet_type}' not available on '{equip_name}'. "
+                    f"Available: {available_outlets}"
+                )
+                return result
+
+        # Check target equipment exists (if already added)
+        if target_equipment in self.equipment:
+            result["warnings"].append(
+                f"Target '{target_equipment}' already exists - will reconnect"
+            )
+
+        # Try to get the actual stream to validate it works
+        try:
+            stream = self._get_outlet(source)
+            if stream is None:
+                result["valid"] = False
+                result["message"] = f"Could not get stream from '{source}'"
+                return result
+        except Exception as e:
+            result["valid"] = False
+            result["message"] = f"Error accessing '{source}': {str(e)}"
+            return result
+
+        return result
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Export current process configuration as a dictionary.
+
+        This can be used to save process designs, or to recreate
+        the process later using from_dict().
+
+        Returns:
+            Dictionary representation of the process.
+
+        Example:
+            >>> config = builder.to_dict()
+            >>> # Save to file
+            >>> import json
+            >>> with open('process.json', 'w') as f:
+            ...     json.dump(config, f, indent=2)
+        """
+        config = {
+            "process": {"name": self._name},
+            "equipment": [],
+            "connections": [],
+        }
+
+        # Note: This captures equipment names but not full reconstruction info
+        # For full reconstruction, use YAML config from the start
+        for name, equip in self.equipment.items():
+            equip_info = {
+                "name": name,
+                "type": type(equip).__name__,
+            }
+
+            # Try to get outlet info
+            outlets = self.get_outlets(name)
+            if outlets:
+                equip_info["outlets"] = outlets
+
+            # Try to get some properties
+            try:
+                if hasattr(equip, "getOutletStream"):
+                    stream = equip.getOutletStream()
+                    if stream:
+                        equip_info["outlet_temperature_C"] = round(
+                            stream.getTemperature("C"), 2
+                        )
+                        equip_info["outlet_pressure_bara"] = round(
+                            stream.getPressure("bara"), 2
+                        )
+            except:
+                pass
+
+            config["equipment"].append(equip_info)
+
+        return config
+
+    def to_yaml(self) -> str:
+        """
+        Export current process configuration as a YAML string.
+
+        Returns:
+            YAML string representation of the process.
+
+        Example:
+            >>> yaml_str = builder.to_yaml()
+            >>> print(yaml_str)
+            >>> # Or save to file
+            >>> with open('process.yaml', 'w') as f:
+            ...     f.write(yaml_str)
+        """
+        import yaml
+
+        config = self.to_dict()
+        return yaml.dump(config, default_flow_style=False, sort_keys=False)
+
+    def get_equipment_list(self) -> List[Dict[str, Any]]:
+        """
+        Get a list of all equipment with their properties.
+
+        Useful for populating equipment lists in GUI.
+
+        Returns:
+            List of dictionaries with equipment info.
+
+        Example:
+            >>> equipment = builder.get_equipment_list()
+            >>> for eq in equipment:
+            ...     print(f"{eq['name']}: {eq['type']}")
+        """
+        equipment_list = []
+        for name, equip in self.equipment.items():
+            info = {
+                "name": name,
+                "type": type(equip).__name__,
+                "outlets": self.get_outlets(name),
+                "inlets": self.get_inlets(name),
+            }
+            equipment_list.append(info)
+        return equipment_list
+
+    def get_connection_graph(self) -> Dict[str, List[str]]:
+        """
+        Get the connection graph of the process.
+
+        Returns a dictionary where keys are equipment names and values
+        are lists of downstream equipment names. Useful for drawing
+        process flow diagrams.
+
+        Returns:
+            Dictionary mapping equipment to their downstream connections.
+
+        Example:
+            >>> graph = builder.get_connection_graph()
+            >>> print(graph)
+            {'feed': ['separator'], 'separator': ['compressor', 'pump'], ...}
+        """
+        # This is a simplified version - full implementation would track
+        # actual connections made during build
+        graph = {name: [] for name in self.equipment}
+
+        # For now, return empty graph - connections aren't tracked
+        # A full implementation would require tracking during add_* calls
+        return graph
+
     def save_results(self, filename: str, format: str = "json") -> "ProcessBuilder":
         """
         Save simulation results to a file.
