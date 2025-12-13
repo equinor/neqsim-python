@@ -461,7 +461,9 @@ class ProcessContext:
 
     def ejector(self, name: str, motive_stream: Any, suction_stream: Any) -> Any:
         """Create an ejector and add to this process."""
-        ej = jneqsim.process.equipment.ejector.Ejector(name, motive_stream, suction_stream)
+        ej = jneqsim.process.equipment.ejector.Ejector(
+            name, motive_stream, suction_stream
+        )
         return self.add(ej)
 
     def flare(self, name: str, inlet_stream: Any = None) -> Any:
@@ -1186,7 +1188,7 @@ class ProcessBuilder:
             ProcessBuilder()
             .add_stream("feed", fluid, flow_rate=100, flow_unit="kg/hr")
             # Set up the recycle initial guess
-            .setup_recycle_loop("my_recycle", "recycle_guess", "feed", 
+            .setup_recycle_loop("my_recycle", "recycle_guess", "feed",
                                 initial_flow=10.0, initial_flow_unit="kg/hr")
             # Mix feed with recycle
             .add_mixer("mixer", inlets=["feed", "recycle_guess.out"])
@@ -1247,7 +1249,10 @@ class ProcessBuilder:
         """
         # Get the virtual stream from setup if outlet not specified
         if outlet is None:
-            if hasattr(self, "_pending_recycles") and recycle_name in self._pending_recycles:
+            if (
+                hasattr(self, "_pending_recycles")
+                and recycle_name in self._pending_recycles
+            ):
                 vs_name = self._pending_recycles[recycle_name]
                 outlet = f"{vs_name}.out"
             else:
@@ -1255,7 +1260,11 @@ class ProcessBuilder:
                     f"No outlet specified and no setup_recycle_loop found for '{recycle_name}'"
                 )
         return self.add_recycle(
-            recycle_name, inlet=inlet, outlet=outlet, tolerance=tolerance, priority=priority
+            recycle_name,
+            inlet=inlet,
+            outlet=outlet,
+            tolerance=tolerance,
+            priority=priority,
         )
 
     def add_distillation_column(
@@ -1496,7 +1505,9 @@ class ProcessBuilder:
         """
         motive_stream = self._get_outlet(motive_inlet)
         suction_stream = self._get_outlet(suction_inlet)
-        ej = jneqsim.process.equipment.ejector.Ejector(name, motive_stream, suction_stream)
+        ej = jneqsim.process.equipment.ejector.Ejector(
+            name, motive_stream, suction_stream
+        )
         self.equipment[name] = ej
         self.process.add(ej)
         return self
@@ -1572,7 +1583,7 @@ class ProcessBuilder:
             ProcessBuilder()
             .add_stream("feed", fluid, flow_rate=100, flow_unit="kg/hr")
             # Virtual stream as recycle guess (small flow to start)
-            .add_virtual_stream("recycle_guess", source="feed", 
+            .add_virtual_stream("recycle_guess", source="feed",
                                 flow_rate=5.0, flow_unit="kg/hr")
             # Mix feed with recycle
             .add_mixer("mixer", inlets=["feed", "recycle_guess.out"])
@@ -1839,7 +1850,11 @@ class ProcessBuilder:
         comp.setUseEnergyEfficiencyChart(use_energy_efficiency_chart)
 
         # Set surge curve if provided
-        if surge_flow is not None and surge_head is not None and chart_conditions is not None:
+        if (
+            surge_flow is not None
+            and surge_head is not None
+            and chart_conditions is not None
+        ):
             comp.getCompressorChart().getSurgeCurve().setCurve(
                 chart_conditions, surge_flow, surge_head
             )
@@ -2278,7 +2293,7 @@ class ProcessBuilder:
             kp: Proportional gain (default 1.0).
             ti: Integral time constant (default 100.0).
             td: Derivative time constant (default 0.0).
-            reverse_acting: If True, controller output decreases when 
+            reverse_acting: If True, controller output decreases when
                 process variable increases (default False).
 
         Returns:
@@ -3574,9 +3589,7 @@ class ProcessBuilder:
 
         return inlets if inlets else ["inlet"]
 
-    def validate_connection(
-        self, source: str, target_equipment: str
-    ) -> Dict[str, Any]:
+    def validate_connection(self, source: str, target_equipment: str) -> Dict[str, Any]:
         """
         Validate if a connection between equipment is valid.
 
