@@ -47,6 +47,11 @@ from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Optional, Union
 import json
 import traceback
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize NeqSim (must be done before importing process modules)
 try:
@@ -553,7 +558,8 @@ async def run_simulation_yaml(yaml_content: str = Body(..., media_type="text/pla
     except ImportError:
         raise HTTPException(status_code=500, detail="PyYAML not installed")
     except Exception as e:
-        return {"success": False, "error": f"{type(e).__name__}: {str(e)}"}
+        logger.error("Exception in /simulate/yaml endpoint", exc_info=True)
+        return {"success": False, "error": "An internal error occurred"}
 
 
 # =============================================================================
