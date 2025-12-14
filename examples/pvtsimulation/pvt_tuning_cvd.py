@@ -14,8 +14,6 @@ Replace the example data with your lab CVD relative volumes aligned with the pre
 
 from __future__ import annotations
 
-from jpype.types import JDouble
-
 from neqsim import jneqsim
 from neqsim.thermo import fluid
 
@@ -53,7 +51,7 @@ def main() -> None:
 
     cvd = jneqsim.pvtsimulation.simulation.ConstantVolumeDepletion(oil)
     cvd.setTemperature(temperature_k, "K")
-    cvd.setTemperaturesAndPressures(JDouble[:](temperatures), JDouble[:](pressures))
+    cvd.setTemperaturesAndPressures(temperatures, pressures)
 
     cvd.runCalc()
     rv_before = _as_list(cvd.getRelativeVolume())

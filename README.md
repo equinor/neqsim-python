@@ -144,14 +144,7 @@ NeqSim also includes a `pvtsimulation` package for common PVT experiments (CCE/C
 - Documentation: `docs/pvt_simulation.md`
 - Direct Java access examples: `examples/pvtsimulation/README.md`
 
-## Transient Multiphase Flow (Two-Fluid Model)
-
-NeqSim includes a mechanistic **Two-Fluid Transient Multiphase Flow Model** for pipeline simulation.
-
-- Jupyter notebook demo (direct Java access): `examples/jupyter/two_fluid_model.ipynb`
-- Upstream documentation (NeqSim Java): https://github.com/equinor/neqsim/blob/master/docs/wiki/two_fluid_model.md
-
-### Prerequisites
+## Prerequisites
 
 Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsim-python/network/dependencies).
 

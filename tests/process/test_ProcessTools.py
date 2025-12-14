@@ -23,7 +23,6 @@ from neqsim.process.processTools import (
 )
 from neqsim.thermo import TPflash, fluid, printFrame, fluid_df
 from pytest import approx
-from jpype.types import JDouble
 from neqsim import jneqsim
 import pandas as pd
 import neqsim.standards
@@ -149,7 +148,7 @@ def test_flowSplitter():
     stream2 = stream("stre333", compressor_1.getOutStream())
 
     streamSplit = splitter("split1", stream2)
-    streamSplit.setFlowRates(JDouble[:]([5.0, 0.1]), "MSm3/day")
+    streamSplit.setFlowRates([5.0, 0.1], "MSm3/day")
 
     resycStream1 = streamSplit.getSplitStream(1)
 
@@ -166,17 +165,17 @@ def test_flowSplitter():
     assert exportStream.getFlowRate("MSm3/day") == approx(5.0)
     assert streamresycl.getFlowRate("MSm3/day") == approx(0.1)
 
-    streamSplit.setFlowRates(JDouble[:]([5, 0.5]), "MSm3/day")
+    streamSplit.setFlowRates([5, 0.5], "MSm3/day")
     runProcess()
     assert exportStream.getFlowRate("MSm3/day") == approx(5.0)
     assert streamresycl.getFlowRate("MSm3/day") == approx(0.5)
 
-    streamSplit.setFlowRates(JDouble[:]([-1, 2.5]), "MSm3/day")
+    streamSplit.setFlowRates([-1, 2.5], "MSm3/day")
     runProcess()
     assert exportStream.getFlowRate("MSm3/day") == approx(5.0)
     assert streamresycl.getFlowRate("MSm3/day") == approx(2.5)
 
-    streamSplit.setSplitFactors(JDouble[:]([1.0, 0.0]))
+    streamSplit.setSplitFactors([1.0, 0.0])
     runProcess()
     assert exportStream.getFlowRate("MSm3/day") == approx(5.0)
     assert streamresycl.getFlowRate("MSm3/day") == approx(0.0)

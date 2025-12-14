@@ -162,7 +162,6 @@ from pathlib import Path
 from typing import Any, Optional, List, Dict, Union
 
 import pandas as pd
-from jpype.types import JDouble
 from jpype.types import *
 
 from neqsim import jneqsim
@@ -172,6 +171,22 @@ _loop_mode: bool = False
 
 
 _YAML_SUFFIXES = {".yaml", ".yml"}
+
+
+def _as_float_list(values) -> list[float]:
+    if values is None:
+        return []
+    if hasattr(values, "tolist"):
+        values = values.tolist()
+    return [float(v) for v in list(values)]
+
+
+def _as_float_matrix(values) -> list[list[float]]:
+    if values is None:
+        return []
+    if hasattr(values, "tolist"):
+        values = values.tolist()
+    return [[float(v) for v in row] for row in list(values)]
 
 
 def _resolve_path_in_cwd(
@@ -4372,35 +4387,37 @@ def compressor(
 
 def compressorChart(compressor, curveConditions, speed, flow, head, polyEff):
     compressor.getCompressorChart().setCurves(
-        JDouble[:](curveConditions),
-        JDouble[:](speed),
-        JDouble[:][:](flow),
-        JDouble[:][:](head),
-        JDouble[:][:](polyEff),
+        _as_float_list(curveConditions),
+        _as_float_list(speed),
+        _as_float_matrix(flow),
+        _as_float_matrix(head),
+        _as_float_matrix(polyEff),
     )
 
 
 def pumpChart(pump, curveConditions, speed, flow, head, polyEff):
     pump.getPumpChart().setCurves(
-        JDouble[:](curveConditions),
-        JDouble[:](speed),
-        JDouble[:][:](flow),
-        JDouble[:][:](head),
-        JDouble[:][:](polyEff),
+        _as_float_list(curveConditions),
+        _as_float_list(speed),
+        _as_float_matrix(flow),
+        _as_float_matrix(head),
+        _as_float_matrix(polyEff),
     )
 
 
 def compressorSurgeCurve(compressor, curveConditions, surgeflow, surgehead):
     compressor.getCompressorChart().getSurgeCurve().setCurve(
-        JDouble[:](curveConditions), JDouble[:](surgeflow), JDouble[:](surgehead)
+        _as_float_list(curveConditions),
+        _as_float_list(surgeflow),
+        _as_float_list(surgehead),
     )
 
 
 def compressorStoneWallCurve(compressor, curveConditions, stoneWallflow, stoneWallHead):
     compressor.getCompressorChart().getStoneWallCurve().setCurve(
-        JDouble[:](curveConditions),
-        JDouble[:](stoneWallflow),
-        JDouble[:](stoneWallHead),
+        _as_float_list(curveConditions),
+        _as_float_list(stoneWallflow),
+        _as_float_list(stoneWallHead),
     )
 
 
@@ -4534,7 +4551,7 @@ def splitter(
     spl = jneqsim.process.equipment.splitter.Splitter(name, teststream)
     if splitfactors is not None and len(splitfactors) > 0:
         spl.setSplitNumber(len(splitfactors))
-        spl.setSplitFactors(JDouble[:](splitfactors))
+        spl.setSplitFactors(_as_float_list(splitfactors))
     _add_to_process(spl, process)
     return spl
 

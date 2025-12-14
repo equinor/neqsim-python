@@ -25,8 +25,6 @@ Notes:
 
 from __future__ import annotations
 
-from jpype.types import JDouble
-
 from neqsim import jneqsim
 from neqsim.thermo import TPflash, fluid
 
@@ -71,7 +69,7 @@ def main() -> None:
 
     print("\n--- Constant Mass Expansion (CCE/CME) ---")
     cme = jneqsim.pvtsimulation.simulation.ConstantMassExpansion(oil.clone())
-    cme.setTemperaturesAndPressures(JDouble[:](temperatures), JDouble[:](pressures))
+    cme.setTemperaturesAndPressures(temperatures, pressures)
     cme.setTemperature(reservoir_temperature_k, "K")
     cme.runCalc()
     print("relativeVolume:", _as_list(cme.getRelativeVolume()))
@@ -84,7 +82,7 @@ def main() -> None:
 
     print("\n--- Constant Volume Depletion (CVD) ---")
     cvd = jneqsim.pvtsimulation.simulation.ConstantVolumeDepletion(oil.clone())
-    cvd.setPressures(JDouble[:](pressures))
+    cvd.setPressures(pressures)
     cvd.setTemperature(reservoir_temperature_k, "K")
     cvd.runCalc()
     print("relativeVolume:", _as_list(cvd.getRelativeVolume()))
@@ -96,7 +94,7 @@ def main() -> None:
 
     print("\n--- Differential Liberation (DL) ---")
     dl = jneqsim.pvtsimulation.simulation.DifferentialLiberation(oil.clone())
-    dl.setPressures(JDouble[:](pressures + [1.01325]))
+    dl.setPressures(pressures + [1.01325])
     dl.setTemperature(reservoir_temperature_k, "K")
     dl.runCalc()
     print("Bo [m3/Sm3]:", _as_list(dl.getBo()))
@@ -107,7 +105,7 @@ def main() -> None:
     sep_pressures = [50.0, 10.0, 1.01325]
     sep_temperatures = [313.15, 303.15, 293.15]
     sep = jneqsim.pvtsimulation.simulation.SeparatorTest(oil.clone())
-    sep.setSeparatorConditions(JDouble[:](sep_temperatures), JDouble[:](sep_pressures))
+    sep.setSeparatorConditions(sep_temperatures, sep_pressures)
     sep.runCalc()
     print("separator GOR [Sm3/Sm3]:", _as_list(sep.getGOR()))
     print("separator Bo [m3/Sm3]:", _as_list(sep.getBofactor()))
@@ -122,21 +120,21 @@ def main() -> None:
     swell = jneqsim.pvtsimulation.simulation.SwellingTest(oil.clone())
     swell.setInjectionGas(injection_gas)
     swell.setTemperature(reservoir_temperature_k, "K")
-    swell.setCummulativeMolePercentGasInjected(JDouble[:](mol_percent_injected))
+    swell.setCummulativeMolePercentGasInjected(mol_percent_injected)
     swell.runCalc()
     print("swell pressures [bara]:", _as_list(swell.getPressures()))
     print("relativeOilVolume [-]:", _as_list(swell.getRelativeOilVolume()))
 
     print("\n--- Viscosity study ---")
     visc = jneqsim.pvtsimulation.simulation.ViscositySim(oil.clone())
-    visc.setTemperaturesAndPressures(JDouble[:](temperatures), JDouble[:](pressures))
+    visc.setTemperaturesAndPressures(temperatures, pressures)
     visc.runCalc()
     print("oilViscosity [Pa*s]:", _as_list(visc.getOilViscosity()))
     print("gasViscosity [Pa*s]:", _as_list(visc.getGasViscosity()))
 
     print("\n--- GOR / Bo vs pressure ---")
     gor = jneqsim.pvtsimulation.simulation.GOR(oil.clone())
-    gor.setTemperaturesAndPressures(JDouble[:](temperatures), JDouble[:](pressures))
+    gor.setTemperaturesAndPressures(temperatures, pressures)
     gor.runCalc()
     print("GOR [Sm3/Sm3]:", _as_list(gor.getGOR()))
     print("Bo [m3/Sm3]:", _as_list(gor.getBofactor()))

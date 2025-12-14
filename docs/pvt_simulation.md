@@ -33,20 +33,18 @@ Other available simulations (direct Java access):
 
 Many PVTsimulation methods expect Java `double[]`. With JPype you can pass:
 
-- A Python list (often auto-converted), or
-- An explicit `double[]` using `jpype.types.JDouble[:]`
+- A Python list (auto-converted to `double[]` by JPype)
 
 Example:
 
 ```python
-from jpype.types import JDouble
 from neqsim import jneqsim
 
 pressures = [400.0, 300.0, 200.0]
 temperatures = [373.15, 373.15, 373.15]
 
 cme = jneqsim.pvtsimulation.simulation.ConstantMassExpansion(oil)
-cme.setTemperaturesAndPressures(JDouble[:](temperatures), JDouble[:](pressures))
+cme.setTemperaturesAndPressures(temperatures, pressures)
 cme.runCalc()
 ```
 

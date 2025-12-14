@@ -14,8 +14,6 @@ Replace the example data with your measured viscosities.
 
 from __future__ import annotations
 
-from jpype.types import JDouble
-
 from neqsim import jneqsim
 from neqsim.thermo import fluid
 
@@ -48,9 +46,7 @@ def main() -> None:
     exp_viscosity = [2.0e-4, 2.8e-4, 4.0e-4, 5.5e-4]
 
     visc = jneqsim.pvtsimulation.simulation.ViscositySim(oil)
-    visc.setTemperaturesAndPressures(
-        JDouble[:](temperatures_k), JDouble[:](pressures_bara)
-    )
+    visc.setTemperaturesAndPressures(temperatures_k, pressures_bara)
     visc.runCalc()
     mu_before = _as_list(visc.getOilViscosity())
 

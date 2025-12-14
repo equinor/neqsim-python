@@ -15,8 +15,6 @@ NeqSim's CME tuning currently uses the optimizer to adjust plus-fraction propert
 
 from __future__ import annotations
 
-from jpype.types import JDouble
-
 from neqsim import jneqsim
 from neqsim.thermo import fluid
 
@@ -56,7 +54,7 @@ def main() -> None:
 
     cme = jneqsim.pvtsimulation.simulation.ConstantMassExpansion(oil)
     cme.setTemperature(temperature_k, "K")
-    cme.setTemperaturesAndPressures(JDouble[:](temperatures), JDouble[:](pressures))
+    cme.setTemperaturesAndPressures(temperatures, pressures)
 
     cme.runCalc()
     rv_before = _as_list(cme.getRelativeVolume())

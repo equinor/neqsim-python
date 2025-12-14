@@ -277,6 +277,23 @@ import math
 
 logger = logging.getLogger(__name__)
 
+
+def _as_float_list(values) -> list[float]:
+    if values is None:
+        return []
+    if hasattr(values, "tolist"):
+        values = values.tolist()
+    return [float(v) for v in list(values)]
+
+
+def _as_float_matrix(values) -> list[list[float]]:
+    if values is None:
+        return []
+    if hasattr(values, "tolist"):
+        values = values.tolist()
+    return [[float(v) for v in row] for row in list(values)]
+
+
 if has_matplotlib():
     import matplotlib.pyplot as plt
 
@@ -487,8 +504,8 @@ def createfluid2(names, molefractions=None, unit="mol/sec"):
     Fluid: The created fluid object.
     """
     if molefractions is None:
-        fluidcreator.create2(JString[:](names))
-    return fluidcreator.create2(JString[:](names), JDouble[:](molefractions), unit)
+        return fluidcreator.create2(JString[:](names))
+    return fluidcreator.create2(JString[:](names), _as_float_list(molefractions), unit)
 
 
 def addOilFractions(
@@ -503,9 +520,9 @@ def addOilFractions(
 ):
     fluid.addOilFractions(
         JString[:](charNames),
-        JDouble[:](molefractions),
-        JDouble[:](molarMass),
-        JDouble[:](density),
+        _as_float_list(molefractions),
+        _as_float_list(molarMass),
+        _as_float_list(density),
         lastIsPlusFraction,
         lumpComponents,
         numberOfPseudoComponents,
@@ -522,8 +539,10 @@ def tunewaxmodel(fluid, experimentaldata, maxiterations=5):
     expList = [[x * 100.0 for x in experimentaldata["experiment"]]]
 
     waxsim = jneqsim.pvtsimulation.simulation.WaxFractionSim(fluid)
-    waxsim.setTemperaturesAndPressures(JDouble[:](tempList), JDouble[:](presList))
-    waxsim.setExperimentalData(JDouble[:, :](expList))
+    waxsim.setTemperaturesAndPressures(
+        _as_float_list(tempList), _as_float_list(presList)
+    )
+    waxsim.setExperimentalData(_as_float_matrix(expList))
     waxsim.getOptimizer().setNumberOfTuningParameters(3)
     waxsim.getOptimizer().setMaxNumberOfIterations(maxiterations)
     waxsim.runTuning()
@@ -575,8 +594,8 @@ def calcproperties(gascondensateFluid, inputDict):
     """
     properties = jneqsim.util.generator.PropertyGenerator(
         gascondensateFluid,
-        JDouble[:](inputDict["temperature"]),
-        JDouble[:](inputDict["pressure"]),
+        _as_float_list(inputDict["temperature"]),
+        _as_float_list(inputDict["pressure"]),
     )
     props = properties.calculate()
     calculatedProperties = {k: list(v) for k, v in props.items()}
@@ -725,7 +744,7 @@ def separatortest(fluid, pressure, temperature, GOR=None, Bo=None, display=False
 
     length = len(pressure)
     sepSim = jneqsim.pvtsimulation.simulation.SeparatorTest(fluid)
-    sepSim.setSeparatorConditions(JDouble[:](temperature), JDouble[:](pressure))
+    sepSim.setSeparatorConditions(_as_float_list(temperature), _as_float_list(pressure))
     sepSim.runCalc()
     for i in range(0, length):
         GOR.append(sepSim.getGOR()[i])
@@ -774,7 +793,7 @@ def CVD(
 
     length = len(pressure)
     cvdSim = jneqsim.pvtsimulation.simulation.ConstantVolumeDepletion(fluid)
-    cvdSim.setPressures(JDouble[:](pressure))
+    cvdSim.setPressures(_as_float_list(pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
     for i in range(0, length):
@@ -818,7 +837,9 @@ def viscositysim(
         aqueousviscosity = []
     length = len(pressure)
     cmeSim = jneqsim.pvtsimulation.simulation.ViscositySim(fluid)
-    cmeSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
+    cmeSim.setTemperaturesAndPressures(
+        _as_float_list(temperature), _as_float_list(pressure)
+    )
     cmeSim.runCalc()
     for i in range(0, length):
         gasviscosity.append(cmeSim.getGasViscosity()[i])
@@ -880,7 +901,9 @@ def CME(
 
     length = len(pressure)
     cvdSim = jneqsim.pvtsimulation.simulation.ConstantMassExpansion(fluid)
-    cvdSim.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
+    cvdSim.setTemperaturesAndPressures(
+        _as_float_list(temperature), _as_float_list(pressure)
+    )
     cvdSim.runCalc()
     saturationPressure = cvdSim.getSaturationPressure()
     for i in range(0, length):
@@ -952,7 +975,7 @@ def difflib(
 
     length = len(pressure)
     cvdSim = jneqsim.pvtsimulation.simulation.DifferentialLiberation(fluid)
-    cvdSim.setPressures(JDouble[:](pressure))
+    cvdSim.setPressures(_as_float_list(pressure))
     cvdSim.setTemperature(temperature)
     cvdSim.runCalc()
     for i in range(0, length):
@@ -991,7 +1014,9 @@ def GOR(fluid, pressure, temperature, GORdata=None, Bo=None, display=False):
 
     length = len(pressure)
     jGOR = jneqsim.pvtsimulation.simulation.GOR(fluid)
-    jGOR.setTemperaturesAndPressures(JDouble[:](temperature), JDouble[:](pressure))
+    jGOR.setTemperaturesAndPressures(
+        _as_float_list(temperature), _as_float_list(pressure)
+    )
     jGOR.runCalc()
     for i in range(0, length):
         GORdata.append(jGOR.getGOR()[i])
@@ -1034,7 +1059,7 @@ def swellingtest(
     cvdSim.setInjectionGas(fluid2)
     cvdSim.setTemperature(temperature)
     cvdSim.setCummulativeMolePercentGasInjected(
-        JDouble[:](cummulativeMolePercentGasInjected)
+        _as_float_list(cummulativeMolePercentGasInjected)
     )
     cvdSim.runCalc()
     for i in range(0, length2):
@@ -1856,7 +1881,7 @@ def fluidComposition(testSystem, composition):
     Returns:
     None
     """
-    testSystem.setMolarComposition(JDouble[:](composition))
+    testSystem.setMolarComposition(_as_float_list(composition))
     testSystem.init(0)
 
 
@@ -1871,7 +1896,7 @@ def fluidCompositionPlus(testSystem, composition):
     Returns:
     None
     """
-    testSystem.setMolarCompositionPlus(JDouble[:](composition))
+    testSystem.setMolarCompositionPlus(_as_float_list(composition))
     testSystem.init(0)
 
 
