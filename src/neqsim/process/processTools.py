@@ -157,6 +157,7 @@ Classes: ProcessContext, ProcessBuilder
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any, Optional, List, Dict, Union
 
 import pandas as pd
@@ -167,6 +168,56 @@ from neqsim import jneqsim
 
 processoperations = jneqsim.process.processmodel.ProcessSystem()
 _loop_mode: bool = False
+
+
+_YAML_SUFFIXES = {".yaml", ".yml"}
+
+
+def _resolve_path_in_cwd(
+    user_path: str,
+    *,
+    allowed_suffixes: Optional[set[str]] = None,
+    must_exist: bool = False,
+) -> Path:
+    """
+    Resolve a user-supplied path safely inside the current working directory.
+
+    This is used for convenience helpers that read/write local config/result files.
+    To avoid path traversal / arbitrary file read/write, absolute paths and paths that
+    escape the current working directory are rejected.
+    """
+    if not isinstance(user_path, str):
+        raise TypeError("path must be a string")
+
+    path = Path(user_path)
+
+    # Disallow absolute paths and drive-relative paths (Windows: 'C:foo').
+    if path.is_absolute() or path.drive:
+        raise ValueError(
+            "Absolute or drive-relative paths are not allowed. "
+            "Use a relative path within the current working directory."
+        )
+
+    base_dir = Path.cwd().resolve()
+    resolved = (base_dir / path).resolve()
+
+    try:
+        resolved.relative_to(base_dir)
+    except ValueError as exc:
+        raise ValueError(
+            "Path traversal outside the current working directory is not allowed."
+        ) from exc
+
+    if allowed_suffixes is not None:
+        suffix = resolved.suffix.lower()
+        if suffix not in allowed_suffixes:
+            allowed = ", ".join(sorted(allowed_suffixes))
+            raise ValueError(f"Invalid file extension '{suffix}'. Allowed: {allowed}.")
+
+    if must_exist and not resolved.is_file():
+        raise FileNotFoundError(f"File not found: {resolved}")
+
+    return resolved
 
 
 class ProcessContext:
@@ -3108,7 +3159,10 @@ class ProcessBuilder:
             >>> process = ProcessBuilder.from_json('process_config.json',
             ...                                    fluids={'feed': my_fluid}).run()
         """
-        with open(json_path, "r") as f:
+        json_file = _resolve_path_in_cwd(
+            json_path, allowed_suffixes={".json"}, must_exist=True
+        )
+        with json_file.open("r", encoding="utf-8") as f:
             config = json.load(f)
         return cls.from_dict(config, fluids)
 
@@ -3149,7 +3203,10 @@ class ProcessBuilder:
                 "PyYAML is required for YAML support. Install with: pip install pyyaml"
             )
 
-        with open(yaml_path, "r") as f:
+        yaml_file = _resolve_path_in_cwd(
+            yaml_path, allowed_suffixes=_YAML_SUFFIXES, must_exist=True
+        )
+        with yaml_file.open("r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
         return cls.from_dict(config, fluids)
 
@@ -3929,18 +3986,28 @@ class ProcessBuilder:
             >>> process.save_results('results.xlsx', format='excel')
         """
         if format == "json":
-            with open(filename, "w") as f:
+            out_file = _resolve_path_in_cwd(
+                filename, allowed_suffixes={".json"}
+            )
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            with out_file.open("w", encoding="utf-8") as f:
                 json.dump(self.results_json(), f, indent=2)
         elif format == "csv":
-            self.results_dataframe().to_csv(filename, index=False)
+            out_file = _resolve_path_in_cwd(filename, allowed_suffixes={".csv"})
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            self.results_dataframe().to_csv(str(out_file), index=False)
         elif format == "excel":
-            self.results_dataframe().to_excel(filename, index=False)
+            out_file = _resolve_path_in_cwd(
+                filename, allowed_suffixes={".xlsx", ".xls"}
+            )
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            self.results_dataframe().to_excel(str(out_file), index=False)
         else:
             raise ValueError(
                 f"Unknown format: {format}. Use 'json', 'csv', or 'excel'."
             )
 
-        print(f"Results saved to {filename}")
+        print(f"Results saved to {out_file}")
         return self
 
 
@@ -4130,7 +4197,8 @@ def glycoldehydrationlmodule(name, teststream):
 
 
 def openprocess(filename):
-    processoperations = jneqsim.process.processmodel.ProcessSystem.open(filename)
+    file_path = _resolve_path_in_cwd(filename, must_exist=True)
+    processoperations = jneqsim.process.processmodel.ProcessSystem.open(str(file_path))
     return processoperations
 
 
@@ -4808,9 +4876,13 @@ def results_json(process, filename=None):
 
         # Save to file if a filename is provided
         if filename:
-            with open(filename, "w") as json_file:
+            out_file = _resolve_path_in_cwd(
+                filename, allowed_suffixes={".json"}
+            )
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            with out_file.open("w", encoding="utf-8") as json_file:
                 json.dump(results, json_file, indent=4)
-            print(f"JSON report saved to {filename}")
+            print(f"JSON report saved to {out_file}")
 
         return results
     except Exception as e:
@@ -5566,7 +5638,8 @@ def create_process_from_config(
     or use pre-created fluid objects.
 
     Args:
-        config: Either a path to a YAML file or a configuration dictionary.
+        config: Either a path to a YAML file (relative to the current working
+            directory) or a configuration dictionary.
         fluids: Optional dictionary mapping fluid names to fluid objects.
             If the config includes a 'fluids' section, fluids are created
             automatically and merged with this dictionary.
@@ -5709,7 +5782,10 @@ def create_process_from_config(
                 "PyYAML is required for YAML support. Install with: pip install pyyaml"
             )
 
-        with open(config, "r") as f:
+        yaml_file = _resolve_path_in_cwd(
+            config, allowed_suffixes=_YAML_SUFFIXES, must_exist=True
+        )
+        with yaml_file.open("r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
 
     # Initialize fluids dictionary
@@ -5738,7 +5814,7 @@ def load_process_config(yaml_path: str) -> Dict[str, Any]:
     Useful for inspecting or modifying configurations before building.
 
     Args:
-        yaml_path: Path to YAML configuration file.
+        yaml_path: Path to YAML configuration file (relative to the current working directory).
 
     Returns:
         Dictionary with the configuration.
@@ -5757,7 +5833,10 @@ def load_process_config(yaml_path: str) -> Dict[str, Any]:
             "PyYAML is required for YAML support. Install with: pip install pyyaml"
         )
 
-    with open(yaml_path, "r") as f:
+    yaml_file = _resolve_path_in_cwd(
+        yaml_path, allowed_suffixes=_YAML_SUFFIXES, must_exist=True
+    )
+    with yaml_file.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
@@ -5767,7 +5846,7 @@ def save_process_config(config: Dict[str, Any], yaml_path: str) -> None:
 
     Args:
         config: Configuration dictionary.
-        yaml_path: Path to save the YAML file.
+        yaml_path: Path to save the YAML file (relative to the current working directory).
 
     Example:
         >>> config = {
@@ -5783,5 +5862,7 @@ def save_process_config(config: Dict[str, Any], yaml_path: str) -> None:
             "PyYAML is required for YAML support. Install with: pip install pyyaml"
         )
 
-    with open(yaml_path, "w") as f:
+    yaml_file = _resolve_path_in_cwd(yaml_path, allowed_suffixes=_YAML_SUFFIXES)
+    yaml_file.parent.mkdir(parents=True, exist_ok=True)
+    with yaml_file.open("w", encoding="utf-8") as f:
         yaml.dump(config, f, default_flow_style=False, sort_keys=False)
