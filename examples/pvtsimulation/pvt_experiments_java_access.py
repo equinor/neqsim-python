@@ -77,7 +77,10 @@ def main() -> None:
     print("relativeVolume:", _as_list(cme.getRelativeVolume()))
     print("liquidRelativeVolume:", _as_list(cme.getLiquidRelativeVolume()))
     print("Yfactor:", _as_list(cme.getYfactor()))
-    print("isoThermalCompressibility [1/bar]:", _as_list(cme.getIsoThermalCompressibility()))
+    print(
+        "isoThermalCompressibility [1/bar]:",
+        _as_list(cme.getIsoThermalCompressibility()),
+    )
 
     print("\n--- Constant Volume Depletion (CVD) ---")
     cvd = jneqsim.pvtsimulation.simulation.ConstantVolumeDepletion(oil.clone())
@@ -86,7 +89,10 @@ def main() -> None:
     cvd.runCalc()
     print("relativeVolume:", _as_list(cvd.getRelativeVolume()))
     print("liquidRelativeVolume:", _as_list(cvd.getLiquidRelativeVolume()))
-    print("cummulativeMolePercDepleted [%]:", _as_list(cvd.getCummulativeMolePercDepleted()))
+    print(
+        "cummulativeMolePercDepleted [%]:",
+        _as_list(cvd.getCummulativeMolePercDepleted()),
+    )
 
     print("\n--- Differential Liberation (DL) ---")
     dl = jneqsim.pvtsimulation.simulation.DifferentialLiberation(oil.clone())

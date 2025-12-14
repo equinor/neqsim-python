@@ -47,11 +47,17 @@ from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Optional, Union
 import json
 import traceback
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize NeqSim (must be done before importing process modules)
 try:
     from neqsim.process import create_process_from_config, create_fluid_from_config
     from neqsim.thermo import TPflash, dataFrame
+
     NEQSIM_AVAILABLE = True
 except ImportError as e:
     NEQSIM_AVAILABLE = False
@@ -81,6 +87,7 @@ app.add_middleware(
 
 class ComponentConfig(BaseModel):
     """Component configuration for fluid creation."""
+
     name: str = Field(..., description="Component name (e.g., 'methane', 'CO2')")
     moles: Optional[float] = Field(None, description="Molar amount")
     rate: Optional[float] = Field(None, description="Flow rate")
@@ -90,12 +97,15 @@ class ComponentConfig(BaseModel):
 
 class FluidConfig(BaseModel):
     """Fluid configuration."""
+
     type: Optional[str] = Field("custom", description="'predefined' or 'custom'")
     name: Optional[str] = Field(None, description="Predefined fluid name")
     model: Optional[str] = Field("srk", description="Equation of state")
     temperature: Optional[float] = Field(298.15, description="Temperature in K")
     pressure: Optional[float] = Field(1.01325, description="Pressure in bara")
-    components: Optional[List[ComponentConfig]] = Field(None, description="Component list")
+    components: Optional[List[ComponentConfig]] = Field(
+        None, description="Component list"
+    )
     mixing_rule: Optional[str] = Field(None, description="Mixing rule")
     ge_model: Optional[str] = Field(None, description="GE model")
     multiphase: Optional[bool] = Field(False, description="Enable multiphase")
@@ -104,22 +114,27 @@ class FluidConfig(BaseModel):
 
 class EquipmentConfig(BaseModel):
     """Equipment configuration."""
+
     type: str = Field(..., description="Equipment type (e.g., 'stream', 'compressor')")
     name: str = Field(..., description="Unique equipment name")
-    
+
     class Config:
         extra = "allow"  # Allow additional fields for equipment-specific params
 
 
 class ProcessConfig(BaseModel):
     """Complete process configuration."""
+
     name: Optional[str] = Field("Process", description="Process name")
-    fluids: Optional[Dict[str, FluidConfig]] = Field(None, description="Fluid definitions")
+    fluids: Optional[Dict[str, FluidConfig]] = Field(
+        None, description="Fluid definitions"
+    )
     equipment: List[EquipmentConfig] = Field(..., description="Equipment list")
 
 
 class FlashRequest(BaseModel):
     """Request for flash calculation."""
+
     fluid: FluidConfig = Field(..., description="Fluid configuration")
     temperature: Optional[float] = Field(None, description="Flash temperature in K")
     pressure: Optional[float] = Field(None, description="Flash pressure in bara")
@@ -127,6 +142,7 @@ class FlashRequest(BaseModel):
 
 class SimulationResult(BaseModel):
     """Simulation result response."""
+
     success: bool
     process_name: str
     equipment_results: Dict[str, Any]
@@ -136,6 +152,7 @@ class SimulationResult(BaseModel):
 
 class FlashResult(BaseModel):
     """Flash calculation result."""
+
     success: bool
     temperature: float
     pressure: float
@@ -162,7 +179,7 @@ async def root():
             "POST /flash": "Run flash calculation",
             "GET /equipment-types": "List available equipment types",
             "GET /fluid-models": "List available equation of state models",
-        }
+        },
     }
 
 
@@ -170,7 +187,9 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     if not NEQSIM_AVAILABLE:
-        raise HTTPException(status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}")
+        raise HTTPException(
+            status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}"
+        )
     return {"status": "healthy", "neqsim": "available"}
 
 
@@ -179,47 +198,67 @@ async def get_equipment_types():
     """Get list of available equipment types for YAML/JSON configuration."""
     equipment_types = {
         "streams": [
-            "stream", "water_stream", "neq_stream", "energy_stream",
-            "well_stream", "virtual_stream", "stream_from_outlet"
+            "stream",
+            "water_stream",
+            "neq_stream",
+            "energy_stream",
+            "well_stream",
+            "virtual_stream",
+            "stream_from_outlet",
         ],
         "separators": [
-            "separator", "three_phase_separator", "gas_scrubber",
-            "gas_scrubber_with_options", "separator_with_dimensions"
+            "separator",
+            "three_phase_separator",
+            "gas_scrubber",
+            "gas_scrubber_with_options",
+            "separator_with_dimensions",
         ],
         "pressure_changers": [
-            "compressor", "pump", "expander", "valve", "valve_with_options",
-            "compressor_with_chart", "polytopic_compressor", "polytropic_compressor"
+            "compressor",
+            "pump",
+            "expander",
+            "valve",
+            "valve_with_options",
+            "compressor_with_chart",
+            "polytopic_compressor",
+            "polytropic_compressor",
         ],
-        "heat_transfer": [
-            "heater", "cooler", "heat_exchanger"
-        ],
+        "heat_transfer": ["heater", "cooler", "heat_exchanger"],
         "mixing_splitting": [
-            "mixer", "splitter", "manifold", "static_mixer",
-            "static_phase_mixer", "component_splitter", "splitter_with_flowrates"
+            "mixer",
+            "splitter",
+            "manifold",
+            "static_mixer",
+            "static_phase_mixer",
+            "component_splitter",
+            "splitter_with_flowrates",
         ],
-        "pipelines": [
-            "pipe", "beggs_brill_pipe", "two_phase_pipe"
-        ],
+        "pipelines": ["pipe", "beggs_brill_pipe", "two_phase_pipe"],
         "columns": [
-            "distillation_column", "teg_absorber", "water_stripper", "simple_absorber"
+            "distillation_column",
+            "teg_absorber",
+            "water_stripper",
+            "simple_absorber",
         ],
-        "reactors": [
-            "reactor", "gibbs_reactor"
-        ],
+        "reactors": ["reactor", "gibbs_reactor"],
         "utilities": [
-            "saturator", "filter", "calculator", "setpoint",
-            "adjuster", "ejector", "flare", "tank"
+            "saturator",
+            "filter",
+            "calculator",
+            "setpoint",
+            "adjuster",
+            "ejector",
+            "flare",
+            "tank",
         ],
         "measurement": [
-            "pressure_transmitter", "level_transmitter",
-            "flow_transmitter", "temperature_transmitter"
+            "pressure_transmitter",
+            "level_transmitter",
+            "flow_transmitter",
+            "temperature_transmitter",
         ],
-        "control": [
-            "pid_controller", "flow_setter", "flow_rate_adjuster"
-        ],
-        "recycle": [
-            "recycle", "recycle_loop", "close_recycle"
-        ]
+        "control": ["pid_controller", "flow_setter", "flow_rate_adjuster"],
+        "recycle": ["recycle", "recycle_loop", "close_recycle"],
     }
     return equipment_types
 
@@ -248,67 +287,86 @@ async def get_fluid_models():
             {"id": "unifac", "name": "UNIFAC"},
         ],
         "predefined_fluids": [
-            "dry gas", "rich gas", "light oil", "black oil",
-            "water", "air", "combustion air"
-        ]
+            "dry gas",
+            "rich gas",
+            "light oil",
+            "black oil",
+            "water",
+            "air",
+            "combustion air",
+        ],
     }
 
 
 @app.post("/simulate", response_model=SimulationResult)
 async def run_simulation(
-    config: ProcessConfig = Body(..., example={
-        "name": "Simple Compression",
-        "fluids": {
-            "feed": {
-                "model": "srk",
-                "temperature": 303.15,
-                "pressure": 10.0,
-                "components": [
-                    {"name": "methane", "moles": 0.9},
-                    {"name": "ethane", "moles": 0.1}
-                ]
-            }
+    config: ProcessConfig = Body(
+        ...,
+        example={
+            "name": "Simple Compression",
+            "fluids": {
+                "feed": {
+                    "model": "srk",
+                    "temperature": 303.15,
+                    "pressure": 10.0,
+                    "components": [
+                        {"name": "methane", "moles": 0.9},
+                        {"name": "ethane", "moles": 0.1},
+                    ],
+                }
+            },
+            "equipment": [
+                {
+                    "type": "stream",
+                    "name": "inlet",
+                    "fluid": "feed",
+                    "flow_rate": 5.0,
+                    "flow_unit": "MSm3/day",
+                },
+                {
+                    "type": "compressor",
+                    "name": "comp1",
+                    "inlet": "inlet",
+                    "pressure": 50.0,
+                },
+            ],
         },
-        "equipment": [
-            {"type": "stream", "name": "inlet", "fluid": "feed",
-             "flow_rate": 5.0, "flow_unit": "MSm3/day"},
-            {"type": "compressor", "name": "comp1", "inlet": "inlet",
-             "pressure": 50.0}
-        ]
-    })
+    )
 ):
     """
     Run a process simulation from JSON configuration.
-    
+
     The configuration should include:
     - name: Optional process name
     - fluids: Dictionary of fluid configurations
     - equipment: List of equipment in process order
-    
+
     Returns simulation results including equipment data and stream properties.
     """
     if not NEQSIM_AVAILABLE:
-        raise HTTPException(status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}")
-    
+        raise HTTPException(
+            status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}"
+        )
+
     try:
         # Convert Pydantic model to dict
         config_dict = config.model_dump(exclude_none=True)
-        
+
         # Convert fluids config
         if "fluids" in config_dict:
             fluids_dict = {}
             for name, fluid_cfg in config_dict["fluids"].items():
                 fluids_dict[name] = fluid_cfg
             config_dict["fluids"] = fluids_dict
-        
+
         # Run simulation
         process = create_process_from_config(config_dict, run=True)
-        
+
         # Collect results
         equipment_results = {}
         for eq_name, eq_obj in process.equipment.items():
             eq_result = {"name": eq_name, "type": type(eq_obj).__name__}
-            
+
             # Try to get common properties
             try:
                 if hasattr(eq_obj, "getOutletStream"):
@@ -319,37 +377,41 @@ async def run_simulation(
                         eq_result["outlet_flow_kg_hr"] = outlet.getFlowRate("kg/hr")
             except:
                 pass
-            
+
             try:
                 if hasattr(eq_obj, "getPower"):
                     eq_result["power_W"] = eq_obj.getPower()
                     eq_result["power_MW"] = eq_obj.getPower() / 1e6
             except:
                 pass
-            
+
             try:
                 if hasattr(eq_obj, "getDuty"):
                     eq_result["duty_W"] = eq_obj.getDuty()
                     eq_result["duty_MW"] = eq_obj.getDuty() / 1e6
             except:
                 pass
-            
+
             try:
                 if hasattr(eq_obj, "getPolytropicEfficiency"):
-                    eq_result["polytropic_efficiency"] = eq_obj.getPolytropicEfficiency()
+                    eq_result["polytropic_efficiency"] = (
+                        eq_obj.getPolytropicEfficiency()
+                    )
                 if hasattr(eq_obj, "getIsentropicEfficiency"):
-                    eq_result["isentropic_efficiency"] = eq_obj.getIsentropicEfficiency()
+                    eq_result["isentropic_efficiency"] = (
+                        eq_obj.getIsentropicEfficiency()
+                    )
             except:
                 pass
-                
+
             equipment_results[eq_name] = eq_result
-        
+
         # Get full results as JSON
         try:
             full_results = process.results_json()
         except:
             full_results = None
-        
+
         # Get stream data
         stream_data = None
         try:
@@ -357,62 +419,67 @@ async def run_simulation(
             stream_data = df.to_dict(orient="records")
         except:
             pass
-        
+
         return SimulationResult(
             success=True,
             process_name=config.name or "Process",
             equipment_results=equipment_results,
             stream_data=stream_data,
         )
-        
+
     except Exception as e:
         return SimulationResult(
             success=False,
             process_name=config.name or "Process",
             equipment_results={},
-            error=f"{type(e).__name__}: {str(e)}\n{traceback.format_exc()}"
+            error=f"{type(e).__name__}: {str(e)}\n{traceback.format_exc()}",
         )
 
 
 @app.post("/flash", response_model=FlashResult)
 async def run_flash(
-    request: FlashRequest = Body(..., example={
-        "fluid": {
-            "model": "srk",
-            "temperature": 303.15,
-            "pressure": 50.0,
-            "components": [
-                {"name": "methane", "moles": 0.85},
-                {"name": "ethane", "moles": 0.10},
-                {"name": "propane", "moles": 0.05}
-            ]
+    request: FlashRequest = Body(
+        ...,
+        example={
+            "fluid": {
+                "model": "srk",
+                "temperature": 303.15,
+                "pressure": 50.0,
+                "components": [
+                    {"name": "methane", "moles": 0.85},
+                    {"name": "ethane", "moles": 0.10},
+                    {"name": "propane", "moles": 0.05},
+                ],
+            },
+            "temperature": 280.0,
+            "pressure": 30.0,
         },
-        "temperature": 280.0,
-        "pressure": 30.0
-    })
+    )
 ):
     """
     Run a TP flash calculation on a fluid.
-    
+
     Returns phase properties and compositions.
     """
     if not NEQSIM_AVAILABLE:
-        raise HTTPException(status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}")
-    
+        raise HTTPException(
+            status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}"
+        )
+
     try:
         # Create fluid
         fluid_config = request.fluid.model_dump(exclude_none=True)
         fluid = create_fluid_from_config(fluid_config)
-        
+
         # Set conditions
         if request.temperature:
             fluid.setTemperature(request.temperature)
         if request.pressure:
             fluid.setPressure(request.pressure)
-        
+
         # Run flash
         TPflash(fluid)
-        
+
         # Collect phase results
         phases = []
         for i in range(fluid.getNumberOfPhases()):
@@ -427,25 +494,25 @@ async def run_flash(
                 "molar_mass_kg_kmol": phase.getMolarMass() * 1000,
                 "Z_factor": phase.getZ(),
                 "viscosity_Pa_s": phase.getViscosity("kg/msec"),
-                "components": {}
+                "components": {},
             }
-            
+
             for j in range(phase.getNumberOfComponents()):
                 comp = phase.getComponent(j)
                 phase_data["components"][comp.getName()] = {
                     "mole_fraction": comp.getx(),
                     "fugacity_coefficient": comp.getFugacityCoefficient(),
                 }
-            
+
             phases.append(phase_data)
-        
+
         # Overall properties
         properties = {
             "number_of_phases": fluid.getNumberOfPhases(),
             "enthalpy_J_mol": fluid.getEnthalpy() / fluid.getTotalNumberOfMoles(),
             "entropy_J_mol_K": fluid.getEntropy() / fluid.getTotalNumberOfMoles(),
         }
-        
+
         return FlashResult(
             success=True,
             temperature=fluid.getTemperature(),
@@ -453,7 +520,7 @@ async def run_flash(
             phases=phases,
             properties=properties,
         )
-        
+
     except Exception as e:
         return FlashResult(
             success=False,
@@ -461,7 +528,7 @@ async def run_flash(
             pressure=request.pressure or 0,
             phases=[],
             properties={},
-            error=f"{type(e).__name__}: {str(e)}"
+            error=f"{type(e).__name__}: {str(e)}",
         )
 
 
@@ -469,32 +536,30 @@ async def run_flash(
 async def run_simulation_yaml(yaml_content: str = Body(..., media_type="text/plain")):
     """
     Run a process simulation from YAML content.
-    
+
     Send raw YAML as the request body with Content-Type: text/plain
     """
     if not NEQSIM_AVAILABLE:
-        raise HTTPException(status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}")
-    
+        raise HTTPException(
+            status_code=503, detail=f"NeqSim not available: {NEQSIM_ERROR}"
+        )
+
     try:
         import yaml
+
         config = yaml.safe_load(yaml_content)
-        
+
         # Run simulation
         process = create_process_from_config(config, run=True)
-        
+
         # Return results as JSON
-        return {
-            "success": True,
-            "results": process.results_json()
-        }
-        
+        return {"success": True, "results": process.results_json()}
+
     except ImportError:
         raise HTTPException(status_code=500, detail="PyYAML not installed")
     except Exception as e:
-        return {
-            "success": False,
-            "error": f"{type(e).__name__}: {str(e)}"
-        }
+        logger.error("Exception in /simulate/yaml endpoint", exc_info=True)
+        return {"success": False, "error": "An internal error occurred"}
 
 
 # =============================================================================
@@ -504,6 +569,7 @@ async def run_simulation_yaml(yaml_content: str = Body(..., media_type="text/pla
 
 if __name__ == "__main__":
     import uvicorn
+
     print("Starting NeqSim Process Simulation API...")
     print("API documentation available at: http://localhost:8000/docs")
     uvicorn.run(app, host="0.0.0.0", port=8000)
