@@ -137,6 +137,13 @@ print(f"Compressor power: {comp.getPower()/1e6:.2f} MW")
 
 See the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples) for more process simulation examples, including [processApproaches.py](https://github.com/equinor/neqsim-python/blob/master/examples/processApproaches.py) which demonstrates all four approaches.
 
+## PVT Simulation (PVTsimulation)
+
+NeqSim also includes a `pvtsimulation` package for common PVT experiments (CCE/CME, CVD, differential liberation, separator tests, swelling, viscosity, etc.) and tuning workflows.
+
+- Documentation: `docs/pvt_simulation.md`
+- Direct Java access examples: `examples/pvtsimulation/README.md`
+
 ### Prerequisites
 
 Java version 8 or higher ([Java JDK](https://adoptium.net/)) needs to be installed. The Python package [JPype](https://github.com/jpype-project/jpype) is used to connect Python and Java. Read the [installation requirements for Jpype](https://jpype.readthedocs.io/en/latest/install.html). Be aware that mixing 64 bit Python with 32 bit Java and vice versa crashes on import of the jpype module. The needed Python packages are listed in the [NeqSim Python dependencies page](https://github.com/equinor/neqsim-python/network/dependencies).
