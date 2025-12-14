@@ -37,3 +37,8 @@ poetry.lock
 
 test_gasoilprocess.zip
 test_gasoilprocess.neqsim
+
+# Local CodeQL artifacts
+codeql-db/
+codeql-*.sarif
+tools/codeql/
