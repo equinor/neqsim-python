@@ -28,4 +28,3 @@ def test_processbuilder_from_json_reads_local_file(monkeypatch, tmp_path):
 
     builder = ProcessBuilder.from_json("process_config.json")
     assert builder.get_process() is not None
-

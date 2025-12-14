@@ -3986,9 +3986,7 @@ class ProcessBuilder:
             >>> process.save_results('results.xlsx', format='excel')
         """
         if format == "json":
-            out_file = _resolve_path_in_cwd(
-                filename, allowed_suffixes={".json"}
-            )
+            out_file = _resolve_path_in_cwd(filename, allowed_suffixes={".json"})
             out_file.parent.mkdir(parents=True, exist_ok=True)
             with out_file.open("w", encoding="utf-8") as f:
                 json.dump(self.results_json(), f, indent=2)
@@ -4876,9 +4874,7 @@ def results_json(process, filename=None):
 
         # Save to file if a filename is provided
         if filename:
-            out_file = _resolve_path_in_cwd(
-                filename, allowed_suffixes={".json"}
-            )
+            out_file = _resolve_path_in_cwd(filename, allowed_suffixes={".json"})
             out_file.parent.mkdir(parents=True, exist_ok=True)
             with out_file.open("w", encoding="utf-8") as json_file:
                 json.dump(results, json_file, indent=4)
