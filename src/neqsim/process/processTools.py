@@ -3159,7 +3159,9 @@ class ProcessBuilder:
             >>> process = ProcessBuilder.from_json('process_config.json',
             ...                                    fluids={'feed': my_fluid}).run()
         """
-        json_file = _resolve_path_in_cwd(json_path, allowed_suffixes={".json"}, must_exist=True)
+        json_file = _resolve_path_in_cwd(
+            json_path, allowed_suffixes={".json"}, must_exist=True
+        )
         with json_file.open("r", encoding="utf-8") as f:
             config = json.load(f)
         return cls.from_dict(config, fluids)
