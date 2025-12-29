@@ -7,15 +7,38 @@
 
 NeqSim Python is part of the [NeqSim project](https://equinor.github.io/neqsimhome/). NeqSim Python is a Python interface to the [NeqSim Java library](https://github.com/equinor/neqsim) for estimation of fluid behavior and process design for oil and gas production. NeqSim Python toolboxes (eg. [thermoTools](https://github.com/equinor/neqsim-python/blob/master/src/neqsim/thermo/thermoTools.py) and [processTools](https://github.com/equinor/neqsim-python/blob/master/src/neqsim/process/processTools.py)) are implemented to streamline use of neqsim in Python. Examples of use are given in the [examples folder](https://github.com/equinor/neqsim-python/tree/master/examples).
 
-## Releases
+## Installation
 
-NeqSim Python is distributed as a pip package. Please read the [Prerequisites](#prerequisites).
+NeqSim Python can be installed via **pip** or **conda**.
 
-End-users should install neqsim python with some additional packages by running
+### Using pip
 
-```
+```bash
 pip install neqsim
 ```
+
+### Using Conda
+
+NeqSim is available on conda-forge. Install with:
+
+```bash
+conda install -c conda-forge neqsim
+```
+
+Or add conda-forge to your channels and install:
+
+```bash
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda install neqsim
+```
+
+**Note:** The conda package automatically includes Java (OpenJDK) as a dependency, so no separate Java installation is required.
+
+### Prerequisites
+
+- Python 3.9 or higher
+- Java 11 or higher (automatically installed with conda, or install separately for pip)
 
 ## Getting Started
 

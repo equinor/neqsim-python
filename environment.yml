@@ -1,0 +1,22 @@
+# NeqSim Conda Environment
+# Install with: conda env create -f environment.yml
+# Activate with: conda activate neqsim-env
+
+name: neqsim-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.9
+  - openjdk>=11
+  - jpype1>=1.5.0
+  - numpy>1.25.2
+  - pandas>=2.0.3
+  # Optional for interactive use
+  - matplotlib>=3.7.0
+  - jupyter>=1.0.0
+  - tabulate>=0.9.0
+  # Install neqsim from PyPI until conda-forge package is available
+  - pip
+  - pip:
+    - neqsim
