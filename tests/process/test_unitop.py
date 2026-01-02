@@ -26,12 +26,13 @@ class ExampleCompressor(unitop):
         return self.outputstream
 
     @JOverride
-    def run(self, id):
-        print("here2")
+    def run(self, id=None):
+        """Doubles the input stream pressure and updates the output stream."""
+        # Get the current input stream's fluid
         fluid2 = self.inputstream.getFluid().clone()
-        fluid2.setPressure(fluid2.getPressure() * 2.0)
-        self.outputstream.setFluid(fluid2)
-        self.outputstream.run()
+        fluid2.setPressure(self.inputstream.getPressure() * 2.0)
+        self.getOutputStream().setFluid(fluid2)
+        self.getOutputStream().run()
 
 
 def test_addPythonUnitOp():
@@ -49,13 +50,11 @@ def test_addPythonUnitOp():
     uop.setName("example operation 1")
     uop.setInputStream(stream1)
 
-    stream2 = jneqsim.process.equipment.stream.Stream("stream2", uop.getOutputStream())
-
     oilprocess = jneqsim.process.processmodel.ProcessSystem()
     oilprocess.add(stream1)
     oilprocess.add(uop)
-    oilprocess.add(stream2)
 
     oilprocess.run()
 
-    assert stream2.getPressure() == 2 * stream1.getPressure()
+    # The outputstream gets the doubled pressure after run()
+    assert uop.getOutputStream().getPressure() == 2 * stream1.getPressure()
