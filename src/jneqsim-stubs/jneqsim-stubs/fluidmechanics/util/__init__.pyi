@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,7 +8,37 @@ else:
 import java.lang
 import jneqsim.fluidmechanics.util.fluidmechanicsvisualization
 import jneqsim.fluidmechanics.util.timeseries
+import jneqsim.thermo.system
 import typing
+
+
+
+class FlowRegimeDetector:
+    @staticmethod
+    def detectFlowPatternName(systemInterface: jneqsim.thermo.system.SystemInterface, double: float, double2: float, double3: float, double4: float) -> java.lang.String: ...
+    @typing.overload
+    @staticmethod
+    def detectFlowRegime(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> 'FlowRegimeDetector.FlowRegime': ...
+    @typing.overload
+    @staticmethod
+    def detectFlowRegime(systemInterface: jneqsim.thermo.system.SystemInterface, double: float, double2: float, double3: float, double4: float) -> 'FlowRegimeDetector.FlowRegime': ...
+    class FlowRegime(java.lang.Enum['FlowRegimeDetector.FlowRegime']):
+        STRATIFIED_SMOOTH: typing.ClassVar['FlowRegimeDetector.FlowRegime'] = ...
+        STRATIFIED_WAVY: typing.ClassVar['FlowRegimeDetector.FlowRegime'] = ...
+        SLUG: typing.ClassVar['FlowRegimeDetector.FlowRegime'] = ...
+        ANNULAR: typing.ClassVar['FlowRegimeDetector.FlowRegime'] = ...
+        BUBBLE: typing.ClassVar['FlowRegimeDetector.FlowRegime'] = ...
+        DROPLET: typing.ClassVar['FlowRegimeDetector.FlowRegime'] = ...
+        def getNodeName(self) -> java.lang.String: ...
+        _valueOf_0__T = typing.TypeVar('_valueOf_0__T', bound=java.lang.Enum)  # <T>
+        @typing.overload
+        @staticmethod
+        def valueOf(class_: typing.Type[_valueOf_0__T], string: typing.Union[java.lang.String, str]) -> _valueOf_0__T: ...
+        @typing.overload
+        @staticmethod
+        def valueOf(string: typing.Union[java.lang.String, str]) -> 'FlowRegimeDetector.FlowRegime': ...
+        @staticmethod
+        def values() -> typing.MutableSequence['FlowRegimeDetector.FlowRegime']: ...
 
 class FrictionFactorCalculator:
     RE_LAMINAR_LIMIT: typing.ClassVar[float] = ...
@@ -20,17 +50,15 @@ class FrictionFactorCalculator:
     @staticmethod
     def calcHaalandFrictionFactor(double: float, double2: float) -> float: ...
     @staticmethod
-    def calcPressureDropPerLength(
-        double: float, double2: float, double3: float, double4: float
-    ) -> float: ...
+    def calcPressureDropPerLength(double: float, double2: float, double3: float, double4: float) -> float: ...
     @staticmethod
     def getFlowRegime(double: float) -> java.lang.String: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.util")``.
 
+    FlowRegimeDetector: typing.Type[FlowRegimeDetector]
     FrictionFactorCalculator: typing.Type[FrictionFactorCalculator]
-    fluidmechanicsvisualization: (
-        jneqsim.fluidmechanics.util.fluidmechanicsvisualization.__module_protocol__
-    )
+    fluidmechanicsvisualization: jneqsim.fluidmechanics.util.fluidmechanicsvisualization.__module_protocol__
     timeseries: jneqsim.fluidmechanics.util.timeseries.__module_protocol__

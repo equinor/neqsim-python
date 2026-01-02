@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -7,6 +7,8 @@ else:
 
 import jneqsim.pvtsimulation.simulation
 import typing
+
+
 
 class TuningInterface:
     def getSimulation(self) -> jneqsim.pvtsimulation.simulation.SimulationInterface: ...
@@ -16,9 +18,7 @@ class TuningInterface:
 class BaseTuningClass(TuningInterface):
     saturationTemperature: float = ...
     saturationPressure: float = ...
-    def __init__(
-        self, simulationInterface: jneqsim.pvtsimulation.simulation.SimulationInterface
-    ): ...
+    def __init__(self, simulationInterface: jneqsim.pvtsimulation.simulation.SimulationInterface): ...
     def getSimulation(self) -> jneqsim.pvtsimulation.simulation.SimulationInterface: ...
     def isTunePlusMolarMass(self) -> bool: ...
     def isTuneVolumeCorrection(self) -> bool: ...
@@ -28,10 +28,9 @@ class BaseTuningClass(TuningInterface):
     def setTuneVolumeCorrection(self, boolean: bool) -> None: ...
 
 class TuneToSaturation(BaseTuningClass):
-    def __init__(
-        self, simulationInterface: jneqsim.pvtsimulation.simulation.SimulationInterface
-    ): ...
+    def __init__(self, simulationInterface: jneqsim.pvtsimulation.simulation.SimulationInterface): ...
     def run(self) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.pvtsimulation.modeltuning")``.

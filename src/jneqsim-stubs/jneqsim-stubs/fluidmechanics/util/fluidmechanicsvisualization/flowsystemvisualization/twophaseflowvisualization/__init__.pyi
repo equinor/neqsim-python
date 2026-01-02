@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,18 +9,17 @@ import jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisuali
 import jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.twophaseflowvisualization.twophasepipeflowvisualization
 import typing
 
-class TwoPhaseFlowVisualization(
-    jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.FlowSystemVisualization
-):
+
+
+class TwoPhaseFlowVisualization(jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.FlowSystemVisualization):
     @typing.overload
     def __init__(self): ...
     @typing.overload
     def __init__(self, int: int, int2: int): ...
 
+
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.twophaseflowvisualization")``.
 
     TwoPhaseFlowVisualization: typing.Type[TwoPhaseFlowVisualization]
-    twophasepipeflowvisualization: (
-        jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.twophaseflowvisualization.twophasepipeflowvisualization.__module_protocol__
-    )
+    twophasepipeflowvisualization: jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.twophaseflowvisualization.twophasepipeflowvisualization.__module_protocol__

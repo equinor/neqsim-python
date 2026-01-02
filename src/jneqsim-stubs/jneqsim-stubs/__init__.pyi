@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,6 +10,7 @@ import jneqsim.blackoil
 import jneqsim.chemicalreactions
 import jneqsim.datapresentation
 import jneqsim.fluidmechanics
+import jneqsim.integration
 import jneqsim.mathlib
 import jneqsim.physicalproperties
 import jneqsim.process
@@ -21,6 +22,7 @@ import jneqsim.thermodynamicoperations
 import jneqsim.util
 import typing
 
+
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("neqsim")``.
 
@@ -29,6 +31,7 @@ class __module_protocol__(Protocol):
     chemicalreactions: jneqsim.chemicalreactions.__module_protocol__
     datapresentation: jneqsim.datapresentation.__module_protocol__
     fluidmechanics: jneqsim.fluidmechanics.__module_protocol__
+    integration: jneqsim.integration.__module_protocol__
     mathlib: jneqsim.mathlib.__module_protocol__
     physicalproperties: jneqsim.physicalproperties.__module_protocol__
     process: jneqsim.process.__module_protocol__

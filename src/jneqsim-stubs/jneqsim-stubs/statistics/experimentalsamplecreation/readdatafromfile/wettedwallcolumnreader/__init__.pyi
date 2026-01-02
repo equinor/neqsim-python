@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,9 +10,9 @@ import jpype
 import jneqsim.statistics.experimentalsamplecreation.readdatafromfile
 import typing
 
-class WettedWallColumnDataObject(
-    jneqsim.statistics.experimentalsamplecreation.readdatafromfile.DataObject
-):
+
+
+class WettedWallColumnDataObject(jneqsim.statistics.experimentalsamplecreation.readdatafromfile.DataObject):
     def __init__(self): ...
     def getCo2SupplyFlow(self) -> float: ...
     def getColumnWallTemperature(self) -> float: ...
@@ -35,18 +35,15 @@ class WettedWallColumnDataObject(
     def setPressure(self, double: float) -> None: ...
     def setTime(self, string: typing.Union[java.lang.String, str]) -> None: ...
 
-class WettedWallDataReader(
-    jneqsim.statistics.experimentalsamplecreation.readdatafromfile.DataReader
-):
+class WettedWallDataReader(jneqsim.statistics.experimentalsamplecreation.readdatafromfile.DataReader):
     @typing.overload
     def __init__(self): ...
     @typing.overload
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
     @staticmethod
-    def main(
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]
-    ) -> None: ...
+    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
     def readData(self) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.statistics.experimentalsamplecreation.readdatafromfile.wettedwallcolumnreader")``.

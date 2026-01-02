@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,12 +8,14 @@ else:
 import java.lang
 import typing
 
+
+
 class DoubleCloneable(java.lang.Cloneable):
     @typing.overload
     def __init__(self): ...
     @typing.overload
     def __init__(self, double: float): ...
-    def clone(self) -> "DoubleCloneable": ...
+    def clone(self) -> 'DoubleCloneable': ...
     def doubleValue(self) -> float: ...
     def set(self, double: float) -> None: ...
 
@@ -24,6 +26,7 @@ class FileSystemSettings:
     defaultDatabaseRootRoot: typing.ClassVar[java.lang.String] = ...
     relativeFilePath: typing.ClassVar[java.lang.String] = ...
     fileExtension: typing.ClassVar[java.lang.String] = ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.util.util")``.

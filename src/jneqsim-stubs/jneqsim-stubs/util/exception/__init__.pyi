@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,153 +8,67 @@ else:
 import java.lang
 import typing
 
+
+
 class ThermoException(java.lang.Exception):
     @typing.overload
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
 
 class InvalidInputException(ThermoException):
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-        string4: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], string4: typing.Union[java.lang.String, str]): ...
+    def getRemediation(self) -> java.lang.String: ...
 
 class InvalidOutputException(ThermoException):
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-        string4: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], string4: typing.Union[java.lang.String, str]): ...
+    def getRemediation(self) -> java.lang.String: ...
 
 class IsNaNException(ThermoException):
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
+    def getRemediation(self) -> java.lang.String: ...
 
 class NotImplementedException(ThermoException):
     @typing.overload
-    def __init__(
-        self, object: typing.Any, string: typing.Union[java.lang.String, str]
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]): ...
 
 class NotInitializedException(ThermoException):
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        object: typing.Any,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-        string4: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], string4: typing.Union[java.lang.String, str]): ...
+    def getRemediation(self) -> java.lang.String: ...
 
 class TooManyIterationsException(ThermoException):
     @typing.overload
-    def __init__(
-        self, object: typing.Any, string: typing.Union[java.lang.String, str], long: int
-    ): ...
+    def __init__(self, object: typing.Any, string: typing.Union[java.lang.String, str], long: int): ...
     @typing.overload
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        long: int,
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], long: int): ...
+    def getRemediation(self) -> java.lang.String: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.util.exception")``.
