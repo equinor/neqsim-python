@@ -368,6 +368,10 @@ fluid_type = {
     "Span-Wagner": jneqsim.thermo.system.SystemSpanWagnerEos,
     "bwrs": jneqsim.thermo.system.SystemBWRSEos,
     "BWRS": jneqsim.thermo.system.SystemBWRSEos,
+    # Leachman hydrogen reference EoS
+    "leachman": jneqsim.thermo.system.SystemLeachmanEos,
+    "Leachman": jneqsim.thermo.system.SystemLeachmanEos,
+    "leachman-h2": jneqsim.thermo.system.SystemLeachmanEos,
     # Other
     "ideal-gas": jneqsim.thermo.system.SystemIdealGas,
     "ideal": jneqsim.thermo.system.SystemIdealGas,
@@ -443,6 +447,8 @@ def fluid(name="srk", temperature=298.15, pressure=1.01325):
       Improved hydrogen parameters for H2-containing gas mixtures.
     - ``gerg-water``: GERG equation with water
     - ``span-wagner``: Span-Wagner equation of state for CO2
+    - ``leachman`` / ``leachman-h2``: Leachman equation of state for pure hydrogen.
+      High-accuracy reference equation supporting normal, para, and ortho hydrogen.
     - ``bwrs``: Benedict-Webb-Rubin-Starling equation of state
 
     **Other:**
