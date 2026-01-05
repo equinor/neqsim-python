@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -13,11 +13,8 @@ import jneqsim.fluidmechanics.geometrydefinitions
 import jneqsim.fluidmechanics.util
 import typing
 
-
-
 class FluidMech:
     def __init__(self): ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics")``.

@@ -203,8 +203,12 @@ class unitop:
     @JOverride  # Implement the missing 'getCalculationIdentifier' method
     def getCalculationIdentifier(self):
         # Return the stored calculation identifier UUID
-        if not hasattr(self, '_calculationIdentifier') or self._calculationIdentifier is None:
+        if (
+            not hasattr(self, "_calculationIdentifier")
+            or self._calculationIdentifier is None
+        ):
             import java.util
+
             self._calculationIdentifier = java.util.UUID.randomUUID()
         return self._calculationIdentifier
 

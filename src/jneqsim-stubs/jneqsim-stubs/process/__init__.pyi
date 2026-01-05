@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -30,9 +30,9 @@ import jneqsim.process.util
 import jneqsim.util
 import typing
 
-
-
-class SimulationInterface(jneqsim.util.NamedInterface, java.lang.Runnable, java.io.Serializable):
+class SimulationInterface(
+    jneqsim.util.NamedInterface, java.lang.Runnable, java.io.Serializable
+):
     def getCalculateSteadyState(self) -> bool: ...
     def getCalculationIdentifier(self) -> java.util.UUID: ...
     def getReport_json(self) -> java.lang.String: ...
@@ -68,7 +68,6 @@ class SimulationBaseClass(jneqsim.util.NamedBaseClass, SimulationInterface):
     def setCalculationIdentifier(self, uUID: java.util.UUID) -> None: ...
     def setRunInSteps(self, boolean: bool) -> None: ...
     def setTime(self, double: float) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process")``.

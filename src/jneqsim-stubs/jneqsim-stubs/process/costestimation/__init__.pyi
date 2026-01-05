@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -12,13 +12,18 @@ import jneqsim.process.costestimation.valve
 import jneqsim.process.mechanicaldesign
 import typing
 
-
-
 class CostEstimateBaseClass(java.io.Serializable):
     @typing.overload
-    def __init__(self, systemMechanicalDesign: jneqsim.process.mechanicaldesign.SystemMechanicalDesign): ...
+    def __init__(
+        self,
+        systemMechanicalDesign: jneqsim.process.mechanicaldesign.SystemMechanicalDesign,
+    ): ...
     @typing.overload
-    def __init__(self, systemMechanicalDesign: jneqsim.process.mechanicaldesign.SystemMechanicalDesign, double: float): ...
+    def __init__(
+        self,
+        systemMechanicalDesign: jneqsim.process.mechanicaldesign.SystemMechanicalDesign,
+        double: float,
+    ): ...
     def equals(self, object: typing.Any) -> bool: ...
     def getCAPEXestimate(self) -> float: ...
     def getWeightBasedCAPEXEstimate(self) -> float: ...
@@ -29,11 +34,12 @@ class UnitCostEstimateBaseClass(java.io.Serializable):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, mechanicalDesign: jneqsim.process.mechanicaldesign.MechanicalDesign): ...
+    def __init__(
+        self, mechanicalDesign: jneqsim.process.mechanicaldesign.MechanicalDesign
+    ): ...
     def equals(self, object: typing.Any) -> bool: ...
     def getTotalCost(self) -> float: ...
     def hashCode(self) -> int: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation")``.

@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -14,13 +14,28 @@ import jneqsim.process.equipment.valve
 import jneqsim.process.mechanicaldesign
 import typing
 
-
-
 class ControlValveSizingInterface:
-    def calcValveSize(self, double: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-    def calculateFlowRateFromValveOpening(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateValveOpeningFromFlowRate(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def findOutletPressureForFixedKv(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calcValveSize(
+        self, double: float
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def calculateFlowRateFromValveOpening(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateValveOpeningFromFlowRate(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def findOutletPressureForFixedKv(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     def getxT(self) -> float: ...
     def isAllowChoked(self) -> bool: ...
     def setAllowChoked(self, boolean: bool) -> None: ...
@@ -31,7 +46,10 @@ class ValveCharacteristic(java.io.Serializable):
     def getOpeningFactor(self, double: float) -> float: ...
 
 class ValveMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
-    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
+    def __init__(
+        self,
+        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
+    ): ...
     def calcDesign(self) -> None: ...
     def calcValveSize(self) -> java.util.Map[java.lang.String, typing.Any]: ...
     def displayResults(self) -> None: ...
@@ -40,9 +58,15 @@ class ValveMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
     def getValveSizingMethod(self) -> ControlValveSizingInterface: ...
     def getValveSizingStandard(self) -> java.lang.String: ...
     def readDesignSpecifications(self) -> None: ...
-    def setValveCharacterization(self, string: typing.Union[java.lang.String, str]) -> None: ...
-    def setValveCharacterizationMethod(self, valveCharacteristic: ValveCharacteristic) -> None: ...
-    def setValveSizingStandard(self, string: typing.Union[java.lang.String, str]) -> None: ...
+    def setValveCharacterization(
+        self, string: typing.Union[java.lang.String, str]
+    ) -> None: ...
+    def setValveCharacterizationMethod(
+        self, valveCharacteristic: ValveCharacteristic
+    ) -> None: ...
+    def setValveSizingStandard(
+        self, string: typing.Union[java.lang.String, str]
+    ) -> None: ...
 
 class ControlValveSizing(ControlValveSizingInterface, java.io.Serializable):
     @typing.overload
@@ -50,12 +74,38 @@ class ControlValveSizing(ControlValveSizingInterface, java.io.Serializable):
     @typing.overload
     def __init__(self, valveMechanicalDesign: ValveMechanicalDesign): ...
     def calcKv(self, double: float) -> float: ...
-    def calcValveSize(self, double: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-    def calculateFlowRateFromValveOpening(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateMolarFlow(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateOutletPressure(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateValveOpeningFromFlowRate(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def findOutletPressureForFixedKv(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calcValveSize(
+        self, double: float
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def calculateFlowRateFromValveOpening(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateMolarFlow(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateOutletPressure(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateValveOpeningFromFlowRate(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def findOutletPressureForFixedKv(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     def getValveMechanicalDesign(self) -> ValveMechanicalDesign: ...
     def getxT(self) -> float: ...
     def isAllowChoked(self) -> bool: ...
@@ -68,29 +118,59 @@ class LinearCharacteristic(ValveCharacteristic):
     def getOpeningFactor(self, double: float) -> float: ...
 
 class SafetyValveMechanicalDesign(ValveMechanicalDesign):
-    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
+    def __init__(
+        self,
+        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
+    ): ...
     def calcDesign(self) -> None: ...
-    def calcGasOrificeAreaAPI520(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> float: ...
+    def calcGasOrificeAreaAPI520(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+    ) -> float: ...
     def getControllingOrificeArea(self) -> float: ...
     def getControllingScenarioName(self) -> java.lang.String: ...
     def getOrificeArea(self) -> float: ...
-    def getScenarioReports(self) -> java.util.Map[java.lang.String, 'SafetyValveMechanicalDesign.SafetyValveScenarioReport']: ...
-    def getScenarioResults(self) -> java.util.Map[java.lang.String, 'SafetyValveMechanicalDesign.SafetyValveScenarioResult']: ...
+    def getScenarioReports(
+        self,
+    ) -> java.util.Map[
+        java.lang.String, "SafetyValveMechanicalDesign.SafetyValveScenarioReport"
+    ]: ...
+    def getScenarioResults(
+        self,
+    ) -> java.util.Map[
+        java.lang.String, "SafetyValveMechanicalDesign.SafetyValveScenarioResult"
+    ]: ...
+
     class SafetyValveScenarioReport:
         def getBackPressureBar(self) -> float: ...
-        def getFluidService(self) -> jneqsim.process.equipment.valve.SafetyValve.FluidService: ...
+        def getFluidService(
+            self,
+        ) -> jneqsim.process.equipment.valve.SafetyValve.FluidService: ...
         def getOverpressureMarginBar(self) -> float: ...
         def getRelievingPressureBar(self) -> float: ...
         def getRequiredOrificeArea(self) -> float: ...
         def getScenarioName(self) -> java.lang.String: ...
         def getSetPressureBar(self) -> float: ...
-        def getSizingStandard(self) -> jneqsim.process.equipment.valve.SafetyValve.SizingStandard: ...
+        def getSizingStandard(
+            self,
+        ) -> jneqsim.process.equipment.valve.SafetyValve.SizingStandard: ...
         def isActiveScenario(self) -> bool: ...
         def isControllingScenario(self) -> bool: ...
+
     class SafetyValveScenarioResult:
         def getBackPressureBar(self) -> float: ...
         def getBackPressurePa(self) -> float: ...
-        def getFluidService(self) -> jneqsim.process.equipment.valve.SafetyValve.FluidService: ...
+        def getFluidService(
+            self,
+        ) -> jneqsim.process.equipment.valve.SafetyValve.FluidService: ...
         def getOverpressureMarginBar(self) -> float: ...
         def getOverpressureMarginPa(self) -> float: ...
         def getRelievingPressureBar(self) -> float: ...
@@ -99,7 +179,9 @@ class SafetyValveMechanicalDesign(ValveMechanicalDesign):
         def getScenarioName(self) -> java.lang.String: ...
         def getSetPressureBar(self) -> float: ...
         def getSetPressurePa(self) -> float: ...
-        def getSizingStandard(self) -> jneqsim.process.equipment.valve.SafetyValve.SizingStandard: ...
+        def getSizingStandard(
+            self,
+        ) -> jneqsim.process.equipment.valve.SafetyValve.SizingStandard: ...
         def isActiveScenario(self) -> bool: ...
         def isControllingScenario(self) -> bool: ...
 
@@ -108,34 +190,147 @@ class ControlValveSizing_IEC_60534(ControlValveSizing):
     def __init__(self): ...
     @typing.overload
     def __init__(self, valveMechanicalDesign: ValveMechanicalDesign): ...
-    def calcValveSize(self, double: float) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def calcValveSize(
+        self, double: float
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
     @typing.overload
-    def calculateFlowRateFromKvAndValveOpeningGas(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, double10: float, boolean: bool) -> float: ...
+    def calculateFlowRateFromKvAndValveOpeningGas(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+        double10: float,
+        boolean: bool,
+    ) -> float: ...
     @typing.overload
-    def calculateFlowRateFromKvAndValveOpeningGas(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateFlowRateFromValveOpening(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateFlowRateFromValveOpeningGas(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateFlowRateFromKvAndValveOpeningGas(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateFlowRateFromValveOpening(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateFlowRateFromValveOpeningGas(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateFlowRateFromValveOpeningLiquid(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float) -> float: ...
+    def calculateFlowRateFromValveOpeningLiquid(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+    ) -> float: ...
     @typing.overload
-    def calculateFlowRateFromValveOpeningLiquid(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateFlowRateFromValveOpeningLiquid(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRateGas(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, double10: float, double11: float, boolean: bool) -> float: ...
+    def calculateValveOpeningFromFlowRateGas(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+        double10: float,
+        double11: float,
+        boolean: bool,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRateGas(self, double: float, double2: float, double3: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateValveOpeningFromFlowRateGas(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRateLiquid(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float) -> float: ...
+    def calculateValveOpeningFromFlowRateLiquid(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRateLiquid(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def findOutletPressureForFixedKv(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateValveOpeningFromFlowRateLiquid(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def findOutletPressureForFixedKv(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def findOutletPressureForFixedKvGas(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float) -> float: ...
+    def findOutletPressureForFixedKvGas(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+    ) -> float: ...
     @typing.overload
-    def findOutletPressureForFixedKvGas(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def findOutletPressureForFixedKvGas(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def findOutletPressureForFixedKvLiquid(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, boolean: bool, boolean2: bool) -> float: ...
+    def findOutletPressureForFixedKvLiquid(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+        boolean: bool,
+        boolean2: bool,
+    ) -> float: ...
     @typing.overload
-    def findOutletPressureForFixedKvLiquid(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def findOutletPressureForFixedKvLiquid(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     def getD(self) -> float: ...
     def getD1(self) -> float: ...
     def getD2(self) -> float: ...
@@ -153,21 +348,69 @@ class ControlValveSizing_IEC_60534(ControlValveSizing):
     def setFL(self, double: float) -> None: ...
     def setFd(self, double: float) -> None: ...
     def setFullOutput(self, boolean: bool) -> None: ...
-    def sizeControlValve(self, fluidType: 'ControlValveSizing_IEC_60534.FluidType', double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, double10: float, double11: float, double12: float, double13: float, double14: float, boolean: bool, boolean2: bool, boolean3: bool, double15: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-    def sizeControlValveGas(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-    def sizeControlValveLiquid(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-    class FluidType(java.lang.Enum['ControlValveSizing_IEC_60534.FluidType']):
-        LIQUID: typing.ClassVar['ControlValveSizing_IEC_60534.FluidType'] = ...
-        GAS: typing.ClassVar['ControlValveSizing_IEC_60534.FluidType'] = ...
-        _valueOf_0__T = typing.TypeVar('_valueOf_0__T', bound=java.lang.Enum)  # <T>
+    def sizeControlValve(
+        self,
+        fluidType: "ControlValveSizing_IEC_60534.FluidType",
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+        double10: float,
+        double11: float,
+        double12: float,
+        double13: float,
+        double14: float,
+        boolean: bool,
+        boolean2: bool,
+        boolean3: bool,
+        double15: float,
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def sizeControlValveGas(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def sizeControlValveLiquid(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
+
+    class FluidType(java.lang.Enum["ControlValveSizing_IEC_60534.FluidType"]):
+        LIQUID: typing.ClassVar["ControlValveSizing_IEC_60534.FluidType"] = ...
+        GAS: typing.ClassVar["ControlValveSizing_IEC_60534.FluidType"] = ...
+        _valueOf_0__T = typing.TypeVar("_valueOf_0__T", bound=java.lang.Enum)  # <T>
         @typing.overload
         @staticmethod
-        def valueOf(class_: typing.Type[_valueOf_0__T], string: typing.Union[java.lang.String, str]) -> _valueOf_0__T: ...
+        def valueOf(
+            class_: typing.Type[_valueOf_0__T],
+            string: typing.Union[java.lang.String, str],
+        ) -> _valueOf_0__T: ...
         @typing.overload
         @staticmethod
-        def valueOf(string: typing.Union[java.lang.String, str]) -> 'ControlValveSizing_IEC_60534.FluidType': ...
+        def valueOf(
+            string: typing.Union[java.lang.String, str]
+        ) -> "ControlValveSizing_IEC_60534.FluidType": ...
         @staticmethod
-        def values() -> typing.MutableSequence['ControlValveSizing_IEC_60534.FluidType']: ...
+        def values() -> (
+            typing.MutableSequence["ControlValveSizing_IEC_60534.FluidType"]
+        ): ...
 
 class ControlValveSizing_simple(ControlValveSizing):
     @typing.overload
@@ -176,36 +419,118 @@ class ControlValveSizing_simple(ControlValveSizing):
     def __init__(self, valveMechanicalDesign: ValveMechanicalDesign): ...
     def calcKv(self, double: float) -> float: ...
     @typing.overload
-    def calculateFlowRateFromValveOpening(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateFlowRateFromValveOpening(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateFlowRateFromValveOpening(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateMolarFlow(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
-    def calculateOutletPressure(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateFlowRateFromValveOpening(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateMolarFlow(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
+    def calculateOutletPressure(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRate(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateValveOpeningFromFlowRate(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRate(self, double: float, double2: float, double3: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateValveOpeningFromFlowRate(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def findOutletPressureForFixedKv(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def findOutletPressureForFixedKv(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def findOutletPressureForFixedKv(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def findOutletPressureForFixedKv(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
 
 class ControlValveSizing_IEC_60534_full(ControlValveSizing_IEC_60534):
     @typing.overload
     def __init__(self): ...
     @typing.overload
     def __init__(self, valveMechanicalDesign: ValveMechanicalDesign): ...
-    def calculateFlowRateFromValveOpening(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateFlowRateFromValveOpening(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRate(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateValveOpeningFromFlowRate(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     @typing.overload
-    def calculateValveOpeningFromFlowRate(self, double: float, double2: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface, streamInterface2: jneqsim.process.equipment.stream.StreamInterface, double3: float) -> float: ...
-    def findOutletPressureForFixedKv(self, double: float, streamInterface: jneqsim.process.equipment.stream.StreamInterface) -> float: ...
+    def calculateValveOpeningFromFlowRate(
+        self,
+        double: float,
+        double2: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+        streamInterface2: jneqsim.process.equipment.stream.StreamInterface,
+        double3: float,
+    ) -> float: ...
+    def findOutletPressureForFixedKv(
+        self,
+        double: float,
+        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
+    ) -> float: ...
     def isFullTrim(self) -> bool: ...
     def setFullTrim(self, boolean: bool) -> None: ...
-    def sizeControlValveGas(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-    def sizeControlValveLiquid(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float) -> java.util.Map[java.lang.String, typing.Any]: ...
-
+    def sizeControlValveGas(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def sizeControlValveLiquid(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+    ) -> java.util.Map[java.lang.String, typing.Any]: ...
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.valve")``.

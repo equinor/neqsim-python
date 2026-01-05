@@ -465,14 +465,14 @@ def fluid(name="srk", temperature=298.15, pressure=1.01325):
         >>> cpa_fluid = fluid("cpa", temperature=298.15, pressure=1.01325)
     """
     name_lower = name.lower()
-    
+
     # Handle special fluid types that need extra configuration
     if name_lower in _special_fluid_types:
         if name_lower in ("gerg-2008-h2", "gerg-h2"):
             system = jneqsim.thermo.system.SystemGERG2008Eos(temperature, pressure)
             system.useHydrogenEnhancedModel()
             return system
-    
+
     if name_lower not in _fluid_type_lower:
         raise ValueError(
             f"Fluid model {name} not found. Available models are {list(fluid_type.keys())}"

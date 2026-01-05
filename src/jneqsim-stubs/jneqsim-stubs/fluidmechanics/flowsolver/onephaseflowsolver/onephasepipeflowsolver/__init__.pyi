@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,21 +10,34 @@ import jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.pipeflowsystem
 import jneqsim.thermo
 import typing
 
-
-
-class OnePhasePipeFlowSolver(jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.OnePhaseFlowSolver):
+class OnePhasePipeFlowSolver(
+    jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.OnePhaseFlowSolver
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, pipeFlowSystem: jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.pipeflowsystem.PipeFlowSystem, double: float, int: int): ...
-    def clone(self) -> 'OnePhasePipeFlowSolver': ...
+    def __init__(
+        self,
+        pipeFlowSystem: jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.pipeflowsystem.PipeFlowSystem,
+        double: float,
+        int: int,
+    ): ...
+    def clone(self) -> "OnePhasePipeFlowSolver": ...
 
-class OnePhaseFixedStaggeredGrid(OnePhasePipeFlowSolver, jneqsim.thermo.ThermodynamicConstantsInterface):
+class OnePhaseFixedStaggeredGrid(
+    OnePhasePipeFlowSolver, jneqsim.thermo.ThermodynamicConstantsInterface
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, pipeFlowSystem: jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.pipeflowsystem.PipeFlowSystem, double: float, int: int, boolean: bool): ...
-    def clone(self) -> 'OnePhaseFixedStaggeredGrid': ...
+    def __init__(
+        self,
+        pipeFlowSystem: jneqsim.fluidmechanics.flowsystem.onephaseflowsystem.pipeflowsystem.PipeFlowSystem,
+        double: float,
+        int: int,
+        boolean: bool,
+    ): ...
+    def clone(self) -> "OnePhaseFixedStaggeredGrid": ...
     def initComposition(self, int: int) -> None: ...
     def initFinalResults(self) -> None: ...
     def initMatrix(self) -> None: ...
@@ -37,7 +50,6 @@ class OnePhaseFixedStaggeredGrid(OnePhasePipeFlowSolver, jneqsim.thermo.Thermody
     def setImpulsMatrixTDMA(self) -> None: ...
     def setMassConservationMatrixTDMA(self) -> None: ...
     def solveTDMA(self) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flowsolver.onephaseflowsolver.onephasepipeflowsolver")``.

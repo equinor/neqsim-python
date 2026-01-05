@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -15,14 +15,16 @@ import jneqsim.process.ml.multiagent
 import jneqsim.process.processmodel
 import typing
 
-
-
 class FlashSurrogateDataGenerator:
     def __init__(self): ...
     @staticmethod
-    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
+    def main(
+        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]
+    ) -> None: ...
 
-class SeparatorCompressorMultiAgentEnv(jneqsim.process.ml.multiagent.MultiAgentEnvironment):
+class SeparatorCompressorMultiAgentEnv(
+    jneqsim.process.ml.multiagent.MultiAgentEnvironment
+):
     def __init__(self): ...
     def applyFeedDisturbance(self, double: float) -> None: ...
     def getCompressor(self) -> jneqsim.process.equipment.compressor.Compressor: ...
@@ -42,14 +44,21 @@ class SeparatorLevelControlEnv(jneqsim.process.ml.RLEnvironment):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, processSystem: jneqsim.process.processmodel.ProcessSystem, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str]): ...
+    def __init__(
+        self,
+        processSystem: jneqsim.process.processmodel.ProcessSystem,
+        string: typing.Union[java.lang.String, str],
+        string2: typing.Union[java.lang.String, str],
+        string3: typing.Union[java.lang.String, str],
+    ): ...
     def getLiquidValve(self) -> jneqsim.process.equipment.valve.ThrottlingValve: ...
     def getSeparator(self) -> jneqsim.process.equipment.separator.Separator: ...
     @staticmethod
-    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
+    def main(
+        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]
+    ) -> None: ...
     def setLevelSetpoint(self, double: float) -> None: ...
     def setPressureSetpoint(self, double: float) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.ml.examples")``.
