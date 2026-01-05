@@ -336,23 +336,28 @@ fluid_type = {
 }
 
 
+# Create case-insensitive lookup for fluid types
+_fluid_type_lower = {k.lower(): v for k, v in fluid_type.items()}
+
+
 def fluid(name="srk", temperature=298.15, pressure=1.01325):
     """
     Create a thermodynamic fluid system.
 
     Parameters:
-    name (str): The name of the equation of state to use. Default is "srk".
+    name (str): The name of the equation of state to use (case-insensitive). Default is "srk".
     temperature (float): The temperature of the fluid in Kelvin. Default is 298.15 K.
     pressure (float): The pressure of the fluid in bar. Default is 1.01325 bar.
 
     Returns:
     object: An instance of the specified thermodynamic fluid system.
     """
-    if name not in fluid_type:
+    name_lower = name.lower()
+    if name_lower not in _fluid_type_lower:
         raise ValueError(
             f"Fluid model {name} not found. Available models are {list(fluid_type.keys())}"
         )
-    fluid_function = fluid_type[name]
+    fluid_function = _fluid_type_lower[name_lower]
     return fluid_function(temperature, pressure)
 
 
