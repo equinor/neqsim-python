@@ -300,40 +300,81 @@ if has_matplotlib():
 thermodynamicoperations = jneqsim.thermodynamicoperations.ThermodynamicOperations
 fluidcreator = jneqsim.thermo.Fluid()
 fluid_type = {
+    # SRK-based equations of state
     "srk": jneqsim.thermo.system.SystemSrkEos,
     "SRK-EoS": jneqsim.thermo.system.SystemSrkEos,
-    "Psrk-EoS": jneqsim.thermo.system.SystemPsrkEos,
-    "PSRK-EoS": jneqsim.thermo.system.SystemPsrkEos,
-    "RK-EoS": jneqsim.thermo.system.SystemRKEos,
-    "pr": jneqsim.thermo.system.SystemPrEos,
-    "PR-EoS": jneqsim.thermo.system.SystemPrEos,
-    "pr-umr": jneqsim.thermo.system.SystemUMRPRUMCEos,
-    "srk-s": jneqsim.thermo.system.SystemSrkSchwartzentruberEos,
-    "GERG-water": jneqsim.thermo.system.SystemGERGwaterEos,
+    "srk-mc": jneqsim.thermo.system.SystemSrkMathiasCopeman,
     "SRK-MC": jneqsim.thermo.system.SystemSrkMathiasCopeman,
-    "PR-MC": jneqsim.thermo.system.SystemPrMathiasCopeman,
+    "srk-peneloux": jneqsim.thermo.system.SystemSrkPenelouxEos,
+    "SRK-Peneloux": jneqsim.thermo.system.SystemSrkPenelouxEos,
+    "srk-twucoon": jneqsim.thermo.system.SystemSrkTwuCoonEos,
+    "SRK-TwuCoon": jneqsim.thermo.system.SystemSrkTwuCoonEos,
+    "srk-twoCoon": jneqsim.thermo.system.SystemSrkTwuCoonParamEos,
+    "SRK-TwuCoon-EOS": jneqsim.thermo.system.SystemSrkTwuCoonStatoilEos,
+    "srk-twucoon-statoil": jneqsim.thermo.system.SystemSrkTwuCoonStatoilEos,
+    "srk-s": jneqsim.thermo.system.SystemSrkSchwartzentruberEos,
     "scrk": jneqsim.thermo.system.SystemSrkSchwartzentruberEos,
     "ScRK-EoS": jneqsim.thermo.system.SystemSrkSchwartzentruberEos,
-    "nrtl": jneqsim.thermo.system.SystemNRTL,
-    "unifac": jneqsim.thermo.system.SystemUNIFAC,
+    "srk-volcor": jneqsim.thermo.system.SystemSrkEosvolcor,
+    "SRK-volcor": jneqsim.thermo.system.SystemSrkEosvolcor,
+    # PR-based equations of state
+    "pr": jneqsim.thermo.system.SystemPrEos,
+    "PR-EoS": jneqsim.thermo.system.SystemPrEos,
+    "pr-mc": jneqsim.thermo.system.SystemPrMathiasCopeman,
+    "PR-MC": jneqsim.thermo.system.SystemPrMathiasCopeman,
+    "pr-danesh": jneqsim.thermo.system.SystemPrDanesh,
+    "PR-Danesh": jneqsim.thermo.system.SystemPrDanesh,
+    "pr-volcor": jneqsim.thermo.system.SystemPrEosvolcor,
+    "PR-volcor": jneqsim.thermo.system.SystemPrEosvolcor,
+    "pr-umr": jneqsim.thermo.system.SystemUMRPRUMCEos,
+    "UMR-PRU": jneqsim.thermo.system.SystemUMRPRUMCEos,
+    # PSRK
+    "psrk": jneqsim.thermo.system.SystemPsrkEos,
+    "Psrk-EoS": jneqsim.thermo.system.SystemPsrkEos,
+    "PSRK-EoS": jneqsim.thermo.system.SystemPsrkEos,
+    # CSP-SRK
+    "csp-srk": jneqsim.thermo.system.SystemCSPsrkEos,
+    "CSP-SRK": jneqsim.thermo.system.SystemCSPsrkEos,
+    # RK
+    "rk": jneqsim.thermo.system.SystemRKEos,
+    "RK-EoS": jneqsim.thermo.system.SystemRKEos,
+    # CPA equations of state
+    "cpa": jneqsim.thermo.system.SystemSrkCPAstatoil,
+    "cpa-srk": jneqsim.thermo.system.SystemSrkCPA,
+    "CPA-SRK-EoS": jneqsim.thermo.system.SystemSrkCPA,
+    "cpa-srk-s": jneqsim.thermo.system.SystemSrkCPAs,
+    "cpa-s": jneqsim.thermo.system.SystemSrkCPAs,
+    "sCPA": jneqsim.thermo.system.SystemSrkCPAs,
+    "cpa-statoil": jneqsim.thermo.system.SystemSrkCPAstatoil,
+    "cpa-pr": jneqsim.thermo.system.SystemPrCPA,
+    "CPA-PR-EoS": jneqsim.thermo.system.SystemPrCPA,
+    # Electrolyte models
     "electrolyte": jneqsim.thermo.system.SystemFurstElectrolyteEos,
     "Electrolyte-ScRK-EoS": jneqsim.thermo.system.SystemFurstElectrolyteEos,
     "Electrolyte-CPA-EoS": jneqsim.thermo.system.SystemElectrolyteCPAstatoil,
     "cpa-el": jneqsim.thermo.system.SystemElectrolyteCPA,
-    "cpa-s": jneqsim.thermo.system.SystemSrkCPAs,
-    "cpa-statoil": jneqsim.thermo.system.SystemSrkCPAstatoil,
-    "cpa": jneqsim.thermo.system.SystemSrkCPAstatoil,
-    "CPA-SRK-EoS": jneqsim.thermo.system.SystemSrkCPA,
-    "cpa-srk": jneqsim.thermo.system.SystemSrkCPA,
-    "srk-twoCoon": jneqsim.thermo.system.SystemSrkTwuCoonParamEos,
-    "cpa-pr": jneqsim.thermo.system.SystemPrCPA,
-    "CPA-PR-EoS": jneqsim.thermo.system.SystemPrCPA,
-    "SRK-TwuCoon-EOS": jneqsim.thermo.system.SystemSrkTwuCoonStatoilEos,
-    "span-wagner": jneqsim.thermo.system.SystemSpanWagnerEos,
+    "electrolyte-cpa": jneqsim.thermo.system.SystemElectrolyteCPA,
+    # Activity coefficient models
+    "nrtl": jneqsim.thermo.system.SystemNRTL,
+    "NRTL": jneqsim.thermo.system.SystemNRTL,
+    "unifac": jneqsim.thermo.system.SystemUNIFAC,
+    "UNIFAC": jneqsim.thermo.system.SystemUNIFAC,
+    # Reference equations of state
+    "gerg-water": jneqsim.thermo.system.SystemGERGwaterEos,
+    "GERG-water": jneqsim.thermo.system.SystemGERGwaterEos,
     "gerg-2008": jneqsim.thermo.system.SystemGERG2008Eos,
+    "GERG-2008": jneqsim.thermo.system.SystemGERG2008Eos,
+    "span-wagner": jneqsim.thermo.system.SystemSpanWagnerEos,
+    "Span-Wagner": jneqsim.thermo.system.SystemSpanWagnerEos,
     "bwrs": jneqsim.thermo.system.SystemBWRSEos,
+    "BWRS": jneqsim.thermo.system.SystemBWRSEos,
+    # Other
     "ideal-gas": jneqsim.thermo.system.SystemIdealGas,
+    "ideal": jneqsim.thermo.system.SystemIdealGas,
 }
+
+# Special fluid types that require additional configuration
+_special_fluid_types = {"gerg-2008-h2", "gerg-h2"}
 
 
 # Create case-insensitive lookup for fluid types
@@ -345,14 +386,85 @@ def fluid(name="srk", temperature=298.15, pressure=1.01325):
     Create a thermodynamic fluid system.
 
     Parameters:
-    name (str): The name of the equation of state to use (case-insensitive). Default is "srk".
-    temperature (float): The temperature of the fluid in Kelvin. Default is 298.15 K.
-    pressure (float): The pressure of the fluid in bar. Default is 1.01325 bar.
+        name (str): The name of the equation of state to use (case-insensitive). Default is "srk".
+        temperature (float): The temperature of the fluid in Kelvin. Default is 298.15 K.
+        pressure (float): The pressure of the fluid in bar. Default is 1.01325 bar.
 
     Returns:
-    object: An instance of the specified thermodynamic fluid system.
+        object: An instance of the specified thermodynamic fluid system.
+
+    Available models:
+
+    **SRK-based equations of state:**
+
+    - ``srk``: Standard Soave-Redlich-Kwong equation of state
+    - ``srk-mc``: SRK with Mathias-Copeman alpha function
+    - ``srk-peneloux``: SRK with Peneloux volume correction
+    - ``srk-twucoon``: SRK with Twu-Coon alpha function
+    - ``srk-twucoon-statoil``: SRK with Twu-Coon (Statoil parameters)
+    - ``srk-s`` / ``scrk``: SRK-Schwartzentruber equation of state
+    - ``srk-volcor``: SRK with volume correction
+
+    **PR-based equations of state:**
+
+    - ``pr``: Standard Peng-Robinson equation of state
+    - ``pr-mc``: PR with Mathias-Copeman alpha function
+    - ``pr-danesh``: PR with Danesh modifications for heavy oil
+    - ``pr-volcor``: PR with volume correction
+    - ``pr-umr``: UMR-PRU (Universal Mixing Rule PR)
+
+    **Predictive and other cubic EoS:**
+
+    - ``psrk``: Predictive SRK equation of state
+    - ``csp-srk``: Corresponding States Principle SRK
+    - ``rk``: Redlich-Kwong equation of state
+
+    **CPA equations of state (for associating fluids):**
+
+    - ``cpa``: CPA-SRK (Statoil version) - recommended for water/glycol
+    - ``cpa-srk``: CPA-SRK equation of state
+    - ``cpa-srk-s`` / ``sCPA``: Simplified CPA-SRK
+    - ``cpa-pr``: CPA with Peng-Robinson
+
+    **Electrolyte models:**
+
+    - ``electrolyte``: Furst electrolyte equation of state
+    - ``electrolyte-cpa``: Electrolyte CPA equation of state
+
+    **Activity coefficient models:**
+
+    - ``nrtl``: NRTL activity coefficient model
+    - ``unifac``: UNIFAC activity coefficient model
+
+    **Reference equations of state:**
+
+    - ``gerg-2008``: GERG-2008 multiparameter equation of state for natural gas
+    - ``gerg-2008-h2`` / ``gerg-h2``: GERG-2008 with hydrogen extension (Beckmüller et al. 2022).
+      Improved hydrogen parameters for H2-containing gas mixtures.
+    - ``gerg-water``: GERG equation with water
+    - ``span-wagner``: Span-Wagner equation of state for CO2
+    - ``bwrs``: Benedict-Webb-Rubin-Starling equation of state
+
+    **Other:**
+
+    - ``ideal-gas`` / ``ideal``: Ideal gas equation of state
+
+    Example:
+        >>> from neqsim.thermo import fluid
+        >>> # Create a fluid using SRK equation of state
+        >>> my_fluid = fluid("srk", temperature=300, pressure=10)
+        >>> # Create a fluid for associating components using CPA
+        >>> cpa_fluid = fluid("cpa", temperature=298.15, pressure=1.01325)
     """
     name_lower = name.lower()
+    
+    # Handle special fluid types that need extra configuration
+    if name_lower in _special_fluid_types:
+        if name_lower in ("gerg-2008-h2", "gerg-h2"):
+            system = jneqsim.thermo.system.SystemGERG2008Eos(temperature, pressure)
+            system.useHydrogenEnhancedModel()
+            return system
+    
     if name_lower not in _fluid_type_lower:
         raise ValueError(
             f"Fluid model {name} not found. Available models are {list(fluid_type.keys())}"
