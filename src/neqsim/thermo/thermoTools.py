@@ -401,20 +401,22 @@ def fluid(name="srk", temperature=298.15, pressure=1.01325):
 
     **SRK-based equations of state:**
 
+    Volume correction is ON by default. Use ``fluid.useVolumeCorrection(False)`` to disable.
+
     - ``srk``: Standard Soave-Redlich-Kwong equation of state
     - ``srk-mc``: SRK with Mathias-Copeman alpha function
     - ``srk-peneloux``: SRK with Peneloux volume correction
     - ``srk-twucoon``: SRK with Twu-Coon alpha function
     - ``srk-twucoon-statoil``: SRK with Twu-Coon (Statoil parameters)
     - ``srk-s`` / ``scrk``: SRK-Schwartzentruber equation of state
-    - ``srk-volcor``: SRK with volume correction
 
     **PR-based equations of state:**
+
+    Volume correction is ON by default. Use ``fluid.useVolumeCorrection(False)`` to disable.
 
     - ``pr``: Standard Peng-Robinson equation of state
     - ``pr-mc``: PR with Mathias-Copeman alpha function
     - ``pr-danesh``: PR with Danesh modifications for heavy oil
-    - ``pr-volcor``: PR with volume correction
     - ``pr-umr``: UMR-PRU (Universal Mixing Rule PR)
 
     **Predictive and other cubic EoS:**
