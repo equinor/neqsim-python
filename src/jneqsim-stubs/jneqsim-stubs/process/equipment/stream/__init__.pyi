@@ -13,6 +13,7 @@ import jneqsim.process.equipment
 import jneqsim.process.util.report
 import jneqsim.standards.gasquality
 import jneqsim.thermo.system
+import jneqsim.util.validation
 import typing
 
 
@@ -180,6 +181,7 @@ class Stream(jneqsim.process.equipment.ProcessEquipmentBaseClass, StreamInterfac
     def toJson(self) -> java.lang.String: ...
     @typing.overload
     def toJson(self, reportConfig: jneqsim.process.util.report.ReportConfig) -> java.lang.String: ...
+    def validateSetup(self) -> jneqsim.util.validation.ValidationResult: ...
 
 class EquilibriumStream(Stream):
     @typing.overload

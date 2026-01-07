@@ -11,6 +11,7 @@ import jpype
 import jneqsim.process.equipment
 import jneqsim.process.equipment.stream
 import jneqsim.process.util.report
+import jneqsim.util.validation
 import typing
 
 
@@ -81,6 +82,7 @@ class Splitter(jneqsim.process.equipment.ProcessEquipmentBaseClass, SplitterInte
     def toJson(self) -> java.lang.String: ...
     @typing.overload
     def toJson(self, reportConfig: jneqsim.process.util.report.ReportConfig) -> java.lang.String: ...
+    def validateSetup(self) -> jneqsim.util.validation.ValidationResult: ...
 
 
 class __module_protocol__(Protocol):

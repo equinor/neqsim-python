@@ -11,6 +11,7 @@ import jpype
 import jneqsim.process.equipment
 import jneqsim.process.equipment.compressor
 import jneqsim.process.equipment.stream
+import jneqsim.process.mechanicaldesign.expander
 import jneqsim.process.util.report
 import typing
 
@@ -26,6 +27,7 @@ class Expander(jneqsim.process.equipment.compressor.Compressor, ExpanderInterfac
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
     @typing.overload
     def __init__(self, string: typing.Union[java.lang.String, str], streamInterface: jneqsim.process.equipment.stream.StreamInterface): ...
+    def getExpanderMechanicalDesign(self) -> jneqsim.process.mechanicaldesign.expander.ExpanderMechanicalDesign: ...
     @typing.overload
     def run(self) -> None: ...
     @typing.overload
