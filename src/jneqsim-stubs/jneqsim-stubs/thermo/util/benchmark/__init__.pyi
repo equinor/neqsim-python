@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,26 +9,23 @@ import java.lang
 import jpype
 import typing
 
+
+
 class TPflash_benchmark:
     def __init__(self): ...
     @staticmethod
-    def main(
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]
-    ) -> None: ...
+    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
 
 class TPflash_benchmark_UMR:
     def __init__(self): ...
     @staticmethod
-    def main(
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]
-    ) -> None: ...
+    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
 
 class TPflash_benchmark_fullcomp:
     def __init__(self): ...
     @staticmethod
-    def main(
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]
-    ) -> None: ...
+    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.thermo.util.benchmark")``.

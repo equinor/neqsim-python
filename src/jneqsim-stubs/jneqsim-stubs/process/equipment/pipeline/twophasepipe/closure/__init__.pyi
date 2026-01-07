@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,28 +9,17 @@ import java.io
 import jneqsim.process.equipment.pipeline.twophasepipe
 import typing
 
+
+
 class GeometryCalculator(java.io.Serializable):
     def __init__(self): ...
     def approximateLiquidLevel(self, double: float, double2: float) -> float: ...
     def calcAnnularFilmThickness(self, double: float, double2: float) -> float: ...
     def calcAnnularGasPerimeter(self, double: float, double2: float) -> float: ...
     def calcAreaDerivative(self, double: float, double2: float) -> float: ...
-    def calculateFromHoldup(
-        self, double: float, double2: float
-    ) -> "GeometryCalculator.StratifiedGeometry": ...
-    def calculateFromLiquidLevel(
-        self, double: float, double2: float
-    ) -> "GeometryCalculator.StratifiedGeometry": ...
-    def isStratifiedStable(
-        self,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-    ) -> bool: ...
-
+    def calculateFromHoldup(self, double: float, double2: float) -> 'GeometryCalculator.StratifiedGeometry': ...
+    def calculateFromLiquidLevel(self, double: float, double2: float) -> 'GeometryCalculator.StratifiedGeometry': ...
+    def isStratifiedStable(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float) -> bool: ...
     class StratifiedGeometry(java.io.Serializable):
         liquidArea: float = ...
         gasArea: float = ...
@@ -46,33 +35,8 @@ class GeometryCalculator(java.io.Serializable):
 
 class InterfacialFriction(java.io.Serializable):
     def __init__(self): ...
-    def calcInterfacialForce(
-        self,
-        flowRegime: jneqsim.process.equipment.pipeline.twophasepipe.PipeSection.FlowRegime,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-    ) -> float: ...
-    def calculate(
-        self,
-        flowRegime: jneqsim.process.equipment.pipeline.twophasepipe.PipeSection.FlowRegime,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-    ) -> "InterfacialFriction.InterfacialFrictionResult": ...
-
+    def calcInterfacialForce(self, flowRegime: jneqsim.process.equipment.pipeline.twophasepipe.PipeSection.FlowRegime, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> float: ...
+    def calculate(self, flowRegime: jneqsim.process.equipment.pipeline.twophasepipe.PipeSection.FlowRegime, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> 'InterfacialFriction.InterfacialFrictionResult': ...
     class InterfacialFrictionResult(java.io.Serializable):
         interfacialShear: float = ...
         frictionFactor: float = ...
@@ -82,28 +46,11 @@ class InterfacialFriction(java.io.Serializable):
 
 class WallFriction(java.io.Serializable):
     def __init__(self): ...
-    def calcColebrookFanning(
-        self, double: float, double2: float, double3: float
-    ) -> float: ...
-    def calcFanningFrictionFactor(
-        self, double: float, double2: float, double3: float
-    ) -> float: ...
-    def calculate(
-        self,
-        flowRegime: jneqsim.process.equipment.pipeline.twophasepipe.PipeSection.FlowRegime,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-    ) -> "WallFriction.WallFrictionResult": ...
+    def calcColebrookFanning(self, double: float, double2: float, double3: float) -> float: ...
+    def calcFanningFrictionFactor(self, double: float, double2: float, double3: float) -> float: ...
+    def calculate(self, flowRegime: jneqsim.process.equipment.pipeline.twophasepipe.PipeSection.FlowRegime, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> 'WallFriction.WallFrictionResult': ...
     def getDefaultRoughness(self) -> float: ...
     def setDefaultRoughness(self, double: float) -> None: ...
-
     class WallFrictionResult(java.io.Serializable):
         gasWallShear: float = ...
         liquidWallShear: float = ...
@@ -112,6 +59,7 @@ class WallFriction(java.io.Serializable):
         gasReynolds: float = ...
         liquidReynolds: float = ...
         def __init__(self): ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.equipment.pipeline.twophasepipe.closure")``.

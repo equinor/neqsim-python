@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -12,30 +12,19 @@ import jpype.protocol
 import jneqsim.process.mechanicaldesign
 import typing
 
+
+
 class MechanicalDesignDataSource:
-    def getDesignLimits(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> java.util.Optional[jneqsim.process.mechanicaldesign.DesignLimitData]: ...
+    def getDesignLimits(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> java.util.Optional[jneqsim.process.mechanicaldesign.DesignLimitData]: ...
 
 class CsvMechanicalDesignDataSource(MechanicalDesignDataSource):
-    def __init__(
-        self, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]
-    ): ...
-    def getDesignLimits(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> java.util.Optional[jneqsim.process.mechanicaldesign.DesignLimitData]: ...
+    def __init__(self, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]): ...
+    def getDesignLimits(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> java.util.Optional[jneqsim.process.mechanicaldesign.DesignLimitData]: ...
 
 class DatabaseMechanicalDesignDataSource(MechanicalDesignDataSource):
     def __init__(self): ...
-    def getDesignLimits(
-        self,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> java.util.Optional[jneqsim.process.mechanicaldesign.DesignLimitData]: ...
+    def getDesignLimits(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> java.util.Optional[jneqsim.process.mechanicaldesign.DesignLimitData]: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.data")``.

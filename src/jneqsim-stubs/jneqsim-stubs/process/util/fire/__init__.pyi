@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,26 +10,18 @@ import jneqsim.process.equipment.flare
 import jneqsim.process.equipment.separator
 import typing
 
+
+
 class FireHeatLoadCalculator:
     STEFAN_BOLTZMANN: typing.ClassVar[float] = ...
     @staticmethod
     def api521PoolFireHeatLoad(double: float, double2: float) -> float: ...
     @staticmethod
-    def generalizedStefanBoltzmannHeatFlux(
-        double: float, double2: float, double3: float, double4: float
-    ) -> float: ...
+    def generalizedStefanBoltzmannHeatFlux(double: float, double2: float, double3: float, double4: float) -> float: ...
 
 class FireHeatTransferCalculator:
     @staticmethod
-    def calculateWallTemperatures(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-    ) -> "FireHeatTransferCalculator.SurfaceTemperatureResult": ...
-
+    def calculateWallTemperatures(double: float, double2: float, double3: float, double4: float, double5: float, double6: float) -> 'FireHeatTransferCalculator.SurfaceTemperatureResult': ...
     class SurfaceTemperatureResult:
         def __init__(self, double: float, double2: float, double3: float): ...
         def heatFlux(self) -> float: ...
@@ -39,82 +31,27 @@ class FireHeatTransferCalculator:
 class ReliefValveSizing:
     R_GAS: typing.ClassVar[float] = ...
     STANDARD_ORIFICE_AREAS_IN2: typing.ClassVar[typing.MutableSequence[float]] = ...
-    STANDARD_ORIFICE_LETTERS: typing.ClassVar[
-        typing.MutableSequence[java.lang.String]
-    ] = ...
+    STANDARD_ORIFICE_LETTERS: typing.ClassVar[typing.MutableSequence[java.lang.String]] = ...
     @staticmethod
     def calculateBlowdownPressure(double: float, double2: float) -> float: ...
     @staticmethod
     def calculateCv(double: float, double2: float) -> float: ...
     @staticmethod
-    def calculateMassFlowCapacity(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-    ) -> float: ...
+    def calculateMassFlowCapacity(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> float: ...
     @staticmethod
     def calculateMaxHeatAbsorption(double: float, double2: float) -> float: ...
     @staticmethod
-    def calculateRequiredArea(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        boolean: bool,
-        boolean2: bool,
-    ) -> "ReliefValveSizing.PSVSizingResult": ...
+    def calculateRequiredArea(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, boolean: bool, boolean2: bool) -> 'ReliefValveSizing.PSVSizingResult': ...
     @staticmethod
-    def dynamicFireSizing(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-        double10: float,
-        double11: float,
-    ) -> "ReliefValveSizing.PSVSizingResult": ...
+    def dynamicFireSizing(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, double10: float, double11: float) -> 'ReliefValveSizing.PSVSizingResult': ...
     @staticmethod
-    def getNextLargerOrifice(
-        string: typing.Union[java.lang.String, str]
-    ) -> java.lang.String: ...
+    def getNextLargerOrifice(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
     @staticmethod
-    def getStandardOrificeArea(
-        string: typing.Union[java.lang.String, str]
-    ) -> float: ...
+    def getStandardOrificeArea(string: typing.Union[java.lang.String, str]) -> float: ...
     @staticmethod
-    def validateSizing(
-        pSVSizingResult: "ReliefValveSizing.PSVSizingResult", boolean: bool
-    ) -> java.lang.String: ...
-
+    def validateSizing(pSVSizingResult: 'ReliefValveSizing.PSVSizingResult', boolean: bool) -> java.lang.String: ...
     class PSVSizingResult:
-        def __init__(
-            self,
-            double: float,
-            double2: float,
-            double3: float,
-            string: typing.Union[java.lang.String, str],
-            double4: float,
-            double5: float,
-            double6: float,
-            double7: float,
-            double8: float,
-            double9: float,
-            double10: float,
-        ): ...
+        def __init__(self, double: float, double2: float, double3: float, string: typing.Union[java.lang.String, str], double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, double10: float): ...
         def getBackPressureCorrectionFactor(self) -> float: ...
         def getBackPressureFraction(self) -> float: ...
         def getCombinationCorrectionFactor(self) -> float: ...
@@ -129,43 +66,15 @@ class ReliefValveSizing:
 
 class SeparatorFireExposure:
     @staticmethod
-    def applyFireHeating(
-        separator: jneqsim.process.equipment.separator.Separator,
-        fireExposureResult: "SeparatorFireExposure.FireExposureResult",
-        double: float,
-    ) -> float: ...
+    def applyFireHeating(separator: jneqsim.process.equipment.separator.Separator, fireExposureResult: 'SeparatorFireExposure.FireExposureResult', double: float) -> float: ...
     @typing.overload
     @staticmethod
-    def evaluate(
-        separator: jneqsim.process.equipment.separator.Separator,
-        fireScenarioConfig: "SeparatorFireExposure.FireScenarioConfig",
-    ) -> "SeparatorFireExposure.FireExposureResult": ...
+    def evaluate(separator: jneqsim.process.equipment.separator.Separator, fireScenarioConfig: 'SeparatorFireExposure.FireScenarioConfig') -> 'SeparatorFireExposure.FireExposureResult': ...
     @typing.overload
     @staticmethod
-    def evaluate(
-        separator: jneqsim.process.equipment.separator.Separator,
-        fireScenarioConfig: "SeparatorFireExposure.FireScenarioConfig",
-        flare: jneqsim.process.equipment.flare.Flare,
-        double: float,
-    ) -> "SeparatorFireExposure.FireExposureResult": ...
-
+    def evaluate(separator: jneqsim.process.equipment.separator.Separator, fireScenarioConfig: 'SeparatorFireExposure.FireScenarioConfig', flare: jneqsim.process.equipment.flare.Flare, double: float) -> 'SeparatorFireExposure.FireExposureResult': ...
     class FireExposureResult:
-        def __init__(
-            self,
-            double: float,
-            double2: float,
-            double3: float,
-            double4: float,
-            double5: float,
-            double6: float,
-            double7: float,
-            double8: float,
-            surfaceTemperatureResult: FireHeatTransferCalculator.SurfaceTemperatureResult,
-            surfaceTemperatureResult2: FireHeatTransferCalculator.SurfaceTemperatureResult,
-            double9: float,
-            double10: float,
-            boolean: bool,
-        ): ...
+        def __init__(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, surfaceTemperatureResult: FireHeatTransferCalculator.SurfaceTemperatureResult, surfaceTemperatureResult2: FireHeatTransferCalculator.SurfaceTemperatureResult, double9: float, double10: float, boolean: bool): ...
         def flareRadiativeFlux(self) -> float: ...
         def flareRadiativeHeat(self) -> float: ...
         def isRuptureLikely(self) -> bool: ...
@@ -175,13 +84,10 @@ class SeparatorFireExposure:
         def totalFireHeat(self) -> float: ...
         def unwettedArea(self) -> float: ...
         def unwettedRadiativeHeat(self) -> float: ...
-        def unwettedWall(
-            self,
-        ) -> FireHeatTransferCalculator.SurfaceTemperatureResult: ...
+        def unwettedWall(self) -> FireHeatTransferCalculator.SurfaceTemperatureResult: ...
         def vonMisesStressPa(self) -> float: ...
         def wettedArea(self) -> float: ...
         def wettedWall(self) -> FireHeatTransferCalculator.SurfaceTemperatureResult: ...
-
     class FireScenarioConfig:
         def __init__(self): ...
         def allowableTensileStrengthPa(self) -> float: ...
@@ -189,36 +95,16 @@ class SeparatorFireExposure:
         def environmentalFactor(self) -> float: ...
         def externalFilmCoefficientWPerM2K(self) -> float: ...
         def fireTemperatureK(self) -> float: ...
-        def setAllowableTensileStrengthPa(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setEmissivity(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setEnvironmentalFactor(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setExternalFilmCoefficientWPerM2K(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setFireTemperatureK(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setThermalConductivityWPerMPerK(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setUnwettedInternalFilmCoefficientWPerM2K(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setViewFactor(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setWallThicknessM(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
-        def setWettedInternalFilmCoefficientWPerM2K(
-            self, double: float
-        ) -> "SeparatorFireExposure.FireScenarioConfig": ...
+        def setAllowableTensileStrengthPa(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setEmissivity(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setEnvironmentalFactor(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setExternalFilmCoefficientWPerM2K(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setFireTemperatureK(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setThermalConductivityWPerMPerK(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setUnwettedInternalFilmCoefficientWPerM2K(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setViewFactor(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setWallThicknessM(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
+        def setWettedInternalFilmCoefficientWPerM2K(self, double: float) -> 'SeparatorFireExposure.FireScenarioConfig': ...
         def thermalConductivityWPerMPerK(self) -> float: ...
         def unwettedInternalFilmCoefficientWPerM2K(self) -> float: ...
         def viewFactor(self) -> float: ...
@@ -227,37 +113,10 @@ class SeparatorFireExposure:
 
 class TransientWallHeatTransfer:
     @typing.overload
-    def __init__(
-        self,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-        int: int,
-    ): ...
+    def __init__(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, int: int): ...
     @typing.overload
-    def __init__(
-        self,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        int: int,
-    ): ...
-    def advanceTimeStep(
-        self,
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-    ) -> None: ...
+    def __init__(self, double: float, double2: float, double3: float, double4: float, double5: float, int: int): ...
+    def advanceTimeStep(self, double: float, double2: float, double3: float, double4: float, double5: float) -> None: ...
     def getHeatAbsorbed(self, double: float, double2: float) -> float: ...
     def getHeatFlux(self) -> float: ...
     def getInnerWallTemperature(self) -> float: ...
@@ -274,56 +133,15 @@ class TransientWallHeatTransfer:
 class VesselHeatTransferCalculator:
     GRAVITY: typing.ClassVar[float] = ...
     @staticmethod
-    def calculateCompleteHeatTransfer(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        boolean: bool,
-    ) -> "VesselHeatTransferCalculator.HeatTransferResult": ...
+    def calculateCompleteHeatTransfer(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, boolean: bool) -> 'VesselHeatTransferCalculator.HeatTransferResult': ...
     @staticmethod
-    def calculateGrashofNumber(
-        double: float, double2: float, double3: float, double4: float, double5: float
-    ) -> float: ...
+    def calculateGrashofNumber(double: float, double2: float, double3: float, double4: float, double5: float) -> float: ...
     @staticmethod
-    def calculateInternalFilmCoefficient(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        boolean: bool,
-    ) -> float: ...
+    def calculateInternalFilmCoefficient(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, boolean: bool) -> float: ...
     @staticmethod
-    def calculateMixedConvectionCoefficient(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-        boolean: bool,
-    ) -> float: ...
+    def calculateMixedConvectionCoefficient(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, boolean: bool) -> float: ...
     @staticmethod
-    def calculateNucleateBoilingHeatFlux(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        double9: float,
-    ) -> float: ...
+    def calculateNucleateBoilingHeatFlux(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float) -> float: ...
     @staticmethod
     def calculateNusseltForcedConvection(double: float, double2: float) -> float: ...
     @staticmethod
@@ -331,38 +149,15 @@ class VesselHeatTransferCalculator:
     @staticmethod
     def calculateNusseltVerticalSurface(double: float, double2: float) -> float: ...
     @staticmethod
-    def calculatePrandtlNumber(
-        double: float, double2: float, double3: float
-    ) -> float: ...
+    def calculatePrandtlNumber(double: float, double2: float, double3: float) -> float: ...
     @staticmethod
     def calculateRayleighNumber(double: float, double2: float) -> float: ...
     @staticmethod
-    def calculateReynoldsNumber(
-        double: float, double2: float, double3: float, double4: float
-    ) -> float: ...
+    def calculateReynoldsNumber(double: float, double2: float, double3: float, double4: float) -> float: ...
     @staticmethod
-    def calculateWettedWallFilmCoefficient(
-        double: float,
-        double2: float,
-        double3: float,
-        double4: float,
-        double5: float,
-        double6: float,
-        double7: float,
-        double8: float,
-        boolean: bool,
-    ) -> float: ...
-
+    def calculateWettedWallFilmCoefficient(double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, boolean: bool) -> float: ...
     class HeatTransferResult:
-        def __init__(
-            self,
-            double: float,
-            double2: float,
-            double3: float,
-            double4: float,
-            double5: float,
-            double6: float,
-        ): ...
+        def __init__(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float): ...
         def getFilmCoefficient(self) -> float: ...
         def getGrashofNumber(self) -> float: ...
         def getHeatFlux(self) -> float: ...
@@ -377,6 +172,7 @@ class VesselRuptureCalculator:
     def ruptureMargin(double: float, double2: float) -> float: ...
     @staticmethod
     def vonMisesStress(double: float, double2: float, double3: float) -> float: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.util.fire")``.

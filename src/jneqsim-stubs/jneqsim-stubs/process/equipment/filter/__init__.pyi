@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -12,42 +12,30 @@ import jneqsim.process.equipment.stream
 import jneqsim.process.util.report
 import typing
 
+
+
 class Filter(jneqsim.process.equipment.TwoPortEquipment):
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], streamInterface: jneqsim.process.equipment.stream.StreamInterface): ...
     def getCvFactor(self) -> float: ...
     def getDeltaP(self) -> float: ...
     @typing.overload
     def run(self) -> None: ...
     @typing.overload
     def run(self, uUID: java.util.UUID) -> None: ...
-    def runConditionAnalysis(
-        self,
-        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
-    ) -> None: ...
+    def runConditionAnalysis(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface) -> None: ...
     def setCvFactor(self, double: float) -> None: ...
     @typing.overload
     def setDeltaP(self, double: float) -> None: ...
     @typing.overload
-    def setDeltaP(
-        self, double: float, string: typing.Union[java.lang.String, str]
-    ) -> None: ...
+    def setDeltaP(self, double: float, string: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     def toJson(self) -> java.lang.String: ...
     @typing.overload
-    def toJson(
-        self, reportConfig: jneqsim.process.util.report.ReportConfig
-    ) -> java.lang.String: ...
+    def toJson(self, reportConfig: jneqsim.process.util.report.ReportConfig) -> java.lang.String: ...
 
 class CharCoalFilter(Filter):
-    def __init__(
-        self,
-        string: typing.Union[java.lang.String, str],
-        streamInterface: jneqsim.process.equipment.stream.StreamInterface,
-    ): ...
+    def __init__(self, string: typing.Union[java.lang.String, str], streamInterface: jneqsim.process.equipment.stream.StreamInterface): ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.equipment.filter")``.

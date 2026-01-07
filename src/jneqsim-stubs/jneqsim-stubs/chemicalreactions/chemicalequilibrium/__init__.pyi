@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -16,70 +16,27 @@ import jneqsim.thermo.component
 import jneqsim.thermo.system
 import typing
 
+
+
 class ChemEq(java.io.Serializable):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(
-        self,
-        double: float,
-        double2: float,
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-    ): ...
+    def __init__(self, double: float, double2: float, doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]): ...
     @typing.overload
-    def __init__(
-        self,
-        double: float,
-        double2: float,
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-        doubleArray2: typing.Union[typing.List[float], jpype.JArray],
-        doubleArray3: typing.Union[typing.List[float], jpype.JArray],
-        doubleArray4: typing.Union[typing.List[float], jpype.JArray],
-    ): ...
+    def __init__(self, double: float, double2: float, doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray], doubleArray2: typing.Union[typing.List[float], jpype.JArray], doubleArray3: typing.Union[typing.List[float], jpype.JArray], doubleArray4: typing.Union[typing.List[float], jpype.JArray]): ...
     @typing.overload
-    def __init__(
-        self,
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-    ): ...
+    def __init__(self, doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]): ...
     def chemSolve(self) -> None: ...
-    def innerStep(
-        self,
-        int: int,
-        doubleArray: typing.Union[typing.List[float], jpype.JArray],
-        int2: int,
-        double2: float,
-    ) -> float: ...
+    def innerStep(self, int: int, doubleArray: typing.Union[typing.List[float], jpype.JArray], int2: int, double2: float) -> float: ...
     @typing.overload
     def solve(self) -> None: ...
     @typing.overload
-    def solve(
-        self,
-        double: float,
-        double2: float,
-        doubleArray: typing.Union[typing.List[float], jpype.JArray],
-        doubleArray2: typing.Union[typing.List[float], jpype.JArray],
-    ) -> None: ...
+    def solve(self, double: float, double2: float, doubleArray: typing.Union[typing.List[float], jpype.JArray], doubleArray2: typing.Union[typing.List[float], jpype.JArray]) -> None: ...
     def step(self) -> float: ...
 
 class ChemicalEquilibrium(java.io.Serializable):
-    def __init__(
-        self,
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-        doubleArray2: typing.Union[typing.List[float], jpype.JArray],
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        componentInterfaceArray: typing.Union[
-            typing.List[jneqsim.thermo.component.ComponentInterface], jpype.JArray
-        ],
-        int: int,
-    ): ...
+    def __init__(self, doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray], doubleArray2: typing.Union[typing.List[float], jpype.JArray], systemInterface: jneqsim.thermo.system.SystemInterface, componentInterfaceArray: typing.Union[typing.List[jneqsim.thermo.component.ComponentInterface], jpype.JArray], int: int): ...
     def calcRefPot(self) -> None: ...
     def chemSolve(self) -> None: ...
     def getConvergenceTolerance(self) -> float: ...
@@ -87,14 +44,7 @@ class ChemicalEquilibrium(java.io.Serializable):
     def getLastIterationCount(self) -> int: ...
     def getMaxIterations(self) -> int: ...
     def getMoles(self) -> typing.MutableSequence[float]: ...
-    def innerStep(
-        self,
-        int: int,
-        doubleArray: typing.Union[typing.List[float], jpype.JArray],
-        int2: int,
-        double2: float,
-        boolean: bool,
-    ) -> float: ...
+    def innerStep(self, int: int, doubleArray: typing.Union[typing.List[float], jpype.JArray], int2: int, double2: float, boolean: bool) -> float: ...
     def isLastConverged(self) -> bool: ...
     def isUseAdaptiveDerivatives(self) -> bool: ...
     def isUseFugacityDerivatives(self) -> bool: ...
@@ -109,49 +59,24 @@ class ChemicalEquilibrium(java.io.Serializable):
     def step(self) -> float: ...
     def updateMoles(self) -> None: ...
 
-class LinearProgrammingChemicalEquilibrium(
-    jneqsim.thermo.ThermodynamicConstantsInterface
-):
-    def __init__(
-        self,
-        doubleArray: typing.Union[typing.List[float], jpype.JArray],
-        componentInterfaceArray: typing.Union[
-            typing.List[jneqsim.thermo.component.ComponentInterface], jpype.JArray
-        ],
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray],
-        chemicalReactionOperations: jneqsim.chemicalreactions.ChemicalReactionOperations,
-        int: int,
-    ): ...
+class LinearProgrammingChemicalEquilibrium(jneqsim.thermo.ThermodynamicConstantsInterface):
+    def __init__(self, doubleArray: typing.Union[typing.List[float], jpype.JArray], componentInterfaceArray: typing.Union[typing.List[jneqsim.thermo.component.ComponentInterface], jpype.JArray], stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray], chemicalReactionOperations: jneqsim.chemicalreactions.ChemicalReactionOperations, int: int): ...
     def calcA(self) -> typing.MutableSequence[typing.MutableSequence[float]]: ...
     def calcx(self, matrix: Jama.Matrix, matrix2: Jama.Matrix) -> None: ...
     def changePrimaryComponents(self) -> None: ...
-    def generateInitialEstimates(
-        self,
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        doubleArray: typing.Union[typing.List[float], jpype.JArray],
-        double2: float,
-        int: int,
-    ) -> typing.MutableSequence[float]: ...
+    def generateInitialEstimates(self, systemInterface: jneqsim.thermo.system.SystemInterface, doubleArray: typing.Union[typing.List[float], jpype.JArray], double2: float, int: int) -> typing.MutableSequence[float]: ...
     def getA(self) -> typing.MutableSequence[typing.MutableSequence[float]]: ...
     def getRefPot(self) -> typing.MutableSequence[float]: ...
 
-class ReferencePotComparator(
-    java.util.Comparator[jneqsim.thermo.component.ComponentInterface],
-    java.io.Serializable,
-):
+class ReferencePotComparator(java.util.Comparator[jneqsim.thermo.component.ComponentInterface], java.io.Serializable):
     def __init__(self): ...
-    def compare(
-        self,
-        componentInterface: jneqsim.thermo.component.ComponentInterface,
-        componentInterface2: jneqsim.thermo.component.ComponentInterface,
-    ) -> int: ...
+    def compare(self, componentInterface: jneqsim.thermo.component.ComponentInterface, componentInterface2: jneqsim.thermo.component.ComponentInterface) -> int: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.chemicalreactions.chemicalequilibrium")``.
 
     ChemEq: typing.Type[ChemEq]
     ChemicalEquilibrium: typing.Type[ChemicalEquilibrium]
-    LinearProgrammingChemicalEquilibrium: typing.Type[
-        LinearProgrammingChemicalEquilibrium
-    ]
+    LinearProgrammingChemicalEquilibrium: typing.Type[LinearProgrammingChemicalEquilibrium]
     ReferencePotComparator: typing.Type[ReferencePotComparator]
