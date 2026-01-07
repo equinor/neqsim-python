@@ -42,3 +42,6 @@ test_gasoilprocess.neqsim
 codeql-db/
 codeql-*.sarif
 tools/codeql/
+
+# Generated stubs
+src/jneqsim-stubs/
