@@ -35,6 +35,10 @@ class unitop:
     def setTagNumber(self, tagNumber):
         self.tagNumber = tagNumber
 
+    @JOverride
+    def getTagNumber(self):
+        return getattr(self, "tagNumber", "")
+
     @JOverride  # Add the missing 'equals' method
     def equals(self, obj):
         # Implement your equality logic here.

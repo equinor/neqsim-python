@@ -112,6 +112,10 @@ class measurement:
     def setTagNumber(self, tagNumber):
         self.tagNumber = tagNumber
 
+    @JOverride
+    def getTagNumber(self):
+        return getattr(self, "tagNumber", "")
+
     @JOverride  # Implement the missing 'evaluateAlarm' method
     def evaluateAlarm(self):
         # Add the logic to evaluate alarm conditions.
