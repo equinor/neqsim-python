@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neqsim"
-version = "3.4.0"
+version = "3.5.0"
 homepage = "https://github.com/Equinor/neqsim-python"
 description = "NeqSim is a tool for thermodynamic and process calculations"
 authors = ["Even Solbraa <esolbraa@gmail.com>"]
@@ -26,6 +26,9 @@ stubgenj = "^0.2.12"  # Generate type stubs for Java classes
 
 [tool.poetry.extras]
 interactive = ["matplotlib", "jupyter", "tabulate"]
+
+[tool.pytest.ini_options]
+addopts = "-p no:faulthandler"
 
 [build-system]
 requires = ["poetry-core"]

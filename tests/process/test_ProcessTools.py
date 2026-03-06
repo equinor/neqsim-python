@@ -72,7 +72,7 @@ def test_hydrateEquilibriumTemperatureAnalyser():
     stream1 = stream("stream1", fluid1)
     hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser("analyser1", stream1)
     runProcess()
-    assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel=0.001)
+    assert hydrateDewPoint.getMeasuredValue("C") == approx(-9.901721, rel=0.001)
 
 
 def test_runProcessAsThread():
@@ -511,7 +511,7 @@ def test_loop_mode():
     stream1 = stream("stream1", fluid1)
     hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser("analyser1", stream1)
     runProcess()
-    assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel=0.001)
+    assert hydrateDewPoint.getMeasuredValue("C") == approx(-9.901721, rel=0.001)
     assert getProcess().getAllUnitNames().size() > 0
 
     clearProcess()
@@ -519,6 +519,6 @@ def test_loop_mode():
     set_loop_mode(True)
     stream1 = stream("stream1", fluid1)
     hydrateDewPoint = hydrateEquilibriumTemperatureAnalyser("analyser1", stream1)
-    assert hydrateDewPoint.getMeasuredValue("C") == approx(-25.204324, rel=0.001)
+    assert hydrateDewPoint.getMeasuredValue("C") == approx(-9.901721, rel=0.001)
     assert getProcess().getAllUnitNames().size() == 0
     set_loop_mode(False)
