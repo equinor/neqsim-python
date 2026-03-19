@@ -169,3 +169,11 @@ class measurement:
     @JOverride
     def getTag(self):
         return getattr(self, "tag", "")
+
+    @JOverride
+    def setTagRole(self, tagRole):
+        self.tagRole = tagRole
+
+    @JOverride
+    def getTagRole(self):
+        return getattr(self, "tagRole", None)
