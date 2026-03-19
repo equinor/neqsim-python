@@ -145,3 +145,7 @@ class measurement:
         # Add the logic to get alarm configuration.
         # This is a placeholder implementation.
         return getattr(self, "alarmConfig", None)
+
+    @JOverride
+    def getFieldValue(self):
+        return 0.0
