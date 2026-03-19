@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Improved PVT Experiments Tutorial
 ==================================
@@ -36,26 +38,22 @@ print("\n1. DEFINING A BLACK OIL SAMPLE")
 print("-" * 40)
 
 oil = fluid("pr")
-oil.addComponent("nitrogen", 0.5, "mol%")
-oil.addComponent("CO2", 1.5, "mol%")
-oil.addComponent("methane", 40.0, "mol%")
-oil.addComponent("ethane", 8.0, "mol%")
-oil.addComponent("propane", 6.0, "mol%")
-oil.addComponent("i-butane", 1.5, "mol%")
-oil.addComponent("n-butane", 3.0, "mol%")
-oil.addComponent("i-pentane", 1.5, "mol%")
-oil.addComponent("n-pentane", 2.0, "mol%")
-oil.addComponent("n-hexane", 3.0, "mol%")
-oil.addComponent("C7", 33.0, "mol%")  # Heptane-plus fraction
+oil.addComponent("nitrogen", 0.5)
+oil.addComponent("CO2", 1.5)
+oil.addComponent("methane", 40.0)
+oil.addComponent("ethane", 8.0)
+oil.addComponent("propane", 6.0)
+oil.addComponent("i-butane", 1.5)
+oil.addComponent("n-butane", 3.0)
+oil.addComponent("i-pentane", 1.5)
+oil.addComponent("n-pentane", 2.0)
+oil.addComponent("n-hexane", 3.0)
+oil.addTBPfraction("C7", 33.0, 0.150, 780.0)  # Heptane-plus fraction (MW=150 g/mol, density=780 kg/m3)
 oil.setMixingRule("classic")
 oil.setMultiPhaseCheck(True)
 
-# Set C7+ properties (typically from lab analysis)
-oil.getPhase(0).getComponent("C7").setMolarMass(0.150)  # 150 g/mol
-oil.getPhase(0).getComponent("C7").setNormalLiquidDensity(780.0)  # kg/m³
-
 # Reservoir conditions
-reservoir_T = 100.0  # °C
+reservoir_T = 100.0  # C
 reservoir_P = 250.0  # bara
 
 oil.setTemperature(reservoir_T, "C")
@@ -73,10 +71,10 @@ print(f"\nReservoir conditions: T = {reservoir_T}°C, P = {reservoir_P} bara")
 print("\n2. SATURATION PRESSURE (BUBBLE POINT)")
 print("-" * 40)
 
-from neqsim.thermo import bubblepoint
+from neqsim.thermo import bubp
 
 oil.setTemperature(reservoir_T, "C")
-psat = bubblepoint(oil)
+psat = bubp(oil)
 
 print(f"Bubble point pressure at {reservoir_T}°C: {psat:.1f} bara")
 print("\nInterpretation:")
@@ -146,17 +144,17 @@ print("-" * 50)
 
 # Create fresh fluid
 diff_oil = fluid("pr")
-diff_oil.addComponent("nitrogen", 0.5, "mol%")
-diff_oil.addComponent("CO2", 1.5, "mol%")
-diff_oil.addComponent("methane", 40.0, "mol%")
-diff_oil.addComponent("ethane", 8.0, "mol%")
-diff_oil.addComponent("propane", 6.0, "mol%")
-diff_oil.addComponent("i-butane", 1.5, "mol%")
-diff_oil.addComponent("n-butane", 3.0, "mol%")
-diff_oil.addComponent("i-pentane", 1.5, "mol%")
-diff_oil.addComponent("n-pentane", 2.0, "mol%")
-diff_oil.addComponent("n-hexane", 3.0, "mol%")
-diff_oil.addComponent("C7", 33.0, "mol%")
+diff_oil.addComponent("nitrogen", 0.5)
+diff_oil.addComponent("CO2", 1.5)
+diff_oil.addComponent("methane", 40.0)
+diff_oil.addComponent("ethane", 8.0)
+diff_oil.addComponent("propane", 6.0)
+diff_oil.addComponent("i-butane", 1.5)
+diff_oil.addComponent("n-butane", 3.0)
+diff_oil.addComponent("i-pentane", 1.5)
+diff_oil.addComponent("n-pentane", 2.0)
+diff_oil.addComponent("n-hexane", 3.0)
+diff_oil.addTBPfraction("C7", 33.0, 0.150, 780.0)
 diff_oil.setMixingRule("classic")
 diff_oil.setMultiPhaseCheck(True)
 
@@ -194,13 +192,13 @@ print("Multi-stage separation to optimize oil recovery and gas quality")
 
 # Create fresh reservoir fluid
 sep_oil = fluid("pr")
-sep_oil.addComponent("methane", 50.0, "mol%")
-sep_oil.addComponent("ethane", 10.0, "mol%")
-sep_oil.addComponent("propane", 8.0, "mol%")
-sep_oil.addComponent("n-butane", 5.0, "mol%")
-sep_oil.addComponent("n-pentane", 7.0, "mol%")
-sep_oil.addComponent("n-hexane", 8.0, "mol%")
-sep_oil.addComponent("n-heptane", 12.0, "mol%")
+sep_oil.addComponent("methane", 50.0)
+sep_oil.addComponent("ethane", 10.0)
+sep_oil.addComponent("propane", 8.0)
+sep_oil.addComponent("n-butane", 5.0)
+sep_oil.addComponent("n-pentane", 7.0)
+sep_oil.addComponent("n-hexane", 8.0)
+sep_oil.addComponent("n-heptane", 12.0)
 sep_oil.setMixingRule("classic")
 sep_oil.setMultiPhaseCheck(True)
 
@@ -243,10 +241,10 @@ print("Swelling test evaluates enhanced oil recovery by gas injection")
 print("Adding CO2 to oil reduces viscosity and increases volume")
 
 base_oil = fluid("pr")
-base_oil.addComponent("methane", 30.0, "mol%")
-base_oil.addComponent("propane", 10.0, "mol%")
-base_oil.addComponent("n-hexane", 20.0, "mol%")
-base_oil.addComponent("n-decane", 40.0, "mol%")
+base_oil.addComponent("methane", 30.0)
+base_oil.addComponent("propane", 10.0)
+base_oil.addComponent("n-hexane", 20.0)
+base_oil.addComponent("n-decane", 40.0)
 base_oil.setMixingRule("classic")
 base_oil.setMultiPhaseCheck(True)
 
@@ -257,7 +255,7 @@ print("-" * 40)
 
 # Get reference volume at saturation
 base_oil.setTemperature(80.0, "C")
-psat_base = bubblepoint(base_oil)
+psat_base = bubp(base_oil)
 base_oil.setPressure(psat_base, "bara")
 TPflash(base_oil)
 base_oil.initThermoProperties()
@@ -267,16 +265,16 @@ for co2_pct in [0, 10, 20, 30]:
     swell_oil = fluid("pr")
     # Scale original composition
     scale = (100 - co2_pct) / 100
-    swell_oil.addComponent("CO2", co2_pct, "mol%")
-    swell_oil.addComponent("methane", 30.0 * scale, "mol%")
-    swell_oil.addComponent("propane", 10.0 * scale, "mol%")
-    swell_oil.addComponent("n-hexane", 20.0 * scale, "mol%")
-    swell_oil.addComponent("n-decane", 40.0 * scale, "mol%")
+    swell_oil.addComponent("CO2", co2_pct)
+    swell_oil.addComponent("methane", 30.0 * scale)
+    swell_oil.addComponent("propane", 10.0 * scale)
+    swell_oil.addComponent("n-hexane", 20.0 * scale)
+    swell_oil.addComponent("n-decane", 40.0 * scale)
     swell_oil.setMixingRule("classic")
     swell_oil.setMultiPhaseCheck(True)
 
     swell_oil.setTemperature(80.0, "C")
-    psat_swell = bubblepoint(swell_oil)
+    psat_swell = bubp(swell_oil)
     swell_oil.setPressure(psat_swell, "bara")
     TPflash(swell_oil)
     swell_oil.initThermoProperties()
@@ -293,9 +291,9 @@ print("-" * 40)
 print("Viscosity variation with pressure and temperature")
 
 visc_oil = fluid("pr")
-visc_oil.addComponent("methane", 30.0, "mol%")
-visc_oil.addComponent("n-pentane", 20.0, "mol%")
-visc_oil.addComponent("n-decane", 50.0, "mol%")
+visc_oil.addComponent("methane", 30.0)
+visc_oil.addComponent("n-pentane", 20.0)
+visc_oil.addComponent("n-decane", 50.0)
 visc_oil.setMixingRule("classic")
 
 print("\nOil viscosity at different conditions:")

@@ -28,9 +28,10 @@ molarMass = [
     202.0 / 1000.0,
 ]
 density = [664.0e-3, 738.0e-3, 765.0e-3, 781.0e-3, 813.30e-3]
-characterizedFluid = addOilFractions(
+addOilFractions(
     fluidDefinedComponents, charNames, charFlowrate, molarMass, density
 )
+characterizedFluid = fluidDefinedComponents  # addOilFractions modifies in place
 # printFrame(characterizedFluid)
 characterizedFluid.setTemperature(273.15 + 20.6, "K")
 characterizedFluid.setPressure(86.8, "bara")
@@ -159,12 +160,12 @@ gasDensity = numpy.zeros((numP, numT))
 oilDensity = numpy.zeros((numP, numT))
 GORcalc = numpy.zeros((numP, numT))
 GORactual = numpy.zeros((numP, numT))
-gasViscosity[:] = np.NaN
-oilViscosity[:] = np.NaN
-gasDensity[:] = np.NaN
-oilDensity[:] = np.NaN
-GORcalc[:] = np.NaN
-GORactual[:] = np.NaN
+gasViscosity[:] = np.nan
+oilViscosity[:] = np.nan
+gasDensity[:] = np.nan
+oilDensity[:] = np.nan
+GORcalc[:] = np.nan
+GORactual[:] = np.nan
 
 for i in range(len(temperatures)):
     for j in range(len(pressures)):

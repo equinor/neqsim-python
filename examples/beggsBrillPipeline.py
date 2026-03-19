@@ -73,22 +73,22 @@ print("=" * 65)
 print("\nPipeline Geometry:")
 print(f"  Length:          10,000 m (10 km)")
 print(f"  Diameter:        0.30 m (12 inch)")
-print(f"  Wall roughness:  50 μm")
+print(f"  Wall roughness:  50 um")
 print(f"  Elevation gain:  200 m (uphill)")
 
 print("\nInlet Conditions:")
 print(f"  Pressure:        {inlet_stream.getPressure('bara'):.1f} bara")
-print(f"  Temperature:     {inlet_stream.getTemperature('C'):.1f} °C")
+print(f"  Temperature:     {inlet_stream.getTemperature('C'):.1f} C")
 print(f"  Mass flow:       {inlet_stream.getFlowRate('kg/hr'):.0f} kg/hr")
 
 print("\nOutlet Conditions:")
 print(f"  Pressure:        {outlet_pressure:.2f} bara")
-print(f"  Temperature:     {outlet_temp:.1f} °C")
+print(f"  Temperature:     {outlet_temp:.1f} C")
 
 print("\nPipeline Performance:")
 print(f"  Pressure drop:   {pressure_drop:.2f} bar")
-print(f"  ΔP per km:       {pressure_drop / 10:.2f} bar/km")
-print(f"  Temp change:     {outlet_temp - inlet_stream.getTemperature('C'):.1f} °C")
+print(f"  dP per km:       {pressure_drop / 10:.2f} bar/km")
+print(f"  Temp change:     {outlet_temp - inlet_stream.getTemperature('C'):.1f} C")
 
 # Get flow information from outlet stream
 outlet_fluid = outlet_stream.getFluid()

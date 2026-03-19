@@ -16,6 +16,7 @@ Features demonstrated:
 """
 
 import uuid
+import jpype
 from neqsim import jneqsim
 from neqsim.thermo import fluid
 
@@ -104,7 +105,8 @@ while time <= simulation_time:
 
     # Run separator transient step
     run_id = uuid.uuid4()
-    separator.runTransient(time_step, jneqsim.util.util.UUIDJVM.randomUUID())
+    UUID = jpype.JClass('java.util.UUID')
+    separator.runTransient(time_step, UUID.randomUUID())
 
     # Run outlet streams
     gas_outlet.run()

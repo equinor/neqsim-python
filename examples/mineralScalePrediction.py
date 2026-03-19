@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Mineral Scale Prediction Tutorial
 ==================================
@@ -76,17 +78,17 @@ print("\n3. CREATING FORMATION WATER")
 print("-" * 40)
 
 # Create electrolyte fluid for scale calculations
-from neqsim.thermo import ioncomposition
+from neqsim.thermo import ionComposition
 
 # Formation water composition (typical North Sea)
 formation_water = fluid("electrolyte")
-formation_water.addComponent("water", 1.0, "kg")
-formation_water.addComponent("Na+", 1.5, "mol")
-formation_water.addComponent("Cl-", 1.6, "mol")
-formation_water.addComponent("Ca++", 0.02, "mol")
-formation_water.addComponent("Ba++", 0.0001, "mol")  # 10 mg/L Ba
-formation_water.addComponent("SO4--", 0.001, "mol")  # Low sulfate
-formation_water.addComponent("HCO3-", 0.01, "mol")  # Bicarbonate
+formation_water.addComponent("water", 1.0, "kg/hr")
+formation_water.addComponent("Na+", 1.5, "mol/sec")
+formation_water.addComponent("Cl-", 1.6, "mol/sec")
+formation_water.addComponent("Ca++", 0.02, "mol/sec")
+formation_water.addComponent("Ba++", 0.0001, "mol/sec")  # 10 mg/L Ba
+formation_water.addComponent("SO4--", 0.001, "mol/sec")  # Low sulfate
+formation_water.addComponent("HCO3-", 0.01, "mol/sec")  # Bicarbonate
 formation_water.setMixingRule("classic")
 
 print("Formation water composition (per kg water):")
@@ -104,13 +106,13 @@ print("\n4. SEAWATER (INJECTION WATER)")
 print("-" * 40)
 
 seawater = fluid("electrolyte")
-seawater.addComponent("water", 1.0, "kg")
-seawater.addComponent("Na+", 0.48, "mol")
-seawater.addComponent("Cl-", 0.56, "mol")
-seawater.addComponent("Ca++", 0.01, "mol")
-seawater.addComponent("Mg++", 0.05, "mol")
-seawater.addComponent("SO4--", 0.028, "mol")  # High sulfate!
-seawater.addComponent("HCO3-", 0.002, "mol")
+seawater.addComponent("water", 1.0, "kg/hr")
+seawater.addComponent("Na+", 0.48, "mol/sec")
+seawater.addComponent("Cl-", 0.56, "mol/sec")
+seawater.addComponent("Ca++", 0.01, "mol/sec")
+seawater.addComponent("Mg++", 0.05, "mol/sec")
+seawater.addComponent("SO4--", 0.028, "mol/sec")  # High sulfate!
+seawater.addComponent("HCO3-", 0.002, "mol/sec")
 seawater.setMixingRule("classic")
 
 print("Seawater composition (per kg water):")
@@ -134,7 +136,7 @@ print(
 print("\n5. SCALE POTENTIAL CALCULATION")
 print("-" * 40)
 
-from neqsim.thermo import calcIonComposition, ioncomposition
+from neqsim.thermo import calcIonComposition, ionComposition
 
 # Calculate scale potential at reservoir conditions
 formation_water.setTemperature(80.0, "C")
@@ -146,7 +148,7 @@ print("Calculating scale potential at 80°C, 200 bara...")
 
 try:
     # Get ion composition analysis
-    ion_analysis = ioncomposition(formation_water)
+    ion_analysis = ionComposition(formation_water)
 
     if ion_analysis is not None:
         print("\nIon composition analysis:")

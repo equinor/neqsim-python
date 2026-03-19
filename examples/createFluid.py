@@ -53,6 +53,7 @@ charFlowrate = [0.2, 0.1, 0.1, 0.05, 0.01]
 molarMass = [0.20, 0.25, 0.3, 0.36, 0.4]
 density = [700.0e-3, 750.0e-3, 810.0e-3, 880.0e-3, 920.0e-3]
 fluid5 = addOilFractions(fluid4, charNames, charFlowrate, molarMass, density)
+fluid5 = fluid4  # addOilFractions modifies fluid in place
 print("phase envelope for fluid 5")
 phaseenvelope(fluid5, True)
 fluid5.setPressure(10.0, "bara")

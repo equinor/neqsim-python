@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Oil Viscosity Models and Tuning Tutorial
 ==========================================
@@ -19,7 +21,7 @@ Topics Covered:
 """
 
 from neqsim.thermo import fluid, TPflash
-import neqsim.jneqsim as jneqsim
+from neqsim import jneqsim
 
 print("=" * 70)
 print("OIL VISCOSITY MODELS AND TUNING TUTORIAL")
@@ -53,11 +55,11 @@ print("-" * 40)
 
 # Create a medium oil
 oil = fluid("srk")
-oil.addComponent("methane", 10.0, "mol%")
-oil.addComponent("n-pentane", 15.0, "mol%")
-oil.addComponent("n-heptane", 25.0, "mol%")
-oil.addComponent("n-decane", 30.0, "mol%")
-oil.addComponent("n-C16", 20.0, "mol%")
+oil.addComponent("methane", 10.0)
+oil.addComponent("n-pentane", 15.0)
+oil.addComponent("n-heptane", 25.0)
+oil.addComponent("nC10", 30.0)
+oil.addComponent("nC16", 20.0)
 oil.setMixingRule("classic")
 oil.setMultiPhaseCheck(True)
 
@@ -124,8 +126,8 @@ print("Adjusting dense-fluid polynomial coefficients to match lab data")
 
 # Create oil system
 tuning_oil = fluid("srk")
-tuning_oil.addComponent("n-heptane", 30.0, "mol%")
-tuning_oil.addComponent("n-decane", 40.0, "mol%")
+tuning_oil.addComponent("n-heptane", 30.0)
+tuning_oil.addComponent("nC10", 40.0)
 tuning_oil.addTBPfraction("C16", 30.0, 0.22, 830.0)
 tuning_oil.setMixingRule("classic")
 
@@ -214,8 +216,8 @@ print("For TBP (True Boiling Point) fractions, a correction factor can be applie
 
 # Create oil with TBP fractions
 ft_oil = fluid("srk")
-ft_oil.addComponent("methane", 5.0, "mol%")
-ft_oil.addComponent("n-heptane", 20.0, "mol%")
+ft_oil.addComponent("methane", 5.0)
+ft_oil.addComponent("n-heptane", 20.0)
 ft_oil.addTBPfraction("C12", 25.0, 0.17, 780.0)
 ft_oil.addTBPfraction("C18", 30.0, 0.25, 820.0)
 ft_oil.addTBPfraction("C25", 20.0, 0.35, 860.0)
@@ -320,9 +322,9 @@ print("\n8. MODEL COMPARISON AT DIFFERENT CONDITIONS")
 print("-" * 40)
 
 comp_oil = fluid("srk")
-comp_oil.addComponent("n-heptane", 30.0, "mol%")
-comp_oil.addComponent("n-decane", 40.0, "mol%")
-comp_oil.addComponent("n-C16", 30.0, "mol%")
+comp_oil.addComponent("n-heptane", 30.0)
+comp_oil.addComponent("nC10", 40.0)
+comp_oil.addComponent("nC16", 30.0)
 comp_oil.setMixingRule("classic")
 comp_oil.setMultiPhaseCheck(True)
 

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Physical Properties Calculation Tutorial
 ==========================================
@@ -33,16 +35,16 @@ print("-" * 40)
 
 # Create a fluid that will have gas, oil, and water phases
 multiphase = fluid("cpa")  # CPA equation of state handles water well
-multiphase.addComponent("nitrogen", 1.0, "mol%")
-multiphase.addComponent("CO2", 3.0, "mol%")
-multiphase.addComponent("methane", 70.0, "mol%")
-multiphase.addComponent("ethane", 8.0, "mol%")
-multiphase.addComponent("propane", 5.0, "mol%")
-multiphase.addComponent("n-butane", 3.0, "mol%")
-multiphase.addComponent("n-pentane", 2.0, "mol%")
-multiphase.addComponent("n-hexane", 3.0, "mol%")
-multiphase.addComponent("n-heptane", 3.0, "mol%")
-multiphase.addComponent("water", 2.0, "mol%")
+multiphase.addComponent("nitrogen", 1.0)
+multiphase.addComponent("CO2", 3.0)
+multiphase.addComponent("methane", 70.0)
+multiphase.addComponent("ethane", 8.0)
+multiphase.addComponent("propane", 5.0)
+multiphase.addComponent("n-butane", 3.0)
+multiphase.addComponent("n-pentane", 2.0)
+multiphase.addComponent("n-hexane", 3.0)
+multiphase.addComponent("n-heptane", 3.0)
+multiphase.addComponent("water", 2.0)
 multiphase.setMixingRule(10)  # CPA mixing rule
 multiphase.setMultiPhaseCheck(True)
 
@@ -236,8 +238,8 @@ print("Showing gas viscosity variation:")
 
 # Create a simple gas
 simple_gas = fluid("srk")
-simple_gas.addComponent("methane", 90.0, "mol%")
-simple_gas.addComponent("ethane", 10.0, "mol%")
+simple_gas.addComponent("methane", 90.0)
+simple_gas.addComponent("ethane", 10.0)
 simple_gas.setMixingRule("classic")
 simple_gas.setPressure(50.0, "bara")
 

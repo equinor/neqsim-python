@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Phase Equilibrium and Saturation Points Tutorial
 =================================================
@@ -32,22 +34,22 @@ print("             (liquid at saturation)")
 
 # Create a light oil
 oil = fluid("pr")
-oil.addComponent("methane", 20.0, "mol%")
-oil.addComponent("ethane", 10.0, "mol%")
-oil.addComponent("propane", 15.0, "mol%")
-oil.addComponent("n-butane", 10.0, "mol%")
-oil.addComponent("n-pentane", 15.0, "mol%")
-oil.addComponent("n-hexane", 10.0, "mol%")
-oil.addComponent("n-heptane", 10.0, "mol%")
-oil.addComponent("n-octane", 10.0, "mol%")
+oil.addComponent("methane", 20.0)
+oil.addComponent("ethane", 10.0)
+oil.addComponent("propane", 15.0)
+oil.addComponent("n-butane", 10.0)
+oil.addComponent("n-pentane", 15.0)
+oil.addComponent("n-hexane", 10.0)
+oil.addComponent("n-heptane", 10.0)
+oil.addComponent("n-octane", 10.0)
 oil.setMixingRule("classic")
 oil.setMultiPhaseCheck(True)
 
 # Calculate bubble point at 100°C
-from neqsim.thermo import bubblepoint
+from neqsim.thermo import bubp
 
 oil.setTemperature(100.0, "C")
-bp = bubblepoint(oil)
+bp = bubp(oil)
 
 print(f"\nLight oil composition:")
 print("  Methane: 20%, Ethane: 10%, Propane: 15%, Butane: 10%")
@@ -64,21 +66,21 @@ print("          (gas at saturation)")
 
 # Create a rich natural gas
 gas = fluid("pr")
-gas.addComponent("methane", 80.0, "mol%")
-gas.addComponent("ethane", 8.0, "mol%")
-gas.addComponent("propane", 5.0, "mol%")
-gas.addComponent("n-butane", 3.0, "mol%")
-gas.addComponent("n-pentane", 2.0, "mol%")
-gas.addComponent("n-hexane", 1.5, "mol%")
-gas.addComponent("n-heptane", 0.5, "mol%")
+gas.addComponent("methane", 80.0)
+gas.addComponent("ethane", 8.0)
+gas.addComponent("propane", 5.0)
+gas.addComponent("n-butane", 3.0)
+gas.addComponent("n-pentane", 2.0)
+gas.addComponent("n-hexane", 1.5)
+gas.addComponent("n-heptane", 0.5)
 gas.setMixingRule("classic")
 gas.setMultiPhaseCheck(True)
 
 # Calculate dew point at 20°C
-from neqsim.thermo import dewpoint
+from neqsim.thermo import dewp
 
 gas.setTemperature(20.0, "C")
-dp = dewpoint(gas)
+dp = dewp(gas)
 
 print(f"\nRich gas composition:")
 print("  Methane: 80%, Ethane: 8%, Propane: 5%, Butane: 3%")
@@ -158,13 +160,13 @@ print("\nPressure [bara] | Liquid Fraction")
 print("----------------|----------------")
 
 test_gas = fluid("pr")
-test_gas.addComponent("methane", 80.0, "mol%")
-test_gas.addComponent("ethane", 8.0, "mol%")
-test_gas.addComponent("propane", 5.0, "mol%")
-test_gas.addComponent("n-butane", 3.0, "mol%")
-test_gas.addComponent("n-pentane", 2.0, "mol%")
-test_gas.addComponent("n-hexane", 1.5, "mol%")
-test_gas.addComponent("n-heptane", 0.5, "mol%")
+test_gas.addComponent("methane", 80.0)
+test_gas.addComponent("ethane", 8.0)
+test_gas.addComponent("propane", 5.0)
+test_gas.addComponent("n-butane", 3.0)
+test_gas.addComponent("n-pentane", 2.0)
+test_gas.addComponent("n-hexane", 1.5)
+test_gas.addComponent("n-heptane", 0.5)
 test_gas.setMixingRule("classic")
 test_gas.setMultiPhaseCheck(True)
 
@@ -188,14 +190,14 @@ print("-" * 40)
 print("Water dew point: temperature where water starts to condense from gas")
 print("Critical for pipeline operations to prevent corrosion and hydrates")
 
-from neqsim.thermo import waterdewpoint
+from neqsim.thermo import waterdewt
 
 # Create a wet natural gas
 wet_gas = fluid("cpa")
-wet_gas.addComponent("methane", 90.0, "mol%")
-wet_gas.addComponent("ethane", 5.0, "mol%")
-wet_gas.addComponent("propane", 3.0, "mol%")
-wet_gas.addComponent("water", 2.0, "mol%")
+wet_gas.addComponent("methane", 90.0)
+wet_gas.addComponent("ethane", 5.0)
+wet_gas.addComponent("propane", 3.0)
+wet_gas.addComponent("water", 2.0)
 wet_gas.setMixingRule(10)  # CPA mixing rule
 wet_gas.setMultiPhaseCheck(True)
 
@@ -207,8 +209,8 @@ print("----------------|--------------------")
 for p in [50, 75, 100, 150]:
     try:
         wet_gas.setPressure(p, "bara")
-        wdp = waterdewpoint(wet_gas)
-        print(f"{p:15} | {wdp:.1f}")
+        wdp = waterdewt(wet_gas)
+        print(f"{p:15} | {wdp - 273.15:.1f}")
     except Exception as e:
         print(f"{p:15} | Error: {e}")
 

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Ejector Process Simulation Example
 
@@ -55,7 +57,7 @@ process.add(ejector)
 process.run()
 
 # Get results
-outlet_stream = ejector.getOutletStream()
+outlet_stream = ejector.getMixedStream()
 outlet_pressure = outlet_stream.getPressure("bara")
 outlet_temperature = outlet_stream.getTemperature("C")
 outlet_flow = outlet_stream.getFlowRate("kg/hr")

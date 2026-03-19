@@ -15,7 +15,7 @@ time.sleep(3)
 eosname = "srk"  # @param ["srk", "pr"]
 # @param ["methane", "ethane", "propane", "i-butane", "n-butane"]
 camponentName = "CO2"
-fluid1 = fluid("eosname")  # create a fluid using the SRK-EoS
+fluid1 = fluid(eosname)  # create a fluid using the SRK-EoS
 fluid1.addComponent(camponentName, 1.0)  # adding 1 mole methane to the fluid
 
 TTrip = fluid1.getPhase(0).getComponent(camponentName).getTriplePointTemperature()

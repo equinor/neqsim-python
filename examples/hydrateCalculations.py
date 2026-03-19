@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Hydrate Calculations Tutorial
 ==============================
@@ -50,17 +52,17 @@ Formation conditions:
 print("\n2. HYDRATE FORMATION TEMPERATURE")
 print("-" * 40)
 
-from neqsim.thermo import hydrateequilibrium
+from neqsim.thermo import hydt
 
 # Create a natural gas
 gas = fluid("cpa")  # CPA handles water well
-gas.addComponent("nitrogen", 1.0, "mol%")
-gas.addComponent("CO2", 2.0, "mol%")
-gas.addComponent("methane", 85.0, "mol%")
-gas.addComponent("ethane", 6.0, "mol%")
-gas.addComponent("propane", 3.0, "mol%")
-gas.addComponent("n-butane", 1.0, "mol%")
-gas.addComponent("water", 2.0, "mol%")
+gas.addComponent("nitrogen", 1.0)
+gas.addComponent("CO2", 2.0)
+gas.addComponent("methane", 85.0)
+gas.addComponent("ethane", 6.0)
+gas.addComponent("propane", 3.0)
+gas.addComponent("n-butane", 1.0)
+gas.addComponent("water", 2.0)
 gas.setMixingRule(10)  # CPA mixing rule
 gas.setMultiPhaseCheck(True)
 
@@ -76,7 +78,7 @@ for p in [20, 50, 100, 150, 200]:
         gas.setTemperature(10.0, "C")  # Initial guess
 
         # Calculate hydrate equilibrium temperature
-        hydrate_T = hydrateequilibrium(gas)
+        hydrate_T = hydt(gas) - 273.15
 
         print(f"{p:15} | {hydrate_T:.1f}")
     except Exception as e:
@@ -99,7 +101,7 @@ for t_c in [0, 5, 10, 15, 20, 25]:
 
     try:
         # This gives hydrate equilibrium
-        hydrate_T = hydrateequilibrium(gas)
+        hydrate_T = hydt(gas) - 273.15
 
         # Since we set temperature, the result tells us the equilibrium T
         # For the hydrate curve, we need to iterate or use proper method
@@ -127,7 +129,7 @@ Interpretation:
 # Example calculation
 gas.setPressure(100.0, "bara")
 gas.setTemperature(15.0, "C")
-hydrate_T = hydrateequilibrium(gas)
+hydrate_T = hydt(gas) - 273.15
 
 operating_T = 5.0  # °C
 subcooling = hydrate_T - operating_T
@@ -151,33 +153,33 @@ print("-----------|----------------|---------------")
 
 # Base case without inhibitor
 gas_base = fluid("cpa")
-gas_base.addComponent("methane", 90.0, "mol%")
-gas_base.addComponent("ethane", 5.0, "mol%")
-gas_base.addComponent("propane", 3.0, "mol%")
-gas_base.addComponent("water", 2.0, "mol%")
+gas_base.addComponent("methane", 90.0)
+gas_base.addComponent("ethane", 5.0)
+gas_base.addComponent("propane", 3.0)
+gas_base.addComponent("water", 2.0)
 gas_base.setMixingRule(10)
 gas_base.setMultiPhaseCheck(True)
 gas_base.setPressure(100.0, "bara")
 gas_base.setTemperature(15.0, "C")
 
-hydrate_T_no_inhibitor = hydrateequilibrium(gas_base)
+hydrate_T_no_inhibitor = hydt(gas_base) - 273.15
 print(f"{0:10} | {hydrate_T_no_inhibitor:.1f}           | 0.0 (baseline)")
 
 # With different methanol concentrations
 for meoh_wt_pct in [10, 20, 30, 40]:
     try:
         gas_meoh = fluid("cpa")
-        gas_meoh.addComponent("methane", 88.0, "mol%")
-        gas_meoh.addComponent("ethane", 5.0, "mol%")
-        gas_meoh.addComponent("propane", 3.0, "mol%")
-        gas_meoh.addComponent("water", 2.0, "mol%")
-        gas_meoh.addComponent("methanol", 2.0 * meoh_wt_pct / 20, "mol%")  # Approximate
+        gas_meoh.addComponent("methane", 88.0)
+        gas_meoh.addComponent("ethane", 5.0)
+        gas_meoh.addComponent("propane", 3.0)
+        gas_meoh.addComponent("water", 2.0)
+        gas_meoh.addComponent("methanol", 2.0 * meoh_wt_pct / 20)  # Approximate
         gas_meoh.setMixingRule(10)
         gas_meoh.setMultiPhaseCheck(True)
         gas_meoh.setPressure(100.0, "bara")
         gas_meoh.setTemperature(15.0, "C")
 
-        hydrate_T_meoh = hydrateequilibrium(gas_meoh)
+        hydrate_T_meoh = hydt(gas_meoh) - 273.15
         depression = hydrate_T_no_inhibitor - hydrate_T_meoh
 
         print(f"{meoh_wt_pct:10} | {hydrate_T_meoh:.1f}           | {depression:.1f}")
@@ -198,18 +200,18 @@ print("----------|----------------|------------------------")
 for meg_wt_pct in [0, 30, 50, 70]:
     try:
         gas_meg = fluid("cpa")
-        gas_meg.addComponent("methane", 88.0, "mol%")
-        gas_meg.addComponent("ethane", 6.0, "mol%")
-        gas_meg.addComponent("propane", 4.0, "mol%")
-        gas_meg.addComponent("water", 2.0, "mol%")
+        gas_meg.addComponent("methane", 88.0)
+        gas_meg.addComponent("ethane", 6.0)
+        gas_meg.addComponent("propane", 4.0)
+        gas_meg.addComponent("water", 2.0)
         if meg_wt_pct > 0:
-            gas_meg.addComponent("MEG", meg_wt_pct / 20, "mol%")  # Approximate
+            gas_meg.addComponent("MEG", meg_wt_pct / 20)  # Approximate
         gas_meg.setMixingRule(10)
         gas_meg.setMultiPhaseCheck(True)
         gas_meg.setPressure(100.0, "bara")
         gas_meg.setTemperature(10.0, "C")
 
-        hydrate_T_meg = hydrateequilibrium(gas_meg)
+        hydrate_T_meg = hydt(gas_meg) - 273.15
 
         note = (
             "Baseline"
@@ -299,11 +301,11 @@ Question: Will hydrates form? How much MEG is needed?
 
 # Check hydrate risk
 pipeline_gas = fluid("cpa")
-pipeline_gas.addComponent("methane", 85.0, "mol%")
-pipeline_gas.addComponent("ethane", 7.0, "mol%")
-pipeline_gas.addComponent("propane", 4.0, "mol%")
-pipeline_gas.addComponent("n-butane", 2.0, "mol%")
-pipeline_gas.addComponent("water", 2.0, "mol%")
+pipeline_gas.addComponent("methane", 85.0)
+pipeline_gas.addComponent("ethane", 7.0)
+pipeline_gas.addComponent("propane", 4.0)
+pipeline_gas.addComponent("n-butane", 2.0)
+pipeline_gas.addComponent("water", 2.0)
 pipeline_gas.setMixingRule(10)
 pipeline_gas.setMultiPhaseCheck(True)
 
@@ -311,7 +313,7 @@ pipeline_gas.setMultiPhaseCheck(True)
 pipeline_gas.setPressure(80.0, "bara")
 pipeline_gas.setTemperature(5.0, "C")
 
-hydrate_T = hydrateequilibrium(pipeline_gas)
+hydrate_T = hydt(pipeline_gas) - 273.15
 
 print(f"Operating temperature: 5°C")
 print(f"Hydrate formation temperature: {hydrate_T:.1f}°C")

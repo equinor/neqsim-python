@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Flare System Simulation Example
 
@@ -73,18 +75,5 @@ print(f"\nFlare Performance:")
 print(f"  Heat duty:         {heat_duty_mw:.2f} MW")
 print(f"  CO2 emissions:     {co2_emission:.0f} kg/hr")
 print(f"  CO2 emissions:     {co2_emission * 24 / 1000:.1f} tonnes/day")
-
-# Check capacity utilization
-capacity_check = flare.checkCapacity()
-if capacity_check.isOverloaded():
-    print(f"\n⚠️  WARNING: Flare is OVERLOADED!")
-    print(f"  Heat utilization: {capacity_check.getHeatUtilization() * 100:.1f}%")
-    print(f"  Mass utilization: {capacity_check.getMassUtilization() * 100:.1f}%")
-else:
-    print(f"\n✓ Flare is within design capacity")
-    if not float("nan") == capacity_check.getHeatUtilization():
-        print(f"  Heat utilization: {capacity_check.getHeatUtilization() * 100:.1f}%")
-    if not float("nan") == capacity_check.getMassUtilization():
-        print(f"  Mass utilization: {capacity_check.getMassUtilization() * 100:.1f}%")
 
 print("=" * 60)

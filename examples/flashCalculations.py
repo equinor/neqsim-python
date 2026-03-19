@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Thermodynamic Flash Calculations Tutorial
 ==========================================
@@ -38,14 +40,14 @@ print("=" * 70)
 # =============================================================================
 # Using SRK (Soave-Redlich-Kwong) equation of state
 natural_gas = fluid("srk")
-natural_gas.addComponent("nitrogen", 2.0, "mol%")
-natural_gas.addComponent("CO2", 1.5, "mol%")
-natural_gas.addComponent("methane", 85.0, "mol%")
-natural_gas.addComponent("ethane", 6.0, "mol%")
-natural_gas.addComponent("propane", 3.0, "mol%")
-natural_gas.addComponent("i-butane", 1.0, "mol%")
-natural_gas.addComponent("n-butane", 1.0, "mol%")
-natural_gas.addComponent("n-pentane", 0.5, "mol%")
+natural_gas.addComponent("nitrogen", 2.0)
+natural_gas.addComponent("CO2", 1.5)
+natural_gas.addComponent("methane", 85.0)
+natural_gas.addComponent("ethane", 6.0)
+natural_gas.addComponent("propane", 3.0)
+natural_gas.addComponent("i-butane", 1.0)
+natural_gas.addComponent("n-butane", 1.0)
+natural_gas.addComponent("n-pentane", 0.5)
 natural_gas.setMixingRule("classic")  # Use standard binary interaction parameters
 natural_gas.setMultiPhaseCheck(True)  # Enable detection of multiple phases
 

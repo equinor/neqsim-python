@@ -56,7 +56,7 @@ coolerMP1 = heater("heat1", compressorLP1.getOutStream())
 coolerMP1.setOutTemperature(303.0)
 scrubberLP = separator("scru", coolerMP1.getOutStream())
 
-recycleLP = recycle("rec1", scrubberLP.getLiquidOutStream())
+# recycleLP = recycle("rec1", scrubberLP.getLiquidOutStream())
 # separator2.addStream(recycleLP.getOutStream())
 
 mixerLP = mixer("mix1")
@@ -68,7 +68,7 @@ coolerMP1 = heater("hett", compressorMP1.getOutStream())
 coolerMP1.setOutTemperature(303.0)
 scrubberMP1 = separator("scr", coolerMP1.getOutStream())
 
-recycleMP = recycle("rec33", scrubberMP1.getLiquidOutStream())
+# recycleMP = recycle("rec33", scrubberMP1.getLiquidOutStream())
 # separator1.addStream(recycleMP.getOutStream())
 
 mixer1 = mixer("mx32")

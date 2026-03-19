@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Fluid Creation Tutorial
 ========================
@@ -54,9 +56,9 @@ print("-" * 40)
 
 # Method A: Mole percent
 gas_mol_pct = fluid("pr")
-gas_mol_pct.addComponent("methane", 90.0, "mol%")
-gas_mol_pct.addComponent("ethane", 7.0, "mol%")
-gas_mol_pct.addComponent("propane", 3.0, "mol%")
+gas_mol_pct.addComponent("methane", 90.0)
+gas_mol_pct.addComponent("ethane", 7.0)
+gas_mol_pct.addComponent("propane", 3.0)
 gas_mol_pct.setMixingRule("classic")
 
 print("A) Mole percent:")
@@ -64,9 +66,9 @@ print("   methane: 90 mol%, ethane: 7 mol%, propane: 3 mol%")
 
 # Method B: Mass (kg)
 gas_mass = fluid("pr")
-gas_mass.addComponent("methane", 100.0, "kg")
-gas_mass.addComponent("ethane", 20.0, "kg")
-gas_mass.addComponent("propane", 10.0, "kg")
+gas_mass.addComponent("methane", 100.0, "kg/hr")
+gas_mass.addComponent("ethane", 20.0, "kg/hr")
+gas_mass.addComponent("propane", 10.0, "kg/hr")
 gas_mass.setMixingRule("classic")
 
 print("\nB) Mass (kg):")
@@ -128,11 +130,11 @@ print("-" * 40)
 print("For undefined components, specify molecular weight and density")
 
 oil = fluid("pr")
-oil.addComponent("methane", 30.0, "mol%")
-oil.addComponent("n-hexane", 20.0, "mol%")
+oil.addComponent("methane", 30.0)
+oil.addComponent("n-hexane", 20.0)
 
 # Add a C10 pseudo-component with custom properties
-oil.addComponent("C10", 25.0, "mol%")
+oil.addComponent("C10", 25.0)
 
 # Add a heavier fraction manually
 # Using addPlusFraction for C20+ pseudo-component
@@ -157,14 +159,14 @@ print("Heavy fractions (C7+) can be characterized into pseudo-components")
 
 # Create oil with C7+ fraction
 oil_plus = fluid("pr")
-oil_plus.addComponent("nitrogen", 0.5, "mol%")
-oil_plus.addComponent("CO2", 1.5, "mol%")
-oil_plus.addComponent("methane", 45.0, "mol%")
-oil_plus.addComponent("ethane", 7.0, "mol%")
-oil_plus.addComponent("propane", 5.0, "mol%")
-oil_plus.addComponent("n-butane", 3.0, "mol%")
-oil_plus.addComponent("n-pentane", 3.0, "mol%")
-oil_plus.addComponent("n-hexane", 3.0, "mol%")
+oil_plus.addComponent("nitrogen", 0.5)
+oil_plus.addComponent("CO2", 1.5)
+oil_plus.addComponent("methane", 45.0)
+oil_plus.addComponent("ethane", 7.0)
+oil_plus.addComponent("propane", 5.0)
+oil_plus.addComponent("n-butane", 3.0)
+oil_plus.addComponent("n-pentane", 3.0)
+oil_plus.addComponent("n-hexane", 3.0)
 
 # Add C7+ as plus fraction (32 mol%, MW=200 g/mol, density=800 kg/m³)
 oil_plus.addPlusFraction("C7+", 32.0, 0.200, 800.0)
@@ -213,8 +215,8 @@ print("\n7. COPYING AND CLONING FLUIDS")
 print("-" * 40)
 
 original = fluid("srk")
-original.addComponent("methane", 90.0, "mol%")
-original.addComponent("ethane", 10.0, "mol%")
+original.addComponent("methane", 90.0)
+original.addComponent("ethane", 10.0)
 original.setMixingRule("classic")
 original.setTemperature(25.0, "C")
 original.setPressure(50.0, "bara")
@@ -243,17 +245,17 @@ print("Combine multiple streams into one fluid")
 
 # Stream 1: Lean gas
 stream1 = fluid("pr")
-stream1.addComponent("methane", 95.0, "mol%")
-stream1.addComponent("ethane", 5.0, "mol%")
+stream1.addComponent("methane", 95.0)
+stream1.addComponent("ethane", 5.0)
 stream1.setMixingRule("classic")
 stream1.setTotalFlowRate(1000.0, "mol/hr")
 
 # Stream 2: Rich gas
 stream2 = fluid("pr")
-stream2.addComponent("methane", 70.0, "mol%")
-stream2.addComponent("ethane", 15.0, "mol%")
-stream2.addComponent("propane", 10.0, "mol%")
-stream2.addComponent("n-butane", 5.0, "mol%")
+stream2.addComponent("methane", 70.0)
+stream2.addComponent("ethane", 15.0)
+stream2.addComponent("propane", 10.0)
+stream2.addComponent("n-butane", 5.0)
 stream2.setMixingRule("classic")
 stream2.setTotalFlowRate(500.0, "mol/hr")
 
@@ -295,9 +297,9 @@ print("\n10. ELECTROLYTE FLUIDS (BRINES)")
 print("-" * 40)
 
 brine = fluid("electrolyte")
-brine.addComponent("water", 1.0, "kg")
-brine.addComponent("Na+", 0.035, "mol")  # Sodium ion
-brine.addComponent("Cl-", 0.035, "mol")  # Chloride ion
+brine.addComponent("water", 1.0, "kg/hr")
+brine.addComponent("Na+", 0.035, "mol/sec")  # Sodium ion
+brine.addComponent("Cl-", 0.035, "mol/sec")  # Chloride ion
 brine.setMixingRule("classic")
 
 print("Created brine with NaCl:")

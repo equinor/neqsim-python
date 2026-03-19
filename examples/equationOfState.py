@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Equation of State Comparison Tutorial
 ======================================
@@ -58,14 +60,14 @@ print("-" * 40)
 def create_natural_gas(eos_name):
     """Create a natural gas mixture with specified EoS."""
     gas = fluid(eos_name)
-    gas.addComponent("nitrogen", 2.0, "mol%")
-    gas.addComponent("CO2", 1.0, "mol%")
-    gas.addComponent("methane", 88.0, "mol%")
-    gas.addComponent("ethane", 5.0, "mol%")
-    gas.addComponent("propane", 2.5, "mol%")
-    gas.addComponent("i-butane", 0.5, "mol%")
-    gas.addComponent("n-butane", 0.5, "mol%")
-    gas.addComponent("n-pentane", 0.5, "mol%")
+    gas.addComponent("nitrogen", 2.0)
+    gas.addComponent("CO2", 1.0)
+    gas.addComponent("methane", 88.0)
+    gas.addComponent("ethane", 5.0)
+    gas.addComponent("propane", 2.5)
+    gas.addComponent("i-butane", 0.5)
+    gas.addComponent("n-butane", 0.5)
+    gas.addComponent("n-pentane", 0.5)
     gas.setMixingRule("classic")
     return gas
 
@@ -118,9 +120,9 @@ def create_wet_gas(eos_name):
         gas = fluid(eos_name)
         gas.setMixingRule("classic")
 
-    gas.addComponent("methane", 90.0, "mol%")
-    gas.addComponent("ethane", 5.0, "mol%")
-    gas.addComponent("water", 5.0, "mol%")
+    gas.addComponent("methane", 90.0)
+    gas.addComponent("ethane", 5.0)
+    gas.addComponent("water", 5.0)
     gas.setMultiPhaseCheck(True)
     return gas
 
@@ -235,10 +237,10 @@ print("-" * 45)
 for eos in ["srk", "pr", "eos-cg"]:
     try:
         ccs_gas = fluid(eos)
-        ccs_gas.addComponent("CO2", 95.0, "mol%")
-        ccs_gas.addComponent("nitrogen", 3.0, "mol%")
-        ccs_gas.addComponent("oxygen", 1.0, "mol%")
-        ccs_gas.addComponent("argon", 1.0, "mol%")
+        ccs_gas.addComponent("CO2", 95.0)
+        ccs_gas.addComponent("nitrogen", 3.0)
+        ccs_gas.addComponent("oxygen", 1.0)
+        ccs_gas.addComponent("argon", 1.0)
         if eos not in ["eos-cg"]:
             ccs_gas.setMixingRule("classic")
         ccs_gas.setTemperature(25.0, "C")

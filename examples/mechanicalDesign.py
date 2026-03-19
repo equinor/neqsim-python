@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 """
 Mechanical Design Calculation Example
 
@@ -65,11 +67,10 @@ design_temp = operating_temp + 25.0
 
 mech_design.setMaxOperationPressure(operating_pressure)
 mech_design.setMaxOperationTemperature(operating_temp + 273.15)  # Convert to Kelvin
-mech_design.setMaxDesignPressure(design_pressure)
 
 print("\nDesign Conditions:")
 print(f"  Design pressure:       {design_pressure:.1f} bara")
-print(f"  Design temperature:    {design_temp:.1f} °C")
+print(f"  Design temperature:    {design_temp:.1f} C")
 
 # Set design capacity (gas volume flow)
 mech_design.setMaxDesignGassVolumeFlow(500.0)  # m3/hr
