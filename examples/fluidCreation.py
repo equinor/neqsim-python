@@ -134,7 +134,7 @@ oil.addComponent("methane", 30.0)
 oil.addComponent("n-hexane", 20.0)
 
 # Add a C10 pseudo-component with custom properties
-oil.addComponent("C10", 25.0)
+oil.addComponent("nC10", 25.0)
 
 # Add a heavier fraction manually
 # Using addPlusFraction for C20+ pseudo-component
