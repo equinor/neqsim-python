@@ -153,3 +153,11 @@ class measurement:
     @JOverride
     def setFieldValue(self, value):
         pass
+
+    @JOverride
+    def hasFieldValue(self):
+        return False
+
+    @JOverride
+    def getOnlineValue(self):
+        return 0.0
