@@ -169,10 +169,10 @@ oil_plus.addComponent("n-pentane", 3.0)
 oil_plus.addComponent("n-hexane", 3.0)
 
 # Add C7+ as plus fraction (32 mol%, MW=200 g/mol, density=800 kg/m³)
-oil_plus.addPlusFraction("C7+", 32.0, 0.200, 800.0)
+oil_plus.addPlusFraction("C7", 32.0, 0.200, 800.0)
 
 # Characterize the plus fraction into 6 pseudo-components
-oil_plus.getCharacterization().setNumberOfPseudoComponents(6)
+oil_plus.getCharacterization().getLumpingModel().setNumberOfPseudoComponents(6)
 oil_plus.getCharacterization().characterisePlusFraction()
 
 oil_plus.setMixingRule("classic")

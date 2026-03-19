@@ -384,13 +384,14 @@ plt.show()
 fluidDefinedComponents = createfluid2(
     definedComponents, definedmolefractions, "mol/sec"
 )
-characterizedFluid = addOilFractions(
+addOilFractions(
     fluidDefinedComponents,
     oilComponents,
     oilComponentsMoleFractions,
     oilComponentsMolarMass,
     oilComponentsRelativeDensity,
 )
+characterizedFluid = fluidDefinedComponents
 
 characterizedFluid.setTemperature(15.0, "C")
 characterizedFluid.setPressure(1.0, "atm")
@@ -545,12 +546,12 @@ gasDensity = numpy.zeros((numP, numT))
 oilDensity = numpy.zeros((numP, numT))
 GORcalc = numpy.zeros((numP, numT))
 GORactual = numpy.zeros((numP, numT))
-gasViscosity[:] = np.NaN
-oilViscosity[:] = np.NaN
-gasDensity[:] = np.NaN
-oilDensity[:] = np.NaN
-GORcalc[:] = np.NaN
-GORactual[:] = np.NaN
+gasViscosity[:] = np.nan
+oilViscosity[:] = np.nan
+gasDensity[:] = np.nan
+oilDensity[:] = np.nan
+GORcalc[:] = np.nan
+GORactual[:] = np.nan
 
 for i in range(len(temperatures)):
     for j in range(len(pressures)):
