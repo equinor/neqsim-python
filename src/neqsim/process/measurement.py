@@ -10,7 +10,7 @@ from jpype import JImplements, JOverride
 
 
 @JImplements(
-    jneqsim.process.measurementdevice.MeasurementDeviceInterface
+    jneqsim.process.measurementdevice.MeasurementDeviceInterface, deferred=True
 )  # Use the fully qualified class name directly from the jneqsim package
 class measurement:
     def __init__(self):
@@ -161,3 +161,11 @@ class measurement:
     @JOverride
     def getOnlineValue(self):
         return 0.0
+
+    @JOverride
+    def setTag(self, tag):
+        self.tag = tag
+
+    @JOverride
+    def getTag(self):
+        return getattr(self, "tag", "")
