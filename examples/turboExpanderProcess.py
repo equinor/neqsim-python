@@ -4,6 +4,7 @@ Created on Thu Jun 13 12:01:47 2019
 
 @author: esol
 """
+
 from neqsim import methods
 from neqsim.process import clearProcess, expander, runProcess, separator, stream
 from neqsim.thermo import fluid

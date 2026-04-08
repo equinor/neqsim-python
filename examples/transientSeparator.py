@@ -105,7 +105,7 @@ while time <= simulation_time:
 
     # Run separator transient step
     run_id = uuid.uuid4()
-    UUID = jpype.JClass('java.util.UUID')
+    UUID = jpype.JClass("java.util.UUID")
     separator.runTransient(time_step, UUID.randomUUID())
 
     # Run outlet streams

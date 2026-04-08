@@ -5,7 +5,6 @@ Created on Wed Feb  5 19:54:21 2020
 @author: esol
 """
 
-
 from neqsim import setDatabase
 from neqsim.thermo import *
 

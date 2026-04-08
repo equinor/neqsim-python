@@ -5,7 +5,6 @@ Created on Tue Apr 21 11:56:16 2020
 @author: esol
 """
 
-
 import numpy as np
 import pandas as pd
 from pyspark import *

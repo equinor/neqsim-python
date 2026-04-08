@@ -22,7 +22,6 @@ from neqsim.thermo import TPflash, fluid
 from neqsim.process import clearProcess, heater, runProcess, separator, stream
 import math
 
-
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS
 fluid1.addComponent("methane", 99.0)
 fluid1.addComponent("nC10", 1.0)

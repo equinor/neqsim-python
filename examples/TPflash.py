@@ -10,6 +10,7 @@ The current python script demonstrates use of neqsim in python
 A gas mixture is defined and the density of the gas is calculated.
 @author: esol
 """
+
 from neqsim.thermo import TPflash, fluid, fluidComposition, phaseenvelope
 
 # Start by creating a fluid in neqsim
