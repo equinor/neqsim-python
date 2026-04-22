@@ -23,7 +23,13 @@ try:
     if not jpype.isJVMStarted():
         # Could call jpype.getDefaultJVMPath() to get default JVM,
         # but not able to get the orders to force loading a specific JVM
-        jpype.startJVM(convertStrings=False)
+        #
+        # Pass "-Xrs" to reduce the JVM's use of OS signals. Without this,
+        # the JVM installs signal handlers (SIGINT/SIGTERM/SIGSEGV) that can
+        # crash embedded Python kernels in IDEs such as Spyder 6 and some
+        # Jupyter setups, producing "The kernel died, restarting..." errors
+        # immediately on `import neqsim`. "-Xrs" is safe for normal use.
+        jpype.startJVM("-Xrs", convertStrings=False)
         jvm_version = jpype.getJVMVersion()[0]
         if jvm_version == 1 and jpype.getJVMVersion()[1] >= 8:
             jpype.addClassPath("./lib/java8/*")
