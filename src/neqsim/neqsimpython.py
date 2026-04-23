@@ -29,7 +29,21 @@ try:
         # crash embedded Python kernels in IDEs such as Spyder 6 and some
         # Jupyter setups, producing "The kernel died, restarting..." errors
         # immediately on `import neqsim`. "-Xrs" is safe for normal use.
-        jpype.startJVM("-Xrs", convertStrings=False)
+        #
+        # In addition, JPype >= 1.5 installs its own Python-level signal
+        # handler chain for SIGINT to forward Ctrl+C into Java. In embedded
+        # kernels (Spyder 6, QtConsole, some Jupyter setups) this conflicts
+        # with the host's signal handling and can still kill the kernel on
+        # `import neqsim` even with "-Xrs". Passing `interrupt=False` tells
+        # JPype to leave signal handling to the host process, which resolves
+        # the "kernel died, restarting" error in Spyder.
+        start_kwargs = {"convertStrings": False}
+        try:
+            # `interrupt` kwarg was added in JPype 1.5.0. Guard with a
+            # fallback for older versions just in case.
+            jpype.startJVM("-Xrs", interrupt=False, **start_kwargs)
+        except TypeError:
+            jpype.startJVM("-Xrs", **start_kwargs)
         jvm_version = jpype.getJVMVersion()[0]
         if jvm_version == 1 and jpype.getJVMVersion()[1] >= 8:
             jpype.addClassPath("./lib/java8/*")
