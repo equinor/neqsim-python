@@ -46,7 +46,7 @@ It provides Python toolboxes such as [thermoTools](https://github.com/equinor/ne
 ### Install
 
 <table>
-<tr><td><strong>pip</strong> (requires Java 11+)</td><td><strong>conda</strong> (Java included)</td></tr>
+<tr><td><strong>pip</strong> (requires Java 8+)</td><td><strong>conda</strong> (Java included)</td></tr>
 <tr>
 <td>
 
