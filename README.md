@@ -65,7 +65,7 @@ conda install -c conda-forge neqsim
 </tr>
 </table>
 
-> **Prerequisites:** Python 3.9+ and Java 11+. The conda package automatically installs OpenJDK — no separate Java setup needed. For pip, install Java from [Adoptium](https://adoptium.net/).
+> **Prerequisites:** Python 3.9+ and Java 8+. The conda package automatically installs OpenJDK — no separate Java setup needed. For pip, install Java from [Adoptium](https://adoptium.net/).
 
 ### Try it now
 
