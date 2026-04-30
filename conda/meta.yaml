@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: b072b3a94923840fb4fdfcda968a0cc81c70008db494be88bb576884ebf9a407
+  sha256: 863013a17592c0b24a5d71775573c57843505c2ec775cca96f71b4d998543674
 
 build:
   number: 0
@@ -21,9 +21,9 @@ requirements:
     - poetry-core
   run:
     - python >=3.9
-    - jpype1 >=1.5.0
+    - jpype1 >=1.7.0,<2.0.0
     - numpy >1.25.2
-    - pandas >=2.0.3
+    - pandas >=2.0.3,<3.0.0
     - openjdk >=11
 
 test:

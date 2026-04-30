@@ -9,9 +9,9 @@ channels:
 dependencies:
   - python>=3.9
   - openjdk>=11
-  - jpype1>=1.5.0
+  - jpype1>=1.7.0,<2.0.0
   - numpy>1.25.2
-  - pandas>=2.0.3
+  - pandas>=2.0.3,<3.0.0
   # Optional for interactive use
   - matplotlib>=3.7.0
   - jupyter>=1.0.0
@@ -19,4 +19,4 @@ dependencies:
   # Install neqsim from PyPI until conda-forge package is available
   - pip
   - pip:
-    - neqsim
+    - neqsim==3.9.1
