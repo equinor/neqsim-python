@@ -19,7 +19,7 @@ pip install --upgrade neqsim==<version>
 Use conda when you want OpenJDK installed with the package:
 
 ```bash
-conda install -c conda-forge neqsim
+conda install -c conda-forge neqsim=<version>
 ```
 
 Requirements:
