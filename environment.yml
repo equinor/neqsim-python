@@ -19,4 +19,4 @@ dependencies:
   # Install neqsim from PyPI until conda-forge package is available
   - pip
   - pip:
-    - neqsim==3.9.1
+    - neqsim==3.10.0
