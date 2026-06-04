@@ -12,7 +12,7 @@ def _get_jvm_error_message() -> str:
     return (
         "Failed to start Java Virtual Machine (JVM).\n\n"
         "Common solutions:\n"
-        "1. Install Java JDK 11+ from https://adoptium.net/\n"
+        "1. Install Java JDK 21+ from https://adoptium.net/\n"
         "2. Ensure JAVA_HOME environment variable is set\n"
         "3. Ensure 64-bit Python matches 64-bit Java (or 32-bit with 32-bit)\n\n"
         "See: https://github.com/equinor/neqsim-python#prerequisites"
@@ -45,17 +45,16 @@ try:
         except TypeError:
             jpype.startJVM("-Xrs", **start_kwargs)
         jvm_version = jpype.getJVMVersion()[0]
-        if jvm_version == 1 and jpype.getJVMVersion()[1] >= 8:
-            jpype.addClassPath("./lib/java8/*")
-        # elif jvm_version >= 21:
-        #    jpype.addClassPath("./lib/java21/*")
-        elif jvm_version >= 11:
-            jpype.addClassPath("./lib/java11/*")
+        if jvm_version >= 21:
+            jpype.addClassPath("./lib/java21/*")
         else:
-            print(
-                "Your version of Java is not supported. Please upgrade to Java version 8 or higher."
-            )
-            print("See: https://github.com/equinor/neqsim-python#prerequisites")
+            if jvm_version == 1 and jpype.getJVMVersion()[1] < 8:
+                print(
+                    "Your version of Java is not supported. Please upgrade to Java version 8 or higher. 21 + is recommended."
+                )
+                print("See: https://github.com/equinor/neqsim-python#prerequisites")
+
+            jpype.addClassPath("./lib/java8/*")
 except Exception as e:
     raise NeqSimJVMError(_get_jvm_error_message()) from e
 
