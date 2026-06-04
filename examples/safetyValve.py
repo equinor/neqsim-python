@@ -87,9 +87,9 @@ print("PRESSURE SAFETY VALVE SIMULATION")
 print("=" * 70)
 
 print("\nPSV Configuration:")
-print(f"  Set pressure:       55.0 bara")
-print(f"  Full open pressure: 60.5 bara")
-print(f"  Blowdown:           7%")
+print("  Set pressure:       55.0 bara")
+print("  Full open pressure: 60.5 bara")
+print("  Blowdown:           7%")
 print(f"  Reseat pressure:    {55.0 * 0.93:.1f} bara")
 
 print("\nNormal Operating Conditions (50 bara):")
@@ -109,12 +109,12 @@ separator_gas.setPressure(58.0, "bara")  # Above set pressure
 feed_stream.setFluid(separator_gas)
 process.run()
 
-print(f"\nOverpressure Conditions (58 bara inlet):")
+print("\nOverpressure Conditions (58 bara inlet):")
 print(f"  PSV status:   {'CLOSED' if psv.getPercentValveOpening() < 0.1 else 'OPEN'}")
 print(f"  PSV opening:  {psv.getPercentValveOpening():.1f}%")
 
 if psv.getPercentValveOpening() > 0:
-    print(f"\n⚠️  PSV IS RELIEVING!")
+    print("\n⚠️  PSV IS RELIEVING!")
     print(f"  Relief rate:  {psv_relief.getFlowRate('kg/hr'):.0f} kg/hr")
     print(f"  Flare duty:   {flare.getHeatDuty('MW'):.2f} MW")
     print(f"  CO2 emission: {flare.getCO2Emission('kg/hr'):.0f} kg/hr")

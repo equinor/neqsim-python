@@ -128,7 +128,7 @@ def create_wet_gas(eos_name):
     return gas
 
 
-print(f"\nConditions: T = 25°C, P = 50 bara")
+print("\nConditions: T = 25°C, P = 50 bara")
 print("Wet natural gas with 5 mol% water")
 print("\nEoS    | # Phases | Gas Density | Water in Gas Phase")
 print("       |          | [kg/m³]     | [mol fraction]")
@@ -186,7 +186,7 @@ print("-" * 40)
 print("CO2 near critical point (Tc=31°C, Pc=73.8 bar)")
 print("Span-Wagner is the reference EoS for CO2")
 
-print(f"\nConditions: T = 35°C, P = 80 bara (supercritical)")
+print("\nConditions: T = 35°C, P = 80 bara (supercritical)")
 print("\nEoS           | Density [kg/m³] | Z-factor")
 print("-" * 45)
 
@@ -212,8 +212,7 @@ for eos in ["srk", "pr", "span-wagner"]:
 # =============================================================================
 print("\n6. EOS-CG FOR CO2 AND COMBUSTION GASES")
 print("-" * 40)
-print(
-    """
+print("""
 EOS-CG (Equation of State for Combustion Gases) is based on GERG-2008
 but optimized for CO2-rich mixtures and combustion product gases.
 
@@ -225,13 +224,12 @@ Best suited for:
   - Blue/green hydrogen with CO2
 
 Components: CO2, N2, O2, Ar, H2O, CO, H2, H2S, SO2, CH4
-"""
-)
+""")
 
 # Create a typical flue gas / CCS mixture
 print("Example: CO2-rich CCS mixture")
 print("Composition: 95% CO2, 3% N2, 1% O2, 1% Ar")
-print(f"\nConditions: T = 25°C, P = 100 bara (dense phase CO2)")
+print("\nConditions: T = 25°C, P = 100 bara (dense phase CO2)")
 print("\nEoS           | Density [kg/m³] | Z-factor")
 print("-" * 45)
 
@@ -263,8 +261,7 @@ print("      critical conditions compared to cubic EoS (SRK/PR).")
 # =============================================================================
 print("\n7. GUIDELINES FOR EoS SELECTION")
 print("-" * 40)
-print(
-    """
+print("""
 Application                          | Recommended EoS
 -------------------------------------|----------------------
 Natural gas properties               | GERG-2008 (most accurate)
@@ -289,6 +286,5 @@ Liquefied Natural Gas (LNG)          | GERG-2008 or PR
 Gas hydrates                         | CPA with hydrate model
                                      |
 Electrolyte solutions (brine)        | Electrolyte-CPA
-"""
-)
+""")
 print("=" * 70)

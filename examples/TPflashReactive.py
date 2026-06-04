@@ -8,9 +8,7 @@ Created on Tue Aug  6 09:45:43 2019
 from neqsim.thermo import (
     TPflash,
     fluid,
-    fluidComposition,
     ionComposition,
-    phaseenvelope,
     scaleCheck,
 )
 

@@ -120,7 +120,7 @@ gas_df.setTemperature(25.0, "C")
 gas_df.setPressure(50.0, "bara")
 TPflash(gas_df)
 
-print(f"\nCreated fluid from DataFrame")
+print("\nCreated fluid from DataFrame")
 print(f"  Total molar flow: {gas_df.getTotalNumberOfMoles():.4f} mol")
 
 # =============================================================================
@@ -272,8 +272,7 @@ print(f"\nMixed stream total flow: {stream1.getTotalNumberOfMoles():.1f} mol")
 # =============================================================================
 print("\n9. COMMONLY USED COMPONENTS")
 print("-" * 40)
-print(
-    """
+print("""
 Category           | Component Names
 -------------------|------------------------------------------------
 Light gases        | nitrogen, oxygen, argon, helium, hydrogen, H2S
@@ -288,8 +287,7 @@ Pseudo-components  | C6, C7, C8, C9, C10, C11-C14, C15-C20 (from DB)
 
 Note: For components not in database, use addTBPfraction() or
       addPlusFraction() with MW and density.
-"""
-)
+""")
 
 # =============================================================================
 # 10. ELECTROLYTE FLUIDS

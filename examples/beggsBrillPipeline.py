@@ -71,10 +71,10 @@ print("BEGGS AND BRILL MULTIPHASE PIPELINE SIMULATION")
 print("=" * 65)
 
 print("\nPipeline Geometry:")
-print(f"  Length:          10,000 m (10 km)")
-print(f"  Diameter:        0.30 m (12 inch)")
-print(f"  Wall roughness:  50 um")
-print(f"  Elevation gain:  200 m (uphill)")
+print("  Length:          10,000 m (10 km)")
+print("  Diameter:        0.30 m (12 inch)")
+print("  Wall roughness:  50 um")
+print("  Elevation gain:  200 m (uphill)")
 
 print("\nInlet Conditions:")
 print(f"  Pressure:        {inlet_stream.getPressure('bara'):.1f} bara")
@@ -95,7 +95,7 @@ outlet_fluid = outlet_stream.getFluid()
 if outlet_fluid.hasPhaseType("gas") and outlet_fluid.hasPhaseType("oil"):
     gas_fraction = outlet_fluid.getPhase("gas").getBeta()
     liquid_fraction = 1.0 - gas_fraction
-    print(f"\nPhase Distribution at Outlet:")
+    print("\nPhase Distribution at Outlet:")
     print(f"  Gas fraction:    {gas_fraction * 100:.1f}%")
     print(f"  Liquid fraction: {liquid_fraction * 100:.1f}%")
 

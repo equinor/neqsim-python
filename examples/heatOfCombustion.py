@@ -6,7 +6,7 @@ Created on Fri Aug 30 21:36:49 2019
 """
 
 from neqsim.standards import ISO6976
-from neqsim.thermo import TPflash, fluid, fluidComposition, phaseenvelope
+from neqsim.thermo import TPflash, fluid
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS

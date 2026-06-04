@@ -44,8 +44,7 @@ Example request body (JSON):
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import Any, Dict, List, Optional, Union
-import json
+from typing import Any, Dict, List, Optional
 import traceback
 import logging
 
@@ -557,7 +556,7 @@ async def run_simulation_yaml(yaml_content: str = Body(..., media_type="text/pla
 
     except ImportError:
         raise HTTPException(status_code=500, detail="PyYAML not installed")
-    except Exception as e:
+    except Exception:
         logger.error("Exception in /simulate/yaml endpoint", exc_info=True)
         return {"success": False, "error": "An internal error occurred"}
 

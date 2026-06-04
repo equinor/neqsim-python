@@ -22,7 +22,7 @@ Properties Covered:
 @author: NeqSim Team
 """
 
-from neqsim.thermo import fluid, TPflash, printFrame
+from neqsim.thermo import fluid, TPflash
 
 print("=" * 70)
 print("PHYSICAL PROPERTIES CALCULATION TUTORIAL")
@@ -58,7 +58,7 @@ TPflash(multiphase)
 multiphase.initThermoProperties()
 multiphase.initPhysicalProperties()
 
-print(f"Conditions: T = 60°C, P = 20 bara")
+print("Conditions: T = 60°C, P = 20 bara")
 print(f"Number of phases: {multiphase.getNumberOfPhases()}")
 
 # =============================================================================
@@ -74,7 +74,7 @@ print(f"Overall mixture density: {total_density:.2f} kg/m³")
 # Phase-specific densities
 if multiphase.hasPhaseType("gas"):
     gas = multiphase.getPhase("gas")
-    print(f"\nGas phase:")
+    print("\nGas phase:")
     print(f"  Density: {gas.getDensity('kg/m3'):.4f} kg/m³")
     print(f"  Molar density: {gas.getDensity('mol/m3'):.2f} mol/m³")
     print(f"  Molar volume: {1.0/gas.getDensity('mol/m3')*1e6:.2f} cm³/mol")
@@ -84,7 +84,7 @@ if multiphase.hasPhaseType("gas"):
 
 if multiphase.hasPhaseType("oil"):
     oil = multiphase.getPhase("oil")
-    print(f"\nOil (liquid hydrocarbon) phase:")
+    print("\nOil (liquid hydrocarbon) phase:")
     print(f"  Density: {oil.getDensity('kg/m3'):.2f} kg/m³")
     print(f"  Molar density: {oil.getDensity('mol/m3'):.2f} mol/m³")
     # API gravity calculation
@@ -95,7 +95,7 @@ if multiphase.hasPhaseType("oil"):
 
 if multiphase.hasPhaseType("aqueous"):
     aq = multiphase.getPhase("aqueous")
-    print(f"\nAqueous phase:")
+    print("\nAqueous phase:")
     print(f"  Density: {aq.getDensity('kg/m3'):.2f} kg/m³")
 
 # =============================================================================
@@ -114,7 +114,7 @@ if multiphase.hasPhaseType("gas"):
     gas_visc = gas.getViscosity("kg/msec")
     gas_density = gas.getDensity("kg/m3")
     kinematic_visc = gas_visc / gas_density  # m²/s
-    print(f"\nGas phase:")
+    print("\nGas phase:")
     print(f"  Dynamic viscosity: {gas_visc:.6f} kg/(m·s)")
     print(f"  Dynamic viscosity: {gas_visc*1000:.4f} cP")
     print(f"  Kinematic viscosity: {kinematic_visc*1e6:.4f} cSt")
@@ -124,7 +124,7 @@ if multiphase.hasPhaseType("oil"):
     oil_visc = oil.getViscosity("kg/msec")
     oil_density = oil.getDensity("kg/m3")
     kinematic_visc = oil_visc / oil_density
-    print(f"\nOil phase:")
+    print("\nOil phase:")
     print(f"  Dynamic viscosity: {oil_visc:.6f} kg/(m·s)")
     print(f"  Dynamic viscosity: {oil_visc*1000:.2f} cP")
     print(f"  Kinematic viscosity: {kinematic_visc*1e6:.2f} cSt")
@@ -132,7 +132,7 @@ if multiphase.hasPhaseType("oil"):
 if multiphase.hasPhaseType("aqueous"):
     aq = multiphase.getPhase("aqueous")
     aq_visc = aq.getViscosity("kg/msec")
-    print(f"\nAqueous phase:")
+    print("\nAqueous phase:")
     print(f"  Dynamic viscosity: {aq_visc:.6f} kg/(m·s)")
     print(f"  Dynamic viscosity: {aq_visc*1000:.4f} cP")
 
@@ -168,14 +168,14 @@ Cp = multiphase.getCp("J/molK")
 Cv = multiphase.getCv("J/molK")
 gamma = multiphase.getKappa()  # Cp/Cv ratio
 
-print(f"Overall mixture:")
+print("Overall mixture:")
 print(f"  Cp: {Cp:.2f} J/(mol·K)")
 print(f"  Cv: {Cv:.2f} J/(mol·K)")
 print(f"  γ = Cp/Cv: {gamma:.4f}")
 
 if multiphase.hasPhaseType("gas"):
     gas = multiphase.getPhase("gas")
-    print(f"\nGas phase:")
+    print("\nGas phase:")
     print(f"  Cp: {gas.getCp('J/molK'):.2f} J/(mol·K)")
     print(f"  Cp: {gas.getCp('J/kgK'):.2f} J/(kg·K)")
     print(f"  γ = Cp/Cv: {gas.getGamma():.4f}")
@@ -208,12 +208,12 @@ if multiphase.hasPhaseType("gas"):
     jt = gas.getJouleThomsonCoefficient()
     # Convert from K/Pa to K/bar
     jt_per_bar = jt * 1e5
-    print(f"\nGas phase:")
+    print("\nGas phase:")
     print(f"  μJT: {jt_per_bar:.4f} K/bar")
     if jt_per_bar > 0:
-        print(f"  → Gas cools when throttled (normal JT effect)")
+        print("  → Gas cools when throttled (normal JT effect)")
     else:
-        print(f"  → Gas heats when throttled (inverse JT effect)")
+        print("  → Gas heats when throttled (inverse JT effect)")
 
 # =============================================================================
 # 8. SURFACE TENSION

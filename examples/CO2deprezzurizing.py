@@ -23,11 +23,8 @@ Created on Tue Jun 23 10:37:26 2020
 
 from neqsim.thermo import (
     PHflash,
-    PHsolidflash,
     TPflash,
-    TPsolidflash,
     bubt,
-    dewt,
     fluid,
     printFrame,
 )

@@ -27,9 +27,6 @@ from neqsim.thermo import (
     PHflash,
     PSflash,
     TVflash,
-    VHflash,
-    VUflash,
-    printFrame,
 )
 
 print("=" * 70)
@@ -72,13 +69,13 @@ TPflash(natural_gas)
 natural_gas.initThermoProperties()
 natural_gas.initPhysicalProperties()
 
-print(f"\nResults:")
+print("\nResults:")
 print(f"  Number of phases: {natural_gas.getNumberOfPhases()}")
 print(f"  Total density: {natural_gas.getDensity('kg/m3'):.2f} kg/m³")
 
 if natural_gas.hasPhaseType("gas"):
     gas_phase = natural_gas.getPhase("gas")
-    print(f"  Gas phase:")
+    print("  Gas phase:")
     print(
         f"    - Mole fraction: {natural_gas.getMoleFraction(natural_gas.getPhaseNumberOfPhase('gas')):.4f}"
     )
@@ -87,7 +84,7 @@ if natural_gas.hasPhaseType("gas"):
 
 if natural_gas.hasPhaseType("oil"):
     oil_phase = natural_gas.getPhase("oil")
-    print(f"  Liquid phase:")
+    print("  Liquid phase:")
     print(
         f"    - Mole fraction: {natural_gas.getMoleFraction(natural_gas.getPhaseNumberOfPhase('oil')):.4f}"
     )
@@ -120,7 +117,7 @@ PHflash(natural_gas, initial_enthalpy, "J")
 natural_gas.initThermoProperties()
 
 final_temp = natural_gas.getTemperature("C")
-print(f"\nAfter throttling to 20 bara:")
+print("\nAfter throttling to 20 bara:")
 print(f"  Final temperature: {final_temp:.1f}°C")
 print(f"  Temperature drop (JT effect): {initial_temp - final_temp:.1f}°C")
 
@@ -150,7 +147,7 @@ PSflash(natural_gas, initial_entropy, "J/K")
 natural_gas.initThermoProperties()
 
 discharge_temp = natural_gas.getTemperature("C")
-print(f"\nIsentropic discharge at 50 bara:")
+print("\nIsentropic discharge at 50 bara:")
 print(f"  Discharge temperature: {discharge_temp:.1f}°C")
 print(f"  Temperature rise: {discharge_temp - initial_temp:.1f}°C")
 
@@ -170,7 +167,7 @@ natural_gas.initThermoProperties()
 
 # Get current volume
 system_volume = natural_gas.getVolume("m3")
-print(f"\nInitial state: T = 25°C, P = 50 bara")
+print("\nInitial state: T = 25°C, P = 50 bara")
 print(f"System volume: {system_volume:.6f} m³")
 
 # Change temperature while keeping volume constant
@@ -180,7 +177,7 @@ TVflash(natural_gas, system_volume, "m3")
 natural_gas.initThermoProperties()
 
 new_pressure = natural_gas.getPressure("bara")
-print(f"\nAfter heating to 50°C at constant volume:")
+print("\nAfter heating to 50°C at constant volume:")
 print(f"  New pressure: {new_pressure:.2f} bara")
 
 # =============================================================================
@@ -189,8 +186,7 @@ print(f"  New pressure: {new_pressure:.2f} bara")
 print("\n" + "=" * 70)
 print("FLASH CALCULATION SUMMARY")
 print("=" * 70)
-print(
-    """
+print("""
 Flash Type | Given          | Find           | Application
 -----------|----------------|----------------|---------------------------
 TPflash    | T, P           | Phases, comp.  | General equilibrium
@@ -199,6 +195,5 @@ PSflash    | P, S           | T, phases      | Compressors, turbines
 TVflash    | T, V           | P, phases      | Closed vessels
 VHflash    | V, H           | T, P, phases   | Adiabatic closed systems
 VUflash    | V, U           | T, P, phases   | Isolated systems
-"""
-)
+""")
 print("=" * 70)

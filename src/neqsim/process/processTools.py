@@ -4173,7 +4173,7 @@ def recycle(name, stream=None):
     Recycle: The created recycle process unit.
     """
     recycle1 = jneqsim.process.equipment.util.Recycle(name)
-    if not stream is None:
+    if stream is not None:
         recycle1.addStream(stream)
     if not _loop_mode:
         processoperations.add(recycle1)

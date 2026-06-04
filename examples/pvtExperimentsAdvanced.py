@@ -251,7 +251,7 @@ base_oil.addComponent("nC10", 40.0)
 base_oil.setMixingRule("classic")
 base_oil.setMultiPhaseCheck(True)
 
-print(f"\nBase oil: C1/C3/C6/C10 at T = 80°C")
+print("\nBase oil: C1/C3/C6/C10 at T = 80°C")
 print("\nCO2 Added | Swelling | Sat. Pressure")
 print("[mol%]    | Factor   | [bara]")
 print("-" * 40)
@@ -318,8 +318,7 @@ for t, p in [(25, 50), (50, 50), (100, 50), (100, 100), (100, 200)]:
 # =============================================================================
 print("\n8. PVT EXPERIMENTS SUMMARY")
 print("-" * 40)
-print(
-    """
+print("""
 Experiment          | Purpose
 --------------------|----------------------------------------------
 CME                 | Oil compressibility, relative volume, GOR
@@ -328,7 +327,6 @@ Liberation          |
 Separator Test      | Optimize surface separation, stock tank oil
 Swelling Test       | EOR potential with gas injection (CO2, HC gas)
 Viscosity Study     | Flow assurance, production optimization
-"""
-)
+""")
 
 print("=" * 70)

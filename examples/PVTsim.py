@@ -2,14 +2,7 @@ import matplotlib.pyplot as plt
 from neqsim.thermo import (
     CVD,
     TPflash,
-    addOilFractions,
     createfluid,
-    createfluid2,
-    dataFrame,
-    fluid,
-    fluidcreator,
-    phaseenvelope,
-    printFrame,
     separatortest,
 )
 

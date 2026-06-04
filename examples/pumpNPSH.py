@@ -90,13 +90,13 @@ if npsha > 0:
 
     # Check for cavitation
     if pump.isCavitating():
-        print(f"  ⚠️  WARNING: CAVITATION RISK!")
-        print(f"     Consider increasing suction pressure")
-        print(f"     or reducing pump speed/flow")
+        print("  ⚠️  WARNING: CAVITATION RISK!")
+        print("     Consider increasing suction pressure")
+        print("     or reducing pump speed/flow")
     else:
-        print(f"  ✓ No cavitation risk detected")
+        print("  ✓ No cavitation risk detected")
 else:
-    print(f"  NPSHa calculation not available")
-    print(f"  Tip: Check fluid has liquid phase at suction")
+    print("  NPSHa calculation not available")
+    print("  Tip: Check fluid has liquid phase at suction")
 
 print("=" * 60)
