@@ -94,7 +94,7 @@ def generate_stubs():
                 shutil.rmtree(jpype_stubs_out)
             shutil.move(str(jpype_stubs), str(jpype_stubs_out))
 
-        # Rename folder neqsim-stubs -> jneqsim
+        # Move stubs from temp directory to final output directory
         shutil.move(str(neqsim_stubs), str(jneqsim_stubs_out))
 
         # Clean up temp directory
