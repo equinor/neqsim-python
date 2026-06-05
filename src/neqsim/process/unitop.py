@@ -266,3 +266,11 @@ class unitop:
         # This will depend on how pressure is handled in your 'unitop' class.
         return 0.0  # Replace 0.0 with the actual pressure value or calculatio
         # Add the logic to calculate or retrieve the pressure.
+
+    @JOverride  # Implement the missing 'isActive' method
+    def isActive(self, isActive=None):
+        # Overloaded: isActive() returns the active state,
+        # isActive(boolean) sets it.
+        if isActive is None:
+            return getattr(self, "_isActive", True)
+        self._isActive = isActive
