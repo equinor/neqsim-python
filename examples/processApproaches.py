@@ -215,7 +215,8 @@ print(f"  Total power:   {(comp1.getPower() + comp2.getPower())/1e6:.3f} MW")
 print("\n" + "=" * 70)
 print("CHOOSING AN APPROACH")
 print("=" * 70)
-print("""
+print(
+    """
 | Use Case                        | Recommended Approach          |
 |---------------------------------|-------------------------------|
 | Learning / tutorials            | Wrappers (global process)     |
@@ -227,4 +228,5 @@ print("""
 | Clean declarative style         | ProcessBuilder                |
 | Mixing wrapper convenience      | Hybrid (process= parameter)   |
   with explicit control           |                               |
-""")
+"""
+)

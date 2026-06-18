@@ -318,7 +318,8 @@ for t, p in [(25, 50), (50, 50), (100, 50), (100, 100), (100, 200)]:
 # =============================================================================
 print("\n8. PVT EXPERIMENTS SUMMARY")
 print("-" * 40)
-print("""
+print(
+    """
 Experiment          | Purpose
 --------------------|----------------------------------------------
 CME                 | Oil compressibility, relative volume, GOR
@@ -327,6 +328,7 @@ Liberation          |
 Separator Test      | Optimize surface separation, stock tank oil
 Swelling Test       | EOR potential with gas injection (CO2, HC gas)
 Viscosity Study     | Flow assurance, production optimization
-""")
+"""
+)
 
 print("=" * 70)
