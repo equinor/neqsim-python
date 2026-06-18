@@ -45,15 +45,11 @@ try:
         except TypeError:
             jpype.startJVM("-Xrs", **start_kwargs)
         jvm_version = jpype.getJVMVersion()[0]
-        if jvm_version == 1 and jpype.getJVMVersion()[1] >= 8:
-            jpype.addClassPath("./lib/java8/*")
-        # elif jvm_version >= 21:
-        #    jpype.addClassPath("./lib/java21/*")
-        elif jvm_version >= 11:
-            jpype.addClassPath("./lib/java11/*")
+        if jvm_version >= 11:
+            jpype.addClassPath("./lib/*")
         else:
             print(
-                "Your version of Java is not supported. Please upgrade to Java version 8 or higher."
+                "Your version of Java is not supported. Please upgrade to Java version 11 or higher."
             )
             print("See: https://github.com/equinor/neqsim-python#prerequisites")
 except Exception as e:
