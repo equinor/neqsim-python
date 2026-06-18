@@ -28,9 +28,7 @@ molarMass = [
     202.0 / 1000.0,
 ]
 density = [664.0e-3, 738.0e-3, 765.0e-3, 781.0e-3, 813.30e-3]
-addOilFractions(
-    fluidDefinedComponents, charNames, charFlowrate, molarMass, density
-)
+addOilFractions(fluidDefinedComponents, charNames, charFlowrate, molarMass, density)
 characterizedFluid = fluidDefinedComponents  # addOilFractions modifies in place
 # printFrame(characterizedFluid)
 characterizedFluid.setTemperature(273.15 + 20.6, "K")

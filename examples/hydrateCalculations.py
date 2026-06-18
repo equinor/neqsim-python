@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.stdout.reconfigure(encoding='utf-8')
+
+sys.stdout.reconfigure(encoding="utf-8")
 """
 Hydrate Calculations Tutorial
 ==============================
@@ -30,8 +31,7 @@ print("=" * 70)
 # =============================================================================
 print("\n1. INTRODUCTION TO GAS HYDRATES")
 print("-" * 40)
-print(
-    """
+print("""
 Gas hydrates form when water and light gases (C1, C2, C3, CO2, H2S)
 combine under high pressure and low temperature conditions.
 
@@ -43,8 +43,7 @@ Formation conditions:
   - Temperature: Typically < 25°C
   - Pressure: Typically > 10-20 bara
   - Presence of free water
-"""
-)
+""")
 
 # =============================================================================
 # 2. HYDRATE FORMATION TEMPERATURE
@@ -115,16 +114,14 @@ for t_c in [0, 5, 10, 15, 20, 25]:
 # =============================================================================
 print("\n4. SUBCOOLING - HYDRATE RISK ASSESSMENT")
 print("-" * 40)
-print(
-    """
+print("""
 Subcooling (ΔT) = Hydrate formation T - Operating T
 
 Interpretation:
   ΔT > 0: Operating BELOW hydrate T → HIGH RISK
   ΔT = 0: At hydrate equilibrium → BORDERLINE
   ΔT < 0: Operating ABOVE hydrate T → SAFE
-"""
-)
+""")
 
 # Example calculation
 gas.setPressure(100.0, "bara")
@@ -227,8 +224,7 @@ for meg_wt_pct in [0, 30, 50, 70]:
 # =============================================================================
 print("\n7. INHIBITOR SELECTION GUIDELINES")
 print("-" * 40)
-print(
-    """
+print("""
 ┌─────────────────────────────────────────────────────────────────┐
 │ Inhibitor Comparison                                            │
 ├────────────┬──────────────────────────────────────────────────┐
@@ -255,16 +251,14 @@ print(
 │            │ ✗ Cannot be regenerated                         │
 │            │ → Best for: Drilling fluids, completion ops     │
 └────────────┴──────────────────────────────────────────────────┘
-"""
-)
+""")
 
 # =============================================================================
 # 8. KINETIC HYDRATE INHIBITORS (KHI)
 # =============================================================================
 print("\n8. KINETIC HYDRATE INHIBITORS (KHI)")
 print("-" * 40)
-print(
-    """
+print("""
 Unlike thermodynamic inhibitors (MEG, MeOH) that shift equilibrium,
 KHIs work by slowing hydrate formation kinetics.
 
@@ -279,8 +273,7 @@ Application:
 
 Note: NeqSim primarily calculates thermodynamic equilibrium.
       KHI effects require separate kinetic models.
-"""
-)
+""")
 
 # =============================================================================
 # 9. PRACTICAL EXAMPLE: PIPELINE HYDRATE ASSESSMENT
@@ -288,16 +281,14 @@ Note: NeqSim primarily calculates thermodynamic equilibrium.
 print("\n9. PRACTICAL EXAMPLE: PIPELINE HYDRATE ASSESSMENT")
 print("-" * 40)
 
-print(
-    """
+print("""
 Scenario: Subsea pipeline from wellhead to platform
   - Wellhead: 150 bara, 80°C
   - Pipeline arrival: 80 bara, 5°C
   - Gas is water-saturated
 
 Question: Will hydrates form? How much MEG is needed?
-"""
-)
+""")
 
 # Check hydrate risk
 pipeline_gas = fluid("cpa")

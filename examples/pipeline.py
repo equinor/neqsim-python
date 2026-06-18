@@ -4,6 +4,7 @@ Created on Wed Sep 11 20:27:48 2019
 
 @author: esol
 """
+
 from neqsim import methods
 from neqsim.process import clearProcess, pipe, pipeline, runProcess, stream
 from neqsim.thermo import TPflash, fluid

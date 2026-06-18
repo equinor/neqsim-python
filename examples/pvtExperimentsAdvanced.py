@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.stdout.reconfigure(encoding='utf-8')
+
+sys.stdout.reconfigure(encoding="utf-8")
 """
 Improved PVT Experiments Tutorial
 ==================================
@@ -48,7 +49,9 @@ oil.addComponent("n-butane", 3.0)
 oil.addComponent("i-pentane", 1.5)
 oil.addComponent("n-pentane", 2.0)
 oil.addComponent("n-hexane", 3.0)
-oil.addTBPfraction("C7", 33.0, 0.150, 780.0)  # Heptane-plus fraction (MW=150 g/mol, density=780 kg/m3)
+oil.addTBPfraction(
+    "C7", 33.0, 0.150, 780.0
+)  # Heptane-plus fraction (MW=150 g/mol, density=780 kg/m3)
 oil.setMixingRule("classic")
 oil.setMultiPhaseCheck(True)
 
@@ -315,8 +318,7 @@ for t, p in [(25, 50), (50, 50), (100, 50), (100, 100), (100, 200)]:
 # =============================================================================
 print("\n8. PVT EXPERIMENTS SUMMARY")
 print("-" * 40)
-print(
-    """
+print("""
 Experiment          | Purpose
 --------------------|----------------------------------------------
 CME                 | Oil compressibility, relative volume, GOR
@@ -325,7 +327,6 @@ Liberation          |
 Separator Test      | Optimize surface separation, stock tank oil
 Swelling Test       | EOR potential with gas injection (CO2, HC gas)
 Viscosity Study     | Flow assurance, production optimization
-"""
-)
+""")
 
 print("=" * 70)
