@@ -451,7 +451,8 @@ with tab3:
 
 with st.sidebar:
     st.header("ℹ️ About")
-    st.markdown("""
+    st.markdown(
+        """
     **NeqSim Process Builder GUI**
 
     A visual tool for building and simulating
@@ -472,7 +473,8 @@ with st.sidebar:
     - Valves
     - Heaters/Coolers
     - Pipes
-    """)
+    """
+    )
 
     st.divider()
 
