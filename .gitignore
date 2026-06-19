@@ -43,5 +43,5 @@ codeql-db/
 codeql-*.sarif
 tools/codeql/
 
-# Generated stubs
-src/jneqsim-stubs/
+# Stubs build artifacts (cleaned up by generate_stubs.py)
+src/temp-stubs/
