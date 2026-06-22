@@ -10,8 +10,6 @@ from neqsim.thermo import (
     addOilFractions,
     createfluid,
     createfluid2,
-    dataFrame,
-    fluid,
     fluid_df,
     fluidcreator,
     phaseenvelope,

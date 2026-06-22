@@ -8,9 +8,6 @@ Created on Mon Jan 20 08:16:29 2020
 from neqsim.thermo import (
     TPflash,
     fluid,
-    fluidComposition,
-    fluidCompositionPlus,
-    phaseenvelope,
     printFrame,
 )
 

@@ -7,13 +7,10 @@ Created on Fri Jun 28 12:49:28 2019
 
 from neqsim.process import (
     clearProcess,
-    compressor,
-    heater,
     runProcess,
     separator,
     stream,
     valve,
-    viewProcess,
 )
 from neqsim.thermo import fluid
 

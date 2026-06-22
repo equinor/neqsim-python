@@ -229,7 +229,7 @@ with tab1:
                             f"**Flow:** {config['flow_rate']} {config['flow_unit']}"
                         )
                     st.write("**Composition:**", config["components"])
-                    if st.button(f"🗑️ Remove", key=f"del_fluid_{name}"):
+                    if st.button("🗑️ Remove", key=f"del_fluid_{name}"):
                         del st.session_state.fluids[name]
                         st.rerun()
         else:
@@ -451,8 +451,7 @@ with tab3:
 
 with st.sidebar:
     st.header("ℹ️ About")
-    st.markdown(
-        """
+    st.markdown("""
     **NeqSim Process Builder GUI**
 
     A visual tool for building and simulating
@@ -473,8 +472,7 @@ with st.sidebar:
     - Valves
     - Heaters/Coolers
     - Pipes
-    """
-    )
+    """)
 
     st.divider()
 

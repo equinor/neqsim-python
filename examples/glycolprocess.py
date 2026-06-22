@@ -11,24 +11,14 @@ from neqsim.process import (
     heater,
     mixer,
     pump,
-    recycle,
     runProcess,
     separator,
     stream,
     valve,
-    viewProcess,
 )
 from neqsim.thermo import (
-    TPflash,
-    addOilFractions,
-    createfluid,
-    createfluid2,
-    dataFrame,
     fluid,
     fluidComposition,
-    fluidcreator,
-    phaseenvelope,
-    printFrame,
 )
 
 # Start by creating a fluid in neqsim uing a predifined fluid (dry gas, rich gas, light oil, black oil)

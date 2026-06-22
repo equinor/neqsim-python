@@ -8,7 +8,7 @@ Created on Thu Jun  4 10:52:50 2020
 
 import pandas as pd
 from neqsim.process import clearProcess, compressor, compressorChart, runProcess, stream
-from neqsim.thermo import fluid, fluid_df
+from neqsim.thermo import fluid_df
 
 # Create a gas-condensate fluid
 naturalgas = {

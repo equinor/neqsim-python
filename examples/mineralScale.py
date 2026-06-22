@@ -11,9 +11,7 @@ from neqsim.thermo import (
     calcIonComposition,
     checkScalePotential,
     fluid,
-    printFluid,
     printFrame,
-    table,
 )
 
 nitrogen = 1.0  # @param {type:"number"}

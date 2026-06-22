@@ -443,18 +443,9 @@ def test_addfluid():
 
 
 def test_fluidChar():
-    import neqsim
     from neqsim.thermo import (
-        fluid,
         fluid_df,
-        addOilFractions,
-        printFrame,
-        dataFrame,
-        fluidcreator,
-        createfluid,
-        createfluid2,
         TPflash,
-        phaseenvelope,
     )
     import pandas as pd
 

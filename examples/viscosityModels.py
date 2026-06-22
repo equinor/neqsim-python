@@ -22,7 +22,6 @@ Topics Covered:
 """
 
 from neqsim.thermo import fluid, TPflash
-from neqsim import jneqsim
 
 print("=" * 70)
 print("OIL VISCOSITY MODELS AND TUNING TUTORIAL")
@@ -33,8 +32,7 @@ print("=" * 70)
 # =============================================================================
 print("\n1. AVAILABLE VISCOSITY MODELS")
 print("-" * 40)
-print(
-    """
+print("""
 Model              | Keyword            | Best For
 -------------------|--------------------|---------------------------------
 LBC                | "LBC"              | General oil, reservoir fluids
@@ -45,8 +43,7 @@ PFCT Heavy Oil     | "PFCT-Heavy-Oil"   | Heavy oils, bitumen
 The LBC model is based on corresponding states principle using critical
 properties. Friction Theory links viscosity to EoS pressure terms,
 providing thermodynamic consistency.
-"""
-)
+""")
 
 # =============================================================================
 # 2. BASIC VISCOSITY CALCULATION
@@ -69,8 +66,8 @@ oil.setTemperature(50.0, "C")
 oil.setPressure(100.0, "bara")
 TPflash(oil)
 
-print(f"Oil composition: C1: 10%, C5: 15%, C7: 25%, C10: 30%, C16: 20%")
-print(f"Conditions: T = 50°C, P = 100 bara")
+print("Oil composition: C1: 10%, C5: 15%, C7: 25%, C10: 30%, C16: 20%")
+print("Conditions: T = 50°C, P = 100 bara")
 
 # Compare different viscosity models
 print("\nViscosity with different models:")
@@ -92,8 +89,7 @@ for model in ["LBC", "friction theory", "PFCT"]:
 # =============================================================================
 print("\n3. LBC MODEL (LOHRENZ-BRAY-CLARK)")
 print("-" * 40)
-print(
-    """
+print("""
 The LBC model calculates viscosity as:
 
     η = η* + η_dense / ξ_m
@@ -115,8 +111,7 @@ Default LBC parameters (a0 to a4):
     a4 = 0.0093324
 
 These parameters can be tuned to match laboratory viscosity data.
-"""
-)
+""")
 
 # =============================================================================
 # 4. TUNING LBC MODEL PARAMETERS
@@ -171,8 +166,7 @@ if tuning_oil.hasPhaseType("oil"):
 
     print(f"Further adjusted (a2=0.10): {tuned_visc_2:.4f} cP")
 
-print(
-    """
+print("""
 LBC Tuning Guidelines:
 ----------------------
 • a0 (index 0): Baseline offset - increase for higher overall viscosity
@@ -180,16 +174,14 @@ LBC Tuning Guidelines:
 • a2 (index 2): Quadratic term - significant for liquid viscosity
 • a3 (index 3): Cubic term - fine-tuning at high density
 • a4 (index 4): Quartic term - extreme density behavior
-"""
-)
+""")
 
 # =============================================================================
 # 5. FRICTION THEORY MODEL
 # =============================================================================
 print("\n5. FRICTION THEORY MODEL")
 print("-" * 40)
-print(
-    """
+print("""
 Friction Theory (f-theory) links viscosity to EoS pressure terms:
 
     η = η0 + ηf
@@ -205,8 +197,7 @@ Advantages:
     ✓ Consistent with phase equilibrium calculations
     ✓ Better extrapolation behavior
     ✓ Works well for wide T/P ranges
-"""
-)
+""")
 
 # =============================================================================
 # 6. TUNING FRICTION THEORY - TBP CORRECTION FACTOR
@@ -262,8 +253,7 @@ if ft_oil.hasPhaseType("oil"):
     # Reset to default
     visc_model.setTBPviscosityCorrection(1.0)
 
-print(
-    """
+print("""
 Friction Theory Tuning Guidelines:
 ----------------------------------
 • TBP Correction Factor:
@@ -274,8 +264,7 @@ Friction Theory Tuning Guidelines:
 • Use when TBP fractions give incorrect viscosity predictions
 • Tune to match laboratory viscosity at one T/P condition
 • Model will extrapolate to other conditions
-"""
-)
+""")
 
 # =============================================================================
 # 7. ADVANCED: TUNING WITH EXPERIMENTAL DATA
@@ -297,8 +286,7 @@ print("-------|----------|---------------")
 for pt in exp_data:
     print(f"{pt['T_C']:6} | {pt['P_bara']:8} | {pt['visc_cP']:.2f}")
 
-print(
-    """
+print("""
 Tuning Workflow:
 ----------------
 1. Create fluid with accurate composition
@@ -313,8 +301,7 @@ Tuning Workflow:
 
 For automatic optimization, use NeqSim's parameter fitting capabilities
 with the ViscosityFunction class in PVT simulation.
-"""
-)
+""")
 
 # =============================================================================
 # 8. MODEL COMPARISON AT DIFFERENT CONDITIONS
@@ -369,8 +356,7 @@ for t_c, p_bara in conditions:
 # =============================================================================
 print("\n9. HEAVY OIL CONSIDERATIONS")
 print("-" * 40)
-print(
-    """
+print("""
 For heavy oils (API < 20°, viscosity > 100 cP), consider:
 
 1. Use PFCT-Heavy-Oil model:
@@ -383,16 +369,14 @@ For heavy oils (API < 20°, viscosity > 100 cP), consider:
 4. Temperature sensitivity is critical - ensure accurate measurements
 
 5. Consider using Pedersen corresponding states for very heavy systems
-"""
-)
+""")
 
 # =============================================================================
 # 10. SUMMARY
 # =============================================================================
 print("\n10. SUMMARY: MODEL SELECTION GUIDELINES")
 print("-" * 40)
-print(
-    """
+print("""
 ┌────────────────────┬──────────────────────────────────────────┐
 │ Oil Type           │ Recommended Model & Notes                │
 ├────────────────────┼──────────────────────────────────────────┤
@@ -408,7 +392,6 @@ print(
 │ Extra-heavy        │ Specialized correlations                 │
 │ (API < 10°)        │ May require custom viscosity data        │
 └────────────────────┴──────────────────────────────────────────┘
-"""
-)
+""")
 
 print("=" * 70)

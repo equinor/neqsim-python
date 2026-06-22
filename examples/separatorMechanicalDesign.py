@@ -10,14 +10,12 @@ from neqsim.process import (
     compressor,
     heater,
     mixer,
-    recycle,
     runProcess,
     separator,
     stream,
     valve,
-    viewProcess,
 )
-from neqsim.thermo import fluid, phaseenvelope
+from neqsim.thermo import fluid
 
 feedPressure = 30.0
 MPpressure = 10.0

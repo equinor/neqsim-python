@@ -52,7 +52,7 @@ from neqsim.thermo import bubp
 oil.setTemperature(100.0, "C")
 bp = bubp(oil)
 
-print(f"\nLight oil composition:")
+print("\nLight oil composition:")
 print("  Methane: 20%, Ethane: 10%, Propane: 15%, Butane: 10%")
 print("  Pentane: 15%, Hexane: 10%, Heptane: 10%, Octane: 10%")
 print(f"\nBubble point at 100°C: {bp:.2f} bara")
@@ -83,7 +83,7 @@ from neqsim.thermo import dewp
 gas.setTemperature(20.0, "C")
 dp = dewp(gas)
 
-print(f"\nRich gas composition:")
+print("\nRich gas composition:")
 print("  Methane: 80%, Ethane: 8%, Propane: 5%, Butane: 3%")
 print("  Pentane: 2%, Hexane: 1.5%, Heptane: 0.5%")
 print(f"\nDew point at 20°C: {dp:.2f} bara")
@@ -111,10 +111,10 @@ try:
     cricondentherm_T = envelope.get("cricondenthermT")[0] - 273.15
     cricondentherm_P = envelope.get("cricondenthermP")[0]
 
-    print(f"\nPhase Envelope Properties:")
-    print(f"  Cricondenbar (max pressure):")
+    print("\nPhase Envelope Properties:")
+    print("  Cricondenbar (max pressure):")
     print(f"    P = {cricondenbar_P:.2f} bara at T = {cricondenbar_T:.1f}°C")
-    print(f"\n  Cricondentherm (max temperature):")
+    print("\n  Cricondentherm (max temperature):")
     print(f"    T = {cricondentherm_T:.1f}°C at P = {cricondentherm_P:.2f} bara")
 except Exception as e:
     print(f"  Could not extract cricondenbar/cricondentherm: {e}")
@@ -144,15 +144,13 @@ except Exception as e:
 # =============================================================================
 print("\n4. RETROGRADE CONDENSATION")
 print("-" * 40)
-print(
-    """
+print("""
 Retrograde condensation is a unique phenomenon in gas condensate systems
 where REDUCING pressure causes MORE liquid to form (counterintuitive!).
 
 This occurs between the cricondentherm and critical point at pressures
 below the cricondenbar. It's important for gas condensate reservoirs.
-"""
-)
+""")
 
 # Demonstrate retrograde behavior
 print("Demonstrating retrograde behavior with the rich gas:")
@@ -220,8 +218,7 @@ for p in [50, 75, 100, 150]:
 # =============================================================================
 print("\n6. CRICONDENBAR & CRICONDENTHERM SIGNIFICANCE")
 print("-" * 40)
-print(
-    """
+print("""
 ┌─────────────────────────────────────────────────────────────────┐
 │                    PHASE ENVELOPE                                │
 │                                                                  │
@@ -243,7 +240,6 @@ print(
 │  ● Above cricondentherm: Heating cannot cause condensation     │
 │  ● Critical point: Liquid and gas become indistinguishable     │
 └─────────────────────────────────────────────────────────────────┘
-"""
-)
+""")
 
 print("=" * 70)

@@ -80,12 +80,12 @@ mech_design.setMaxDesignGassVolumeFlow(500.0)  # m3/hr
 mech_design.calcDesign()
 
 print("\nSeparator Geometry:")
-print(f"  Internal diameter:     2.0 m")
-print(f"  Tangent length:        5.0 m")
+print("  Internal diameter:     2.0 m")
+print("  Tangent length:        5.0 m")
 
 # Display results if available
 print("\nMechanical Design Parameters:")
-print(f"  Max design gas flow:   500.0 m³/hr")
+print("  Max design gas flow:   500.0 m³/hr")
 
 # Get capacity utilization
 gas_stream = separator.getGasOutStream()
@@ -96,11 +96,11 @@ capacity_utilization = (actual_gas_flow / 500.0) * 100.0
 print(f"  Capacity utilization:  {capacity_utilization:.1f}%")
 
 if capacity_utilization > 100:
-    print(f"  ⚠️  WARNING: Separator is OVER capacity!")
+    print("  ⚠️  WARNING: Separator is OVER capacity!")
 elif capacity_utilization > 80:
-    print(f"  ⚠️  Note: Operating above 80% design capacity")
+    print("  ⚠️  Note: Operating above 80% design capacity")
 else:
-    print(f"  ✓ Operating within design limits")
+    print("  ✓ Operating within design limits")
 
 # Pipeline mechanical design example
 print("\n" + "-" * 65)
@@ -121,9 +121,9 @@ pipe_design.setMaxOperationPressure(operating_pressure)
 pipe_design.setMinOperationPressure(10.0)  # Minimum arrival pressure
 
 print("\nPipeline Parameters:")
-print(f"  Length:               50 km")
-print(f"  Diameter:             0.5 m (20 inch)")
+print("  Length:               50 km")
+print("  Diameter:             0.5 m (20 inch)")
 print(f"  Max operating P:      {operating_pressure:.1f} bara")
-print(f"  Min operating P:      10.0 bara")
+print("  Min operating P:      10.0 bara")
 
 print("=" * 65)

@@ -11,7 +11,7 @@ A gas mixture is defined and the density of the gas is calculated.
 @author: esol
 """
 
-from neqsim.thermo import TPflash, fluid, fluidComposition, phaseenvelope
+from neqsim.thermo import TPflash, fluid, fluidComposition
 
 # Start by creating a fluid in neqsim
 fluid1 = fluid("srk")  # create a fluid using the SRK-EoS

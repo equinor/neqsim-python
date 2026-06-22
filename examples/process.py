@@ -12,7 +12,6 @@ from neqsim.process import (
     separator,
     stream,
     valve,
-    viewProcess,
 )
 from neqsim.thermo import fluid
 

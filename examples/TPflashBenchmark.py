@@ -1,6 +1,6 @@
 import time
 
-from neqsim.thermo import TPflash, createfluid, fluid, fluidcreator, printFrame
+from neqsim.thermo import TPflash, fluid
 
 fluid1 = fluid("srk", 303.15, 35.01325)
 

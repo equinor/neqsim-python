@@ -1,6 +1,4 @@
 from neqsim import jneqsim
-import jpype
-import jpype.imports
 from jpype import JImplements, JOverride
 
 # Ensure the JVM is started and neqsim is attached

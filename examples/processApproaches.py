@@ -23,8 +23,6 @@ from neqsim.process import (
     separator,
     compressor,
     cooler,
-    valve,
-    # New classes (Approaches 2 & 3)
     ProcessContext,
     ProcessBuilder,
     newProcess,
@@ -72,7 +70,7 @@ comp2 = compressor("2nd stage", cool1.getOutletStream(), pres=120.0)
 # Run the simulation
 runProcess()
 
-print(f"\nResults (Approach 1):")
+print("\nResults (Approach 1):")
 print(f"  Stage 1 power: {comp1.getPower()/1e6:.3f} MW")
 print(f"  Stage 2 power: {comp2.getPower()/1e6:.3f} MW")
 print(f"  Total power:   {(comp1.getPower() + comp2.getPower())/1e6:.3f} MW")
@@ -117,7 +115,7 @@ with ProcessContext("Compression Train") as ctx:
     stage1 = ctx.get("1st stage")
     stage2 = ctx.get("2nd stage")
 
-    print(f"\nResults (Approach 2):")
+    print("\nResults (Approach 2):")
     print(f"  Stage 1 power: {stage1.getPower()/1e6:.3f} MW")
     print(f"  Stage 2 power: {stage2.getPower()/1e6:.3f} MW")
     print(f"  Total power:   {(stage1.getPower() + stage2.getPower())/1e6:.3f} MW")
@@ -161,7 +159,7 @@ process = (
 comp1 = process.get("1st stage")
 comp2 = process.get("2nd stage")
 
-print(f"\nResults (Approach 3):")
+print("\nResults (Approach 3):")
 print(f"  Stage 1 power: {comp1.getPower()/1e6:.3f} MW")
 print(f"  Stage 2 power: {comp2.getPower()/1e6:.3f} MW")
 print(f"  Total power:   {(comp1.getPower() + comp2.getPower())/1e6:.3f} MW")
@@ -202,7 +200,7 @@ comp2 = compressor("2nd stage", cool.getOutletStream(), pres=120.0, process=my_p
 # Run specific process
 my_process.run()
 
-print(f"\nResults (Hybrid):")
+print("\nResults (Hybrid):")
 print(f"  Stage 1 power: {comp1.getPower()/1e6:.3f} MW")
 print(f"  Stage 2 power: {comp2.getPower()/1e6:.3f} MW")
 print(f"  Total power:   {(comp1.getPower() + comp2.getPower())/1e6:.3f} MW")
@@ -215,8 +213,7 @@ print(f"  Total power:   {(comp1.getPower() + comp2.getPower())/1e6:.3f} MW")
 print("\n" + "=" * 70)
 print("CHOOSING AN APPROACH")
 print("=" * 70)
-print(
-    """
+print("""
 | Use Case                        | Recommended Approach          |
 |---------------------------------|-------------------------------|
 | Learning / tutorials            | Wrappers (global process)     |
@@ -228,5 +225,4 @@ print(
 | Clean declarative style         | ProcessBuilder                |
 | Mixing wrapper convenience      | Hybrid (process= parameter)   |
   with explicit control           |                               |
-"""
-)
+""")

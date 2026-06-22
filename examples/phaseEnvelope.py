@@ -10,7 +10,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 from neqsim.thermo.thermoTools import *
-from neqsim.thermo.thermoTools import fluid, phaseenvelope
+from neqsim.thermo.thermoTools import fluid
 
 time.sleep(3)
 eosname = "srk"  # @param ["srk", "pr"]

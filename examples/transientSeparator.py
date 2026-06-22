@@ -66,8 +66,8 @@ print("TRANSIENT SEPARATOR SIMULATION")
 print("=" * 70)
 
 print("\nSeparator Configuration:")
-print(f"  Internal diameter: 2.5 m")
-print(f"  Length:            6.0 m")
+print("  Internal diameter: 2.5 m")
+print("  Length:            6.0 m")
 
 print("\nInitial Steady-State Conditions:")
 print(f"  Feed rate:      {feed_stream.getFlowRate('kg/hr'):.0f} kg/hr")
@@ -83,7 +83,7 @@ print("-" * 70)
 time_step = 10.0  # seconds
 simulation_time = 120.0  # total seconds
 
-print(f"\nTime (s) | Pressure (bara) | Gas Flow (kg/hr) | Liquid Flow (kg/hr)")
+print("\nTime (s) | Pressure (bara) | Gas Flow (kg/hr) | Liquid Flow (kg/hr)")
 print("-" * 70)
 
 time = 0.0

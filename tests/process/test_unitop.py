@@ -1,14 +1,7 @@
 from neqsim.process.unitop import unitop
-from neqsim.process.processTools import (
-    pump,
-    stream,
-    clearProcess,
-    runProcess,
-    pumpChart,
-)
 from neqsim.thermo import fluid
 from neqsim import jneqsim
-from jpype import JImplements, JOverride
+from jpype import JOverride
 
 
 class ExampleCompressor(unitop):
