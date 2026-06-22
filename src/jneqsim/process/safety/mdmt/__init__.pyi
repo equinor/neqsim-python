@@ -1,0 +1,39 @@
+
+import sys
+if sys.version_info >= (3, 8):
+    from typing import Protocol
+else:
+    from typing_extensions import Protocol
+
+import java.io
+import java.lang
+import typing
+
+
+
+class MDMTCalculator(java.io.Serializable):
+    def __init__(self, materialCurve: 'MDMTCalculator.MaterialCurve', double: float): ...
+    def getMDMT_C(self) -> float: ...
+    def isAcceptable(self, double: float) -> bool: ...
+    def report(self, double: float) -> java.lang.String: ...
+    def setStressRatio(self, double: float) -> 'MDMTCalculator': ...
+    class MaterialCurve(java.lang.Enum['MDMTCalculator.MaterialCurve']):
+        A: typing.ClassVar['MDMTCalculator.MaterialCurve'] = ...
+        B: typing.ClassVar['MDMTCalculator.MaterialCurve'] = ...
+        C: typing.ClassVar['MDMTCalculator.MaterialCurve'] = ...
+        D: typing.ClassVar['MDMTCalculator.MaterialCurve'] = ...
+        _valueOf_0__T = typing.TypeVar('_valueOf_0__T', bound=java.lang.Enum)  # <T>
+        @typing.overload
+        @staticmethod
+        def valueOf(class_: typing.Type[_valueOf_0__T], string: typing.Union[java.lang.String, str]) -> _valueOf_0__T: ...
+        @typing.overload
+        @staticmethod
+        def valueOf(string: typing.Union[java.lang.String, str]) -> 'MDMTCalculator.MaterialCurve': ...
+        @staticmethod
+        def values() -> typing.MutableSequence['MDMTCalculator.MaterialCurve']: ...
+
+
+class __module_protocol__(Protocol):
+    # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.safety.mdmt")``.
+
+    MDMTCalculator: typing.Type[MDMTCalculator]

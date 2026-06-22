@@ -10,7 +10,7 @@ conflicts with the Python 'neqsim' package. The stubs are generated accordingly.
 Usage:
     python scripts/generate_stubs.py
 
-The stubs will be generated in the src/jneqsim-stubs directory.
+The stubs will be generated in the src/jneqsim directory.
 """
 
 import re
@@ -60,8 +60,8 @@ def generate_stubs():
         shutil.rmtree(temp_output_dir)
     temp_output_dir.mkdir(exist_ok=True)
 
-    # Final output directory
-    final_output_dir = src_path / "jneqsim-stubs"
+    # Final output directory: stubs live directly under src/ alongside neqsim/
+    final_output_dir = src_path
 
     print("Generating stubs...")
 
@@ -81,34 +81,36 @@ def generate_stubs():
         print("Renaming 'neqsim' -> 'jneqsim' in stubs to avoid naming conflict...")
         rename_package_in_stubs(temp_output_dir, "neqsim", "jneqsim")
 
-        # Clean up existing output
-        if final_output_dir.exists():
-            shutil.rmtree(final_output_dir)
-        final_output_dir.mkdir(exist_ok=True)
+        # Clean up existing jneqsim output
+        jneqsim_stubs_out = final_output_dir / "jneqsim"
+        if jneqsim_stubs_out.exists():
+            shutil.rmtree(jneqsim_stubs_out)
 
         # Move jpype-stubs as-is (it's at temp_output_dir/jpype-stubs)
         jpype_stubs = temp_output_dir / "jpype-stubs"
         if jpype_stubs.exists():
-            shutil.move(str(jpype_stubs), str(final_output_dir / "jpype-stubs"))
+            jpype_stubs_out = final_output_dir / "jpype-stubs"
+            if jpype_stubs_out.exists():
+                shutil.rmtree(jpype_stubs_out)
+            shutil.move(str(jpype_stubs), str(jpype_stubs_out))
 
-        # Rename folder neqsim-stubs -> jneqsim-stubs
-        target = final_output_dir / "jneqsim-stubs"
-        shutil.move(str(neqsim_stubs), str(target))
+        # Rename folder neqsim-stubs -> jneqsim
+        shutil.move(str(neqsim_stubs), str(jneqsim_stubs_out))
 
         # Clean up temp directory
         shutil.rmtree(temp_output_dir)
 
-    print(f"Stubs generated successfully in {final_output_dir}")
+    print(f"Stubs generated successfully in {final_output_dir / 'jneqsim'}")
     print("\n" + "=" * 60)
     print("USAGE INSTRUCTIONS")
     print("=" * 60)
     print("\nThe Java 'neqsim' package stubs are available as 'jneqsim'")
     print("to avoid conflicts with the Python 'neqsim' package.")
     print("\nFor VS Code with Pylance, add to settings.json:")
-    print('  "python.analysis.extraPaths": ["src/jneqsim-stubs"]')
+    print('  "python.analysis.extraPaths": ["src"]')
     print("\nFor mypy, add to pyproject.toml:")
     print("  [tool.mypy]")
-    print('  mypy_path = "src/jneqsim-stubs"')
+    print('  mypy_path = "src"')
 
 
 if __name__ == "__main__":

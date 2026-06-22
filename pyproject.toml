@@ -1,4 +1,8 @@
 [tool.poetry]
+packages = [
+    {include = "neqsim", from = "src"},
+    {include = "jneqsim", from = "src"},
+]
 name = "neqsim"
 version = "3.14.0"
 homepage = "https://github.com/Equinor/neqsim-python"
@@ -26,6 +30,9 @@ stubgenj = "^0.2.12"  # Generate type stubs for Java classes
 
 [tool.poetry.extras]
 interactive = ["matplotlib", "jupyter", "tabulate"]
+
+[tool.mypy]
+mypy_path = "src"
 
 [tool.pytest.ini_options]
 addopts = "-p no:faulthandler"
