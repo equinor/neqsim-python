@@ -44,8 +44,13 @@ dev = [
 [tool.uv]
 default-groups = "all"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/neqsim", "src/jneqsim"]
+[tool.uv.build-backend]
+# Allow namespace packages to include both neqsim and jneqsim-stubs
+namespace = true
+# Include the stub package in distributions using glob patterns
+source-include = [
+    "src/jneqsim-stubs/**",
+]
 
 [build-system]
 requires = ["uv_build>=0.11.18,<0.12.0"]
