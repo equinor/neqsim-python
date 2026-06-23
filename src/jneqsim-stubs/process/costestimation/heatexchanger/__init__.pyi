@@ -1,0 +1,46 @@
+import sys
+
+if sys.version_info >= (3, 8):
+    from typing import Protocol
+else:
+    from typing_extensions import Protocol
+
+import java.lang
+import java.util
+import jneqsim.process.costestimation
+import jneqsim.process.mechanicaldesign.heatexchanger
+import typing
+
+class BAHXCostEstimator(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
+    def __init__(
+        self,
+        bAHXMechanicalDesign: jneqsim.process.mechanicaldesign.heatexchanger.BAHXMechanicalDesign,
+    ): ...
+    def calcInstalledCost(self) -> float: ...
+    def getAnnualMaintenanceCostUSD(self) -> float: ...
+    def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def getEquipmentCostUSD(self) -> float: ...
+    def getInstalledCostUSD(self) -> float: ...
+    def getSpecificCostPerM2(self) -> float: ...
+
+class HeatExchangerCostEstimate(
+    jneqsim.process.costestimation.UnitCostEstimateBaseClass
+):
+    def __init__(
+        self,
+        heatExchangerMechanicalDesign: jneqsim.process.mechanicaldesign.heatexchanger.HeatExchangerMechanicalDesign,
+    ): ...
+    def calcUtilityOperatingCost(
+        self, string: typing.Union[java.lang.String, str], double: float
+    ) -> float: ...
+    def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def getExchangerType(self) -> java.lang.String: ...
+    def getTotalCost(self) -> float: ...
+    def setExchangerType(self, string: typing.Union[java.lang.String, str]) -> None: ...
+    def setTemaType(self, string: typing.Union[java.lang.String, str]) -> None: ...
+
+class __module_protocol__(Protocol):
+    # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.heatexchanger")``.
+
+    BAHXCostEstimator: typing.Type[BAHXCostEstimator]
+    HeatExchangerCostEstimate: typing.Type[HeatExchangerCostEstimate]

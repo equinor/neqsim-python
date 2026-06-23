@@ -186,7 +186,8 @@ print(f"  New pressure: {new_pressure:.2f} bara")
 print("\n" + "=" * 70)
 print("FLASH CALCULATION SUMMARY")
 print("=" * 70)
-print("""
+print(
+    """
 Flash Type | Given          | Find           | Application
 -----------|----------------|----------------|---------------------------
 TPflash    | T, P           | Phases, comp.  | General equilibrium
@@ -195,5 +196,6 @@ PSflash    | P, S           | T, phases      | Compressors, turbines
 TVflash    | T, V           | P, phases      | Closed vessels
 VHflash    | V, H           | T, P, phases   | Adiabatic closed systems
 VUflash    | V, U           | T, P, phases   | Isolated systems
-""")
+"""
+)
 print("=" * 70)

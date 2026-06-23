@@ -144,13 +144,15 @@ except Exception as e:
 # =============================================================================
 print("\n4. RETROGRADE CONDENSATION")
 print("-" * 40)
-print("""
+print(
+    """
 Retrograde condensation is a unique phenomenon in gas condensate systems
 where REDUCING pressure causes MORE liquid to form (counterintuitive!).
 
 This occurs between the cricondentherm and critical point at pressures
 below the cricondenbar. It's important for gas condensate reservoirs.
-""")
+"""
+)
 
 # Demonstrate retrograde behavior
 print("Demonstrating retrograde behavior with the rich gas:")
@@ -218,7 +220,8 @@ for p in [50, 75, 100, 150]:
 # =============================================================================
 print("\n6. CRICONDENBAR & CRICONDENTHERM SIGNIFICANCE")
 print("-" * 40)
-print("""
+print(
+    """
 ┌─────────────────────────────────────────────────────────────────┐
 │                    PHASE ENVELOPE                                │
 │                                                                  │
@@ -240,6 +243,7 @@ print("""
 │  ● Above cricondentherm: Heating cannot cause condensation     │
 │  ● Critical point: Liquid and gas become indistinguishable     │
 └─────────────────────────────────────────────────────────────────┘
-""")
+"""
+)
 
 print("=" * 70)

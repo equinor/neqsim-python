@@ -1,0 +1,146 @@
+import sys
+
+if sys.version_info >= (3, 8):
+    from typing import Protocol
+else:
+    from typing_extensions import Protocol
+
+import java.io
+import java.lang
+import java.util
+import jneqsim.process.safety.scenario
+import typing
+
+class CfdSourceTermCase(java.io.Serializable):
+    SCHEMA_VERSION: typing.ClassVar[java.lang.String] = ...
+    @staticmethod
+    def builder() -> "CfdSourceTermCase.Builder": ...
+    @staticmethod
+    def fromScenario(
+        releaseDispersionScenario: jneqsim.process.safety.scenario.ReleaseDispersionScenarioGenerator.ReleaseDispersionScenario,
+    ) -> "CfdSourceTermCase": ...
+    def getCaseId(self) -> java.lang.String: ...
+    def getQualityWarnings(self) -> java.util.List[java.lang.String]: ...
+    def getRelease(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def getScenarioName(self) -> java.lang.String: ...
+    def getSchemaVersion(self) -> java.lang.String: ...
+    def getSourceTerm(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def toJson(self) -> java.lang.String: ...
+    def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+    def validate(self) -> "CfdSourceTermCase.ValidationResult": ...
+
+    class Builder:
+        def __init__(self): ...
+        def ambient(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def build(self) -> "CfdSourceTermCase": ...
+        def caseId(
+            self, string: typing.Union[java.lang.String, str]
+        ) -> "CfdSourceTermCase.Builder": ...
+        def cfdHints(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def consequenceBranches(
+            self,
+            list: java.util.List[
+                typing.Union[
+                    java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                    typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+                ]
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def context(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def dispersionScreening(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def fluid(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def inventory(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def provenance(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def release(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def scenarioName(
+            self, string: typing.Union[java.lang.String, str]
+        ) -> "CfdSourceTermCase.Builder": ...
+        def sourceTerm(
+            self,
+            map: typing.Union[
+                java.util.Map[typing.Union[java.lang.String, str], typing.Any],
+                typing.Mapping[typing.Union[java.lang.String, str], typing.Any],
+            ],
+        ) -> "CfdSourceTermCase.Builder": ...
+        def warnings(
+            self, list: java.util.List[typing.Union[java.lang.String, str]]
+        ) -> "CfdSourceTermCase.Builder": ...
+
+    class ValidationResult(java.io.Serializable):
+        def getErrors(self) -> java.util.List[java.lang.String]: ...
+        def getWarnings(self) -> java.util.List[java.lang.String]: ...
+        def isValid(self) -> bool: ...
+        def toJson(self) -> java.lang.String: ...
+
+class CfdSourceTermExporter(java.io.Serializable):
+    def __init__(self): ...
+    def exportJson(
+        self,
+        cfdSourceTermCase: CfdSourceTermCase,
+        string: typing.Union[java.lang.String, str],
+    ) -> None: ...
+    def exportManifest(
+        self,
+        list: java.util.List[CfdSourceTermCase],
+        string: typing.Union[java.lang.String, str],
+    ) -> None: ...
+    def exportOpenFoamSkeleton(
+        self,
+        cfdSourceTermCase: CfdSourceTermCase,
+        string: typing.Union[java.lang.String, str],
+    ) -> None: ...
+    def toJson(self, cfdSourceTermCase: CfdSourceTermCase) -> java.lang.String: ...
+
+class __module_protocol__(Protocol):
+    # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.safety.cfd")``.
+
+    CfdSourceTermCase: typing.Type[CfdSourceTermCase]
+    CfdSourceTermExporter: typing.Type[CfdSourceTermExporter]

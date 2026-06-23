@@ -16,19 +16,16 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
-    - name: Install poetry
-      run: pipx install poetry
-
     - name: Setup python
       uses: actions/setup-python@v6
       with:
         python-version: 3.13
 
-    - name: Install dependencies
-      run: poetry install --no-interaction
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v5
 
     - name: Build wheel
-      run: poetry build
+      run: uv build
 
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1

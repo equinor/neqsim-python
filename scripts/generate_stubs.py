@@ -60,9 +60,6 @@ def generate_stubs():
         shutil.rmtree(temp_output_dir)
     temp_output_dir.mkdir(exist_ok=True)
 
-    # Final output directory: stubs live directly under src/ alongside neqsim/
-    final_output_dir = src_path
-
     print("Generating stubs...")
 
     # Generate stubs for the neqsim package (pass JPackage objects)
@@ -81,26 +78,27 @@ def generate_stubs():
         print("Renaming 'neqsim' -> 'jneqsim' in stubs to avoid naming conflict...")
         rename_package_in_stubs(temp_output_dir, "neqsim", "jneqsim")
 
-        # Clean up existing jneqsim output
-        jneqsim_stubs_out = final_output_dir / "jneqsim"
+        # Clean up existing jneqsim-stubs output
+        jneqsim_stubs_out = src_path / "jneqsim-stubs"
         if jneqsim_stubs_out.exists():
             shutil.rmtree(jneqsim_stubs_out)
 
         # Move jpype-stubs as-is (it's at temp_output_dir/jpype-stubs)
         jpype_stubs = temp_output_dir / "jpype-stubs"
         if jpype_stubs.exists():
-            jpype_stubs_out = final_output_dir / "jpype-stubs"
+            jpype_stubs_out = src_path / "jpype-stubs"
             if jpype_stubs_out.exists():
                 shutil.rmtree(jpype_stubs_out)
             shutil.move(str(jpype_stubs), str(jpype_stubs_out))
 
-        # Rename folder neqsim-stubs -> jneqsim
+        # Move stubs from temp directory to final output directory
+        # (must keep -stubs suffix for uv discovery)
         shutil.move(str(neqsim_stubs), str(jneqsim_stubs_out))
 
         # Clean up temp directory
         shutil.rmtree(temp_output_dir)
 
-    print(f"Stubs generated successfully in {final_output_dir / 'jneqsim'}")
+    print(f"Stubs generated successfully in {jneqsim_stubs_out}")
     print("\n" + "=" * 60)
     print("USAGE INSTRUCTIONS")
     print("=" * 60)
