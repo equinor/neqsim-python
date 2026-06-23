@@ -19,7 +19,7 @@ classifiers = [
 dependencies = [
     "JPype1>=1.7.0,<2",
     "numpy>1.25.2",
-    "pandas>=2.0.3,<3",
+    "pandas>=2.0.3,<4",
 ]
 
 [project.optional-dependencies]
