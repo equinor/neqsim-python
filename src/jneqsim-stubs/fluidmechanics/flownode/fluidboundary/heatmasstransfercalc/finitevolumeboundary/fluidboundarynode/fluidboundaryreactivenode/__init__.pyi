@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,14 +9,13 @@ import jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.finite
 import jneqsim.thermo.system
 import typing
 
-
-
-class FluidBoundaryNodeReactive(jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.finitevolumeboundary.fluidboundarynode.FluidBoundaryNode):
+class FluidBoundaryNodeReactive(
+    jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.finitevolumeboundary.fluidboundarynode.FluidBoundaryNode
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
     def __init__(self, systemInterface: jneqsim.thermo.system.SystemInterface): ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.finitevolumeboundary.fluidboundarynode.fluidboundaryreactivenode")``.

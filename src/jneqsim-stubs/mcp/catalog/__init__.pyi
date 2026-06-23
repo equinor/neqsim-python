@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,8 +8,6 @@ else:
 import java.lang
 import java.util
 import typing
-
-
 
 class ExampleCatalog:
     @staticmethod
@@ -49,11 +47,18 @@ class ExampleCatalog:
     @staticmethod
     def getCategories() -> java.util.List[java.lang.String]: ...
     @staticmethod
-    def getExample(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+    def getExample(
+        string: typing.Union[java.lang.String, str],
+        string2: typing.Union[java.lang.String, str],
+    ) -> java.lang.String: ...
     @staticmethod
-    def getExampleNames(string: typing.Union[java.lang.String, str]) -> java.util.List[java.lang.String]: ...
+    def getExampleNames(
+        string: typing.Union[java.lang.String, str],
+    ) -> java.util.List[java.lang.String]: ...
     @staticmethod
-    def getToolExample(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+    def getToolExample(
+        string: typing.Union[java.lang.String, str],
+    ) -> java.lang.String: ...
     @staticmethod
     def materialsReviewStidRegister() -> java.lang.String: ...
     @staticmethod
@@ -110,7 +115,6 @@ class ExampleCatalog:
     def visualizationPhaseEnvelope() -> java.lang.String: ...
     @staticmethod
     def waterHammerValveClosure() -> java.lang.String: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.mcp.catalog")``.

@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,10 +9,11 @@ import jneqsim.process.electricaldesign
 import jneqsim.process.equipment
 import typing
 
-
-
 class PipelineElectricalDesign(jneqsim.process.electricaldesign.ElectricalDesign):
-    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
+    def __init__(
+        self,
+        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
+    ): ...
     def calcDesign(self) -> None: ...
     def getCathodicProtectionKW(self) -> float: ...
     def getHeatTracingWPerM(self) -> float: ...
@@ -26,7 +27,6 @@ class PipelineElectricalDesign(jneqsim.process.electricaldesign.ElectricalDesign
     def setHasHeatTracing(self, boolean: bool) -> None: ...
     def setHeatTracingWPerM(self, double: float) -> None: ...
     def setInstrumentationKW(self, double: float) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.electricaldesign.pipeline")``.

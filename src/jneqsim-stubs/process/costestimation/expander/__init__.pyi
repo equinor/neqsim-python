@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,12 +11,15 @@ import jneqsim.process.costestimation
 import jneqsim.process.mechanicaldesign.expander
 import typing
 
-
-
 class ExpanderCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
-    def __init__(self, expanderMechanicalDesign: jneqsim.process.mechanicaldesign.expander.ExpanderMechanicalDesign): ...
+    def __init__(
+        self,
+        expanderMechanicalDesign: jneqsim.process.mechanicaldesign.expander.ExpanderMechanicalDesign,
+    ): ...
     @typing.overload
-    def calcAnnualOperatingCost(self, double: float, double2: float, double3: float, int: int) -> float: ...
+    def calcAnnualOperatingCost(
+        self, double: float, double2: float, double3: float, int: int
+    ) -> float: ...
     @typing.overload
     def calcAnnualOperatingCost(self, int: int) -> float: ...
     def calcPowerGenerationRevenue(self, int: int, double: float) -> float: ...
@@ -34,7 +37,6 @@ class ExpanderCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseCl
     def setLoadType(self, string: typing.Union[java.lang.String, str]) -> None: ...
     def setShaftPower(self, double: float) -> None: ...
     def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.expander")``.

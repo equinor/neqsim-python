@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,10 +9,11 @@ import jneqsim.process.electricaldesign
 import jneqsim.process.equipment
 import typing
 
-
-
 class SeparatorElectricalDesign(jneqsim.process.electricaldesign.ElectricalDesign):
-    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
+    def __init__(
+        self,
+        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
+    ): ...
     def calcDesign(self) -> None: ...
     def getControlValvePowerKW(self) -> float: ...
     def getHeatTracingKW(self) -> float: ...
@@ -28,7 +29,6 @@ class SeparatorElectricalDesign(jneqsim.process.electricaldesign.ElectricalDesig
     def setInstrumentationKW(self, double: float) -> None: ...
     def setLightingKW(self, double: float) -> None: ...
     def setNumberOfControlValves(self, int: int) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.electricaldesign.separator")``.

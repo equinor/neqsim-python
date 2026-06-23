@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,8 +8,6 @@ else:
 import java.lang
 import jpype
 import typing
-
-
 
 class RiskFrameworkQuickStart:
     def __init__(self): ...
@@ -30,8 +28,9 @@ class RiskFrameworkQuickStart:
     @staticmethod
     def exampleSISIntegration() -> None: ...
     @staticmethod
-    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
-
+    def main(
+        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray],
+    ) -> None: ...
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.safety.risk.examples")``.
