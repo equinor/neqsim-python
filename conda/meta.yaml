@@ -24,7 +24,7 @@ requirements:
     - jpype1 >=1.7.0,<2.0.0
     - numpy >1.25.2
     - pandas >=2.0.3,<3.0.0
-    - openjdk >=11
+    - openjdk >=17
 
 test:
   imports:

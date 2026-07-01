@@ -46,7 +46,7 @@ It provides Python toolboxes such as [thermoTools](https://github.com/equinor/ne
 ### Install
 
 <table>
-<tr><td><strong>pip</strong> (requires Java 11+)</td><td><strong>conda</strong> (Java included)</td></tr>
+<tr><td><strong>pip</strong> (requires Java 17+)</td><td><strong>conda</strong> (Java included)</td></tr>
 <tr>
 <td>
 
@@ -65,7 +65,7 @@ conda install -c conda-forge neqsim
 </tr>
 </table>
 
-> **Prerequisites:** Python 3.9+ and Java 11+. The conda package automatically installs OpenJDK — no separate Java setup needed. For pip, install Java from [Adoptium](https://adoptium.net/).
+> **Prerequisites:** Python 3.9+ and Java 17+ (NeqSim 3.15+ requires Java 17 or higher; earlier NeqSim releases required Java 11+). The conda package automatically installs OpenJDK — no separate Java setup needed. For pip, install Java from [Adoptium](https://adoptium.net/).
 
 ### Try it now
 
@@ -245,6 +245,29 @@ Explore ready-to-run examples in the [examples folder](https://github.com/equino
 [JPype](https://github.com/jpype-project/jpype) bridges Python and Java. See the [JPype installation guide](https://jpype.readthedocs.io/en/latest/install.html) for platform-specific details. Ensure Python and Java are both 64-bit (or both 32-bit) — mixing architectures will crash on import.
 
 The full list of Python dependencies is on the [dependencies page](https://github.com/equinor/neqsim-python/network/dependencies).
+
+### JVM Startup Control
+
+By default, `import neqsim` starts the JVM immediately. This can be tuned via environment variables:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `NEQSIM_JVM_AUTOSTART` | `1` | Set to `0`/`false`/`no` to disable automatic JVM startup on import. Call `init_jvm()` explicitly before using `jneqsim`. |
+| `NEQSIM_JVM_ARGS` | *(none)* | Extra JVM startup arguments (space separated), appended after the default `-Xrs`. |
+| `NEQSIM_JVM_MAX_HEAP` | *(none)* | Max JVM heap size, e.g. `2g` — passed as `-Xmx2g`. |
+
+```python
+import os
+os.environ["NEQSIM_JVM_AUTOSTART"] = "0"  # must be set before `import neqsim`
+
+from neqsim.neqsimpython import init_jvm, is_jvm_started
+
+print(is_jvm_started())        # False
+init_jvm(jvm_args=["-Xrs"])     # start explicitly, e.g. with custom args
+print(is_jvm_started())        # True
+```
+
+`init_jvm()` is safe to call multiple times — it is a no-op if the JVM is already running.
 
 ---
 

@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,10 +11,10 @@ import jneqsim.process.costestimation
 import jneqsim.process.mechanicaldesign
 import typing
 
-
-
 class MixerCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
-    def __init__(self, mechanicalDesign: jneqsim.process.mechanicaldesign.MechanicalDesign): ...
+    def __init__(
+        self, mechanicalDesign: jneqsim.process.mechanicaldesign.MechanicalDesign
+    ): ...
     def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
     def getMixerType(self) -> java.lang.String: ...
     def getPipeDiameter(self) -> float: ...
@@ -24,7 +24,6 @@ class MixerCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass
     def setPipeDiameter(self, double: float) -> None: ...
     def setPressureClass(self, int: int) -> None: ...
     def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.mixer")``.

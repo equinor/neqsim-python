@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,12 +11,15 @@ import jneqsim.process.costestimation
 import jneqsim.process.mechanicaldesign.tank
 import typing
 
-
-
 class TankCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
-    def __init__(self, tankMechanicalDesign: jneqsim.process.mechanicaldesign.tank.TankMechanicalDesign): ...
+    def __init__(
+        self,
+        tankMechanicalDesign: jneqsim.process.mechanicaldesign.tank.TankMechanicalDesign,
+    ): ...
     @typing.overload
-    def calcAnnualOperatingCost(self, double: float, double2: float, double3: float, int: int) -> float: ...
+    def calcAnnualOperatingCost(
+        self, double: float, double2: float, double3: float, int: int
+    ) -> float: ...
     @typing.overload
     def calcAnnualOperatingCost(self, int: int) -> float: ...
     def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
@@ -33,7 +36,6 @@ class TankCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass)
     def setTankType(self, string: typing.Union[java.lang.String, str]) -> None: ...
     def setTankVolume(self, double: float) -> None: ...
     def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.tank")``.

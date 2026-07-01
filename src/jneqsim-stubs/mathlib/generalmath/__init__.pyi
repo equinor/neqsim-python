@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,12 +8,14 @@ else:
 import jpype
 import typing
 
-
-
 class TDMAsolve:
     @staticmethod
-    def solve(doubleArray: typing.Union[typing.List[float], jpype.JArray], doubleArray2: typing.Union[typing.List[float], jpype.JArray], doubleArray3: typing.Union[typing.List[float], jpype.JArray], doubleArray4: typing.Union[typing.List[float], jpype.JArray]) -> typing.MutableSequence[float]: ...
-
+    def solve(
+        doubleArray: typing.Union[typing.List[float], jpype.JArray],
+        doubleArray2: typing.Union[typing.List[float], jpype.JArray],
+        doubleArray3: typing.Union[typing.List[float], jpype.JArray],
+        doubleArray4: typing.Union[typing.List[float], jpype.JArray],
+    ) -> typing.MutableSequence[float]: ...
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.mathlib.generalmath")``.

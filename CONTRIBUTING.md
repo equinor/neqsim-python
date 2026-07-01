@@ -13,10 +13,21 @@ Please note we have a code of conduct, please follow it in all your interactions
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
 
+## Development Checks
+
+Before opening a PR, run the same checks CI runs:
+
+```bash
+uv sync
+uv run black --check --include '\.py$' src/neqsim tests   # required — CI fails on violations
+uv run mypy src/neqsim                                     # advisory — CI reports but does not block
+uv run pytest -p no:faulthandler                            # full test suite
+```
+
 ## Release Process
 
 1. Update the release version in `pyproject.toml` and `conda/meta.yaml`.
-2. Update the bundled NeqSim JAR files under `src/neqsim/lib/` for each supported Java runtime.
+2. Update the bundled NeqSim JAR file at `src/neqsim/lib/neqsim-<version>.jar` (Java 17+ only).
 3. Draft the GitHub release body from `.github/RELEASE_TEMPLATE.md`, keeping the installation and quick-start sections in the release notes.
 4. Use GitHub's generated release notes to include categorized pull requests. The categories are configured in `.github/release.yml`.
 5. Publish the GitHub release only when ready. A published release triggers the PyPI publishing workflow and the Java stub generation workflow.

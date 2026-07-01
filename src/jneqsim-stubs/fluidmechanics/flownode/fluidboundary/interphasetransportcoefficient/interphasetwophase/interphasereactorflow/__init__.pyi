@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,32 +10,71 @@ import jneqsim.fluidmechanics.flownode.fluidboundary.interphasetransportcoeffici
 import jneqsim.thermo
 import typing
 
-
-
-class InterphaseReactorFlow(jneqsim.fluidmechanics.flownode.fluidboundary.interphasetransportcoefficient.interphasetwophase.InterphaseTwoPhase):
+class InterphaseReactorFlow(
+    jneqsim.fluidmechanics.flownode.fluidboundary.interphasetransportcoefficient.interphasetwophase.InterphaseTwoPhase
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface): ...
+    def __init__(
+        self, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface
+    ): ...
 
-class InterphasePackedBed(InterphaseReactorFlow, jneqsim.thermo.ThermodynamicConstantsInterface):
+class InterphasePackedBed(
+    InterphaseReactorFlow, jneqsim.thermo.ThermodynamicConstantsInterface
+):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(self, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface): ...
-    def calcInterPhaseFrictionFactor(self, int: int, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
-    def calcInterphaseHeatTransferCoefficient(self, int: int, double: float, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
-    def calcInterphaseMassTransferCoefficient(self, int: int, double: float, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
+    def __init__(
+        self, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface
+    ): ...
+    def calcInterPhaseFrictionFactor(
+        self,
+        int: int,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
+    def calcInterphaseHeatTransferCoefficient(
+        self,
+        int: int,
+        double: float,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
+    def calcInterphaseMassTransferCoefficient(
+        self,
+        int: int,
+        double: float,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
     @typing.overload
-    def calcWallFrictionFactor(self, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
+    def calcWallFrictionFactor(
+        self, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface
+    ) -> float: ...
     @typing.overload
-    def calcWallFrictionFactor(self, int: int, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
+    def calcWallFrictionFactor(
+        self,
+        int: int,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
     @typing.overload
-    def calcWallHeatTransferCoefficient(self, int: int, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
+    def calcWallHeatTransferCoefficient(
+        self,
+        int: int,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
     @typing.overload
-    def calcWallHeatTransferCoefficient(self, int: int, double: float, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
-    def calcWallMassTransferCoefficient(self, int: int, double: float, flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface) -> float: ...
-
+    def calcWallHeatTransferCoefficient(
+        self,
+        int: int,
+        double: float,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
+    def calcWallMassTransferCoefficient(
+        self,
+        int: int,
+        double: float,
+        flowNodeInterface: jneqsim.fluidmechanics.flownode.FlowNodeInterface,
+    ) -> float: ...
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flownode.fluidboundary.interphasetransportcoefficient.interphasetwophase.interphasereactorflow")``.
