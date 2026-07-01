@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,10 +9,12 @@ import java.lang
 import jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.onephaseflowvisualization
 import typing
 
-
-
-class PipeFlowVisualization(jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.onephaseflowvisualization.OnePhaseFlowVisualization):
-    bulkComposition: typing.MutableSequence[typing.MutableSequence[typing.MutableSequence[float]]] = ...
+class PipeFlowVisualization(
+    jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.onephaseflowvisualization.OnePhaseFlowVisualization
+):
+    bulkComposition: typing.MutableSequence[
+        typing.MutableSequence[typing.MutableSequence[float]]
+    ] = ...
     @typing.overload
     def __init__(self): ...
     @typing.overload
@@ -20,7 +22,6 @@ class PipeFlowVisualization(jneqsim.fluidmechanics.util.fluidmechanicsvisualizat
     def calcPoints(self, string: typing.Union[java.lang.String, str]) -> None: ...
     def displayResult(self, string: typing.Union[java.lang.String, str]) -> None: ...
     def setPoints(self) -> None: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.util.fluidmechanicsvisualization.flowsystemvisualization.onephaseflowvisualization.pipeflowvisualization")``.

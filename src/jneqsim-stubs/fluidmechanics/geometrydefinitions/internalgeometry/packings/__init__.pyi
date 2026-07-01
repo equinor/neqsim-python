@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,8 +8,6 @@ else:
 import java.lang
 import jneqsim.util
 import typing
-
-
 
 class PackingInterface:
     def getSize(self) -> float: ...
@@ -21,7 +19,12 @@ class Packing(jneqsim.util.NamedBaseClass, PackingInterface):
     @typing.overload
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
     @typing.overload
-    def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], int: int): ...
+    def __init__(
+        self,
+        string: typing.Union[java.lang.String, str],
+        string2: typing.Union[java.lang.String, str],
+        int: int,
+    ): ...
     def getSize(self) -> float: ...
     def getSurfaceAreaPrVolume(self) -> float: ...
     def getVoidFractionPacking(self) -> float: ...
@@ -42,7 +45,6 @@ class RachigRingPacking(Packing):
     def __init__(self): ...
     @typing.overload
     def __init__(self, string: typing.Union[java.lang.String, str], int: int): ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.geometrydefinitions.internalgeometry.packings")``.

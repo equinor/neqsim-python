@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,10 +9,11 @@ import jneqsim.process.equipment
 import jneqsim.process.mechanicaldesign
 import typing
 
-
-
 class EjectorMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
-    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
+    def __init__(
+        self,
+        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
+    ): ...
     def getBodyVolume(self) -> float: ...
     def getConnectedPipingVolume(self) -> float: ...
     def getDiffuserOutletArea(self) -> float: ...
@@ -37,8 +38,27 @@ class EjectorMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign)
     def getSuctionInletVelocity(self) -> float: ...
     def getTotalVolume(self) -> float: ...
     def resetDesign(self) -> None: ...
-    def updateDesign(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, double10: float, double11: float, double12: float, double13: float, double14: float, double15: float, double16: float, double17: float, double18: float) -> None: ...
-
+    def updateDesign(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+        double10: float,
+        double11: float,
+        double12: float,
+        double13: float,
+        double14: float,
+        double15: float,
+        double16: float,
+        double17: float,
+        double18: float,
+    ) -> None: ...
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.ejector")``.

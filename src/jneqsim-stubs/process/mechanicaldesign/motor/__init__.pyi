@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,15 +11,15 @@ import java.util
 import jneqsim.process.electricaldesign
 import typing
 
-
-
 class MotorMechanicalDesign(java.io.Serializable):
     @typing.overload
     def __init__(self): ...
     @typing.overload
     def __init__(self, double: float): ...
     @typing.overload
-    def __init__(self, electricalDesign: jneqsim.process.electricaldesign.ElectricalDesign): ...
+    def __init__(
+        self, electricalDesign: jneqsim.process.electricaldesign.ElectricalDesign
+    ): ...
     def calcDesign(self) -> None: ...
     def getAltitudeM(self) -> float: ...
     def getAmbientTemperatureC(self) -> float: ...
@@ -62,7 +62,6 @@ class MotorMechanicalDesign(java.io.Serializable):
     def setShaftPowerKW(self, double: float) -> None: ...
     def toJson(self) -> java.lang.String: ...
     def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.motor")``.

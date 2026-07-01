@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,10 +10,20 @@ import java.lang
 import java.util
 import typing
 
-
-
 class FlareCapacityDTO(java.io.Serializable):
-    def __init__(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float, double7: float, double8: float, double9: float, boolean: bool): ...
+    def __init__(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        double7: float,
+        double8: float,
+        double9: float,
+        boolean: bool,
+    ): ...
     def getDesignHeatDutyW(self) -> float: ...
     def getDesignMassRateKgS(self) -> float: ...
     def getDesignMolarRateMoleS(self) -> float: ...
@@ -26,7 +36,15 @@ class FlareCapacityDTO(java.io.Serializable):
     def isOverloaded(self) -> bool: ...
 
 class FlareDispersionSurrogateDTO(java.io.Serializable):
-    def __init__(self, double: float, double2: float, double3: float, double4: float, double5: float, double6: float): ...
+    def __init__(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+    ): ...
     def getExitVelocityMs(self) -> float: ...
     def getMassRateKgS(self) -> float: ...
     def getMolarRateMoleS(self) -> float: ...
@@ -35,7 +53,22 @@ class FlareDispersionSurrogateDTO(java.io.Serializable):
     def getStandardVolumeSm3PerSec(self) -> float: ...
 
 class FlarePerformanceDTO(java.io.Serializable):
-    def __init__(self, string: typing.Union[java.lang.String, str], double: float, double2: float, double3: float, double4: float, double5: float, double6: float, flareDispersionSurrogateDTO: FlareDispersionSurrogateDTO, map: typing.Union[java.util.Map[typing.Union[java.lang.String, str], float], typing.Mapping[typing.Union[java.lang.String, str], float]], flareCapacityDTO: FlareCapacityDTO): ...
+    def __init__(
+        self,
+        string: typing.Union[java.lang.String, str],
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+        double6: float,
+        flareDispersionSurrogateDTO: FlareDispersionSurrogateDTO,
+        map: typing.Union[
+            java.util.Map[typing.Union[java.lang.String, str], float],
+            typing.Mapping[typing.Union[java.lang.String, str], float],
+        ],
+        flareCapacityDTO: FlareCapacityDTO,
+    ): ...
     def getCapacity(self) -> FlareCapacityDTO: ...
     def getCo2EmissionKgS(self) -> float: ...
     def getCo2EmissionTonPerDay(self) -> float: ...
@@ -49,7 +82,6 @@ class FlarePerformanceDTO(java.io.Serializable):
     def getMassRateKgS(self) -> float: ...
     def getMolarRateMoleS(self) -> float: ...
     def isOverloaded(self) -> bool: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.equipment.flare.dto")``.

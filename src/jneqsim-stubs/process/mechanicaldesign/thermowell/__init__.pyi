@@ -1,5 +1,5 @@
-
 import sys
+
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,8 +8,6 @@ else:
 import java.io
 import java.lang
 import typing
-
-
 
 class ThermowellDesignCalculator(java.io.Serializable):
     def __init__(self): ...
@@ -29,13 +27,25 @@ class ThermowellDesignCalculator(java.io.Serializable):
     def isFrequencyCheckPassed(self) -> bool: ...
     def isHydrostaticCheckPassed(self) -> bool: ...
     def isStaticStressCheckPassed(self) -> bool: ...
-    def setCorrectionFactors(self, double: float, double2: float, double3: float) -> None: ...
+    def setCorrectionFactors(
+        self, double: float, double2: float, double3: float
+    ) -> None: ...
     def setFrequencyRatioLimit(self, double: float) -> None: ...
-    def setGeometry(self, double: float, double2: float, double3: float, double4: float, double5: float) -> None: ...
-    def setMaterial(self, double: float, double2: float, double3: float, double4: float) -> None: ...
-    def setProcessConditions(self, double: float, double2: float, double3: float, double4: float) -> None: ...
+    def setGeometry(
+        self,
+        double: float,
+        double2: float,
+        double3: float,
+        double4: float,
+        double5: float,
+    ) -> None: ...
+    def setMaterial(
+        self, double: float, double2: float, double3: float, double4: float
+    ) -> None: ...
+    def setProcessConditions(
+        self, double: float, double2: float, double3: float, double4: float
+    ) -> None: ...
     def toJson(self) -> java.lang.String: ...
-
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.thermowell")``.
