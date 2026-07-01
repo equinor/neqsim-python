@@ -25,7 +25,7 @@ conda install -c conda-forge neqsim=<version>
 Requirements:
 
 - Python 3.9 or newer.
-- Java 11 or newer for pip installs.
+- Java 17 or newer for pip installs. Download from [Adoptium](https://adoptium.net/).
 - Conda installs include OpenJDK through conda-forge.
 
 Verify the installed package version without starting the JVM:
@@ -62,6 +62,6 @@ printFrame(natural_gas)
 ## Maintainer Checklist
 
 - Confirm `pyproject.toml` and `conda/meta.yaml` use this version.
-- Confirm bundled JAR files match this version for each supported Java runtime.
+- Confirm the bundled JAR at `src/neqsim/lib/neqsim-<version>.jar` matches this version.
 - Run the relevant tests or packaging checks before publishing.
 - Publish the GitHub release only when ready to trigger the PyPI release workflow.

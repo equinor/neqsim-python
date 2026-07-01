@@ -23,7 +23,7 @@ def _get_jvm_error_message() -> str:
     return (
         "Failed to start Java Virtual Machine (JVM).\n\n"
         "Common solutions:\n"
-        "1. Install Java JDK 11+ from https://adoptium.net/\n"
+        "1. Install Java JDK 17+ from https://adoptium.net/\n"
         "2. Ensure JAVA_HOME environment variable is set\n"
         "3. Ensure 64-bit Python matches 64-bit Java (or 32-bit with 32-bit)\n\n"
         "See: https://github.com/equinor/neqsim-python#prerequisites"
@@ -85,7 +85,7 @@ def init_jvm(jvm_args: Optional[List[str]] = None, interrupt: bool = False) -> N
 
     Raises:
         NeqSimJVMError: If the JVM fails to start, or the detected Java
-            version is older than 11.
+            version is older than 17.
     """
     if jpype.isJVMStarted():
         return
@@ -99,19 +99,22 @@ def init_jvm(jvm_args: Optional[List[str]] = None, interrupt: bool = False) -> N
             jpype.startJVM(*args, interrupt=interrupt, **start_kwargs)
         except TypeError:
             jpype.startJVM(*args, **start_kwargs)
+
+        jvm_version = jpype.getJVMVersion()[0]
+        if jvm_version < 17:
+            raise NeqSimJVMError(
+                "Detected Java version below 17. NeqSim from version 3.15 "
+                "requires Java 17 or higher.\n"
+                "Download Java 17+ from: https://adoptium.net/\n"
+                "See: https://github.com/equinor/neqsim-python#prerequisites"
+            )
+
+        module_dir = Path(__file__).resolve().parent
+        jpype.addClassPath(str(module_dir / "lib" / "*"))
+    except NeqSimJVMError:
+        raise
     except Exception as e:
         raise NeqSimJVMError(_get_jvm_error_message()) from e
-
-    jvm_version = jpype.getJVMVersion()[0]
-    if jvm_version < 11:
-        raise NeqSimJVMError(
-            "Detected Java version below 11. Please upgrade to Java version "
-            "11 or higher.\n"
-            "See: https://github.com/equinor/neqsim-python#prerequisites"
-        )
-
-    module_dir = Path(__file__).resolve().parent
-    jpype.addClassPath(str(module_dir / "lib" / "java11" / "*"))
 
 
 def _autostart_enabled() -> bool:
