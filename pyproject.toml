@@ -1,6 +1,6 @@
 [project]
 name = "neqsim"
-version = "3.14.0"
+version = "3.15.0"
 description = "NeqSim is a tool for thermodynamic and process calculations"
 authors = [{ name = "Even Solbraa", email = "esolbraa@gmail.com" }]
 requires-python = ">=3.9,<4"
@@ -50,6 +50,9 @@ namespace = true
 # Include the stub package in distributions using glob patterns
 source-include = [
     "src/jneqsim-stubs/**",
+    "src/jpype-stubs/**",
+    "src/neqsim/**/*.pyi",
+    "src/neqsim/py.typed",
 ]
 
 [build-system]

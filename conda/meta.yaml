@@ -1,5 +1,5 @@
 {% set name = "neqsim" %}
-{% set version = "3.14.0" %}
+{% set version = "3.15.0" %}
 
 package:
   name: {{ name|lower }}
