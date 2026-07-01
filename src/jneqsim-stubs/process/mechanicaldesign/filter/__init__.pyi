@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,15 +11,12 @@ import jneqsim.process.equipment
 import jneqsim.process.mechanicaldesign
 import typing
 
+
+
 class FilterMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
-    def __init__(
-        self,
-        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
-    ): ...
+    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
     def calcDesign(self) -> None: ...
-    def generateBillOfMaterials(
-        self,
-    ) -> java.util.List[java.util.Map[java.lang.String, typing.Any]]: ...
+    def generateBillOfMaterials(self) -> java.util.List[java.util.Map[java.lang.String, typing.Any]]: ...
     def getAnnualMaintenanceCostUSD(self) -> float: ...
     def getDesignPressure(self) -> float: ...
     def getDesignTemperatureC(self) -> float: ...
@@ -52,10 +49,8 @@ class FilterMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
     def toJson(self) -> java.lang.String: ...
 
 class SulfurFilterMechanicalDesign(FilterMechanicalDesign):
-    def __init__(
-        self,
-        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
-    ): ...
+    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.filter")``.

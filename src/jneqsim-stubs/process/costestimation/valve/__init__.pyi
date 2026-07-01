@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,11 +11,10 @@ import jneqsim.process.costestimation
 import jneqsim.process.mechanicaldesign.valve
 import typing
 
+
+
 class ValveCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
-    def __init__(
-        self,
-        valveMechanicalDesign: jneqsim.process.mechanicaldesign.valve.ValveMechanicalDesign,
-    ): ...
+    def __init__(self, valveMechanicalDesign: jneqsim.process.mechanicaldesign.valve.ValveMechanicalDesign): ...
     def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
     def getTotalCost(self) -> float: ...
     def getValveCv(self) -> float: ...
@@ -26,6 +25,7 @@ class ValveCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass
     def setPressureClass(self, int: int) -> None: ...
     def setValveCv(self, double: float) -> None: ...
     def setValveType(self, string: typing.Union[java.lang.String, str]) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.valve")``.

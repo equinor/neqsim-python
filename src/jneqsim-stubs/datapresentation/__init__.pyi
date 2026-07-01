@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,6 +11,8 @@ import jneqsim.datapresentation.filehandling
 import jneqsim.datapresentation.jfreechart
 import typing
 
+
+
 class DataHandling:
     def __init__(self): ...
     def getItemCount(self, int: int) -> int: ...
@@ -20,30 +22,16 @@ class DataHandling:
     def getSeriesName(self, int: int) -> java.lang.String: ...
     def getXValue(self, int: int, int2: int) -> java.lang.Number: ...
     def getYValue(self, int: int, int2: int) -> java.lang.Number: ...
-    def printToFile(
-        self,
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-        string: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def printToFile(self, doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray], string: typing.Union[java.lang.String, str]) -> None: ...
 
 class SampleXYDataSource:
-    def __init__(
-        self,
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray],
-        string2: typing.Union[java.lang.String, str],
-        string3: typing.Union[java.lang.String, str],
-        string4: typing.Union[java.lang.String, str],
-    ): ...
+    def __init__(self, doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray], stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], string4: typing.Union[java.lang.String, str]): ...
     def getItemCount(self, int: int) -> int: ...
     def getSeriesCount(self) -> int: ...
     def getSeriesName(self, int: int) -> java.lang.String: ...
     def getXValue(self, int: int, int2: int) -> java.lang.Number: ...
     def getYValue(self, int: int, int2: int) -> java.lang.Number: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.datapresentation")``.

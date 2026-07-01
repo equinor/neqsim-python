@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,11 +10,10 @@ import jneqsim.process.equipment
 import jneqsim.process.mechanicaldesign
 import typing
 
+
+
 class MembraneMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
-    def __init__(
-        self,
-        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
-    ): ...
+    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
     def calcDesign(self) -> None: ...
     def getHousingWallThickness(self) -> float: ...
     def getMembraneLifeMonths(self) -> int: ...
@@ -28,6 +27,7 @@ class MembraneMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign
     def setAreaPerModule(self, double: float) -> None: ...
     def setMembraneLifeMonths(self, int: int) -> None: ...
     def setModuleType(self, string: typing.Union[java.lang.String, str]) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.membrane")``.

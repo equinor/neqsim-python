@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,19 +11,14 @@ import jneqsim.process.costestimation
 import jneqsim.process.mechanicaldesign.absorber
 import typing
 
+
+
 class AbsorberCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
-    def __init__(
-        self,
-        absorberMechanicalDesign: jneqsim.process.mechanicaldesign.absorber.AbsorberMechanicalDesign,
-    ): ...
+    def __init__(self, absorberMechanicalDesign: jneqsim.process.mechanicaldesign.absorber.AbsorberMechanicalDesign): ...
     @typing.overload
-    def calcAnnualOperatingCost(
-        self, double: float, double2: float, double3: float, int: int
-    ) -> float: ...
+    def calcAnnualOperatingCost(self, double: float, double2: float, double3: float, int: int) -> float: ...
     @typing.overload
-    def calcAnnualOperatingCost(
-        self, int: int, double: float, double2: float
-    ) -> float: ...
+    def calcAnnualOperatingCost(self, int: int, double: float, double2: float) -> float: ...
     def getAbsorberType(self) -> java.lang.String: ...
     def getColumnDiameter(self) -> float: ...
     def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
@@ -41,6 +36,7 @@ class AbsorberCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseCl
     def setReboilerDuty(self, double: float) -> None: ...
     def setTrayType(self, string: typing.Union[java.lang.String, str]) -> None: ...
     def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.absorber")``.

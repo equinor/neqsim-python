@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -8,6 +8,8 @@ else:
 import jpype
 import jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc
 import typing
+
+
 
 class EnhancementFactorInterface:
     def calcEnhancementVec(self, int: int) -> None: ...
@@ -18,10 +20,7 @@ class EnhancementFactor(EnhancementFactorInterface):
     @typing.overload
     def __init__(self): ...
     @typing.overload
-    def __init__(
-        self,
-        fluidBoundaryInterface: jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.FluidBoundaryInterface,
-    ): ...
+    def __init__(self, fluidBoundaryInterface: jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.FluidBoundaryInterface): ...
     @typing.overload
     def calcEnhancementVec(self, int: int) -> None: ...
     @typing.overload
@@ -35,32 +34,23 @@ class EnhancementFactor(EnhancementFactorInterface):
     @typing.overload
     def getHattaNumber(self) -> typing.MutableSequence[float]: ...
     @typing.overload
-    def setEnhancementVec(
-        self, doubleArray: typing.Union[typing.List[float], jpype.JArray]
-    ) -> None: ...
+    def setEnhancementVec(self, doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> None: ...
     @typing.overload
     def setEnhancementVec(self, int: int, double: float) -> None: ...
-    def setHattaNumber(
-        self, doubleArray: typing.Union[typing.List[float], jpype.JArray]
-    ) -> None: ...
+    def setHattaNumber(self, doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> None: ...
     def setOnesVec(self, int: int) -> None: ...
 
 class EnhancementFactorAlg(EnhancementFactor):
-    def __init__(
-        self,
-        fluidBoundaryInterface: jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.FluidBoundaryInterface,
-    ): ...
+    def __init__(self, fluidBoundaryInterface: jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.FluidBoundaryInterface): ...
     @typing.overload
     def calcEnhancementVec(self, int: int, int2: int) -> None: ...
     @typing.overload
     def calcEnhancementVec(self, int: int) -> None: ...
 
 class EnhancementFactorNumeric(EnhancementFactor):
-    def __init__(
-        self,
-        fluidBoundaryInterface: jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.FluidBoundaryInterface,
-    ): ...
+    def __init__(self, fluidBoundaryInterface: jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.FluidBoundaryInterface): ...
     def calcEnhancementMatrix(self, int: int) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.fluidmechanics.flownode.fluidboundary.heatmasstransfercalc.nonequilibriumfluidboundary.filmmodelboundary.reactivefilmmodel.enhancementfactor")``.

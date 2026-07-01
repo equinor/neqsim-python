@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -9,6 +9,7 @@ import jneqsim.mcp.catalog
 import jneqsim.mcp.model
 import jneqsim.mcp.runners
 import typing
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.mcp")``.

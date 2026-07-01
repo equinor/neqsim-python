@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -14,225 +14,121 @@ import jpype.protocol
 import jneqsim.thermo.system
 import typing
 
+
+
 class EclipseFluidReadWrite:
     pseudoName: typing.ClassVar[java.lang.String] = ...
     def __init__(self): ...
     @staticmethod
-    def addWaterToFluid(
-        systemInterface: jneqsim.thermo.system.SystemInterface, double: float
-    ) -> None: ...
+    def addWaterToFluid(systemInterface: jneqsim.thermo.system.SystemInterface, double: float) -> None: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str], boolean: bool
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], boolean: bool) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str], boolean: bool, double: float
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], boolean: bool, double: float) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        boolean: bool,
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], boolean: bool) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        boolean: bool,
-        double: float,
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], boolean: bool, double: float) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-        stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], systemInterface: jneqsim.thermo.system.SystemInterface) -> jneqsim.thermo.system.SystemInterface: ...
     @staticmethod
-    def readE300File(
-        string: typing.Union[java.lang.String, str],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def readE300File(string: typing.Union[java.lang.String, str]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def setComposition(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        string: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def setComposition(systemInterface: jneqsim.thermo.system.SystemInterface, string: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     @staticmethod
-    def setComposition(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def setComposition(systemInterface: jneqsim.thermo.system.SystemInterface, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     @staticmethod
-    def toE300String(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-    ) -> java.lang.String: ...
+    def toE300String(systemInterface: jneqsim.thermo.system.SystemInterface) -> java.lang.String: ...
     @typing.overload
     @staticmethod
-    def toE300String(
-        systemInterface: jneqsim.thermo.system.SystemInterface, double: float
-    ) -> java.lang.String: ...
+    def toE300String(systemInterface: jneqsim.thermo.system.SystemInterface, double: float) -> java.lang.String: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        string: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, string: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        string: typing.Union[java.lang.String, str],
-        double: float,
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, string: typing.Union[java.lang.String, str], double: float) -> None: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath],
-        double: float,
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], double: float) -> None: ...
 
 class JsonFluidReadWrite:
     @typing.overload
     @staticmethod
-    def convertE300ToJson(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def convertE300ToJson(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     @staticmethod
-    def convertE300ToJson(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        double: float,
-    ) -> None: ...
+    def convertE300ToJson(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], double: float) -> None: ...
     @typing.overload
     @staticmethod
-    def convertJsonToE300(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def convertJsonToE300(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     @staticmethod
-    def convertJsonToE300(
-        string: typing.Union[java.lang.String, str],
-        string2: typing.Union[java.lang.String, str],
-        double: float,
-    ) -> None: ...
+    def convertJsonToE300(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], double: float) -> None: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str], boolean: bool
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], boolean: bool) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str], boolean: bool, double: float
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], boolean: bool, double: float) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def readString(
-        string: typing.Union[java.lang.String, str],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def readString(string: typing.Union[java.lang.String, str]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def readString(
-        string: typing.Union[java.lang.String, str], boolean: bool
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def readString(string: typing.Union[java.lang.String, str], boolean: bool) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def readString(
-        string: typing.Union[java.lang.String, str], boolean: bool, double: float
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def readString(string: typing.Union[java.lang.String, str], boolean: bool, double: float) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def toJsonString(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-    ) -> java.lang.String: ...
+    def toJsonString(systemInterface: jneqsim.thermo.system.SystemInterface) -> java.lang.String: ...
     @typing.overload
     @staticmethod
-    def toJsonString(
-        systemInterface: jneqsim.thermo.system.SystemInterface, double: float
-    ) -> java.lang.String: ...
+    def toJsonString(systemInterface: jneqsim.thermo.system.SystemInterface, double: float) -> java.lang.String: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        string: typing.Union[java.lang.String, str],
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, string: typing.Union[java.lang.String, str]) -> None: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        string: typing.Union[java.lang.String, str],
-        double: float,
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, string: typing.Union[java.lang.String, str], double: float) -> None: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath],
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> None: ...
     @typing.overload
     @staticmethod
-    def write(
-        systemInterface: jneqsim.thermo.system.SystemInterface,
-        path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath],
-        double: float,
-    ) -> None: ...
+    def write(systemInterface: jneqsim.thermo.system.SystemInterface, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], double: float) -> None: ...
 
 class TablePrinter(java.io.Serializable):
     def __init__(self): ...
     @staticmethod
-    def convertDoubleToString(
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-    ) -> typing.MutableSequence[typing.MutableSequence[java.lang.String]]: ...
+    def convertDoubleToString(doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]) -> typing.MutableSequence[typing.MutableSequence[java.lang.String]]: ...
     @typing.overload
     @staticmethod
-    def printTable(
-        doubleArray: typing.Union[
-            typing.List[typing.MutableSequence[float]], jpype.JArray
-        ],
-    ) -> None: ...
+    def printTable(doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]) -> None: ...
     @typing.overload
     @staticmethod
-    def printTable(
-        stringArray: typing.Union[
-            typing.List[typing.MutableSequence[java.lang.String]], jpype.JArray
-        ],
-    ) -> None: ...
+    def printTable(stringArray: typing.Union[typing.List[typing.MutableSequence[java.lang.String]], jpype.JArray]) -> None: ...
 
 class WhitsonPVTReader:
     def __init__(self): ...
@@ -244,15 +140,11 @@ class WhitsonPVTReader:
     def getOmegaB(self) -> float: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str]) -> jneqsim.thermo.system.SystemInterface: ...
     @typing.overload
     @staticmethod
-    def read(
-        string: typing.Union[java.lang.String, str],
-        doubleArray: typing.Union[typing.List[float], jpype.JArray],
-    ) -> jneqsim.thermo.system.SystemInterface: ...
+    def read(string: typing.Union[java.lang.String, str], doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> jneqsim.thermo.system.SystemInterface: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.thermo.util.readwrite")``.

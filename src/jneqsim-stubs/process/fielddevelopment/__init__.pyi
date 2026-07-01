@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -18,6 +18,7 @@ import jneqsim.process.fielddevelopment.subsea
 import jneqsim.process.fielddevelopment.tieback
 import jneqsim.process.fielddevelopment.workflow
 import typing
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.fielddevelopment")``.

@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,11 +10,10 @@ import jneqsim.process.equipment
 import jneqsim.process.mechanicaldesign
 import typing
 
+
+
 class ReactorMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign):
-    def __init__(
-        self,
-        processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface,
-    ): ...
+    def __init__(self, processEquipmentInterface: jneqsim.process.equipment.ProcessEquipmentInterface): ...
     def calcDesign(self) -> None: ...
     def getBedPressureDrop(self) -> float: ...
     def getCatalystMass(self) -> float: ...
@@ -36,6 +35,7 @@ class ReactorMechanicalDesign(jneqsim.process.mechanicaldesign.MechanicalDesign)
     def setLHSV(self, double: float) -> None: ...
     def setNumberOfBeds(self, int: int) -> None: ...
     def setReactorType(self, string: typing.Union[java.lang.String, str]) -> None: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.mechanicaldesign.reactor")``.

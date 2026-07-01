@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -10,6 +10,7 @@ import java.lang
 import java.util
 import jneqsim.process.advisory
 import jneqsim.process.alarm
+import jneqsim.process.allocation
 import jneqsim.process.automation
 import jneqsim.process.calibration
 import jneqsim.process.chemistry
@@ -23,6 +24,7 @@ import jneqsim.process.dynamics
 import jneqsim.process.electricaldesign
 import jneqsim.process.equipment
 import jneqsim.process.examples
+import jneqsim.process.fastsimulation
 import jneqsim.process.fielddevelopment
 import jneqsim.process.hydrogen
 import jneqsim.process.instrumentdesign
@@ -45,11 +47,11 @@ import jneqsim.process.util
 import jneqsim.util
 import typing
 
+
+
 class ProcessElementInterface(jneqsim.util.NamedInterface, java.io.Serializable): ...
 
-class SimulationInterface(
-    jneqsim.util.NamedInterface, java.lang.Runnable, java.io.Serializable
-):
+class SimulationInterface(jneqsim.util.NamedInterface, java.lang.Runnable, java.io.Serializable):
     def getCalculateSteadyState(self) -> bool: ...
     def getCalculationIdentifier(self) -> java.util.UUID: ...
     def getReport_json(self) -> java.lang.String: ...
@@ -86,6 +88,7 @@ class SimulationBaseClass(jneqsim.util.NamedBaseClass, SimulationInterface):
     def setRunInSteps(self, boolean: bool) -> None: ...
     def setTime(self, double: float) -> None: ...
 
+
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process")``.
 
@@ -94,6 +97,7 @@ class __module_protocol__(Protocol):
     SimulationInterface: typing.Type[SimulationInterface]
     advisory: jneqsim.process.advisory.__module_protocol__
     alarm: jneqsim.process.alarm.__module_protocol__
+    allocation: jneqsim.process.allocation.__module_protocol__
     automation: jneqsim.process.automation.__module_protocol__
     calibration: jneqsim.process.calibration.__module_protocol__
     chemistry: jneqsim.process.chemistry.__module_protocol__
@@ -107,6 +111,7 @@ class __module_protocol__(Protocol):
     electricaldesign: jneqsim.process.electricaldesign.__module_protocol__
     equipment: jneqsim.process.equipment.__module_protocol__
     examples: jneqsim.process.examples.__module_protocol__
+    fastsimulation: jneqsim.process.fastsimulation.__module_protocol__
     fielddevelopment: jneqsim.process.fielddevelopment.__module_protocol__
     hydrogen: jneqsim.process.hydrogen.__module_protocol__
     instrumentdesign: jneqsim.process.instrumentdesign.__module_protocol__

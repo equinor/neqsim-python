@@ -1,5 +1,5 @@
-import sys
 
+import sys
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -11,19 +11,14 @@ import jneqsim.process.costestimation
 import jneqsim.process.mechanicaldesign.ejector
 import typing
 
+
+
 class EjectorCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseClass):
-    def __init__(
-        self,
-        ejectorMechanicalDesign: jneqsim.process.mechanicaldesign.ejector.EjectorMechanicalDesign,
-    ): ...
+    def __init__(self, ejectorMechanicalDesign: jneqsim.process.mechanicaldesign.ejector.EjectorMechanicalDesign): ...
     @typing.overload
-    def calcAnnualOperatingCost(
-        self, double: float, double2: float, double3: float, int: int
-    ) -> float: ...
+    def calcAnnualOperatingCost(self, double: float, double2: float, double3: float, int: int) -> float: ...
     @typing.overload
-    def calcAnnualOperatingCost(
-        self, int: int, double: float, double2: float
-    ) -> float: ...
+    def calcAnnualOperatingCost(self, int: int, double: float, double2: float) -> float: ...
     def getCostBreakdown(self) -> java.util.Map[java.lang.String, typing.Any]: ...
     def getEjectorType(self) -> java.lang.String: ...
     def getNumberOfStages(self) -> int: ...
@@ -36,6 +31,7 @@ class EjectorCostEstimate(jneqsim.process.costestimation.UnitCostEstimateBaseCla
     def setSuctionCapacity(self, double: float) -> None: ...
     def setSuctionPressure(self, double: float) -> None: ...
     def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.costestimation.ejector")``.

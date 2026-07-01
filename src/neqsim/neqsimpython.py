@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import jpype
 
 
@@ -46,7 +48,8 @@ try:
             jpype.startJVM("-Xrs", **start_kwargs)
         jvm_version = jpype.getJVMVersion()[0]
         if jvm_version >= 11:
-            jpype.addClassPath("./lib/*")
+            module_dir = Path(__file__).resolve().parent
+            jpype.addClassPath(str(module_dir / "lib" / "java11" / "*"))
         else:
             print(
                 "Your version of Java is not supported. Please upgrade to Java version 11 or higher."
