@@ -8,11 +8,37 @@ on:
       - master
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        run: pipx install uv
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Check formatting with black
+        run: uv run black --check --include '\.py$' src/neqsim tests
+
+      - name: Type check with mypy (advisory, non-blocking)
+        continue-on-error: true
+        run: uv run mypy src/neqsim
+
   build:
     strategy:
+      fail-fast: false
       matrix:
-        version: [3.9, 3.12, 3.13]
+        version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     runs-on: ubuntu-latest
+    # 3.14 is very new; don't fail the whole matrix while the ecosystem catches up.
+    continue-on-error: ${{ matrix.version == '3.14' }}
     steps:
       - uses: actions/checkout@v7
 
