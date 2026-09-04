@@ -1,6 +1,6 @@
 [project]
 name = "neqsim"
-version = "3.18.0"
+version = "3.19.0"
 description = "NeqSim is a tool for thermodynamic and process calculations"
 authors = [{ name = "Even Solbraa", email = "esolbraa@gmail.com" }]
 requires-python = ">=3.10,<4"

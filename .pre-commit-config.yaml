@@ -16,3 +16,6 @@ repos:
     rev: 26.5.1
     hooks:
     -   id: black
+        # Java API stubs are generated artifacts owned by stubgenj. Some Java-
+        # derived names are not valid Python syntax and cannot be parsed by Black.
+        exclude: ^src/(jneqsim|jpype)-stubs/

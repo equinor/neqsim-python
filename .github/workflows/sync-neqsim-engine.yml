@@ -1,0 +1,124 @@
+name: Sync bundled NeqSim engine
+
+on:
+  push:
+    branches:
+      - "release/**"
+    paths:
+      - ".github/neqsim-engine.sha256"
+      - ".github/workflows/sync-neqsim-engine.yml"
+      - "pyproject.toml"
+      - "scripts/generate_component_literals.py"
+      - "scripts/generate_stubs.py"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "NeqSim release version; defaults to pyproject.toml"
+        required: false
+        type: string
+      jar_sha256:
+        description: "Expected JAR SHA-256; defaults to .github/neqsim-engine.sha256"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-neqsim-engine-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Resolve release inputs
+        id: release
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_JAR_SHA256: ${{ inputs.jar_sha256 }}
+        run: |
+          version="${INPUT_VERSION}"
+          if [ -z "${version}" ]; then
+            version="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
+          fi
+
+          expected_sha256="${INPUT_JAR_SHA256}"
+          if [ -z "${expected_sha256}" ]; then
+            expected_sha256="$(awk 'NR == 1 {print $1}' .github/neqsim-engine.sha256)"
+          fi
+
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "expected_sha256=${expected_sha256}" >> "${GITHUB_OUTPUT}"
+
+      - name: Download and verify NeqSim JAR
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          EXPECTED_SHA256: ${{ steps.release.outputs.expected_sha256 }}
+        run: |
+          jar_name="neqsim-${VERSION}.jar"
+          curl -fL --retry 3 --retry-delay 2 \
+            --output "${RUNNER_TEMP}/${jar_name}" \
+            "https://github.com/equinor/neqsim/releases/download/v${VERSION}/${jar_name}"
+
+          actual_sha256="$(sha256sum "${RUNNER_TEMP}/${jar_name}" | awk '{print $1}')"
+          if [ "${actual_sha256}" != "${EXPECTED_SHA256}" ]; then
+            echo "JAR checksum mismatch: expected ${EXPECTED_SHA256}, got ${actual_sha256}" >&2
+            exit 1
+          fi
+
+          find src/neqsim/lib -maxdepth 1 -type f -name 'neqsim-*.jar' -delete
+          mv "${RUNNER_TEMP}/${jar_name}" "src/neqsim/lib/${jar_name}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Regenerate Java API metadata
+        run: |
+          uv sync --group dev
+          uv run python scripts/generate_stubs.py
+          uv run python scripts/generate_api_manifest.py
+          uv run python scripts/generate_component_literals.py
+          uv run python -c 'from pathlib import Path; [compile(path.read_text(encoding="utf-8"), str(path), "exec") for path in Path("src/jneqsim-stubs").rglob("*.pyi")]'
+
+      - name: Commit release artifacts
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if git diff --quiet -- \
+            src/neqsim/lib \
+            src/jneqsim-stubs \
+            src/jpype-stubs \
+            src/neqsim/data/neqsim_api.json.gz \
+            src/neqsim/thermo/component_names.py \
+            src/neqsim/thermo/component_names.pyi; then
+            echo "Bundled engine and generated API metadata are already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A \
+            src/neqsim/lib \
+            src/jneqsim-stubs \
+            src/jpype-stubs \
+            src/neqsim/data/neqsim_api.json.gz \
+            src/neqsim/thermo/component_names.py \
+            src/neqsim/thermo/component_names.pyi
+          git commit -m "release: bundle NeqSim Java ${VERSION} and refresh API metadata"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

@@ -11,6 +11,7 @@ import java.util
 import jneqsim.process.chemistry.acid
 import jneqsim.process.chemistry.asphaltene
 import jneqsim.process.chemistry.corrosion
+import jneqsim.process.chemistry.electrochlorination
 import jneqsim.process.chemistry.equipment
 import jneqsim.process.chemistry.hydrate
 import jneqsim.process.chemistry.rca
@@ -195,6 +196,7 @@ class __module_protocol__(Protocol):
     acid: jneqsim.process.chemistry.acid.__module_protocol__
     asphaltene: jneqsim.process.chemistry.asphaltene.__module_protocol__
     corrosion: jneqsim.process.chemistry.corrosion.__module_protocol__
+    electrochlorination: jneqsim.process.chemistry.electrochlorination.__module_protocol__
     equipment: jneqsim.process.chemistry.equipment.__module_protocol__
     hydrate: jneqsim.process.chemistry.hydrate.__module_protocol__
     rca: jneqsim.process.chemistry.rca.__module_protocol__

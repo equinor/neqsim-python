@@ -21,6 +21,7 @@ import jneqsim.thermo.util.jni
 import jneqsim.thermo.util.leachman
 import jneqsim.thermo.util.readwrite
 import jneqsim.thermo.util.referenceequations
+import jneqsim.thermo.util.solid
 import jneqsim.thermo.util.spanwagner
 import jneqsim.thermo.util.steam
 import jneqsim.thermo.util.sulfur
@@ -96,6 +97,7 @@ class __module_protocol__(Protocol):
     leachman: jneqsim.thermo.util.leachman.__module_protocol__
     readwrite: jneqsim.thermo.util.readwrite.__module_protocol__
     referenceequations: jneqsim.thermo.util.referenceequations.__module_protocol__
+    solid: jneqsim.thermo.util.solid.__module_protocol__
     spanwagner: jneqsim.thermo.util.spanwagner.__module_protocol__
     steam: jneqsim.thermo.util.steam.__module_protocol__
     sulfur: jneqsim.thermo.util.sulfur.__module_protocol__

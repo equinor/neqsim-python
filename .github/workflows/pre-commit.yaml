@@ -3,7 +3,7 @@ name: Run pre-commit on pull-requests (and main branch)
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch: # Trigger manually
 
 jobs:

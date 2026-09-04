@@ -19,6 +19,10 @@ class AgenticEngineeringRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
 
+class ApiKnowledgeRunner:
+    @staticmethod
+    def inspect(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+
 class AutomationRunner:
     @staticmethod
     def compareStates(string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]) -> java.lang.String: ...
@@ -73,14 +77,6 @@ class BenchmarkTrust:
 class BioprocessRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
-
-class CapabilitiesRunner:
-    @staticmethod
-    def getCapabilities() -> java.lang.String: ...
-    @staticmethod
-    def getSetupTemplate(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
-    @staticmethod
-    def getSetupTemplates() -> java.lang.String: ...
 
 class ChemistryRunner:
     @staticmethod
@@ -163,6 +159,12 @@ class FlowAssuranceRunner:
     def getSupportedAnalyses() -> java.util.List[java.lang.String]: ...
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+
+class GeneralCapabilityRunner:
+    @staticmethod
+    def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+    @staticmethod
+    def search(string: typing.Union[java.lang.String, str], int: int) -> java.lang.String: ...
 
 class HAZOPStudyRunner:
     @staticmethod
@@ -256,6 +258,32 @@ class MaterialsReviewRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
 
+class McpAcceptanceBaselineRunner:
+    @staticmethod
+    def describe() -> com.google.gson.JsonObject: ...
+    @staticmethod
+    def run() -> com.google.gson.JsonObject: ...
+
+class McpAcceptanceFixtureCatalog:
+    @staticmethod
+    def build() -> com.google.gson.JsonObject: ...
+    @staticmethod
+    def largeFacilityInput() -> java.lang.String: ...
+    @staticmethod
+    def multiAreaInput() -> java.lang.String: ...
+    @staticmethod
+    def singleCalculationInput() -> java.lang.String: ...
+    @staticmethod
+    def smallTrainInput() -> java.lang.String: ...
+
+class McpCampaignMatrix:
+    @staticmethod
+    def build() -> com.google.gson.JsonObject: ...
+
+class McpEvidenceInventory:
+    @staticmethod
+    def build() -> com.google.gson.JsonObject: ...
+
 class McpExecutionPolicy:
     @staticmethod
     def activeOperations(string: typing.Union[java.lang.String, str]) -> int: ...
@@ -275,6 +303,8 @@ class McpExecutionPolicy:
     def tryAcquireSlot() -> bool: ...
     @staticmethod
     def workerPool() -> java.util.concurrent.ExecutorService: ...
+
+class McpImplementationInventory: ...
 
 class McpRequestContext:
     @staticmethod
@@ -506,12 +536,12 @@ class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.mcp.runners")``.
 
     AgenticEngineeringRunner: typing.Type[AgenticEngineeringRunner]
+    ApiKnowledgeRunner: typing.Type[ApiKnowledgeRunner]
     AutomationRunner: typing.Type[AutomationRunner]
     BarrierRegisterRunner: typing.Type[BarrierRegisterRunner]
     BatchRunner: typing.Type[BatchRunner]
     BenchmarkTrust: typing.Type[BenchmarkTrust]
     BioprocessRunner: typing.Type[BioprocessRunner]
-    CapabilitiesRunner: typing.Type[CapabilitiesRunner]
     ChemistryRunner: typing.Type[ChemistryRunner]
     ComponentQuery: typing.Type[ComponentQuery]
     CompositionRunner: typing.Type[CompositionRunner]
@@ -524,12 +554,18 @@ class __module_protocol__(Protocol):
     FlareRadiationRunner: typing.Type[FlareRadiationRunner]
     FlashRunner: typing.Type[FlashRunner]
     FlowAssuranceRunner: typing.Type[FlowAssuranceRunner]
+    GeneralCapabilityRunner: typing.Type[GeneralCapabilityRunner]
     HAZOPStudyRunner: typing.Type[HAZOPStudyRunner]
     HazopScenarioRunner: typing.Type[HazopScenarioRunner]
     IndustrialProfile: typing.Type[IndustrialProfile]
     LOPARunner: typing.Type[LOPARunner]
     MaterialsReviewRunner: typing.Type[MaterialsReviewRunner]
+    McpAcceptanceBaselineRunner: typing.Type[McpAcceptanceBaselineRunner]
+    McpAcceptanceFixtureCatalog: typing.Type[McpAcceptanceFixtureCatalog]
+    McpCampaignMatrix: typing.Type[McpCampaignMatrix]
+    McpEvidenceInventory: typing.Type[McpEvidenceInventory]
     McpExecutionPolicy: typing.Type[McpExecutionPolicy]
+    McpImplementationInventory: typing.Type[McpImplementationInventory]
     McpRequestContext: typing.Type[McpRequestContext]
     McpRunnerPlugin: typing.Type[McpRunnerPlugin]
     ModelRegistry: typing.Type[ModelRegistry]

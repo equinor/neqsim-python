@@ -212,8 +212,7 @@ for eos in ["srk", "pr", "span-wagner"]:
 # =============================================================================
 print("\n6. EOS-CG FOR CO2 AND COMBUSTION GASES")
 print("-" * 40)
-print(
-    """
+print("""
 EOS-CG (Equation of State for Combustion Gases) is based on GERG-2008
 but optimized for CO2-rich mixtures and combustion product gases.
 
@@ -225,8 +224,7 @@ Best suited for:
   - Blue/green hydrogen with CO2
 
 Components: CO2, N2, O2, Ar, H2O, CO, H2, H2S, SO2, CH4
-"""
-)
+""")
 
 # Create a typical flue gas / CCS mixture
 print("Example: CO2-rich CCS mixture")
@@ -263,8 +261,7 @@ print("      critical conditions compared to cubic EoS (SRK/PR).")
 # =============================================================================
 print("\n7. GUIDELINES FOR EoS SELECTION")
 print("-" * 40)
-print(
-    """
+print("""
 Application                          | Recommended EoS
 -------------------------------------|----------------------
 Natural gas properties               | GERG-2008 (most accurate)
@@ -289,6 +286,5 @@ Liquefied Natural Gas (LNG)          | GERG-2008 or PR
 Gas hydrates                         | CPA with hydrate model
                                      |
 Electrolyte solutions (brine)        | Electrolyte-CPA
-"""
-)
+""")
 print("=" * 70)
