@@ -1878,7 +1878,7 @@ wheels = [
 
 [[package]]
 name = "neqsim"
-version = "3.19.0"
+version = "3.20.0"
 source = { editable = "." }
 dependencies = [
     { name = "jpype1" },

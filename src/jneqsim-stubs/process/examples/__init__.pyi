@@ -6,17 +6,30 @@ else:
     from typing_extensions import Protocol
 
 import java.lang
+import java.nio.file
 import java.util
 import jpype
+import jpype.protocol
 import jneqsim.process.equipment.separator
 import jneqsim.process.equipment.valve
 import jneqsim.process.mechanicaldesign.valve
 import jneqsim.process.processmodel
+import jneqsim.process.processmodel.diagram
 import jneqsim.process.safety.risk.sis
 import jneqsim.thermo.system
 import typing
 
 
+
+class Comparesimulations2EngineeringDiagramReference:
+    @staticmethod
+    def createExecutedProcess() -> jneqsim.process.processmodel.ProcessSystem: ...
+    @staticmethod
+    def deliver(processSystem: jneqsim.process.processmodel.ProcessSystem, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> jneqsim.process.processmodel.diagram.EngineeringDiagramDualProfileDelivery.Report: ...
+    @staticmethod
+    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
+    @staticmethod
+    def request(processSystem: jneqsim.process.processmodel.ProcessSystem) -> jneqsim.process.processmodel.diagram.EngineeringDiagramDualProfileDelivery.Request: ...
 
 class InletSeparatorSafetySystemExample:
     DESIGN_PRESSURE_BARA: typing.ClassVar[float] = ...
@@ -211,5 +224,6 @@ class OilGasProcessSimulationOptimization:
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.examples")``.
 
+    Comparesimulations2EngineeringDiagramReference: typing.Type[Comparesimulations2EngineeringDiagramReference]
     InletSeparatorSafetySystemExample: typing.Type[InletSeparatorSafetySystemExample]
     OilGasProcessSimulationOptimization: typing.Type[OilGasProcessSimulationOptimization]
