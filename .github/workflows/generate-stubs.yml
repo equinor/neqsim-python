@@ -14,6 +14,14 @@ on:
   # Allow manual trigger
   workflow_dispatch:
 
+# A push to master and a release publish commonly fire together (a release
+# also pushes the tagged commit), giving two concurrent runs targeting the
+# same branch. Queue them instead of letting both auto-commit-and-push race,
+# which fails the second push with "non-fast-forward".
+concurrency:
+  group: generate-stubs-${{ (github.event_name == 'release' && github.event.repository.default_branch) || github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   generate-stubs:
     runs-on: ubuntu-latest
