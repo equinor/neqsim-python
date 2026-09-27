@@ -14,6 +14,7 @@ import jneqsim.process.chemistry.corrosion
 import jneqsim.process.chemistry.electrochlorination
 import jneqsim.process.chemistry.equipment
 import jneqsim.process.chemistry.hydrate
+import jneqsim.process.chemistry.injection
 import jneqsim.process.chemistry.rca
 import jneqsim.process.chemistry.scale
 import jneqsim.process.chemistry.scavenger
@@ -199,6 +200,7 @@ class __module_protocol__(Protocol):
     electrochlorination: jneqsim.process.chemistry.electrochlorination.__module_protocol__
     equipment: jneqsim.process.chemistry.equipment.__module_protocol__
     hydrate: jneqsim.process.chemistry.hydrate.__module_protocol__
+    injection: jneqsim.process.chemistry.injection.__module_protocol__
     rca: jneqsim.process.chemistry.rca.__module_protocol__
     scale: jneqsim.process.chemistry.scale.__module_protocol__
     scavenger: jneqsim.process.chemistry.scavenger.__module_protocol__

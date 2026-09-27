@@ -25,6 +25,7 @@ import jneqsim.process.safety.envelope
 import jneqsim.process.safety.escalation
 import jneqsim.process.safety.esd
 import jneqsim.process.safety.fire
+import jneqsim.process.safety.firewater
 import jneqsim.process.safety.hazid
 import jneqsim.process.safety.inherent
 import jneqsim.process.safety.inventory
@@ -254,6 +255,7 @@ class __module_protocol__(Protocol):
     escalation: jneqsim.process.safety.escalation.__module_protocol__
     esd: jneqsim.process.safety.esd.__module_protocol__
     fire: jneqsim.process.safety.fire.__module_protocol__
+    firewater: jneqsim.process.safety.firewater.__module_protocol__
     hazid: jneqsim.process.safety.hazid.__module_protocol__
     inherent: jneqsim.process.safety.inherent.__module_protocol__
     inventory: jneqsim.process.safety.inventory.__module_protocol__

@@ -160,6 +160,12 @@ class FlowAssuranceRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
 
+class FluidDefaults:
+    @staticmethod
+    def defaultMixingRule(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+    @staticmethod
+    def resolveMixingRule(jsonObject: com.google.gson.JsonObject, string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+
 class GeneralCapabilityRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
@@ -554,6 +560,7 @@ class __module_protocol__(Protocol):
     FlareRadiationRunner: typing.Type[FlareRadiationRunner]
     FlashRunner: typing.Type[FlashRunner]
     FlowAssuranceRunner: typing.Type[FlowAssuranceRunner]
+    FluidDefaults: typing.Type[FluidDefaults]
     GeneralCapabilityRunner: typing.Type[GeneralCapabilityRunner]
     HAZOPStudyRunner: typing.Type[HAZOPStudyRunner]
     HazopScenarioRunner: typing.Type[HazopScenarioRunner]

@@ -11,6 +11,18 @@ import typing
 
 
 
+class HydrideStorageScreening:
+    @staticmethod
+    def desorptionGibbsEnergyJPerMolH2(double: float, double2: float, double3: float, double4: float) -> float: ...
+    @staticmethod
+    def equilibriumFugacityBar(double: float, double2: float, double3: float) -> float: ...
+    @staticmethod
+    def equilibriumTemperatureK(double: float, double2: float, double3: float) -> float: ...
+    @staticmethod
+    def gravimetricCapacityPercent(double: float, int: int) -> float: ...
+    @staticmethod
+    def volumetricHydrogenDensityGPerL(int: int, int2: int, double: float) -> float: ...
+
 class ParaOrthoH2Correction(java.io.Serializable):
     @staticmethod
     def estimateEquilibrationTimeSeconds(double: float, conversionCatalyst: 'ParaOrthoH2Correction.ConversionCatalyst') -> float: ...
@@ -55,4 +67,5 @@ class ParaOrthoH2Correction(java.io.Serializable):
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.thermo.util.hydrogen")``.
 
+    HydrideStorageScreening: typing.Type[HydrideStorageScreening]
     ParaOrthoH2Correction: typing.Type[ParaOrthoH2Correction]

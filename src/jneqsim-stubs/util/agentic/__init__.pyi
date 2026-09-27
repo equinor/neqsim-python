@@ -13,6 +13,16 @@ import typing
 
 
 
+class AgentBenchmarkRunner:
+    @staticmethod
+    def getUnattemptedProblemIds() -> typing.MutableSequence[typing.MutableSequence[java.lang.String]]: ...
+    @staticmethod
+    def isVerifiedReference(benchmarkProblem: 'AgentBenchmarkSuite.BenchmarkProblem') -> bool: ...
+    @staticmethod
+    def runStandardSuite() -> 'AgentBenchmarkSuite.BenchmarkReport': ...
+    @staticmethod
+    def summarize(benchmarkReport: 'AgentBenchmarkSuite.BenchmarkReport') -> java.lang.String: ...
+
 class AgentBenchmarkSuite(java.io.Serializable):
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
     def addConvergenceResult(self, string: typing.Union[java.lang.String, str], boolean: bool) -> None: ...
@@ -294,6 +304,7 @@ class TaskResultValidator(java.io.Serializable):
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.util.agentic")``.
 
+    AgentBenchmarkRunner: typing.Type[AgentBenchmarkRunner]
     AgentBenchmarkSuite: typing.Type[AgentBenchmarkSuite]
     AgentFeedbackCollector: typing.Type[AgentFeedbackCollector]
     AgentSession: typing.Type[AgentSession]

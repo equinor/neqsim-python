@@ -11,6 +11,7 @@ import java.lang
 import java.util
 import jpype
 import jneqsim.process.measurementdevice
+import jneqsim.process.operations.continuous
 import jneqsim.process.operations.envelope
 import jneqsim.process.processmodel
 import jneqsim.util.validation
@@ -272,4 +273,5 @@ class __module_protocol__(Protocol):
     PipeSectionAnalyzer: typing.Type[PipeSectionAnalyzer]
     TrialAssessmentResult: typing.Type[TrialAssessmentResult]
     WaterHammerStudy: typing.Type[WaterHammerStudy]
+    continuous: jneqsim.process.operations.continuous.__module_protocol__
     envelope: jneqsim.process.operations.envelope.__module_protocol__
