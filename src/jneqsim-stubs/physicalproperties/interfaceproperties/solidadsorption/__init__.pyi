@@ -5,7 +5,6 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import Protocol
 
-import java.io
 import java.lang
 import jneqsim.thermo
 import jneqsim.thermo.system
@@ -13,7 +12,7 @@ import typing
 
 
 
-class AdsorptionInterface(jneqsim.thermo.ThermodynamicConstantsInterface, java.io.Serializable):
+class AdsorptionInterface(jneqsim.thermo.ThermodynamicConstantsInterface):
     def calcAdsorption(self, int: int) -> None: ...
     def getIsothermType(self) -> 'IsothermType': ...
     @typing.overload
@@ -24,7 +23,7 @@ class AdsorptionInterface(jneqsim.thermo.ThermodynamicConstantsInterface, java.i
     def isCalculated(self) -> bool: ...
     def setSolidMaterial(self, string: typing.Union[java.lang.String, str]) -> None: ...
 
-class CapillaryCondensationModel(java.io.Serializable, jneqsim.thermo.ThermodynamicConstantsInterface):
+class CapillaryCondensationModel(jneqsim.thermo.ThermodynamicConstantsInterface):
     KELVIN_VALIDITY_RADIUS_NM: typing.ClassVar[float] = ...
     @typing.overload
     def __init__(self): ...
@@ -152,7 +151,7 @@ class IsothermType(java.lang.Enum['IsothermType']):
     @staticmethod
     def values() -> typing.MutableSequence['IsothermType']: ...
 
-class AbstractAdsorptionModel(AdsorptionInterface, java.io.Serializable):
+class AbstractAdsorptionModel(AdsorptionInterface):
     @typing.overload
     def __init__(self): ...
     @typing.overload
