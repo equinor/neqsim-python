@@ -44,7 +44,7 @@ dev = [
     # requires-python). Keep this in sync with the black rev in
     # .pre-commit-config.yaml.
     "black>=26.0,<27.0",
-    "pytest>=8.0.0,<9",
+    "pytest>=8.0.0,<10",
     "pre-commit>=3.6.0,<4",
     "stubgenj>=0.2.12,<0.3",
     "mypy>=1.10,<3",
