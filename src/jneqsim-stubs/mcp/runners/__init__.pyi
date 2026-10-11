@@ -78,6 +78,14 @@ class BioprocessRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
 
+class CapabilitiesRunner:
+    @staticmethod
+    def getCapabilities() -> java.lang.String: ...
+    @staticmethod
+    def getSetupTemplate(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+    @staticmethod
+    def getSetupTemplates() -> java.lang.String: ...
+
 class ChemistryRunner:
     @staticmethod
     def getSupportedAnalyses() -> java.util.List[java.lang.String]: ...
@@ -125,6 +133,12 @@ class DataCatalogRunner:
 class DynamicRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+
+class EngineeringCoverageCatalog:
+    @staticmethod
+    def query(jsonObject: com.google.gson.JsonObject) -> com.google.gson.JsonObject: ...
+    @staticmethod
+    def summary() -> com.google.gson.JsonObject: ...
 
 class EngineeringValidator:
     @staticmethod
@@ -548,12 +562,14 @@ class __module_protocol__(Protocol):
     BatchRunner: typing.Type[BatchRunner]
     BenchmarkTrust: typing.Type[BenchmarkTrust]
     BioprocessRunner: typing.Type[BioprocessRunner]
+    CapabilitiesRunner: typing.Type[CapabilitiesRunner]
     ChemistryRunner: typing.Type[ChemistryRunner]
     ComponentQuery: typing.Type[ComponentQuery]
     CompositionRunner: typing.Type[CompositionRunner]
     CrossValidationRunner: typing.Type[CrossValidationRunner]
     DataCatalogRunner: typing.Type[DataCatalogRunner]
     DynamicRunner: typing.Type[DynamicRunner]
+    EngineeringCoverageCatalog: typing.Type[EngineeringCoverageCatalog]
     EngineeringValidator: typing.Type[EngineeringValidator]
     EquipmentSizingRunner: typing.Type[EquipmentSizingRunner]
     FieldDevelopmentRunner: typing.Type[FieldDevelopmentRunner]

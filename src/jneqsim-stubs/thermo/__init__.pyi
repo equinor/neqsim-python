@@ -84,6 +84,11 @@ class ThermodynamicModelSettings(java.io.Serializable):
     def setUseWarmStartKValues(boolean: bool) -> None: ...
     class Flags: ...
 
+class WaterReferenceConstants:
+    CRITICAL_TEMPERATURE_K: typing.ClassVar[float] = ...
+    CRITICAL_PRESSURE_PA: typing.ClassVar[float] = ...
+    CRITICAL_PRESSURE_BARA: typing.ClassVar[float] = ...
+
 class ThermodynamicModelTest(ThermodynamicConstantsInterface):
     @typing.overload
     def __init__(self): ...
@@ -107,6 +112,7 @@ class __module_protocol__(Protocol):
     ThermodynamicConstantsInterface: typing.Type[ThermodynamicConstantsInterface]
     ThermodynamicModelSettings: typing.Type[ThermodynamicModelSettings]
     ThermodynamicModelTest: typing.Type[ThermodynamicModelTest]
+    WaterReferenceConstants: typing.Type[WaterReferenceConstants]
     atomelement: jneqsim.thermo.atomelement.__module_protocol__
     characterization: jneqsim.thermo.characterization.__module_protocol__
     component: jneqsim.thermo.component.__module_protocol__
