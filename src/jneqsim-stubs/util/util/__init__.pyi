@@ -7,9 +7,44 @@ else:
 
 import java.io
 import java.lang
+import jpype
 import typing
 
 
+
+class ArrayUtils:
+    @staticmethod
+    def clearArray(doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> None: ...
+    @staticmethod
+    def clearMatrixArray(doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]) -> None: ...
+    _copyArray_1__T = typing.TypeVar('_copyArray_1__T')  # <T>
+    @typing.overload
+    @staticmethod
+    def copyArray(doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> typing.MutableSequence[float]: ...
+    @typing.overload
+    @staticmethod
+    def copyArray(tArray: typing.Union[typing.List[_copyArray_1__T], jpype.JArray]) -> typing.MutableSequence[_copyArray_1__T]: ...
+    @typing.overload
+    @staticmethod
+    def copyArrayOrEmpty(doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> typing.MutableSequence[float]: ...
+    @typing.overload
+    @staticmethod
+    def copyArrayOrEmpty(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> typing.MutableSequence[java.lang.String]: ...
+    _copyMatrixArray_1__T = typing.TypeVar('_copyMatrixArray_1__T')  # <T>
+    @typing.overload
+    @staticmethod
+    def copyMatrixArray(doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]) -> typing.MutableSequence[typing.MutableSequence[float]]: ...
+    @typing.overload
+    @staticmethod
+    def copyMatrixArray(tArray: typing.Union[typing.List[typing.MutableSequence[_copyMatrixArray_1__T]], jpype.JArray]) -> typing.MutableSequence[typing.MutableSequence[_copyMatrixArray_1__T]]: ...
+    @staticmethod
+    def copyMatrixArrayOrEmpty(doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray]) -> typing.MutableSequence[typing.MutableSequence[float]]: ...
+    @staticmethod
+    def extractColumn(doubleArray: typing.Union[typing.List[typing.MutableSequence[float]], jpype.JArray], int: int) -> typing.MutableSequence[float]: ...
+    @staticmethod
+    def filledArray(int: int, double: float) -> typing.MutableSequence[float]: ...
+    @staticmethod
+    def infinityNorm(doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> float: ...
 
 class DoubleCloneable(java.lang.Cloneable, java.io.Serializable):
     @typing.overload
@@ -32,5 +67,6 @@ class FileSystemSettings:
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.util.util")``.
 
+    ArrayUtils: typing.Type[ArrayUtils]
     DoubleCloneable: typing.Type[DoubleCloneable]
     FileSystemSettings: typing.Type[FileSystemSettings]
