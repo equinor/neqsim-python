@@ -538,6 +538,10 @@ class Validator:
     @staticmethod
     def validate(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
 
+class VfpTableRunner:
+    @staticmethod
+    def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
+
 class VisualizationRunner:
     @staticmethod
     def run(string: typing.Union[java.lang.String, str]) -> java.lang.String: ...
@@ -622,6 +626,7 @@ class __module_protocol__(Protocol):
     UtilityDesignRunner: typing.Type[UtilityDesignRunner]
     ValidationProfileRunner: typing.Type[ValidationProfileRunner]
     Validator: typing.Type[Validator]
+    VfpTableRunner: typing.Type[VfpTableRunner]
     VisualizationRunner: typing.Type[VisualizationRunner]
     WaterHammerRunner: typing.Type[WaterHammerRunner]
     WellIntegrityRunner: typing.Type[WellIntegrityRunner]
