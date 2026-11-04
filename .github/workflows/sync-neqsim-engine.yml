@@ -25,7 +25,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-neqsim-engine-${{ github.ref }}
+  # Both workflows commit generated metadata back to the release branch.
+  # Share the stub-generation queue so their pushes cannot race.
+  group: generate-stubs-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -92,6 +94,9 @@ jobs:
         run: |
           uv sync --group dev
           uv run python scripts/generate_stubs.py
+          # Discovery prefers the packaged manifest. Remove the previous release's
+          # snapshot so generation scans the newly downloaded JAR instead.
+          rm -f src/neqsim/data/neqsim_api.json.gz src/neqsim/data/neqsim_api.json
           uv run python scripts/generate_api_manifest.py
           uv run python scripts/generate_component_literals.py
           uv run python -c 'from pathlib import Path; [compile(path.read_text(encoding="utf-8"), str(path), "exec") for path in Path("src/jneqsim-stubs").rglob("*.pyi")]'

@@ -11,14 +11,30 @@ import java.util
 import jpype.protocol
 import jneqsim.process.engineering
 import jneqsim.process.engineering.model
+import jneqsim.process.engineering.pid
+import jneqsim.process.processmodel.dexpi
 import org.w3c.dom
 import typing
 
 
 
+class Dexpi201PidMaterializer:
+    @staticmethod
+    def materialize(engineeringProject: jneqsim.process.engineering.EngineeringProject, pidDesignModel: jneqsim.process.engineering.pid.PidDesignModel, pidSimulationBindings: jneqsim.process.engineering.pid.PidSimulationBindings, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> 'Dexpi201PidMaterializer.Result': ...
+    class Result:
+        def getAssessment(self) -> jneqsim.process.processmodel.dexpi.Dexpi20ConformanceAssessment.Report: ...
+        def getNativeIds(self) -> java.util.Map[java.lang.String, java.lang.String]: ...
+        def getSignalLinks(self) -> java.util.List[java.util.Map[java.lang.String, java.lang.String]]: ...
+        def getUnresolved(self) -> java.util.Map[java.lang.String, java.lang.String]: ...
+        def isComplete(self) -> bool: ...
+        def toJson(self) -> java.lang.String: ...
+        def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+
 class DexpiEngineeringExporter:
     @staticmethod
     def export(engineeringProject: jneqsim.process.engineering.EngineeringProject, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> 'DexpiEngineeringExporter.ExportResult': ...
+    @staticmethod
+    def exportDexpi201(engineeringProject: jneqsim.process.engineering.EngineeringProject, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], dexpi20PlantExportMetadata: jneqsim.process.processmodel.dexpi.Dexpi20PlantExportMetadata) -> jneqsim.process.processmodel.dexpi.Dexpi20ConformanceAssessment.Report: ...
     @staticmethod
     def refreshPackageManifest(path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> java.nio.file.Path: ...
     class ExportResult:
@@ -74,6 +90,7 @@ class EngineeringDexpiRoundTripQualifier:
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.engineering.dexpi")``.
 
+    Dexpi201PidMaterializer: typing.Type[Dexpi201PidMaterializer]
     DexpiEngineeringExporter: typing.Type[DexpiEngineeringExporter]
     DexpiEngineeringMaterializer: typing.Type[DexpiEngineeringMaterializer]
     DexpiEngineeringValidator: typing.Type[DexpiEngineeringValidator]

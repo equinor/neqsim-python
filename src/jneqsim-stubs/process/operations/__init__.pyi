@@ -13,6 +13,7 @@ import jpype
 import jneqsim.process.measurementdevice
 import jneqsim.process.operations.continuous
 import jneqsim.process.operations.envelope
+import jneqsim.process.operations.replay
 import jneqsim.process.processmodel
 import jneqsim.util.validation
 import typing
@@ -275,3 +276,4 @@ class __module_protocol__(Protocol):
     WaterHammerStudy: typing.Type[WaterHammerStudy]
     continuous: jneqsim.process.operations.continuous.__module_protocol__
     envelope: jneqsim.process.operations.envelope.__module_protocol__
+    replay: jneqsim.process.operations.replay.__module_protocol__
