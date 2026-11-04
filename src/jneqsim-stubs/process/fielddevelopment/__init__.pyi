@@ -17,6 +17,7 @@ import jneqsim.process.fielddevelopment.reservoir
 import jneqsim.process.fielddevelopment.screening
 import jneqsim.process.fielddevelopment.subsea
 import jneqsim.process.fielddevelopment.tieback
+import jneqsim.process.fielddevelopment.wellplanning
 import jneqsim.process.fielddevelopment.workflow
 import typing
 
@@ -36,4 +37,5 @@ class __module_protocol__(Protocol):
     screening: jneqsim.process.fielddevelopment.screening.__module_protocol__
     subsea: jneqsim.process.fielddevelopment.subsea.__module_protocol__
     tieback: jneqsim.process.fielddevelopment.tieback.__module_protocol__
+    wellplanning: jneqsim.process.fielddevelopment.wellplanning.__module_protocol__
     workflow: jneqsim.process.fielddevelopment.workflow.__module_protocol__
