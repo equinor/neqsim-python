@@ -211,6 +211,10 @@ class QfuncFlash(Flash):
     def run(self) -> None: ...
     def solveQ(self) -> float: ...
 
+class SeawaterPHflash(Flash):
+    def __init__(self, systemSeawater: jneqsim.thermo.system.SystemSeawater, double: float): ...
+    def run(self) -> None: ...
+
 class TPflash(Flash):
     @typing.overload
     def __init__(self): ...
@@ -530,6 +534,7 @@ class __module_protocol__(Protocol):
     RachfordRice: typing.Type[RachfordRice]
     ReactiveCO2BrinePhaseEquilibrium: typing.Type[ReactiveCO2BrinePhaseEquilibrium]
     SaturateWithWater: typing.Type[SaturateWithWater]
+    SeawaterPHflash: typing.Type[SeawaterPHflash]
     SolidFlash: typing.Type[SolidFlash]
     SolidFlash1: typing.Type[SolidFlash1]
     SolidFlash12: typing.Type[SolidFlash12]

@@ -89,6 +89,12 @@ class NeqSimThreadPool:
     @staticmethod
     def submit(callable: typing.Union[java.util.concurrent.Callable[_submit_1__T], typing.Callable[[], _submit_1__T]]) -> java.util.concurrent.Future[_submit_1__T]: ...
 
+class NeqSimVersion:
+    VERSION_PROPERTY: typing.ClassVar[java.lang.String] = ...
+    DEVELOPMENT_VERSION: typing.ClassVar[java.lang.String] = ...
+    @staticmethod
+    def get() -> java.lang.String: ...
+
 class NamedBaseClass(NamedInterface, java.io.Serializable):
     name: java.lang.String = ...
     def __init__(self, string: typing.Union[java.lang.String, str]): ...
@@ -106,6 +112,7 @@ class __module_protocol__(Protocol):
     NamedInterface: typing.Type[NamedInterface]
     NeqSimLogging: typing.Type[NeqSimLogging]
     NeqSimThreadPool: typing.Type[NeqSimThreadPool]
+    NeqSimVersion: typing.Type[NeqSimVersion]
     agentic: jneqsim.util.agentic.__module_protocol__
     annotation: jneqsim.util.annotation.__module_protocol__
     database: jneqsim.util.database.__module_protocol__

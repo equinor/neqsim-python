@@ -1897,7 +1897,7 @@ wheels = [
 
 [[package]]
 name = "neqsim"
-version = "3.28.0"
+version = "3.29.0"
 source = { editable = "." }
 default-groups = "all"
 dependencies = [

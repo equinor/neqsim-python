@@ -8,7 +8,10 @@ else:
 import com.google.gson
 import java.io
 import java.lang
+import java.nio.file
 import java.util
+import jpype
+import jpype.protocol
 import jneqsim.process.engineering.automation
 import jneqsim.process.engineering.calculation
 import jneqsim.process.engineering.deliverables
@@ -27,18 +30,35 @@ import jneqsim.process.engineering.piping
 import jneqsim.process.engineering.production
 import jneqsim.process.engineering.rotating
 import jneqsim.process.engineering.safety
+import jneqsim.process.engineering.scd
 import jneqsim.process.engineering.validation
 import jneqsim.process.engineering.verticalslice
 import jneqsim.process.equipment
 import jneqsim.process.materials
 import jneqsim.process.processmodel
+import jneqsim.process.processmodel.dexpi
 import jneqsim.process.safety.depressurization
 import jneqsim.process.safety.esd
 import jneqsim.process.safety.overpressure
 import jneqsim.process.safety.scenario
+import jneqsim.process.util.scenario
 import typing
 
 
+
+class CompressorAutomationWorkflow:
+    @staticmethod
+    def defaultCases() -> java.util.List[jneqsim.process.util.scenario.CompressorAutomationStudy.CaseDefinition]: ...
+    @staticmethod
+    def designFromJson(string: typing.Union[java.lang.String, str]) -> jneqsim.process.util.scenario.CompressorAutomationStudy.Design: ...
+    @staticmethod
+    def main(stringArray: typing.Union[typing.List[java.lang.String], jpype.JArray]) -> None: ...
+    @typing.overload
+    @staticmethod
+    def run(design: jneqsim.process.util.scenario.CompressorAutomationStudy.Design, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> java.util.Map[java.lang.String, typing.Any]: ...
+    @typing.overload
+    @staticmethod
+    def run(design: jneqsim.process.util.scenario.CompressorAutomationStudy.Design, pidDesignModel: jneqsim.process.engineering.pid.PidDesignModel, list: java.util.List[jneqsim.process.util.scenario.CompressorAutomationStudy.CaseDefinition], path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> java.util.Map[java.lang.String, typing.Any]: ...
 
 class EngineeringApprovalRecord(java.io.Serializable):
     def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], status: 'EngineeringApprovalRecord.Status', string4: typing.Union[java.lang.String, str], string5: typing.Union[java.lang.String, str], string6: typing.Union[java.lang.String, str]): ...
@@ -272,6 +292,12 @@ class EngineeringSimulationRunner:
     def buildCaseSet(engineeringProject: EngineeringProject) -> jneqsim.process.engineering.designcase.EngineeringCaseSet: ...
     @staticmethod
     def run(engineeringProject: EngineeringProject, engineeringCaseRunOptions: jneqsim.process.engineering.designcase.EngineeringCaseRunOptions) -> EngineeringSimulationResult: ...
+    @typing.overload
+    @staticmethod
+    def runStrict(engineeringProject: EngineeringProject) -> EngineeringSimulationResult: ...
+    @typing.overload
+    @staticmethod
+    def runStrict(engineeringProject: EngineeringProject, engineeringCaseRunOptions: jneqsim.process.engineering.designcase.EngineeringCaseRunOptions) -> EngineeringSimulationResult: ...
 
 class EngineeringStandard(java.io.Serializable):
     def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], string4: typing.Union[java.lang.String, str]): ...
@@ -306,6 +332,14 @@ class EngineeringValidationReport(java.io.Serializable):
         def valueOf(string: typing.Union[java.lang.String, str]) -> 'EngineeringValidationReport.Severity': ...
         @staticmethod
         def values() -> typing.MutableSequence['EngineeringValidationReport.Severity']: ...
+
+class HeatExchangerAutomationWorkflow:
+    @staticmethod
+    def export(engineeringProject: EngineeringProject, dexpi20PlantExportMetadata: jneqsim.process.processmodel.dexpi.Dexpi20PlantExportMetadata, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], result: jneqsim.process.engineering.pid.HeatExchangerControllerTuning.Result) -> java.nio.file.Path: ...
+    @staticmethod
+    def instrument(processSystem: jneqsim.process.processmodel.ProcessSystem, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str], string3: typing.Union[java.lang.String, str], settings: 'HeatExchangerAutomationWorkflow.Settings') -> EngineeringProject: ...
+    class Settings:
+        def __init__(self, int: int, int2: int, double: float, double2: float, double3: float, double4: float): ...
 
 class LineDesignInput(java.io.Serializable):
     def __init__(self, string: typing.Union[java.lang.String, str], string2: typing.Union[java.lang.String, str]): ...
@@ -544,6 +578,7 @@ class SimulationEngineeringDesignRunner:
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.engineering")``.
 
+    CompressorAutomationWorkflow: typing.Type[CompressorAutomationWorkflow]
     EngineeringApprovalRecord: typing.Type[EngineeringApprovalRecord]
     EngineeringApprovalStatus: typing.Type[EngineeringApprovalStatus]
     EngineeringBoundary: typing.Type[EngineeringBoundary]
@@ -558,6 +593,7 @@ class __module_protocol__(Protocol):
     EngineeringSimulationRunner: typing.Type[EngineeringSimulationRunner]
     EngineeringStandard: typing.Type[EngineeringStandard]
     EngineeringValidationReport: typing.Type[EngineeringValidationReport]
+    HeatExchangerAutomationWorkflow: typing.Type[HeatExchangerAutomationWorkflow]
     LineDesignInput: typing.Type[LineDesignInput]
     NorsokOffshoreEngineeringBuilder: typing.Type[NorsokOffshoreEngineeringBuilder]
     ProcessToEngineeringDesignBuilder: typing.Type[ProcessToEngineeringDesignBuilder]
@@ -585,5 +621,6 @@ class __module_protocol__(Protocol):
     production: jneqsim.process.engineering.production.__module_protocol__
     rotating: jneqsim.process.engineering.rotating.__module_protocol__
     safety: jneqsim.process.engineering.safety.__module_protocol__
+    scd: jneqsim.process.engineering.scd.__module_protocol__
     validation: jneqsim.process.engineering.validation.__module_protocol__
     verticalslice: jneqsim.process.engineering.verticalslice.__module_protocol__
