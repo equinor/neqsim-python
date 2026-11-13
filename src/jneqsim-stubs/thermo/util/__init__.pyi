@@ -20,6 +20,7 @@ import jneqsim.thermo.util.humidair
 import jneqsim.thermo.util.hydrogen
 import jneqsim.thermo.util.jni
 import jneqsim.thermo.util.leachman
+import jneqsim.thermo.util.mineral
 import jneqsim.thermo.util.readwrite
 import jneqsim.thermo.util.referenceequations
 import jneqsim.thermo.util.solid
@@ -154,6 +155,7 @@ class __module_protocol__(Protocol):
     hydrogen: jneqsim.thermo.util.hydrogen.__module_protocol__
     jni: jneqsim.thermo.util.jni.__module_protocol__
     leachman: jneqsim.thermo.util.leachman.__module_protocol__
+    mineral: jneqsim.thermo.util.mineral.__module_protocol__
     readwrite: jneqsim.thermo.util.readwrite.__module_protocol__
     referenceequations: jneqsim.thermo.util.referenceequations.__module_protocol__
     solid: jneqsim.thermo.util.solid.__module_protocol__
