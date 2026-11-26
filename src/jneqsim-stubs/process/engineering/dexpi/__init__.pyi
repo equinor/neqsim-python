@@ -5,6 +5,7 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import Protocol
 
+import java.io
 import java.lang
 import java.nio.file
 import java.util
@@ -18,9 +19,25 @@ import typing
 
 
 
+class Dexpi201DynamicBindingReader:
+    @staticmethod
+    def read(path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], engineeringProject: jneqsim.process.engineering.EngineeringProject, pidDesignModel: jneqsim.process.engineering.pid.PidDesignModel, string: typing.Union[java.lang.String, str]) -> 'Dexpi201DynamicBindingReader.Result': ...
+    class Result(java.io.Serializable):
+        def getBindings(self) -> jneqsim.process.engineering.pid.PidSimulationBindings: ...
+        def getSourceSha256(self) -> java.lang.String: ...
+        def getVerifiedActuations(self) -> java.util.List[java.util.Map[java.lang.String, java.lang.String]]: ...
+        def getVerifiedSignals(self) -> java.util.List[java.util.Map[java.lang.String, java.lang.String]]: ...
+        def getVerifiedTags(self) -> java.util.List[java.lang.String]: ...
+        def toJson(self) -> java.lang.String: ...
+        def toMap(self) -> java.util.Map[java.lang.String, typing.Any]: ...
+
 class Dexpi201PidMaterializer:
+    @typing.overload
     @staticmethod
     def materialize(engineeringProject: jneqsim.process.engineering.EngineeringProject, pidDesignModel: jneqsim.process.engineering.pid.PidDesignModel, pidSimulationBindings: jneqsim.process.engineering.pid.PidSimulationBindings, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> 'Dexpi201PidMaterializer.Result': ...
+    @typing.overload
+    @staticmethod
+    def materialize(engineeringProject: jneqsim.process.engineering.EngineeringProject, pidDesignModel: jneqsim.process.engineering.pid.PidDesignModel, pidSimulationBindings: jneqsim.process.engineering.pid.PidSimulationBindings, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], pidSizing: jneqsim.process.engineering.pid.PidSizing) -> 'Dexpi201PidMaterializer.Result': ...
     class Result:
         def getAssessment(self) -> jneqsim.process.processmodel.dexpi.Dexpi20ConformanceAssessment.Report: ...
         def getNativeIds(self) -> java.util.Map[java.lang.String, java.lang.String]: ...
@@ -39,6 +56,9 @@ class DexpiEngineeringExporter:
     @typing.overload
     @staticmethod
     def exportDexpi201(engineeringProject: jneqsim.process.engineering.EngineeringProject, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], dexpi20PlantExportMetadata: jneqsim.process.processmodel.dexpi.Dexpi20PlantExportMetadata, boolean: bool) -> jneqsim.process.processmodel.dexpi.Dexpi20ConformanceAssessment.Report: ...
+    @typing.overload
+    @staticmethod
+    def exportDexpi201(engineeringProject: jneqsim.process.engineering.EngineeringProject, path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath], dexpi20PlantExportMetadata: jneqsim.process.processmodel.dexpi.Dexpi20PlantExportMetadata, boolean: bool, pidSizing: jneqsim.process.engineering.pid.PidSizing) -> jneqsim.process.processmodel.dexpi.Dexpi20ConformanceAssessment.Report: ...
     @staticmethod
     def refreshPackageManifest(path: typing.Union[java.nio.file.Path, jpype.protocol.SupportsPath]) -> java.nio.file.Path: ...
     class ExportResult:
@@ -94,6 +114,7 @@ class EngineeringDexpiRoundTripQualifier:
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.process.engineering.dexpi")``.
 
+    Dexpi201DynamicBindingReader: typing.Type[Dexpi201DynamicBindingReader]
     Dexpi201PidMaterializer: typing.Type[Dexpi201PidMaterializer]
     DexpiEngineeringExporter: typing.Type[DexpiEngineeringExporter]
     DexpiEngineeringMaterializer: typing.Type[DexpiEngineeringMaterializer]

@@ -26,6 +26,7 @@ import jneqsim.process.util.fielddevelopment
 import jneqsim.process.util.fire
 import jneqsim.process.util.heatintegration
 import jneqsim.process.util.heattransfer
+import jneqsim.process.util.mercury
 import jneqsim.process.util.monitor
 import jneqsim.process.util.optimizer
 import jneqsim.process.util.reconciliation
@@ -116,6 +117,7 @@ class __module_protocol__(Protocol):
     fire: jneqsim.process.util.fire.__module_protocol__
     heatintegration: jneqsim.process.util.heatintegration.__module_protocol__
     heattransfer: jneqsim.process.util.heattransfer.__module_protocol__
+    mercury: jneqsim.process.util.mercury.__module_protocol__
     monitor: jneqsim.process.util.monitor.__module_protocol__
     optimizer: jneqsim.process.util.optimizer.__module_protocol__
     reconciliation: jneqsim.process.util.reconciliation.__module_protocol__
