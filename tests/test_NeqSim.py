@@ -18,8 +18,11 @@ def test_Viscosity():
     thermoOps = jneqsim.thermodynamicoperations.ThermodynamicOperations(thermoSystem)
     thermoOps.TPflash()
 
-    gasEnthalpy = thermoSystem.getPhase(0).getEnthalpy()
-    assert abs(1079.7110727588224 - gasEnthalpy) < 1e-10
+    # The flash must return enthalpy for the converged gas composition.
+    gasEnthalpy = thermoSystem.getPhase("gas").getEnthalpy()
+    thermoSystem.init(2)
+    assert abs(528.9261480724308 - gasEnthalpy) < 1e-10
+    assert abs(thermoSystem.getPhase("gas").getEnthalpy() - gasEnthalpy) < 1e-10
 
     thermoSystem.initPhysicalProperties("Viscosity")
     gasViscosity = thermoSystem.getPhase(0).getViscosity("kg/msec")

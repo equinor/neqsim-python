@@ -54,7 +54,8 @@ dev = [
 default-groups = "all"
 
 [tool.uv.build-backend]
-# Allow namespace packages to include both neqsim and jneqsim-stubs
+# Include the runtime package and the Java engine type stubs in wheels.
+module-name = ["neqsim", "jneqsim-stubs"]
 namespace = true
 # Include the license and stub package in source distributions.
 source-include = [
