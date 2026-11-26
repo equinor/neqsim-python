@@ -31,7 +31,6 @@ import jneqsim.process.equipment.lng
 import jneqsim.process.equipment.manifold
 import jneqsim.process.equipment.membrane
 import jneqsim.process.equipment.mixer
-import jneqsim.process.equipment.network
 import jneqsim.process.equipment.pipeline
 import jneqsim.process.equipment.powergeneration
 import jneqsim.process.equipment.pump
@@ -217,6 +216,7 @@ class ProcessEquipmentInterface(jneqsim.process.ProcessElementInterface, jneqsim
     def getMassBalance(self) -> float: ...
     @typing.overload
     def getMassBalance(self, string: typing.Union[java.lang.String, str]) -> float: ...
+    def getMaxStableTransientTimeStep(self) -> float: ...
     def getMaxUtilization(self) -> float: ...
     def getMaxUtilizationPercent(self) -> float: ...
     def getMechanicalDesign(self) -> jneqsim.process.mechanicaldesign.MechanicalDesign: ...
@@ -511,7 +511,6 @@ class __module_protocol__(Protocol):
     manifold: jneqsim.process.equipment.manifold.__module_protocol__
     membrane: jneqsim.process.equipment.membrane.__module_protocol__
     mixer: jneqsim.process.equipment.mixer.__module_protocol__
-    network: jneqsim.process.equipment.network.__module_protocol__
     pipeline: jneqsim.process.equipment.pipeline.__module_protocol__
     powergeneration: jneqsim.process.equipment.powergeneration.__module_protocol__
     pump: jneqsim.process.equipment.pump.__module_protocol__

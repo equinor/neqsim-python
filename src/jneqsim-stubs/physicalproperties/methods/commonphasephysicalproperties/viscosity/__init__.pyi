@@ -116,10 +116,15 @@ class PFCTViscosityMethodMod86(Viscosity):
     def setCspViscosityCorrectionFactor(self, int: int, double: float) -> None: ...
     def setCspViscosityCorrectionFactors(self, doubleArray: typing.Union[typing.List[float], jpype.JArray]) -> None: ...
 
+class BnsLbcViscosityMethod(LBCViscosityMethod):
+    def __init__(self, physicalProperties: jneqsim.physicalproperties.system.PhysicalProperties): ...
+    def getCriticalVolume(self, int: int) -> float: ...
+
 
 class __module_protocol__(Protocol):
     # A module protocol which reflects the result of ``jp.JPackage("jneqsim.physicalproperties.methods.commonphasephysicalproperties.viscosity")``.
 
+    BnsLbcViscosityMethod: typing.Type[BnsLbcViscosityMethod]
     CO2ViscosityMethod: typing.Type[CO2ViscosityMethod]
     FrictionTheoryViscosityMethod: typing.Type[FrictionTheoryViscosityMethod]
     KTAViscosityMethod: typing.Type[KTAViscosityMethod]

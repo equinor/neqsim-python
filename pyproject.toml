@@ -1,6 +1,6 @@
 [project]
 name = "neqsim"
-version = "3.29.0"
+version = "3.30.0"
 description = "NeqSim is a tool for thermodynamic and process calculations"
 authors = [{ name = "Even Solbraa", email = "esolbraa@gmail.com" }]
 requires-python = ">=3.10,<4"
@@ -54,7 +54,8 @@ dev = [
 default-groups = "all"
 
 [tool.uv.build-backend]
-# Allow namespace packages to include both neqsim and jneqsim-stubs
+# Include the runtime package and the Java engine type stubs in wheels.
+module-name = ["neqsim", "jneqsim-stubs"]
 namespace = true
 # Include the license and stub package in source distributions.
 source-include = [

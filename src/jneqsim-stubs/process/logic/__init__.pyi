@@ -14,6 +14,7 @@ import jneqsim.process.logic.condition
 import jneqsim.process.logic.control
 import jneqsim.process.logic.esd
 import jneqsim.process.logic.hipps
+import jneqsim.process.logic.procedure
 import jneqsim.process.logic.shutdown
 import jneqsim.process.logic.sis
 import jneqsim.process.logic.startup
@@ -80,6 +81,7 @@ class __module_protocol__(Protocol):
     control: jneqsim.process.logic.control.__module_protocol__
     esd: jneqsim.process.logic.esd.__module_protocol__
     hipps: jneqsim.process.logic.hipps.__module_protocol__
+    procedure: jneqsim.process.logic.procedure.__module_protocol__
     shutdown: jneqsim.process.logic.shutdown.__module_protocol__
     sis: jneqsim.process.logic.sis.__module_protocol__
     startup: jneqsim.process.logic.startup.__module_protocol__
